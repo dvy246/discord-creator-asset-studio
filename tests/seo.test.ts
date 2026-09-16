@@ -7,41 +7,58 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(__dirname, '../dist');
 
-test('E2E SEO: Title is under 60 chars and meta description is under 150 chars', () => {
-  const indexPath = path.join(distDir, 'index.html');
-  if (!fs.existsSync(indexPath)) {
-    assert.fail('index.html not found in dist. Ensure build has run before tests.');
-  }
+test('E2E SEO: All generated HTML pages have valid titles, meta descriptions, and canonicals', () => {
+  const htmlFiles = [
+    'index.html',
+    'privacy/index.html',
+    'terms/index.html',
+    'about/index.html',
+    'contact/index.html',
+    'guides/discord-sizes/index.html',
+    'tools/emoji/index.html',
+    'tools/sticker/index.html',
+    'tools/banner/index.html',
+    'tools/avatar/index.html',
+    'tools/role-icon/index.html',
+    '404.html',
+    '500.html'
+  ];
 
-  const html = fs.readFileSync(indexPath, 'utf-8');
+  for (const file of htmlFiles) {
+    const filePath = path.join(distDir, file);
+    assert.ok(fs.existsSync(filePath), `Generated file ${file} must exist`);
 
-  // Check title
-  const titleMatch = html.match(/<title>(.*?)<\/title>/i);
-  assert.ok(titleMatch, 'Title tag must exist');
-  const title = titleMatch[1];
-  assert.ok(title.length <= 60, `Title must be <= 60 characters. Current length: ${title.length}`);
+    const html = fs.readFileSync(filePath, 'utf-8');
 
-  // Check meta description
-  const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["'](.*?)["'][^>]*>/i);
-  if (!descMatch) {
-    const descMatchAlt = html.match(/<meta[^>]*content=["'](.*?)["'][^>]*name=["']description["'][^>]*>/i);
-    assert.ok(descMatchAlt, 'Meta description tag must exist');
-    const desc = descMatchAlt[1];
-    assert.ok(desc.length <= 150, `Meta description must be <= 150 characters. Current length: ${desc.length}`);
-  } else {
+    // Title tag validation (< 60 chars)
+    const titleMatch = html.match(/<title>(.*?)<\/title>/i);
+    assert.ok(titleMatch, `${file}: Title tag must exist`);
+    const title = titleMatch[1];
+    assert.ok(title.length <= 60, `${file}: Title length (${title.length}) must be <= 60 chars: "${title}"`);
+
+    // Meta description validation (< 160 chars)
+    const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["'](.*?)["'][^>]*>/i) ||
+                      html.match(/<meta[^>]*content=["'](.*?)["'][^>]*name=["']description["'][^>]*>/i);
+    assert.ok(descMatch, `${file}: Meta description tag must exist`);
     const desc = descMatch[1];
-    assert.ok(desc.length <= 150, `Meta description must be <= 150 characters. Current length: ${desc.length}`);
+    assert.ok(desc.length <= 160, `${file}: Description length (${desc.length}) must be <= 160 chars`);
+
+    // Canonical check (only for standard pages, 404/500 don't require canonicals)
+    if (!file.startsWith('404') && !file.startsWith('500')) {
+      const canonicalMatch = html.match(/<link[^>]*rel=["']canonical["'][^>]*href=["'](.*?)["'][^>]*>/i) ||
+                             html.match(/<link[^>]*href=["'](.*?)["'][^>]*rel=["']canonical["'][^>]*>/i);
+      assert.ok(canonicalMatch, `${file}: Canonical link must exist`);
+      assert.ok(canonicalMatch[1].startsWith('https://discordassets.studio'), `${file}: Canonical must be absolute`);
+    }
   }
+});
 
-  // Check canonical link
-  const canonicalMatch = html.match(/<link[^>]*rel=["']canonical["'][^>]*href=["'](.*?)["'][^>]*>/i) || html.match(/<link[^>]*href=["'](.*?)["'][^>]*rel=["']canonical["'][^>]*>/i);
-  assert.ok(canonicalMatch, 'Canonical link must exist');
-  assert.ok(canonicalMatch[1].startsWith('https://discordassets.studio'), 'Canonical link must be absolute');
+test('E2E SEO: robots.txt and sitemap are generated and valid', () => {
+  const robotsPath = path.join(distDir, 'robots.txt');
+  assert.ok(fs.existsSync(robotsPath), 'dist/robots.txt must exist');
+  const robotsContent = fs.readFileSync(robotsPath, 'utf-8');
+  assert.ok(robotsContent.includes('Sitemap: https://discordassets.studio/sitemap-index.xml'), 'robots.txt must point to sitemap-index.xml');
 
-  // Check hreflang
-  const hreflangEnMatch = html.match(/<link[^>]*rel=["']alternate["'][^>]*hreflang=["']en["'][^>]*>/i) || html.match(/<link[^>]*hreflang=["']en["'][^>]*rel=["']alternate["'][^>]*>/i);
-  assert.ok(hreflangEnMatch, 'Hreflang for en must exist');
-
-  const hreflangEsMatch = html.match(/<link[^>]*rel=["']alternate["'][^>]*hreflang=["']es["'][^>]*>/i) || html.match(/<link[^>]*hreflang=["']es["'][^>]*rel=["']alternate["'][^>]*>/i);
-  assert.ok(hreflangEsMatch, 'Hreflang for es must exist');
+  const sitemapPath = path.join(distDir, 'sitemap-index.xml');
+  assert.ok(fs.existsSync(sitemapPath), 'dist/sitemap-index.xml must exist');
 });

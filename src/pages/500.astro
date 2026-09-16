@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Processing Error | Discord Asset Studio" description="An unexpected client-side error occurred while processing your Discord asset.">
+  <div class="max-w-3xl mx-auto px-4 py-24 text-center">
+    <div class="inline-flex items-center justify-center w-16 h-16 rounded-[12px] bg-[#242934] border border-[#ef4444]/30 text-[#ef4444] text-2xl font-bold mb-6">
+      500
+    </div>
+    <h1 class="text-3xl font-bold text-white tracking-tight mb-4">Local Worker Error</h1>
+    <p class="text-[#9da6b8] text-base leading-relaxed mb-8 max-w-lg mx-auto">
+      An unhandled exception occurred in the browser execution thread. Because no media is sent to a server, resetting your canvas or reloading the tool will clear memory.
+    </p>
+
+    <div class="flex items-center justify-center gap-4">
+      <button onclick="window.location.reload()" class="px-6 py-2.5 rounded-[8px] bg-[#1c2028] border border-[#2b313e] hover:border-[#3f4758] text-white text-sm font-medium transition-colors">
+        Reload Page
+      </button>
+      <a href="/" class="px-6 py-2.5 rounded-[8px] bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-medium transition-colors">
+        Return Home
+      </a>
+    </div>
+  </div>
+</Layout>

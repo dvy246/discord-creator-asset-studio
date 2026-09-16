@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About Us | Discord Asset Studio" description="Learn about the mission, engineering philosophy, and privacy-first architecture of Discord Asset Studio.">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+    <div class="mb-10">
+      <span class="text-xs font-semibold text-[#3b82f6] uppercase tracking-wider">Independent Creator Tooling</span>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white tracking-tight mt-2 mb-4">About Discord Asset Studio</h1>
+      <p class="text-[#9da6b8] text-base leading-relaxed">
+        Building the standard for honest, zero-compromise, browser-local digital asset validation.
+      </p>
+    </div>
+
+    <div class="space-y-8 text-[#9da6b8] text-sm leading-relaxed border-t border-[#2b313e] pt-8">
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-2">Our Engineering Philosophy</h2>
+        <p class="mb-3">
+          Most online image converters and Discord resizers operate as ad-saturated data funnels. They require users to upload their personal artwork, emojis, or brand icons to remote servers, compress them with lossy default presets, and charge subscriptions to remove watermarks.
+        </p>
+        <p>
+          We built Discord Asset Studio to solve this specific problem with technical rigor:
+        </p>
+        <ul class="list-disc pl-5 space-y-2 mt-3 text-[#f0f2f5]">
+          <li><strong>100% In-Browser Execution:</strong> Using Web Workers, HTML5 Canvas, and modern WebAssembly codecs, your files never leave your machine.</li>
+          <li><strong>Deterministic Validation:</strong> Every validation result cites the exact official rule ID, detected dimension/byte count, official limit, source URL, and last verification date.</li>
+          <li><strong>Transparent Gating:</strong> We clearly distinguish between file validity (e.g. dimensions, byte caps) and platform permissions (e.g. Nitro subscription, Boost Level 2, or Manage Roles permission).</li>
+          <li><strong>No Dark Patterns:</strong> No forced signups, no watermarks, no artificial delays, and no paywalls for basic file resizing.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-2">Rule Provenance & Maintenance</h2>
+        <p>
+          Our rule registry is maintained in open-source configuration files. Each rule includes an automated freshness review due date (`reviewDueAt`), triggering continuous CI checks to ensure our parameters stay synchronized with Discord's active support documentation and developer guidelines.
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>
