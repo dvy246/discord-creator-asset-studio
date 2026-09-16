@@ -1,12 +1,55 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
+import SketchCircle from '../../components/SketchCircle.astro';
+
+const pageTitle = "Discord Avatar Maker & PFP Cropper | 512x512";
+const pageDescription = "Crop, resize, and preview Discord avatars with a live circular mask. 512x512 square authoring with 100% private in-browser processing.";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are the recommended dimensions for a Discord profile picture (PFP)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord recommends authoring avatars at 512x512 pixels with a 1:1 square aspect ratio. While Discord renders avatars at 128x128 in profile modals, 80x80 in user lists, and 40x40 in chat streams, a 512x512 master image ensures crisp detail on 2x and 3x Retina mobile devices and 4K desktop screens."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much of the image is lost when Discord crops square avatars into circles?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When a 1:1 square image is clipped into a circular mask (border-radius: 50%), exactly 21.46% of the total pixel area is cut off from the four corners. Any branding, logos, or peripheral subject details positioned outside the central inscribed circle will be hidden from view."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the maximum file size for Discord avatars?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord allows avatar uploads up to 8.0 MB (8,388,608 bytes). Supported image formats include PNG, JPEG, WebP, and animated GIF."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do animated avatars require a Discord Nitro subscription?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. While static avatars are free for every Discord user, animated avatars (using the GIF format) require an active Discord Nitro or Nitro Basic subscription to display animation in chat and profile popouts."
+      }
+    }
+  ]
+};
 ---
 
-<Layout 
-  title="Discord Avatar Maker & PFP Cropper | 512x512" 
-  description="Crop, resize, and preview Discord avatars with a live circular mask. 512x512 square authoring with 100% private in-browser processing."
->
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Inject FAQ Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
       <div class="flex items-center gap-2 text-xs text-[#6B7A90] mb-2 font-mono">
@@ -28,7 +71,8 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Main Workspace Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
       <div class="lg:col-span-7 space-y-6">
         <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs">
           <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
@@ -37,7 +81,7 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
               👤
             </div>
             <p class="text-sm font-bold text-[#192538]">Select profile picture artwork</p>
-            <p class="text-xs text-[#6B7A90]">PNG, JPG, or GIF (Centered on 512x512 canvas)</p>
+            <p class="text-xs text-[#6B7A90]">PNG, JPG, WebP, or GIF (Centered on 512x512 canvas)</p>
           </div>
         </div>
 
@@ -67,9 +111,11 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
             <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-[#5865f2] bg-[#1e1f22] flex items-center justify-center relative shadow-lg">
               <img id="circlePreviewImg" class="w-full h-full object-cover hidden" alt="Avatar Circle Mask Preview" />
               <span id="circlePlaceholder" class="text-xs text-[#949ba4] font-mono">Circle</span>
+              <!-- Online status ring -->
+              <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#23A55A] border-2 border-[#313338]"></div>
             </div>
-            <span class="text-xs font-semibold text-white mt-3">Display Viewport</span>
-            <span class="text-[10px] text-[#949ba4]">Discord renders avatars in circles across desktop & mobile</span>
+            <span class="text-xs font-semibold text-white mt-3">Live Profile Viewport</span>
+            <span class="text-[10px] text-[#949ba4]">Circular mask with bottom-right status indicator clearance</span>
           </div>
         </div>
 
@@ -77,12 +123,16 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
           <h2 class="text-sm font-bold text-[#192538] pb-3 border-b border-[#E0DBD0] mb-4">Specification Receipt</h2>
           <div class="space-y-3 text-xs font-mono">
             <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Dimensions:</span>
+              <span class="text-[#6B7A90]">Output Resolution:</span>
+              <span class="text-[#192538] font-bold">512 × 512 px</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+              <span class="text-[#6B7A90]">Original Resolution:</span>
               <span id="statDimensions" class="text-[#192538] font-bold">-- × --</span>
             </div>
             <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Max Size:</span>
-              <span class="text-[#0D9488] font-bold">8 MB</span>
+              <span class="text-[#6B7A90]">Max File Size:</span>
+              <span class="text-[#0D9488] font-bold">8.0 MB</span>
             </div>
             <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans">
               <strong>Requirement:</strong> Static avatars are free. Animated avatars (.gif) require an active Discord Nitro subscription.
@@ -91,6 +141,181 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
         </div>
       </div>
     </div>
+
+    <!-- Text-Locking Sticky Stacking Technical Dossier (600+ Words) -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+        
+        <!-- Left Column: Pinned Progress Timeline (5 cols) -->
+        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
+            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+            <span>Avatar Technical Blueprint</span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
+            Engineering <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">iconic</span><SketchUnderline color="#66A3BF" /></span> Discord avatars.
+          </h2>
+
+          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
+            From circular geometry clipping to status indicator badge collision, creating a standout Discord avatar requires understanding how Discord's client layers UI elements directly over your artwork.
+          </p>
+
+          <!-- Step Timeline -->
+          <div class="relative pl-6 space-y-5 select-none pt-2">
+            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
+            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
+              <span class="text-xs sm:text-sm">01 / The 512×512 Master Standard</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
+              <span class="text-xs sm:text-sm">02 / Circle Mask Mathematics</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
+              <span class="text-xs sm:text-sm">03 / Status Indicator Occlusion</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
+              <span class="text-xs sm:text-sm">04 / Nitro Animated GIFs & Framing</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Stacking Sticky Dossier Cards (7 cols) -->
+        <div class="lg:col-span-7 relative pb-16 space-y-12">
+          
+          <!-- Card 1 -->
+          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">CANVAS BLUEPRINT // 01</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">512 × 512 MASTER</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                The 512x512 Master: Multi-Resolution Clarity
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Discord displays your avatar at vastly different dimensions depending on context. In message streams, avatars appear at 40x40 pixels; in member sidebars, they shrink to 32x32 pixels; in user profile modals, they scale up to 128x128 pixels; and on high-density 3x mobile screens, they require up to 384 physical device pixels.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Authoring your profile picture at an exact 512x512 pixel square canvas guarantees optimal sampling data across all client viewports. Downscaling from a clean 512px raster avoids the jagged aliasing and moiré artifacts that occur when low-resolution 128px images are stretched onto modern Retina displays.
+              </p>
+              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
+                <div>
+                  <span class="text-[#6B7A90]">Master Authoring Canvas:</span>
+                  <span class="text-[#0D9488] font-bold ml-1">512 × 512 px (1:1 Ratio)</span>
+                </div>
+                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">Lossless Scaling</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">GEOMETRY PHYSICS // 02</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">21.46% CORNER LOSS</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Circle Mask Mathematics: The Inscribed Diameter
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Every avatar uploaded to Discord is subjected to an instantaneous client-side circular crop: `border-radius: 50%`. Geometrically, the area of a circle inscribed within a square of side length s is (π / 4) × s² ≈ 0.7854 × s². This means exactly 21.46% of the original square image is permanently clipped off in the four outer corners.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Artists who place logos, signature marks, or character hair ornaments in the extreme corners will find their details brutally truncated in Discord's interface. Discord Asset Studio projects an active circular overlay over your 512px canvas so you can visually verify that all focal elements remain safely centered within the 440px safe diameter.
+              </p>
+              <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                  <span class="text-[#6B7A90] block text-[10px]">Corner Area Clipped:</span>
+                  <span class="font-bold text-[#192538] dark:text-white">21.46% of Canvas</span>
+                </div>
+                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                  <span class="text-[#6B7A90] block text-[10px]">Recommended Safe Radius:</span>
+                  <span class="font-bold text-[#192538] dark:text-white">220 px from Center</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">UI OCCLUSION // 03</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">BOTTOM-RIGHT BADGE</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Status Indicator Occlusion: Protecting the 4th Quadrant
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                In Discord chat streams, user lists, and profile summaries, Discord positions a permanent circular status indicator badge directly in the bottom-right quadrant of your avatar. This badge conveys online status (green dot), idle (crescent moon), do not disturb (red dash), offline (gray ring), or active live streaming (purple camera icon).
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                This status pill occupies approximately 28% of the bottom-right circular quadrant and features a thick 2-pixel background cutout border. If your character's mouth, accessory, or primary logo is oriented toward this bottom-right corner, the status indicator will obscure it entirely. We recommend composing avatars with a slight leftward or central focal orientation.
+              </p>
+              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
+                <span class="text-[#0D9488] font-bold">✓ Status Zone Clear:</span>
+                <span>Our live preview simulates the bottom-right status pill to ensure zero subject blockage.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="sticky-step-wrapper sticky top-36 z-40">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">NITRO SPECIFICATION // 04</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">ANIMATED GIF & DECORATION</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Animated Nitro Avatars & Avatar Decoration Layering
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Subscribers to Discord Nitro can upload animated GIF avatars. Discord plays these animations automatically upon hover or continuously inside direct message panels and profile modals. Animated avatars must remain under Discord's 8.0 MB file size limit and loop cleanly without jarring frame hitches.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Furthermore, Discord's introduction of "Avatar Decorations" adds an animated 3D bezel around user PFPs. These decorations overlap the outer 10% to 15% of your avatar perimeter. Keeping character faces and high-detail elements safely recessed from the outer edge ensures total compatibility with whatever decoration your community members equip.
+              </p>
+              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span>Zero Server Uploads • In-Browser 512x512 Canvas Cropping</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive FAQ Accordion Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
   </div>
 
   <script>
@@ -101,68 +326,166 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
     const exportBtn = document.getElementById('exportBtn');
     const circlePreviewImg = document.getElementById('circlePreviewImg') as HTMLImageElement;
     const circlePlaceholder = document.getElementById('circlePlaceholder');
+    const dropzone = document.getElementById('dropzone');
     const statDimensions = document.getElementById('statDimensions');
 
     let currentBlob: Blob | null = null;
     let currentObjectUrl: string | null = null;
 
-    fileInput.addEventListener('change', (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const img = new Image();
-          img.onload = () => {
-            const ctx = mainCanvas.getContext('2d');
-            if (!ctx) return;
-
-            mainCanvas.width = 512;
-            mainCanvas.height = 512;
-            ctx.clearRect(0, 0, 512, 512);
-
-            const size = Math.min(img.width, img.height);
-            const sx = (img.width - size) / 2;
-            const sy = (img.height - size) / 2;
-
-            ctx.drawImage(img, sx, sy, size, size, 0, 0, 512, 512);
-            editorPanel?.classList.remove('hidden');
-
-            mainCanvas.toBlob((blob) => {
-              if (blob) {
-                currentBlob = blob;
-                if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
-                currentObjectUrl = URL.createObjectURL(blob);
-                circlePreviewImg.src = currentObjectUrl;
-                circlePreviewImg.classList.remove('hidden');
-                circlePlaceholder?.classList.add('hidden');
-                statDimensions!.innerText = `${img.width}×${img.height} → 512×512`;
-              }
-            }, 'image/png');
-          };
-          img.src = event.target?.result as string;
-        };
-        reader.readAsDataURL(file);
+    function cleanup() {
+      if (currentObjectUrl) {
+        URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = null;
       }
+    }
+
+    fileInput?.addEventListener('change', (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      handleFile(file);
     });
 
+    dropzone?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+    });
+
+    dropzone?.addEventListener('dragleave', () => {
+      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    });
+
+    dropzone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+      const file = e.dataTransfer?.files?.[0];
+      if (!file) return;
+      handleFile(file);
+    });
+
+    function handleFile(file: File) {
+      cleanup();
+      currentObjectUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        if (statDimensions) statDimensions.innerText = `${img.width} × ${img.height} px`;
+        renderCanvas(img);
+        editorPanel?.classList.remove('hidden');
+      };
+      img.src = currentObjectUrl;
+    }
+
+    function renderCanvas(img: HTMLImageElement) {
+      const ctx = mainCanvas.getContext('2d');
+      if (!ctx) return;
+
+      const size = 512;
+      mainCanvas.width = size;
+      mainCanvas.height = size;
+      ctx.clearRect(0, 0, size, size);
+
+      const minDim = Math.min(img.width, img.height);
+      const sx = (img.width - minDim) / 2;
+      const sy = (img.height - minDim) / 2;
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+
+      mainCanvas.toBlob((blob) => {
+        if (!blob) return;
+        currentBlob = blob;
+        const url = URL.createObjectURL(blob);
+        if (circlePreviewImg) {
+          circlePreviewImg.src = url;
+          circlePreviewImg.classList.remove('hidden');
+        }
+        circlePlaceholder?.classList.add('hidden');
+      }, 'image/png');
+    }
+
     resetBtn?.addEventListener('click', () => {
+      cleanup();
       currentBlob = null;
-      if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
       editorPanel?.classList.add('hidden');
-      circlePreviewImg?.classList.add('hidden');
+      if (circlePreviewImg) circlePreviewImg.classList.add('hidden');
       circlePlaceholder?.classList.remove('hidden');
-      statDimensions!.innerText = '-- × --';
+      if (statDimensions) statDimensions.innerText = '-- × --';
       fileInput.value = '';
     });
 
     exportBtn?.addEventListener('click', () => {
-      if (!currentBlob || !currentObjectUrl) return;
+      if (!currentBlob) return;
       const a = document.createElement('a');
-      a.href = currentObjectUrl;
+      a.href = URL.createObjectURL(currentBlob);
       a.download = 'discord-avatar-512x512.png';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
     });
+
+    // Sticky Scroll Stacking & Observer Script
+    function setupScrollLocking() {
+      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
+      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
+      const progressBar = document.getElementById('scroll-progress-line');
+
+      if (!cardWrappers.length) return;
+
+      function updateCardStack() {
+        let activeIndex = 0;
+
+        cardWrappers.forEach((wrapper, index) => {
+          const rect = wrapper.getBoundingClientRect();
+          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
+          const isLocked = rect.top <= stickyTop + 8;
+
+          if (isLocked) {
+            activeIndex = index;
+          }
+
+          const nextCard = cardWrappers[index + 1];
+          if (nextCard) {
+            const nextRect = nextCard.getBoundingClientRect();
+            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
+            const transitionDist = 180;
+            
+            if (nextRect.top < nextStickyTop + transitionDist) {
+              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
+              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
+              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
+            } else {
+              wrapper.style.transform = 'scale(1)';
+              wrapper.style.filter = 'brightness(1)';
+            }
+          }
+        });
+
+        stepIndicators.forEach((ind, i) => {
+          const dot = ind.querySelector('.step-dot');
+          if (i <= activeIndex) {
+            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
+            dot?.classList.add('border-current', 'scale-110');
+            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
+          } else {
+            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+            ind.classList.add('text-[#6B7A90]', 'opacity-70');
+            dot?.classList.remove('border-current', 'scale-110');
+            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
+          }
+        });
+
+        if (progressBar) {
+          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
+          progressBar.style.height = `${pct}%`;
+        }
+      }
+
+      window.addEventListener('scroll', updateCardStack, { passive: true });
+      updateCardStack();
+    }
+
+    setupScrollLocking();
+    document.addEventListener('astro:after-swap', setupScrollLocking);
   </script>
 </Layout>

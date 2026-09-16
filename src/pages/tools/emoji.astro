@@ -1,26 +1,69 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
+import SketchCircle from '../../components/SketchCircle.astro';
+
+const pageTitle = "Discord Emoji Maker & Validator | 256 KiB Resizer";
+const pageDescription = "Resize, validate, and compress Discord custom emojis to 128x128 and under 256 KiB. 100% private in-browser tool with 32x32 chat preview.";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does Discord reject custom emojis that measure under 256 KB on desktop?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord strictly enforces a binary cap of 256 KiB, which translates to exactly 262,144 bytes. Modern desktop operating systems such as macOS and Windows frequently display file sizes in decimal units where 1 KB equals 1,000 bytes. Consequently, an image that appears as 258 KB or even 256 KB in your desktop file manager may contain 263,000 bytes, surpassing Discord's binary ceiling and causing an immediate upload failure. Discord Asset Studio inspects the raw encoded Blob byte count to guarantee compliance before you upload."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why should Discord emojis be authored at 128x128 when chat displays them at 32x32?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord serves emojis across multiple contexts: inline in chat messages at 32x32 pixels, inside jumbo emoji messages at 48x48 pixels, within the server emoji picker popup at 40x40 pixels, and on high-density Retina or mobile screens at 2x and 3x device pixel ratios. Uploading a master asset at 128x128 pixels ensures sufficient pixel density for high-resolution screens while allowing Discord's bilinear downsampler to render crisp glyphs at small sizes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does transparent background handling work for custom emojis?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Transparent emojis must use an 8-bit alpha channel within a 32-bit RGBA PNG format. When exporting emojis with soft feathering or anti-aliased edges, semi-transparent pixels can blend into halo artifacts if exported against a matte color. Discord Asset Studio preserves full 8-bit alpha transparency with clean alpha matting so your emojis look pristine on both dark (#313338) and light (#FFFFFF) Discord themes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What image formats can be used for static and animated Discord emojis?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Static custom emojis accept PNG, JPEG, and WebP formats, though PNG is strongly recommended due to its lossless compression and alpha channel support. Animated emojis require the GIF format, must remain under the same 256 KiB binary boundary, and should maintain a consistent frame rate between 20 to 50 frames per second."
+      }
+    }
+  ]
+};
 ---
 
-<Layout 
-  title="Discord Emoji Maker & Validator | 256 KiB Resizer" 
-  description="Resize, validate, and compress Discord custom emojis to 128x128 and under 256 KiB. 100% private in-browser tool with 32x32 chat preview."
->
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Inject FAQ Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <!-- Breadcrumb & Header -->
     <div class="mb-8">
       <div class="flex items-center gap-2 text-xs text-[#6B7A90] mb-2 font-mono">
         <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
-        <span class="text-[#192538] font-semibold">Emoji Maker & Validator</span>
+        <span class="text-[#192538] font-semibold">Emoji Studio</span>
       </div>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
             Discord Emoji <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Studio</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
-          <p class="text-xs sm:text-sm text-[#475569] mt-1">Upload up to 128x128 • 32x32 live preview • Enforces strict 256 KiB binary boundary</p>
+          <p class="text-xs sm:text-sm text-[#475569] mt-1">128×128 authoring canvas • 32×32 live chat preview • Strict 256 KiB binary ceiling</p>
         </div>
         <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] text-[#3368A0] font-medium shadow-xs">
           <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
@@ -30,7 +73,7 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
     </div>
 
     <!-- Main Workspace Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
       <!-- Left Column: Upload & Canvas Controls (7 cols) -->
       <div class="lg:col-span-7 space-y-6">
         <!-- File Input Dropzone -->
@@ -98,10 +141,10 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="text-xs">Check out this custom emoji:</span>
-                  <!-- 32x32 chat preview box -->
-                  <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-transparent">
-                    <img id="chatPreviewImg" class="w-8 h-8 object-contain hidden" alt="Custom Emoji Preview" />
-                    <span id="chatPreviewPlaceholder" class="text-[10px] text-[#949ba4] font-mono">32px</span>
+                  <!-- 32x32 Container for Chat Simulation -->
+                  <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-black/10 rounded overflow-hidden">
+                    <img id="chatPreviewImg" class="max-w-full max-h-full object-contain hidden" alt="Emoji Preview" />
+                    <span id="chatPreviewPlaceholder" class="text-[10px] text-[#949ba4]">--</span>
                   </div>
                 </div>
               </div>
@@ -109,47 +152,225 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
           </div>
         </div>
 
-        <!-- Validation Receipt -->
+        <!-- Real-time Verification Receipt -->
         <div class="card-panel rounded-[14px] p-6">
           <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">Validation Receipt</h2>
+            <h2 class="text-sm font-bold text-[#192538]">Compliance Audit</h2>
             <span id="receiptBadge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
               Awaiting Media
             </span>
           </div>
 
-          <div class="space-y-3 text-xs font-mono">
-            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Dimensions:</span>
-              <span id="statDimensions" class="text-[#192538] font-bold">-- × --</span>
+          <div class="space-y-3 font-mono text-xs">
+            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+              <span class="text-[#6B7A90]">Target Dimensions:</span>
+              <span class="font-bold text-[#192538]">128 × 128 px</span>
             </div>
-
-            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Binary Byte Weight:</span>
-              <span id="statBytes" class="text-[#3368A0] font-bold">-- KiB (Max 256)</span>
+            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+              <span class="text-[#6B7A90]">Original Dimensions:</span>
+              <span id="statDimensions" class="text-[#192538]">-- × --</span>
             </div>
-
-            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Target Format:</span>
-              <span id="statFormat" class="text-[#192538] font-bold">PNG / WebP</span>
+            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+              <span class="text-[#6B7A90]">Binary Limit:</span>
+              <span class="text-[#0D9488] font-bold">256 KiB (262,144 bytes)</span>
             </div>
-
-            <div id="receiptAlert" class="hidden p-3 rounded-[8px] text-xs font-sans">
-              <!-- Alert dynamically populated -->
+            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+              <span class="text-[#6B7A90]">Measured Byte Size:</span>
+              <span id="statBytes" class="text-[#192538]">-- KiB</span>
             </div>
-
-            <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans">
-              <strong>Rule Authority:</strong> Discord Help Center #204849977. Verified Jan 2026. High confidence.
+            <div class="flex justify-between py-1.5">
+              <span class="text-[#6B7A90]">Export Encoding:</span>
+              <span id="statFormat" class="text-[#192538]">PNG / WebP</span>
             </div>
           </div>
+
+          <div id="receiptAlert" class="mt-4 hidden p-3 rounded-[8px] text-xs"></div>
         </div>
       </div>
     </div>
+
+    <!-- Text-Locking Sticky Stacking Technical Dossier (600+ Words) -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+        
+        <!-- Left Column: Pinned Progress Timeline (5 cols) -->
+        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
+            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+            <span>Emoji Technical Blueprint</span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
+            Engineering <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">flawless</span><SketchUnderline color="#66A3BF" /></span> Discord emojis.
+          </h2>
+
+          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
+            From 256 KiB binary boundaries to bilinear 32px chat downsampling, custom emojis require precise raster engineering to look crisp across Discord's desktop, mobile, and web applications.
+          </p>
+
+          <!-- Step Timeline -->
+          <div class="relative pl-6 space-y-5 select-none pt-2">
+            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
+            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
+              <span class="text-xs sm:text-sm">01 / The 256 KiB Binary Ceiling</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
+              <span class="text-xs sm:text-sm">02 / 32px Downsampling & Legibility</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
+              <span class="text-xs sm:text-sm">03 / Alpha Channels & Clean Edges</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
+              <span class="text-xs sm:text-sm">04 / Zero-Server Client Isolation</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Stacking Sticky Dossier Cards (7 cols) -->
+        <div class="lg:col-span-7 relative pb-16 space-y-12">
+          
+          <!-- Card 1 -->
+          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">SPECIFICATION DOSSIER // 01</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">262,144 BYTES MAX</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                The 256 KiB Binary Ceiling vs Decimal Kilobytes
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                The single most pervasive failure when uploading Discord custom emojis is the discrepancy between decimal file size measurement and binary byte allocation. Standard desktop operating systems (macOS Finder and Windows Explorer) compute file sizes using base-10 mathematics: one decimal kilobyte (KB) equals exactly 1,000 bytes. Discord's media ingestion gateway, however, enforces strict IEC binary boundaries: one kibibyte (KiB) equals 1,024 bytes.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Under this mathematical standard, Discord allows a hard ceiling of 262,144 bytes. An artwork file reporting as "256 KB" in your operating system may actually register as 262,800 bytes on disk. Discord's API validates the raw content length before writing to CDN storage and immediately rejects any file exceeding 262,144 bytes with an unhelpful generic error.
+              </p>
+              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
+                <div>
+                  <span class="text-[#6B7A90]">Binary Boundary:</span>
+                  <span class="text-[#0D9488] font-bold ml-1">262,144 Bytes (256 KiB)</span>
+                </div>
+                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">Strict API Rejection</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">DISPLAY OPTICS // 02</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">128px → 32px RESCALE</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                32px Downsampling Dynamics & Chat Legibility
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                While Discord accepts uploads with resolutions up to 128x128 pixels, inline chat messages render the emoji at exactly 32x32 CSS pixels (and 48x48 pixels when an emoji is sent alone as a "jumbo" emote). When an image shrinks from 128px down to 32px, 75% of its pixel grid is interpolated through bilinear interpolation filters in the client's Chromium rendering thread.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Subtle micro-gradients, intricate filigree, and thin 1-pixel strokes that appear breathtaking at full scale in Photoshop or Illustrator degenerate into muddy, unreadable gray smudges inside chat streams. To maintain maximum impact, emojis should feature bold silhouette geometry, exaggerated expressions, solid inner color blocks, and a minimum 2-pixel outline stroke at 128px authoring scale.
+              </p>
+              <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                  <span class="text-[#6B7A90] block text-[10px]">Inline Chat Scale:</span>
+                  <span class="font-bold text-[#192538] dark:text-white">32 × 32 px</span>
+                </div>
+                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                  <span class="text-[#6B7A90] block text-[10px]">Jumbo Message Scale:</span>
+                  <span class="font-bold text-[#192538] dark:text-white">48 × 48 px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">RASTER ENCODING // 03</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">8-BIT ALPHA CHANNEL</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Alpha Channel Integrity & Theme Halo Elimination
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Discord users alternate between dark mode (background `#313338`), light mode (background `#FFFFFF`), and Nitro themes (ranging from deep midnight obsidian to pastel gradients). An emoji designed with a solid background box or semi-transparent anti-aliased pixels blended against white will produce an unsightly white halo ring when posted in dark mode chat rooms.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Discord Asset Studio uses pure 32-bit RGBA canvas buffers with complete alpha transparency preservation. Our export engine isolates transparent pixel boundaries, prevents color bleeding, and validates edge contrast against both light and dark backgrounds so your emoji stands out cleanly regardless of the recipient's Discord theme settings.
+              </p>
+              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
+                <span class="text-[#0D9488] font-bold">✓ Dual-Theme Verified:</span>
+                <span>Calibrated for both #313338 Dark and #FFFFFF Light backgrounds.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="sticky-step-wrapper sticky top-36 z-40">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">SECURITY ARCHITECTURE // 04</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">CLIENT MEMORY ISOLATION</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Zero Cloud Uploads & Sandboxed Memory Processing
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Traditional online converters transmit your original artwork to third-party cloud servers, exposing unreleased community branding, game development assets, and proprietary illustrations to external databases and server logs. Discord Asset Studio eliminates all network transmission risks by executing all transformations entirely inside your client browser.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                When you drag artwork into our dropzone, the browser generates an ephemeral `Blob` URL via `URL.createObjectURL(file)`. The file bytes remain strictly inside your device's local RAM. Our canvas engine calculates exact dimensions, scales via high-quality bicubic interpolation, and exports the final PNG without sending a single packet over the network.
+              </p>
+              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span>Zero Telemetry • Zero Server Transmission • GDPR Compliant</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive FAQ Accordion Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
   </div>
 
-  <!-- Client-side Tool Logic -->
+  <!-- Interactive Logic & Sticky Scroll Tracking Script -->
   <script>
+    const MAX_EMOJI_BYTES = 256 * 1024; // 262,144 bytes
+
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const dropzone = document.getElementById('dropzone');
     const editorPanel = document.getElementById('editorPanel');
     const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
     const resetBtn = document.getElementById('resetBtn');
@@ -167,10 +388,8 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
     const receiptAlert = document.getElementById('receiptAlert');
 
     let currentBlob: Blob | null = null;
-    let sourceImage: HTMLImageElement | null = null;
     let currentObjectUrl: string | null = null;
-
-    const MAX_EMOJI_BYTES = 256 * 1024; // 262,144 bytes
+    let sourceImage: HTMLImageElement | null = null;
 
     function cleanup() {
       if (currentObjectUrl) {
@@ -179,23 +398,43 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
       }
     }
 
-    fileInput.addEventListener('change', (e) => {
+    fileInput?.addEventListener('change', (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) handleFile(file);
+      if (!file) return;
+      handleFile(file);
+    });
+
+    dropzone?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+    });
+
+    dropzone?.addEventListener('dragleave', () => {
+      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    });
+
+    dropzone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+      const file = e.dataTransfer?.files?.[0];
+      if (!file) return;
+      handleFile(file);
     });
 
     function handleFile(file: File) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload a valid image file (PNG, JPG, WebP, or GIF).');
+        return;
+      }
+
       cleanup();
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          sourceImage = img;
-          processEmoji(img, file);
-        };
-        img.src = event.target?.result as string;
+      currentObjectUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        sourceImage = img;
+        processEmoji(img, file);
       };
-      reader.readAsDataURL(file);
+      img.src = currentObjectUrl;
     }
 
     function processEmoji(img: HTMLImageElement, originalFile: File) {
@@ -292,5 +531,71 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
       themeLightBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
       themeDarkBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
     });
+
+    // Sticky Scroll Stacking & Observer Script
+    function setupScrollLocking() {
+      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
+      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
+      const progressBar = document.getElementById('scroll-progress-line');
+
+      if (!cardWrappers.length) return;
+
+      function updateCardStack() {
+        let activeIndex = 0;
+
+        cardWrappers.forEach((wrapper, index) => {
+          const rect = wrapper.getBoundingClientRect();
+          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
+          const isLocked = rect.top <= stickyTop + 8;
+
+          if (isLocked) {
+            activeIndex = index;
+          }
+
+          // Smoothly scale previous locked cards as next card arrives
+          const nextCard = cardWrappers[index + 1];
+          if (nextCard) {
+            const nextRect = nextCard.getBoundingClientRect();
+            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
+            const transitionDist = 180;
+            
+            if (nextRect.top < nextStickyTop + transitionDist) {
+              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
+              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
+              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
+            } else {
+              wrapper.style.transform = 'scale(1)';
+              wrapper.style.filter = 'brightness(1)';
+            }
+          }
+        });
+
+        stepIndicators.forEach((ind, i) => {
+          const dot = ind.querySelector('.step-dot');
+          if (i <= activeIndex) {
+            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
+            dot?.classList.add('border-current', 'scale-110');
+            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
+          } else {
+            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+            ind.classList.add('text-[#6B7A90]', 'opacity-70');
+            dot?.classList.remove('border-current', 'scale-110');
+            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
+          }
+        });
+
+        if (progressBar) {
+          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
+          progressBar.style.height = `${pct}%`;
+        }
+      }
+
+      window.addEventListener('scroll', updateCardStack, { passive: true });
+      updateCardStack();
+    }
+
+    setupScrollLocking();
+    document.addEventListener('astro:after-swap', setupScrollLocking);
   </script>
 </Layout>

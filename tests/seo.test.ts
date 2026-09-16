@@ -64,3 +64,37 @@ test('E2E SEO: robots.txt and sitemap are generated and valid', () => {
   const sitemapPath = path.join(distDir, 'sitemap-index.xml');
   assert.ok(fs.existsSync(sitemapPath), 'dist/sitemap-index.xml must exist');
 });
+
+test('E2E SEO: All 5 tool pages contain valid JSON-LD FAQPage schemas and 600+ words of content', () => {
+  const toolFiles = [
+    'tools/emoji/index.html',
+    'tools/sticker/index.html',
+    'tools/banner/index.html',
+    'tools/avatar/index.html',
+    'tools/role-icon/index.html'
+  ];
+
+  for (const file of toolFiles) {
+    const filePath = path.join(distDir, file);
+    assert.ok(fs.existsSync(filePath), `${file} must exist`);
+
+    const html = fs.readFileSync(filePath, 'utf-8');
+
+    // Assert JSON-LD FAQPage exists
+    assert.ok(html.includes('"@type":"FAQPage"') || html.includes('"@type": "FAQPage"'), `${file} must include FAQPage schema`);
+
+    // Extract text content and calculate word count (stripping scripts and tags)
+    const textOnly = html
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ')
+      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ' ')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    const words = textOnly.split(/\s+/).filter(Boolean);
+    assert.ok(
+      words.length >= 600,
+      `${file}: Must contain at least 600 words of content, found ${words.length} words`
+    );
+  }
+});

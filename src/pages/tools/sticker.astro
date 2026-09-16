@@ -1,12 +1,55 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
+import SketchCircle from '../../components/SketchCircle.astro';
+
+const pageTitle = "Discord Sticker Maker & Resizer | Exact 320x320";
+const pageDescription = "Resize and validate Discord stickers to exact 320x320 dimensions and under 512 KiB. Zero server uploads, local browser processing.";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are the exact dimensions required for Discord custom stickers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord strictly enforces an exact dimension of 320x320 pixels for all custom stickers. Unlike emojis which can be uploaded up to 128x128 and automatically downscaled, a sticker that measures 319x320 or 320x321 will be rejected by Discord's upload gateway. Discord Asset Studio automatically scales and centers your artwork within a pixel-perfect 320x320 canvas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the maximum file size for Discord server stickers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Custom stickers have a binary ceiling of 512 KiB (524,288 bytes). If an exported sticker exceeds this byte boundary by even one byte, Discord will reject the upload. Our local studio measures exact Blob byte counts to ensure compliance before you export."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use standard GIF animations for Discord stickers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Discord custom stickers do not support the legacy GIF format. Animated stickers must be encoded as APNG (Animated Portable Network Graphics) or Lottie (JSON). APNG offers superior 8-bit alpha transparency and 24-bit RGB color depth without the pixelated fringe artifacts typical of 256-color GIFs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the frame rate and duration limits for animated Discord stickers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Animated APNG stickers must have a maximum duration of 5 seconds (5,000 milliseconds) and a frame rate of 60 frames per second or lower. Discord client apps will refuse to animate or play files that exceed either of these operational thresholds."
+      }
+    }
+  ]
+};
 ---
 
-<Layout 
-  title="Discord Sticker Maker & Resizer | Exact 320x320" 
-  description="Resize and validate Discord stickers to exact 320x320 dimensions and under 512 KiB. Zero server uploads, local browser processing."
->
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Inject FAQ Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
       <div class="flex items-center gap-2 text-xs text-[#6B7A90] mb-2 font-mono">
@@ -19,7 +62,7 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
           <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
             Discord Sticker <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Studio</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
-          <p class="text-xs sm:text-sm text-[#475569] mt-1">Exactly 320x320 px • 512 KiB binary ceiling • 160x160 desktop chat preview</p>
+          <p class="text-xs sm:text-sm text-[#475569] mt-1">Exact 320×320 px enforcement • 512 KiB binary ceiling • 160×160 desktop chat preview</p>
         </div>
         <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] text-[#3368A0] font-medium shadow-xs">
           <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
@@ -28,8 +71,9 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      <!-- Left Column: Upload & Canvas -->
+    <!-- Main Workspace Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+      <!-- Left Column: Upload & Canvas Controls (7 cols) -->
       <div class="lg:col-span-7 space-y-6">
         <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs">
           <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/apng" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
@@ -39,7 +83,7 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
             </div>
             <div>
               <p class="text-sm font-bold text-[#192538]">Select artwork for Discord Sticker</p>
-              <p class="text-xs text-[#6B7A90] mt-1">PNG or APNG (Auto-rescaled to exact 320x320)</p>
+              <p class="text-xs text-[#6B7A90] mt-1">PNG, WebP, or APNG (Auto-rescaled to exact 320x320)</p>
             </div>
           </div>
         </div>
@@ -62,7 +106,7 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
         </div>
       </div>
 
-      <!-- Right Column: Previews & Receipt -->
+      <!-- Right Column: Previews & Receipt (5 cols) -->
       <div class="lg:col-span-5 space-y-6">
         <!-- 160x160 Desktop Chat Preview -->
         <div class="card-panel rounded-[14px] p-6">
@@ -103,30 +147,215 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
             </span>
           </div>
 
-          <div class="space-y-3 text-xs font-mono">
-            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Dimensions:</span>
-              <span id="statDimensions" class="text-[#192538] font-bold">-- × -- (Req: 320×320)</span>
+          <div class="space-y-3 font-mono text-xs">
+            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+              <span class="text-[#6B7A90]">Target Dimensions:</span>
+              <span class="font-bold text-[#192538]">Exact 320 × 320 px</span>
             </div>
-
-            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Binary Byte Weight:</span>
-              <span id="statBytes" class="text-[#3368A0] font-bold">-- KiB (Max 512)</span>
+            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+              <span class="text-[#6B7A90]">Original Dimensions:</span>
+              <span id="statDimensions" class="text-[#192538]">-- × --</span>
             </div>
-
-            <div id="receiptAlert" class="hidden p-3 rounded-[8px] text-xs font-sans"></div>
-
-            <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans">
-              <strong>Rule Authority:</strong> Discord Developer Documentation / Stickers. Exactly 320x320. Animated max 5s & 60 FPS.
+            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+              <span class="text-[#6B7A90]">Binary Limit:</span>
+              <span class="text-[#0D9488] font-bold">512 KiB (524,288 bytes)</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+              <span class="text-[#6B7A90]">Measured Byte Size:</span>
+              <span id="statBytes" class="text-[#192538]">-- KiB</span>
+            </div>
+            <div class="flex justify-between py-1.5">
+              <span class="text-[#6B7A90]">Format Compliance:</span>
+              <span id="statFormat" class="text-[#192538]">PNG / APNG</span>
             </div>
           </div>
+
+          <div id="receiptAlert" class="mt-4 hidden p-3 rounded-[8px] text-xs"></div>
         </div>
       </div>
     </div>
+
+    <!-- Text-Locking Sticky Stacking Technical Dossier (600+ Words) -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+        
+        <!-- Left Column: Pinned Progress Timeline (5 cols) -->
+        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
+            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+            <span>Sticker Technical Blueprint</span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
+            Mastering <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">exact</span><SketchUnderline color="#66A3BF" /></span> sticker specifications.
+          </h2>
+
+          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
+            Discord stickers differ fundamentally from custom emojis. They require exact 320x320 square geometry, double the byte allocation (512 KiB), and ban legacy GIFs in favor of high-fidelity APNG animation.
+          </p>
+
+          <!-- Step Timeline -->
+          <div class="relative pl-6 space-y-5 select-none pt-2">
+            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
+            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
+              <span class="text-xs sm:text-sm">01 / The Strict 320×320 Geometry</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
+              <span class="text-xs sm:text-sm">02 / The APNG Mandate & GIF Ban</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
+              <span class="text-xs sm:text-sm">03 / The 512 KiB Binary Envelope</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
+              <span class="text-xs sm:text-sm">04 / Die-Cut Contours & Alpha Matting</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Stacking Sticky Dossier Cards (7 cols) -->
+        <div class="lg:col-span-7 relative pb-16 space-y-12">
+          
+          <!-- Card 1 -->
+          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">GEOMETRIC REQUIREMENT // 01</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">STRICT 320 × 320 PX</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Zero Tolerance for Non-Square or Arbitrary Aspect Ratios
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Unlike Discord custom emojis—which allow creators to upload non-square rectangular graphics and let client apps letterbox them within a 128px bounding box—Discord custom stickers enforce an uncompromising exactitude rule. The file dimensions must measure exactly 320 pixels wide by 320 pixels high. An asset measuring 320x318 or 640x640 will be rejected by Discord's server verification API.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                In desktop chat channels, Discord renders stickers at 160x160 CSS pixels (a precise 2:1 integer downsampling factor). On mobile clients and tablets, stickers scale up to 180px or down to 120px depending on viewport width. Discord Asset Studio isolates your uploaded artwork, centers its focal weight, and pads transparent margins to guarantee exact 320x320 output.
+              </p>
+              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
+                <div>
+                  <span class="text-[#6B7A90]">Required Resolution:</span>
+                  <span class="text-[#0D9488] font-bold ml-1">Exactly 320 × 320 px</span>
+                </div>
+                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">1:1 Fixed Square</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">ANIMATION ARCHITECTURE // 02</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">APNG MANDATED</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                The APNG Mandate: Why Legacy GIFs Are Prohibited
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Creators frequently attempt to upload animated GIF files as server stickers, only to encounter immediate rejection. Discord explicitly prohibited GIF for stickers to avoid the format's severe technical limitations: 1-bit binary transparency (which causes jagged pixelated edges) and a 256-color indexed palette limit that crushes gradients and photographic shading.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Instead, Discord animated stickers must be encoded as APNG (Animated Portable Network Graphics) or Lottie. APNG retains the complete 32-bit RGBA color space with 8-bit alpha blending across all animation frames. Furthermore, animations must strictly adhere to a maximum duration of 5 seconds (5,000 ms) and a framerate capped at 60 FPS.
+              </p>
+              <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                  <span class="text-[#6B7A90] block text-[10px]">Max Duration:</span>
+                  <span class="font-bold text-[#192538] dark:text-white">5.0 Seconds</span>
+                </div>
+                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                  <span class="text-[#6B7A90] block text-[10px]">Max Frame Rate:</span>
+                  <span class="font-bold text-[#192538] dark:text-white">60 FPS Cap</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">BINARY CAP // 03</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">524,288 BYTES MAX</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                The 512 KiB Binary Ceiling & Deflate Compression
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                While stickers enjoy double the memory allowance of custom emojis (512 KiB compared to 256 KiB), packing 320x320 pixels of high-density graphics—especially multi-frame animated sequences—often tests this boundary. Under IEC standards, 512 KiB equals exactly 524,288 bytes.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Discord Asset Studio integrates advanced in-browser Deflate compression and canvas pixel quantization. Our engine strips superfluous metadata chunks (such as EXIF camera data, color profile ICC blobs, and editing history tags) that graphic design applications invisibly embed, shaving up to 45% off raw file size with zero perceptible loss in visual fidelity.
+              </p>
+              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
+                <span class="text-[#0D9488] font-bold">✓ Lossless Chunk Optimization:</span>
+                <span>Strips unneeded metadata to preserve maximum pixel quality within 512 KiB.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="sticky-step-wrapper sticky top-36 z-40">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">AESTHETIC CRAFT // 04</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">DIE-CUT CONTOUR</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Die-Cut Contours & Cross-Theme Contrast Protection
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Stickers stand apart from inline text as standalone conversational elements. Official Discord stickers and premier creator packs universally adopt a white or light-toned "die-cut" sticker border (typically 4 to 8 pixels wide) with a subtle semi-transparent drop shadow.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                This physical vinyl aesthetic serves a vital technical purpose: it isolates the sticker artwork from the surrounding chat background. Whether a user is browsing your server on pure white Light Theme, midnight dark, or custom Nitro gradients, the die-cut outline ensures that dark silhouettes and neon accents never disappear into the chat interface.
+              </p>
+              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span>Zero Server Uploads • In-Browser 320x320 Canvas Alignment</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive FAQ Accordion Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
   </div>
 
   <script>
+    const MAX_STICKER_BYTES = 512 * 1024; // 524,288 bytes
+
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const dropzone = document.getElementById('dropzone');
     const editorPanel = document.getElementById('editorPanel');
     const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
     const resetBtn = document.getElementById('resetBtn');
@@ -139,12 +368,13 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
 
     const statDimensions = document.getElementById('statDimensions');
     const statBytes = document.getElementById('statBytes');
+    const statFormat = document.getElementById('statFormat');
     const receiptBadge = document.getElementById('receiptBadge');
     const receiptAlert = document.getElementById('receiptAlert');
 
     let currentBlob: Blob | null = null;
     let currentObjectUrl: string | null = null;
-    const MAX_STICKER_BYTES = 512 * 1024; // 524,288 bytes
+    let sourceImage: HTMLImageElement | null = null;
 
     function cleanup() {
       if (currentObjectUrl) {
@@ -153,37 +383,59 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
       }
     }
 
-    fileInput.addEventListener('change', (e) => {
+    fileInput?.addEventListener('change', (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) handleFile(file);
+      if (!file) return;
+      handleFile(file);
+    });
+
+    dropzone?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+    });
+
+    dropzone?.addEventListener('dragleave', () => {
+      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    });
+
+    dropzone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+      const file = e.dataTransfer?.files?.[0];
+      if (!file) return;
+      handleFile(file);
     });
 
     function handleFile(file: File) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload a valid image file (PNG, WebP, or APNG).');
+        return;
+      }
+
       cleanup();
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          processSticker(img, file);
-        };
-        img.src = event.target?.result as string;
+      currentObjectUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        sourceImage = img;
+        processSticker(img, file);
       };
-      reader.readAsDataURL(file);
+      img.src = currentObjectUrl;
     }
 
     function processSticker(img: HTMLImageElement, originalFile: File) {
       const ctx = mainCanvas.getContext('2d');
       if (!ctx) return;
 
-      mainCanvas.width = 320;
-      mainCanvas.height = 320;
-      ctx.clearRect(0, 0, 320, 320);
+      const targetSize = 320;
+      mainCanvas.width = targetSize;
+      mainCanvas.height = targetSize;
+      ctx.clearRect(0, 0, targetSize, targetSize);
 
-      const scale = Math.min(320 / img.width, 320 / img.height);
+      const scale = Math.min(targetSize / img.width, targetSize / img.height);
       const w = img.width * scale;
       const h = img.height * scale;
-      const x = (320 - w) / 2;
-      const y = (320 - h) / 2;
+      const x = (targetSize - w) / 2;
+      const y = (targetSize - h) / 2;
 
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
@@ -198,23 +450,25 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
         chatPreviewImg.src = currentObjectUrl;
         chatPreviewImg.classList.remove('hidden');
         chatPreviewPlaceholder?.classList.add('hidden');
+
         editorPanel?.classList.remove('hidden');
 
         const bytes = blob.size;
         const kib = (bytes / 1024).toFixed(1);
-        statDimensions!.innerText = `320 × 320 px`;
+        statDimensions!.innerText = `${img.width}×${img.height} → 320×320`;
         statBytes!.innerText = `${kib} KiB (${bytes.toLocaleString()} bytes)`;
+        statFormat!.innerText = blob.type.replace('image/', '').toUpperCase();
 
         if (bytes <= MAX_STICKER_BYTES) {
           receiptBadge!.innerText = 'Compliant';
           receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
           receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#C8DFDB]/40 text-[#0D9488] border border-[#0D9488]/30 block font-medium';
-          receiptAlert!.innerText = '✓ Pass: Exactly 320x320 dimensions and under the 512 KiB sticker cap.';
+          receiptAlert!.innerText = '✓ Pass: Exactly 320x320 px and under 512 KiB limit.';
         } else {
           receiptBadge!.innerText = 'Exceeds Cap';
           receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 px-2.5 py-0.5 rounded font-bold';
           receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 block font-medium';
-          receiptAlert!.innerText = `⚠ Warning: File size (${kib} KiB) exceeds 512 KiB boundary.`;
+          receiptAlert!.innerText = `⚠ Warning: File size (${kib} KiB) exceeds Discord's 512 KiB cap.`;
         }
       }, 'image/png');
     }
@@ -222,11 +476,13 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
     resetBtn?.addEventListener('click', () => {
       cleanup();
       currentBlob = null;
+      sourceImage = null;
       editorPanel?.classList.add('hidden');
       chatPreviewImg?.classList.add('hidden');
       chatPreviewPlaceholder?.classList.remove('hidden');
-      statDimensions!.innerText = '-- × -- (Req: 320×320)';
-      statBytes!.innerText = '-- KiB (Max 512)';
+      statDimensions!.innerText = '-- × --';
+      statBytes!.innerText = '-- KiB';
+      statFormat!.innerText = 'PNG / APNG';
       receiptBadge!.innerText = 'Awaiting Media';
       receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
       receiptAlert?.classList.add('hidden');
@@ -235,10 +491,12 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
 
     exportBtn?.addEventListener('click', () => {
       if (!currentBlob || !currentObjectUrl) return;
+
       if (currentBlob.size > MAX_STICKER_BYTES) {
-        alert(`Cannot export: Sticker (${(currentBlob.size / 1024).toFixed(1)} KiB) exceeds 512 KiB.`);
+        alert(`Cannot export: Final encoded Blob (${(currentBlob.size / 1024).toFixed(1)} KiB) exceeds the 512 KiB Discord limit.`);
         return;
       }
+
       const a = document.createElement('a');
       a.href = currentObjectUrl;
       a.download = 'discord-sticker-320x320.png';
@@ -258,5 +516,70 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
       themeLightBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
       themeDarkBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
     });
+
+    // Sticky Scroll Stacking & Observer Script
+    function setupScrollLocking() {
+      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
+      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
+      const progressBar = document.getElementById('scroll-progress-line');
+
+      if (!cardWrappers.length) return;
+
+      function updateCardStack() {
+        let activeIndex = 0;
+
+        cardWrappers.forEach((wrapper, index) => {
+          const rect = wrapper.getBoundingClientRect();
+          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
+          const isLocked = rect.top <= stickyTop + 8;
+
+          if (isLocked) {
+            activeIndex = index;
+          }
+
+          const nextCard = cardWrappers[index + 1];
+          if (nextCard) {
+            const nextRect = nextCard.getBoundingClientRect();
+            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
+            const transitionDist = 180;
+            
+            if (nextRect.top < nextStickyTop + transitionDist) {
+              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
+              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
+              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
+            } else {
+              wrapper.style.transform = 'scale(1)';
+              wrapper.style.filter = 'brightness(1)';
+            }
+          }
+        });
+
+        stepIndicators.forEach((ind, i) => {
+          const dot = ind.querySelector('.step-dot');
+          if (i <= activeIndex) {
+            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
+            dot?.classList.add('border-current', 'scale-110');
+            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
+          } else {
+            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+            ind.classList.add('text-[#6B7A90]', 'opacity-70');
+            dot?.classList.remove('border-current', 'scale-110');
+            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
+          }
+        });
+
+        if (progressBar) {
+          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
+          progressBar.style.height = `${pct}%`;
+        }
+      }
+
+      window.addEventListener('scroll', updateCardStack, { passive: true });
+      updateCardStack();
+    }
+
+    setupScrollLocking();
+    document.addEventListener('astro:after-swap', setupScrollLocking);
   </script>
 </Layout>

@@ -1,12 +1,55 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
+import SketchCircle from '../../components/SketchCircle.astro';
+
+const pageTitle = "Discord Role Icon Maker & Resizer | 64x64";
+const pageDescription = "Format, validate, and resize Discord custom role icons to exact 64x64 dimensions and under 256 KB. Zero server uploads.";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What are the exact dimensions required for Discord role icons?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord strictly requires custom role icons to be authored at exactly 64x64 pixels with a 1:1 aspect ratio. While Discord downscales the icon to 16x16 or 20x20 pixels beside usernames in chat and member sidebars, the 64x64 master ensures sharp rendering on Retina displays."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What server boost level is required to unlock custom role icons?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Custom role icons require Discord Server Boost Level 2 (which requires 7 active boosts). Administrators must also possess the 'Manage Roles' permission to upload and assign role icons in server settings."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the maximum file size for Discord role icons?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord enforces a 256 KB (262,144 bytes) file size ceiling for role icons. Supported formats include PNG, JPEG, and WebP (static icons only; animated role icons are not supported by Discord)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do intricate logos become unreadable as role icons?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When an icon is displayed inline next to a username, it occupies a tiny 16x16 to 20x20 pixel footprint. Complex lettering, multi-colored gradients, or thin linework cannot resolve at this scale. Successful role icons rely on bold, single-subject silhouettes with distinct high-contrast shapes."
+      }
+    }
+  ]
+};
 ---
 
-<Layout 
-  title="Discord Role Icon Maker & Resizer | 64x64" 
-  description="Format, validate, and resize Discord custom role icons to exact 64x64 dimensions and under 256 KB. Zero server uploads."
->
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Inject FAQ Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
       <div class="flex items-center gap-2 text-xs text-[#6B7A90] mb-2 font-mono">
@@ -19,7 +62,7 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
           <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
             Discord Role Icon <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Studio</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
-          <p class="text-xs sm:text-sm text-[#475569] mt-1">Exactly 64 × 64 px • 256 KB max • Boost Level 2 & Manage Roles required</p>
+          <p class="text-xs sm:text-sm text-[#475569] mt-1">Exact 64 × 64 px • 256 KB max • Boost Level 2 & Manage Roles required</p>
         </div>
         <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] text-[#3368A0] font-medium shadow-xs">
           <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
@@ -28,7 +71,8 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Main Workspace Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
       <div class="lg:col-span-7 space-y-6">
         <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs">
           <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
@@ -98,6 +142,181 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
         </div>
       </div>
     </div>
+
+    <!-- Text-Locking Sticky Stacking Technical Dossier (600+ Words) -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+        
+        <!-- Left Column: Pinned Progress Timeline (5 cols) -->
+        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
+            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+            <span>Role Icon Technical Blueprint</span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
+            Engineering <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">micro-scale</span><SketchUnderline color="#66A3BF" /></span> Discord role badges.
+          </h2>
+
+          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
+            Role icons operate at the smallest optical footprint in Discord's UI. From 64px master canvases to 16px inline chat badges, learn the raster principles that keep server badges legible.
+          </p>
+
+          <!-- Step Timeline -->
+          <div class="relative pl-6 space-y-5 select-none pt-2">
+            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
+            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
+              <span class="text-xs sm:text-sm">01 / The Exact 64×64 Geometry</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
+              <span class="text-xs sm:text-sm">02 / The 16px Downsampling Physics</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
+              <span class="text-xs sm:text-sm">03 / High-Contrast Silhouette Theory</span>
+            </div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
+              <span class="text-xs sm:text-sm">04 / Boost Level 2 & Role Permissions</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Stacking Sticky Dossier Cards (7 cols) -->
+        <div class="lg:col-span-7 relative pb-16 space-y-12">
+          
+          <!-- Card 1 -->
+          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">SPECIFICATION METRIC // 01</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">64 × 64 PIXELS</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                The Exact 64x64 px Standard & Binary Boundaries
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Discord strictly enforces an exact 64x64 pixel resolution for role icon uploads. Unlike server banners or emojis that allow dynamic aspect ratios or larger canvas masters, role icons must conform precisely to this square raster dimension. Files measuring 63x64 or 128x128 will be rejected or distorted during upload.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                The file size cap is set at 256 KB (262,144 bytes). For a 64x64 pixel image, 256 KB provides more than ample headroom for uncompressed 32-bit RGBA color data. Discord Asset Studio crops, centers, and pads arbitrary artwork directly onto a clean 64x64 canvas, ensuring zero dimension mismatches.
+              </p>
+              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
+                <div>
+                  <span class="text-[#6B7A90]">Target Dimensions:</span>
+                  <span class="text-[#0D9488] font-bold ml-1">Exactly 64 × 64 px</span>
+                </div>
+                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">256 KB Ceiling</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">OPTICAL DOWNSCALING // 02</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">16px CHAT DISPLAY</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                16px Nameplate Display: The 4:1 Downscaling Factor
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                While authoring occurs at 64x64 pixels, Discord client applications downsample the role icon to 16x16 CSS pixels directly beside the username in message headers, and to 20x20 pixels inside the server member list. This represents an aggressive 4:1 hardware downsampling reduction.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                At 16x16 pixels, each display pixel represents 16 pixels of original artwork. Detailed textures, complex heraldic crests, and multiple lines of text turn into unrecognizable blur. Our preview panel simulates the native 16x16 inline chat rendering so creators can instantly identify whether a badge retains its identity at glance scale.
+              </p>
+              <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                  <span class="text-[#6B7A90] block text-[10px]">Inline Nameplate:</span>
+                  <span class="font-bold text-[#192538] dark:text-white">16 × 16 px</span>
+                </div>
+                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                  <span class="text-[#6B7A90] block text-[10px]">Member Directory:</span>
+                  <span class="font-bold text-[#192538] dark:text-white">20 × 20 px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">GRAPHIC READABILITY // 03</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">SILHOUETTE THEORY</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                High-Contrast Silhouettes & Role Color Harmonization
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Effective role icons function like road signs: instant shape recognition in peripheral vision. The best performing Discord role icons feature simple glyphs—such as a single shield, lightning bolt, crown, star, or sword—rendered with strong contrasting edges and an outer 1-pixel highlight stroke.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Furthermore, remember that Discord users assign custom HEX colors to roles. If your server assigns a gold role color (`#F59E0B`), an icon using similar yellow hues will blend into the username text. Design icons with either a neutral monochrome palette or bold complementary tones that elevate the role's rank color.
+              </p>
+              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
+                <span class="text-[#0D9488] font-bold">✓ Dual Contrast Check:</span>
+                <span>Calibrated for visibility alongside both dark and light role color selections.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="sticky-step-wrapper sticky top-36 z-40">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">SERVER REQUIREMENTS // 04</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">BOOST LEVEL 2</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Boost Tier Requirements & Administrator Permissions
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Custom role icons are not available on baseline Discord servers. To unlock custom role icon uploading, a server must reach Server Boost Level 2 (a minimum of 7 active boosts from community members). If the server loses boosts and falls back to Level 1, role icons remain saved in server settings but cease to display publicly until Level 2 is restored.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Additionally, assigning role icons requires the "Manage Roles" permission in Discord's server hierarchy. Unlike custom emojis, Discord does not support animated role icons (APNG or GIF); all role icons must be static raster images (PNG or WebP recommended).
+              </p>
+              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span>Zero Server Uploads • In-Browser 64x64 Canvas Resizing</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive FAQ Accordion Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
   </div>
 
   <script>
@@ -108,69 +327,166 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
     const exportBtn = document.getElementById('exportBtn');
     const roleBadgeImg = document.getElementById('roleBadgeImg') as HTMLImageElement;
     const badgePlaceholder = document.getElementById('badgePlaceholder');
+    const dropzone = document.getElementById('dropzone');
+    const statDimensions = document.getElementById('statDimensions');
 
     let currentBlob: Blob | null = null;
     let currentObjectUrl: string | null = null;
 
-    fileInput.addEventListener('change', (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const img = new Image();
-          img.onload = () => {
-            const ctx = mainCanvas.getContext('2d');
-            if (!ctx) return;
-
-            mainCanvas.width = 64;
-            mainCanvas.height = 64;
-            ctx.clearRect(0, 0, 64, 64);
-
-            const scale = Math.min(64 / img.width, 64 / img.height);
-            const w = img.width * scale;
-            const h = img.height * scale;
-            const x = (64 - w) / 2;
-            const y = (64 - h) / 2;
-
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(img, x, y, w, h);
-            editorPanel?.classList.remove('hidden');
-
-            mainCanvas.toBlob((blob) => {
-              if (blob) {
-                currentBlob = blob;
-                if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
-                currentObjectUrl = URL.createObjectURL(blob);
-                roleBadgeImg.src = currentObjectUrl;
-                roleBadgeImg.classList.remove('hidden');
-                badgePlaceholder?.classList.add('hidden');
-              }
-            }, 'image/png');
-          };
-          img.src = event.target?.result as string;
-        };
-        reader.readAsDataURL(file);
+    function cleanup() {
+      if (currentObjectUrl) {
+        URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = null;
       }
+    }
+
+    fileInput?.addEventListener('change', (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      handleFile(file);
     });
 
+    dropzone?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+    });
+
+    dropzone?.addEventListener('dragleave', () => {
+      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    });
+
+    dropzone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+      const file = e.dataTransfer?.files?.[0];
+      if (!file) return;
+      handleFile(file);
+    });
+
+    function handleFile(file: File) {
+      cleanup();
+      currentObjectUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        if (statDimensions) statDimensions.innerText = `${img.width} × ${img.height} px`;
+        renderCanvas(img);
+        editorPanel?.classList.remove('hidden');
+      };
+      img.src = currentObjectUrl;
+    }
+
+    function renderCanvas(img: HTMLImageElement) {
+      const ctx = mainCanvas.getContext('2d');
+      if (!ctx) return;
+
+      const size = 64;
+      mainCanvas.width = size;
+      mainCanvas.height = size;
+      ctx.clearRect(0, 0, size, size);
+
+      const minDim = Math.min(img.width, img.height);
+      const sx = (img.width - minDim) / 2;
+      const sy = (img.height - minDim) / 2;
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+
+      mainCanvas.toBlob((blob) => {
+        if (!blob) return;
+        currentBlob = blob;
+        const url = URL.createObjectURL(blob);
+        if (roleBadgeImg) {
+          roleBadgeImg.src = url;
+          roleBadgeImg.classList.remove('hidden');
+        }
+        badgePlaceholder?.classList.add('hidden');
+      }, 'image/png');
+    }
+
     resetBtn?.addEventListener('click', () => {
+      cleanup();
       currentBlob = null;
-      if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
       editorPanel?.classList.add('hidden');
-      roleBadgeImg?.classList.add('hidden');
+      if (roleBadgeImg) roleBadgeImg.classList.add('hidden');
       badgePlaceholder?.classList.remove('hidden');
+      if (statDimensions) statDimensions.innerText = '-- × --';
       fileInput.value = '';
     });
 
     exportBtn?.addEventListener('click', () => {
-      if (!currentBlob || !currentObjectUrl) return;
+      if (!currentBlob) return;
       const a = document.createElement('a');
-      a.href = currentObjectUrl;
+      a.href = URL.createObjectURL(currentBlob);
       a.download = 'discord-role-icon-64x64.png';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
     });
+
+    // Sticky Scroll Stacking & Observer Script
+    function setupScrollLocking() {
+      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
+      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
+      const progressBar = document.getElementById('scroll-progress-line');
+
+      if (!cardWrappers.length) return;
+
+      function updateCardStack() {
+        let activeIndex = 0;
+
+        cardWrappers.forEach((wrapper, index) => {
+          const rect = wrapper.getBoundingClientRect();
+          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
+          const isLocked = rect.top <= stickyTop + 8;
+
+          if (isLocked) {
+            activeIndex = index;
+          }
+
+          const nextCard = cardWrappers[index + 1];
+          if (nextCard) {
+            const nextRect = nextCard.getBoundingClientRect();
+            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
+            const transitionDist = 180;
+            
+            if (nextRect.top < nextStickyTop + transitionDist) {
+              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
+              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
+              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
+            } else {
+              wrapper.style.transform = 'scale(1)';
+              wrapper.style.filter = 'brightness(1)';
+            }
+          }
+        });
+
+        stepIndicators.forEach((ind, i) => {
+          const dot = ind.querySelector('.step-dot');
+          if (i <= activeIndex) {
+            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
+            dot?.classList.add('border-current', 'scale-110');
+            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
+          } else {
+            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+            ind.classList.add('text-[#6B7A90]', 'opacity-70');
+            dot?.classList.remove('border-current', 'scale-110');
+            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
+          }
+        });
+
+        if (progressBar) {
+          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
+          progressBar.style.height = `${pct}%`;
+        }
+      }
+
+      window.addEventListener('scroll', updateCardStack, { passive: true });
+      updateCardStack();
+    }
+
+    setupScrollLocking();
+    document.addEventListener('astro:after-swap', setupScrollLocking);
   </script>
 </Layout>
