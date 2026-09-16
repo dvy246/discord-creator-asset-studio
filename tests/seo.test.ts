@@ -15,6 +15,8 @@ test('E2E SEO: All generated HTML pages have valid titles, meta descriptions, an
     'about/index.html',
     'contact/index.html',
     'guides/discord-sizes/index.html',
+    'es/index.html',
+    'es/guides/discord-sizes/index.html',
     'tools/emoji/index.html',
     'tools/sticker/index.html',
     'tools/banner/index.html',

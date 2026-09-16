@@ -1,0 +1,67 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Tamaños de Discord (2026): Guía Oficial de Dimensiones" 
+  description="Guía completa y verificada de tamaños para Discord 2026. Dimensiones en píxeles, límites de peso y requisitos de Nitro y Boosts."
+>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+    <div class="mb-12">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3b82f6]/10 text-[#3b82f6] text-xs font-semibold border border-[#3b82f6]/20 mb-4">
+        Actualizado para Versiones 2026
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-bold text-white tracking-tight mb-4">
+        Tabla Oficial de Tamaños y Dimensiones de Discord
+      </h1>
+      <p class="text-[#9da6b8] text-lg leading-relaxed max-w-3xl">
+        Cada dimensión oficial, límite binario de bytes, formato admitido y requisito de suscripción para creadores de Discord.
+      </p>
+    </div>
+
+    <!-- Tabla -->
+    <div class="overflow-x-auto rounded-[12px] border border-[#2b313e] bg-[#15181e] mb-12">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-[#1c2028] text-xs uppercase text-[#9da6b8] border-b border-[#2b313e]">
+          <tr>
+            <th class="py-3.5 px-4">Tipo de Asset</th>
+            <th class="py-3.5 px-4">Dimensiones</th>
+            <th class="py-3.5 px-4">Peso Máximo</th>
+            <th class="py-3.5 px-4">Formatos</th>
+            <th class="py-3.5 px-4">Requisitos</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#2b313e] text-[#f0f2f5]">
+          <tr class="hover:bg-[#1c2028]/50">
+            <td class="py-3.5 px-4 font-semibold text-white">Banner de Perfil Global</td>
+            <td class="py-3.5 px-4 font-mono text-xs text-[#3b82f6]">Mín 680 × 240</td>
+            <td class="py-3.5 px-4 font-mono text-xs">10 MB</td>
+            <td class="py-3.5 px-4 text-xs text-[#9da6b8]">PNG, JPG, GIF</td>
+            <td class="py-3.5 px-4 text-xs"><span class="px-2 py-0.5 rounded bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20">Discord Nitro</span></td>
+          </tr>
+          <tr class="hover:bg-[#1c2028]/50">
+            <td class="py-3.5 px-4 font-semibold text-white">Banner del Servidor</td>
+            <td class="py-3.5 px-4 font-mono text-xs text-[#3b82f6]">960 × 540 (16:9)</td>
+            <td class="py-3.5 px-4 font-mono text-xs">10 MB</td>
+            <td class="py-3.5 px-4 text-xs text-[#9da6b8]">PNG, JPG, GIF</td>
+            <td class="py-3.5 px-4 text-xs"><span class="px-2 py-0.5 rounded bg-[#3b82f6]/10 text-[#3b82f6] border border-[#3b82f6]/20">Boost Nivel 2 / 3</span></td>
+          </tr>
+          <tr class="hover:bg-[#1c2028]/50">
+            <td class="py-3.5 px-4 font-semibold text-white">Emoji Personalizado</td>
+            <td class="py-3.5 px-4 font-mono text-xs text-[#3b82f6]">128 × 128 (vista 32px)</td>
+            <td class="py-3.5 px-4 font-mono text-xs text-[#ef4444]">256 KiB</td>
+            <td class="py-3.5 px-4 text-xs text-[#9da6b8]">PNG, JPG, GIF, WEBP</td>
+            <td class="py-3.5 px-4 text-xs">Ranura de Servidor</td>
+          </tr>
+          <tr class="hover:bg-[#1c2028]/50">
+            <td class="py-3.5 px-4 font-semibold text-white">Sticker de Servidor</td>
+            <td class="py-3.5 px-4 font-mono text-xs text-[#3b82f6]">Exacto 320 × 320</td>
+            <td class="py-3.5 px-4 font-mono text-xs text-[#ef4444]">512 KiB</td>
+            <td class="py-3.5 px-4 text-xs text-[#9da6b8]">PNG / APNG animado</td>
+            <td class="py-3.5 px-4 text-xs">Máx 5s y 60 FPS</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Layout>
