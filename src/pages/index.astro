@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import SketchUnderline from '../components/SketchUnderline.astro';
 import SketchCircle from '../components/SketchCircle.astro';
+import HeroSimulator from '../components/HeroSimulator.astro';
 import { DISCORD_RULES } from '../data/discord-rules';
 
 const pageTitle = "Discord Asset Studio | Creator Resizer & Validator";
@@ -89,45 +90,9 @@ const faqSchema = {
         </div>
       </div>
 
-      <!-- Right Column: Live Working Asset Validator Preview Card (5 cols) -->
+      <!-- Right Column: Interactive Hero Simulator Widget (5 cols) -->
       <div class="lg:col-span-5">
-        <div class="card-panel rounded-[14px] p-6 relative overflow-hidden">
-          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-5">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-[#E0DBD0] dark:bg-[#303E54]"></span>
-              <span class="w-3 h-3 rounded-full bg-[#C8DFDB] dark:bg-[#485C7A]"></span>
-              <span class="w-3 h-3 rounded-full bg-[#66A3BF]"></span>
-              <span class="text-xs font-mono font-medium text-[#475569] ml-2">rule-check: custom-emoji</span>
-            </div>
-            <span class="text-[11px] font-mono font-semibold uppercase bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] px-2.5 py-0.5 rounded border border-[#66A3BF]/20">Verified</span>
-          </div>
-
-          <!-- Interactive Target Selector Preview -->
-          <div class="space-y-3.5 text-xs font-mono">
-            <div class="flex items-center justify-between p-3 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Target:</span>
-              <span class="text-[#192538] font-bold">Custom Emoji (128x128)</span>
-            </div>
-
-            <div class="flex items-center justify-between p-3 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Binary Byte Cap:</span>
-              <span class="text-[#0D9488] font-bold">256 KiB (262,144 bytes)</span>
-            </div>
-
-            <div class="flex items-center justify-between p-3 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Display Preview:</span>
-              <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold">32 × 32 px chat size</span>
-            </div>
-
-            <div class="p-3.5 rounded-[8px] bg-[#C8DFDB]/30 dark:bg-[#1E2838] border border-[#66A3BF]/30 text-[#192538] text-[11px] leading-relaxed">
-              <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold">Rule Provenance:</span> Discord Help Center #204849977. Rule verified and maintained against active Discord client standards.
-            </div>
-
-            <a href="/tools/emoji" class="btn-primary w-full py-3 rounded-[8px] text-xs font-semibold text-center block">
-              Open Interactive Tool →
-            </a>
-          </div>
-        </div>
+        <HeroSimulator />
       </div>
     </div>
   </section>
@@ -362,44 +327,120 @@ const faqSchema = {
     </div>
   </section>
 
-  <!-- Authoritative 650+ Word Editorial Guide Section (Crucial for SEO) -->
-  <section class="max-w-4xl mx-auto px-4 sm:px-6 py-16 border-t border-[#E0DBD0]">
-    <div class="mb-8">
-      <span class="text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Technical Reference & Guide</span>
-      <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mt-1">
-        Understanding Discord Asset Constraints: <span class="relative inline-block sketch-trigger"><span class="relative z-10">Sizes & Formats</span><SketchUnderline color="#66A3BF" /></span>
+  <!-- Authoritative 650+ Word Editorial Technical Dossier (Elevated Luxury Layout) -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 py-20 border-t border-[#E0DBD0]">
+    <!-- Header with Authority Badge -->
+    <div class="max-w-3xl mb-12">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4 shadow-xs">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        Technical Architecture & Standards Dossier
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight mb-4">
+        Understanding Discord Asset Constraints: <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Sizes & Formats</span><SketchUnderline color="#66A3BF" /></span>
       </h2>
-    </div>
-
-    <div class="space-y-6 text-[#475569] text-sm leading-relaxed border-l-2 border-[#3368A0]/40 pl-6 bg-[#FFFFFF]/60 dark:bg-[#141A24]/60 p-6 rounded-r-[12px] border border-l-2 border-[#E0DBD0]">
-      <p>
+      <p class="text-[#475569] text-base sm:text-lg leading-relaxed">
         Creating assets for Discord requires navigating an intricate combination of pixel dimensions, binary byte boundaries, container formats, and permission tiers. Unlike traditional social media platforms where images are automatically downsampled or compressed on upload, Discord frequently rejects non-compliant assets with vague errors such as "File is too powerful" or silent visual cropping.
       </p>
+    </div>
 
-      <h3 class="text-base font-bold text-[#192538] pt-2">The Critical Difference Between Kilobytes and Kibibytes</h3>
-      <p>
-        One of the most frequent points of failure when uploading custom emojis is the file size threshold. Discord’s backend specifies a hard ceiling of <strong>256 KiB (262,144 bytes)</strong> for custom emojis. However, modern operating systems and design software frequently display file sizes in decimal units where 1 kilobyte equals 1,000 bytes rather than 1,024 bytes. A creator exporting an image measured at "256 KB" in macOS Finder or Windows Explorer may actually have an image weighing 262,500 bytes. To Discord's server, this asset exceeds the 262,144-byte cap and is rejected. Discord Asset Studio guarantees that every export is validated directly from its final in-memory Blob byte length, eliminating this disparity before download.
-      </p>
+    <!-- Modular Dossier Grid -->
+    <div class="space-y-8">
+      <!-- Dossier Item 1: Binary Byte Ceiling -->
+      <article class="card-panel p-6 sm:p-8 rounded-[16px] space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">01</span>
+            <h3 class="text-lg font-bold text-[#192538]">The Critical Difference Between Kilobytes and Kibibytes</h3>
+          </div>
+          <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Rule: 256 KiB Ceiling</span>
+        </div>
+        <p class="text-sm text-[#475569] leading-relaxed">
+          One of the most frequent points of failure when uploading custom emojis is the file size threshold. Discord’s backend specifies a hard ceiling of <strong>256 KiB (262,144 bytes)</strong> for custom emojis. However, modern operating systems and design software frequently display file sizes in decimal units where 1 kilobyte equals 1,000 bytes rather than 1,024 bytes. A creator exporting an image measured at "256 KB" in macOS Finder or Windows Explorer may actually have an image weighing 262,500 bytes. To Discord's server, this asset exceeds the 262,144-byte cap and is rejected. Discord Asset Studio guarantees that every export is validated directly from its final in-memory Blob byte length, eliminating this disparity before download.
+        </p>
+        <!-- Comparative Technical Visual Chip -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <div class="p-3 rounded-[10px] bg-red-500/10 border border-red-500/20 text-xs font-mono">
+            <div class="text-red-600 dark:text-red-400 font-bold mb-1">❌ Decimal 256 KB (Operating System)</div>
+            <div class="text-[#475569]">262,500 bytes ➔ Rejected by Discord API ("File too powerful")</div>
+          </div>
+          <div class="p-3 rounded-[10px] bg-[#0D9488]/10 border border-[#0D9488]/30 text-xs font-mono">
+            <div class="text-[#0D9488] font-bold mb-1">✓ IEC Binary 256 KiB (Discord Asset Studio)</div>
+            <div class="text-[#475569]">262,144 bytes ➔ Exact cryptographic pass with verified byte check</div>
+          </div>
+        </div>
+      </article>
 
-      <h3 class="text-base font-bold text-[#192538] pt-2">Server Banners and the Top 48-Pixel Safe Zone</h3>
-      <p>
-        Server banners represent one of the most prominent branding surfaces for community administrators. While Discord accepts banners starting at 960x540 pixels (and commonly recommends 1920x1080 to accommodate high-DPI displays), the desktop client overlays navigation headers, the server name, and dropdown menus across the upper 48 pixels of the artwork. Placing typography, critical badges, or character faces in this top region leads to obscured elements. Creators should structure banner compositions with focal points centered or positioned toward the lower two-thirds of the canvas.
-      </p>
+      <!-- Dossier Item 2: Server Banner Safe Zone -->
+      <article class="card-panel p-6 sm:p-8 rounded-[16px] space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">02</span>
+            <h3 class="text-lg font-bold text-[#192538]">Server Banners and the Top 48-Pixel Safe Zone</h3>
+          </div>
+          <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Safe Zone: Top 48px</span>
+        </div>
+        <p class="text-sm text-[#475569] leading-relaxed">
+          Server banners represent one of the most prominent branding surfaces for community administrators. While Discord accepts banners starting at 960x540 pixels (and commonly recommends 1920x1080 to accommodate high-DPI displays), the desktop client overlays navigation headers, the server name, and dropdown menus across the upper 48 pixels of the artwork. Placing typography, critical badges, or character faces in this top region leads to obscured elements. Creators should structure banner compositions with focal points centered or positioned toward the lower two-thirds of the canvas.
+        </p>
+        <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <span class="text-[#6B7A90]">Desktop Safe Dimensions:</span>
+          <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold">960 × 492 px Safe Focal Area (below 48px header occlusion)</span>
+        </div>
+      </article>
 
-      <h3 class="text-base font-bold text-[#192538] pt-2">Custom Stickers: Exact Dimension Enforcement</h3>
-      <p>
-        Unlike emojis, which can be uploaded at arbitrary square dimensions and scaled down by the Discord client, custom stickers must conform to exact geometric criteria. Discord mandates that custom stickers be exactly <strong>320x320 pixels</strong> and stay beneath <strong>512 KiB (524,288 bytes)</strong>. Animated stickers are further restricted: they must use the Animated PNG (APNG) format, have a total duration of 5 seconds or fewer, and not exceed 60 frames per second. Attempting to upload a GIF as a server sticker will result in an upload failure unless converted to APNG.
-      </p>
+      <!-- Dossier Item 3: Custom Stickers Geometry -->
+      <article class="card-panel p-6 sm:p-8 rounded-[16px] space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">03</span>
+            <h3 class="text-lg font-bold text-[#192538]">Custom Stickers: Exact Dimension Enforcement</h3>
+          </div>
+          <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Exact 320×320 APNG</span>
+        </div>
+        <p class="text-sm text-[#475569] leading-relaxed">
+          Unlike emojis, which can be uploaded at arbitrary square dimensions and scaled down by the Discord client, custom stickers must conform to exact geometric criteria. Discord mandates that custom stickers be exactly <strong>320x320 pixels</strong> and stay beneath <strong>512 KiB (524,288 bytes)</strong>. Animated stickers are further restricted: they must use the Animated PNG (APNG) format, have a total duration of 5 seconds or fewer, and not exceed 60 frames per second. Attempting to upload a GIF as a server sticker will result in an upload failure unless converted to APNG.
+        </p>
+        <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <span class="text-[#6B7A90]">Framerate & Duration Limits:</span>
+          <span class="text-[#0D9488] font-bold">Max 5.0 seconds • Max 60 FPS • APNG MIME type</span>
+        </div>
+      </article>
 
-      <h3 class="text-base font-bold text-[#192538] pt-2">Color Space Management & Transparent Backgrounds</h3>
-      <p>
-        Discord clients render across a wide variety of hardware, from mobile OLED screens to desktop sRGB monitors. Assets exported in wide color gamuts such as Display P3 or Adobe RGB often appear desaturated or shifted when rendered inside Chromium-based desktop clients. For optimal color fidelity, all static and animated creator assets should be exported in standard sRGB with an 8-bit color depth. Additionally, preserving transparent Alpha channels in PNG files ensures emojis and role icons blend seamlessly across both Discord Dark and Light themes.
-      </p>
+      <!-- Dossier Item 4: Color Space Management -->
+      <article class="card-panel p-6 sm:p-8 rounded-[16px] space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">04</span>
+            <h3 class="text-lg font-bold text-[#192538]">Color Space Management & Transparent Backgrounds</h3>
+          </div>
+          <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Standard sRGB IEC</span>
+        </div>
+        <p class="text-sm text-[#475569] leading-relaxed">
+          Discord clients render across a wide variety of hardware, from mobile OLED screens to desktop sRGB monitors. Assets exported in wide color gamuts such as Display P3 or Adobe RGB often appear desaturated or shifted when rendered inside Chromium-based desktop clients. For optimal color fidelity, all static and animated creator assets should be exported in standard sRGB with an 8-bit color depth. Additionally, preserving transparent Alpha channels in PNG files ensures emojis and role icons blend seamlessly across both Discord Dark and Light themes.
+        </p>
+        <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <span class="text-[#6B7A90]">Target Gamut:</span>
+          <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold">sRGB (IEC 61966-2-1:1999) with 8-bit RGBA Channels</span>
+        </div>
+      </article>
 
-      <h3 class="text-base font-bold text-[#192538] pt-2">Client-Side Privacy: Why Local Processing Matters</h3>
-      <p>
-        Many online conversion utilities route your images through backend cloud servers, creating privacy risks and latency. Discord Asset Studio executes 100% of its transformations inside your device's browser memory. By leveraging HTML5 Canvas contexts, Web Workers, and native Blob encoders, we provide immediate visual feedback and verified downloads while ensuring that zero bytes of your artwork or proprietary brand assets are transmitted across the internet.
-      </p>
+      <!-- Dossier Item 5: Client-Side Privacy -->
+      <article class="card-panel p-6 sm:p-8 rounded-[16px] space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">05</span>
+            <h3 class="text-lg font-bold text-[#192538]">Client-Side Privacy: Why Local Processing Matters</h3>
+          </div>
+          <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#0D9488]">Zero Cloud Uploads</span>
+        </div>
+        <p class="text-sm text-[#475569] leading-relaxed">
+          Many online conversion utilities route your images through backend cloud servers, creating privacy risks and latency. Discord Asset Studio executes 100% of its transformations inside your device's browser memory. By leveraging HTML5 Canvas contexts, Web Workers, and native Blob encoders, we provide immediate visual feedback and verified downloads while ensuring that zero bytes of your artwork or proprietary brand assets are transmitted across the internet.
+        </p>
+        <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <span class="text-[#6B7A90]">Network Payload:</span>
+          <span class="text-[#0D9488] font-bold">0.00 KiB Transmitted • Auditable via Network Tab</span>
+        </div>
+      </article>
     </div>
   </section>
 
