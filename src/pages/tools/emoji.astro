@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
 ---
 
 <Layout 
@@ -9,18 +10,20 @@ import Layout from '../../layouts/Layout.astro';
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <!-- Breadcrumb & Header -->
     <div class="mb-8">
-      <div class="flex items-center gap-2 text-xs text-[#9da6b8] mb-2 font-mono">
-        <a href="/" class="hover:text-white transition-colors">Studio</a>
+      <div class="flex items-center gap-2 text-xs text-[#6B7A90] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
-        <span class="text-white">Emoji Maker & Validator</span>
+        <span class="text-[#192538] font-semibold">Emoji Maker & Validator</span>
       </div>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Discord Emoji Studio</h1>
-          <p class="text-xs sm:text-sm text-[#9da6b8] mt-1">Upload up to 128x128 • 32x32 live preview • Enforces strict 256 KiB binary boundary</p>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            Discord Emoji <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Studio</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] mt-1">Upload up to 128x128 • 32x32 live preview • Enforces strict 256 KiB binary boundary</p>
         </div>
-        <div class="flex items-center gap-2 text-xs bg-[#15181e] px-3 py-1.5 rounded-[8px] border border-[#2b313e] text-[#10b981]">
-          <span class="w-2 h-2 rounded-full bg-[#10b981]"></span>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] text-[#3368A0] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
           Local Browser Processing Only
         </div>
       </div>
@@ -33,39 +36,37 @@ import Layout from '../../layouts/Layout.astro';
         <!-- File Input Dropzone -->
         <div 
           id="dropzone" 
-          class="border-2 border-dashed border-[#2b313e] hover:border-[#3b82f6] rounded-[12px] bg-[#15181e] p-8 text-center transition-all cursor-pointer relative"
+          class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs"
         >
           <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
           <div class="space-y-3 pointer-events-none">
-            <div class="w-12 h-12 rounded-[10px] bg-[#1c2028] text-[#3b82f6] flex items-center justify-center mx-auto text-xl font-bold">
+            <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 text-[#3368A0] flex items-center justify-center mx-auto text-xl font-bold">
               📁
             </div>
             <div>
-              <p class="text-sm font-semibold text-white">Click to browse or drop emoji artwork</p>
-              <p class="text-xs text-[#6b7385] mt-1">PNG, JPG, WebP, or GIF (Processed in memory)</p>
+              <p class="text-sm font-bold text-[#192538]">Click to browse or drop emoji artwork</p>
+              <p class="text-xs text-[#6B7A90] mt-1">PNG, JPG, WebP, or GIF (Processed in local memory)</p>
             </div>
           </div>
         </div>
 
         <!-- Canvas & Editor Controls -->
-        <div id="editorPanel" class="bg-[#15181e] border border-[#2b313e] rounded-[12px] p-6 hidden">
-          <div class="flex items-center justify-between pb-4 border-b border-[#2b313e] mb-4">
-            <h2 class="text-sm font-semibold text-white">Canvas Transformation</h2>
-            <div class="flex items-center gap-2">
-              <button id="resetBtn" class="text-xs px-3 py-1.5 rounded-[6px] bg-[#1c2028] hover:bg-[#242934] border border-[#2b313e] text-[#9da6b8] hover:text-white transition-colors">
-                Reset
-              </button>
-            </div>
+        <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden">
+          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-4">
+            <h2 class="text-sm font-bold text-[#192538]">Canvas Transformation (128 × 128)</h2>
+            <button id="resetBtn" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">
+              Reset
+            </button>
           </div>
 
           <!-- Live Canvas Surface -->
-          <div class="flex items-center justify-center p-6 bg-[#0d0f12] rounded-[8px] border border-[#2b313e] overflow-hidden mb-6">
-            <canvas id="mainCanvas" width="128" height="128" class="max-w-[128px] max-h-[128px] shadow-sm rounded-[4px] bg-[repeating-conic-gradient(#1c2028_0%_25%,#15181e_0%_50%)] [background-size:16px_16px]"></canvas>
+          <div class="flex items-center justify-center p-6 bg-[#FAF8F5] rounded-[10px] border border-[#E0DBD0] overflow-hidden mb-6">
+            <canvas id="mainCanvas" width="128" height="128" class="max-w-[128px] max-h-[128px] shadow-sm rounded-[6px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] [background-size:16px_16px]"></canvas>
           </div>
 
           <!-- Actions -->
           <div class="flex flex-col sm:flex-row items-center gap-3">
-            <button id="exportBtn" class="w-full sm:flex-1 py-3 rounded-[8px] bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2 shadow-sm">
+            <button id="exportBtn" class="btn-primary w-full sm:flex-1 py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2">
               <span>Export Verified Emoji</span>
             </button>
           </div>
@@ -75,17 +76,17 @@ import Layout from '../../layouts/Layout.astro';
       <!-- Right Column: Validation Receipt & Live Discord Preview (5 cols) -->
       <div class="lg:col-span-5 space-y-6">
         <!-- Live Chat Size Previews -->
-        <div class="bg-[#15181e] border border-[#2b313e] rounded-[12px] p-6">
-          <div class="flex items-center justify-between pb-3 border-b border-[#2b313e] mb-4">
-            <h2 class="text-sm font-semibold text-white">Discord Chat Preview</h2>
+        <div class="card-panel rounded-[14px] p-6">
+          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+            <h2 class="text-sm font-bold text-[#192538]">Discord Chat Preview</h2>
             <!-- Light/Dark Preview Surface Toggle -->
-            <div class="flex items-center gap-1 bg-[#1c2028] p-1 rounded-[6px] border border-[#2b313e]">
-              <button id="themeDarkBtn" class="text-[11px] px-2 py-0.5 rounded bg-[#3b82f6] text-white font-medium">Dark</button>
-              <button id="themeLightBtn" class="text-[11px] px-2 py-0.5 rounded text-[#9da6b8] hover:text-white font-medium">Light</button>
+            <div class="flex items-center gap-1 bg-[#FAF8F5] p-1 rounded-[6px] border border-[#E0DBD0]">
+              <button id="themeDarkBtn" class="text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium">Dark</button>
+              <button id="themeLightBtn" class="text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium">Light</button>
             </div>
           </div>
 
-          <div id="previewSurface" class="p-4 rounded-[8px] bg-[#313338] text-white transition-colors">
+          <div id="previewSurface" class="p-4 rounded-[10px] bg-[#313338] text-white transition-colors">
             <div class="flex items-start gap-3">
               <div class="w-10 h-10 rounded-full bg-[#5865f2] flex items-center justify-center font-bold text-xs flex-shrink-0">
                 User
@@ -109,35 +110,35 @@ import Layout from '../../layouts/Layout.astro';
         </div>
 
         <!-- Validation Receipt -->
-        <div class="bg-[#15181e] border border-[#2b313e] rounded-[12px] p-6">
-          <div class="flex items-center justify-between pb-3 border-b border-[#2b313e] mb-4">
-            <h2 class="text-sm font-semibold text-white">Validation Receipt</h2>
-            <span id="receiptBadge" class="text-[10px] font-mono uppercase bg-[#242934] text-[#9da6b8] px-2 py-0.5 rounded">
+        <div class="card-panel rounded-[14px] p-6">
+          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+            <h2 class="text-sm font-bold text-[#192538]">Validation Receipt</h2>
+            <span id="receiptBadge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
               Awaiting Media
             </span>
           </div>
 
           <div class="space-y-3 text-xs font-mono">
-            <div class="flex items-center justify-between p-2.5 rounded-[6px] bg-[#1c2028] border border-[#2b313e]">
-              <span class="text-[#9da6b8]">Dimensions:</span>
-              <span id="statDimensions" class="text-white">-- × --</span>
+            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+              <span class="text-[#6B7A90]">Dimensions:</span>
+              <span id="statDimensions" class="text-[#192538] font-bold">-- × --</span>
             </div>
 
-            <div class="flex items-center justify-between p-2.5 rounded-[6px] bg-[#1c2028] border border-[#2b313e]">
-              <span class="text-[#9da6b8]">Binary Byte Weight:</span>
-              <span id="statBytes" class="text-white">-- KiB (Max 256)</span>
+            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+              <span class="text-[#6B7A90]">Binary Byte Weight:</span>
+              <span id="statBytes" class="text-[#3368A0] font-bold">-- KiB (Max 256)</span>
             </div>
 
-            <div class="flex items-center justify-between p-2.5 rounded-[6px] bg-[#1c2028] border border-[#2b313e]">
-              <span class="text-[#9da6b8]">Target Format:</span>
-              <span id="statFormat" class="text-white">PNG / WebP</span>
+            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+              <span class="text-[#6B7A90]">Target Format:</span>
+              <span id="statFormat" class="text-[#192538] font-bold">PNG / WebP</span>
             </div>
 
-            <div id="receiptAlert" class="hidden p-3 rounded-[6px] text-xs font-sans">
+            <div id="receiptAlert" class="hidden p-3 rounded-[8px] text-xs font-sans">
               <!-- Alert dynamically populated -->
             </div>
 
-            <div class="pt-2 border-t border-[#2b313e] text-[11px] text-[#6b7385] font-sans">
+            <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans">
               <strong>Rule Authority:</strong> Discord Help Center #204849977. Verified Jan 2026. High confidence.
             </div>
           </div>
@@ -149,7 +150,6 @@ import Layout from '../../layouts/Layout.astro';
   <!-- Client-side Tool Logic -->
   <script>
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    const dropzone = document.getElementById('dropzone');
     const editorPanel = document.getElementById('editorPanel');
     const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
     const resetBtn = document.getElementById('resetBtn');
@@ -202,13 +202,11 @@ import Layout from '../../layouts/Layout.astro';
       const ctx = mainCanvas.getContext('2d');
       if (!ctx) return;
 
-      // Target size: 128x128
       const targetSize = 128;
       mainCanvas.width = targetSize;
       mainCanvas.height = targetSize;
       ctx.clearRect(0, 0, targetSize, targetSize);
 
-      // Maintain aspect ratio, center on canvas
       const scale = Math.min(targetSize / img.width, targetSize / img.height);
       const w = img.width * scale;
       const h = img.height * scale;
@@ -219,22 +217,18 @@ import Layout from '../../layouts/Layout.astro';
       ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, x, y, w, h);
 
-      // Convert canvas to Blob
       mainCanvas.toBlob((blob) => {
         if (!blob) return;
         currentBlob = blob;
         cleanup();
         currentObjectUrl = URL.createObjectURL(blob);
 
-        // Update preview image
         chatPreviewImg.src = currentObjectUrl;
         chatPreviewImg.classList.remove('hidden');
         chatPreviewPlaceholder?.classList.add('hidden');
 
-        // Reveal editor
         editorPanel?.classList.remove('hidden');
 
-        // Evaluate validation
         const bytes = blob.size;
         const kib = (bytes / 1024).toFixed(1);
         statDimensions!.innerText = `${img.width}×${img.height} → 128×128`;
@@ -243,13 +237,13 @@ import Layout from '../../layouts/Layout.astro';
 
         if (bytes <= MAX_EMOJI_BYTES) {
           receiptBadge!.innerText = 'Compliant';
-          receiptBadge!.className = 'text-[10px] font-mono uppercase bg-[#10b981]/10 text-[#10b981] px-2 py-0.5 rounded';
-          receiptAlert!.className = 'p-3 rounded-[6px] text-xs bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/20 block';
+          receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
+          receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#C8DFDB]/40 text-[#0D9488] border border-[#0D9488]/30 block font-medium';
           receiptAlert!.innerText = '✓ Pass: Exactly within the 256 KiB upload limit and 128x128 dimensions.';
         } else {
           receiptBadge!.innerText = 'Exceeds Cap';
-          receiptBadge!.className = 'text-[10px] font-mono uppercase bg-[#ef4444]/10 text-[#ef4444] px-2 py-0.5 rounded';
-          receiptAlert!.className = 'p-3 rounded-[6px] text-xs bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/20 block';
+          receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 px-2.5 py-0.5 rounded font-bold';
+          receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 block font-medium';
           receiptAlert!.innerText = `⚠ Warning: File size (${kib} KiB) exceeds Discord's 256 KiB cap by ${(bytes - MAX_EMOJI_BYTES).toLocaleString()} bytes.`;
         }
       }, 'image/png');
@@ -266,7 +260,7 @@ import Layout from '../../layouts/Layout.astro';
       statBytes!.innerText = '-- KiB';
       statFormat!.innerText = 'PNG / WebP';
       receiptBadge!.innerText = 'Awaiting Media';
-      receiptBadge!.className = 'text-[10px] font-mono uppercase bg-[#242934] text-[#9da6b8] px-2 py-0.5 rounded';
+      receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
       receiptAlert?.classList.add('hidden');
       fileInput.value = '';
     });
@@ -287,17 +281,16 @@ import Layout from '../../layouts/Layout.astro';
       document.body.removeChild(a);
     });
 
-    // Theme toggles
     themeDarkBtn?.addEventListener('click', () => {
-      previewSurface!.className = 'p-4 rounded-[8px] bg-[#313338] text-white transition-colors';
-      themeDarkBtn.className = 'text-[11px] px-2 py-0.5 rounded bg-[#3b82f6] text-white font-medium';
-      themeLightBtn!.className = 'text-[11px] px-2 py-0.5 rounded text-[#9da6b8] hover:text-white font-medium';
+      previewSurface!.className = 'p-4 rounded-[10px] bg-[#313338] text-white transition-colors';
+      themeDarkBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
+      themeLightBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
     });
 
     themeLightBtn?.addEventListener('click', () => {
-      previewSurface!.className = 'p-4 rounded-[8px] bg-[#ffffff] text-[#313338] transition-colors border border-[#e3e5e8]';
-      themeLightBtn.className = 'text-[11px] px-2 py-0.5 rounded bg-[#3b82f6] text-white font-medium';
-      themeDarkBtn!.className = 'text-[11px] px-2 py-0.5 rounded text-[#9da6b8] hover:text-white font-medium';
+      previewSurface!.className = 'p-4 rounded-[10px] bg-[#ffffff] text-[#313338] transition-colors border border-[#e3e5e8]';
+      themeLightBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
+      themeDarkBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
     });
   </script>
 </Layout>

@@ -5,42 +5,42 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Privacy Policy | Discord Asset Studio" description="Read our client-side privacy disclosure: Discord Asset Studio processes all images locally in your browser with zero server uploads.">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-10">
-      <span class="text-xs font-semibold text-[#3b82f6] uppercase tracking-wider">Zero-Server Guarantee</span>
-      <h1 class="text-3xl sm:text-4xl font-bold text-white tracking-tight mt-2 mb-4">Privacy & Data Architecture</h1>
-      <p class="text-[#9da6b8] text-base leading-relaxed">
+      <span class="text-xs font-bold text-[#3368A0] uppercase tracking-wider">Zero-Server Guarantee</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight mt-2 mb-4">Privacy & Data Architecture</h1>
+      <p class="text-[#475569] text-base leading-relaxed">
         Last updated: September 16, 2026. This policy discloses how Discord Asset Studio handles your media, network activity, and browser storage.
       </p>
     </div>
 
-    <div class="space-y-10 text-[#9da6b8] text-sm leading-relaxed border-t border-[#2b313e] pt-8">
-      <section>
-        <h2 class="text-lg font-semibold text-white mb-3">1. Zero Media Uploads (100% Client-Side Processing)</h2>
+    <div class="space-y-10 text-[#475569] text-sm leading-relaxed border-t border-[#E0DBD0] pt-8">
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] mb-3">1. Zero Media Uploads (100% Client-Side Processing)</h2>
         <p class="mb-3">
           Discord Asset Studio is built on a strict zero-server media architecture. When you drag and drop, paste, or select an image or video file for validation or compression:
         </p>
-        <ul class="list-disc pl-5 space-y-1 text-[#f0f2f5]">
-          <li>The media is read directly into your device's memory using browser <code class="text-xs bg-[#1c2028] px-1.5 py-0.5 rounded text-[#3b82f6]">FileReader</code> and <code class="text-xs bg-[#1c2028] px-1.5 py-0.5 rounded text-[#3b82f6]">URL.createObjectURL</code> APIs.</li>
+        <ul class="list-disc pl-5 space-y-1 text-[#192538] font-medium">
+          <li>The media is read directly into your device's memory using browser <code class="text-xs bg-[#FAF8F5] border border-[#E0DBD0] px-1.5 py-0.5 rounded text-[#3368A0]">FileReader</code> and <code class="text-xs bg-[#FAF8F5] border border-[#E0DBD0] px-1.5 py-0.5 rounded text-[#3368A0]">URL.createObjectURL</code> APIs.</li>
           <li>All resizing, cropping, quantizing, and formatting operations occur exclusively inside browser Web Workers and HTML5 Canvas contexts.</li>
           <li><strong>No bytes, dimensions, filenames, EXIF data, or visual contents are ever transmitted to any external backend, API, or cloud storage.</strong> You can confirm this at any time by inspecting the Network tab in your browser's Developer Tools.</li>
         </ul>
       </section>
 
-      <section>
-        <h2 class="text-lg font-semibold text-white mb-3">2. Memory Lifecycle & Object Cleanup</h2>
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] mb-3">2. Memory Lifecycle & Object Cleanup</h2>
         <p>
-          We automatically revoke in-memory Object URLs via <code class="text-xs bg-[#1c2028] px-1.5 py-0.5 rounded text-[#3b82f6]">URL.revokeObjectURL()</code> as soon as a transformation completes, when a canvas is reset, or when navigating away from a tool page. Worker threads are terminated or garbage-collected by the browser upon teardown.
+          We automatically revoke in-memory Object URLs via <code class="text-xs bg-[#FAF8F5] border border-[#E0DBD0] px-1.5 py-0.5 rounded text-[#3368A0]">URL.revokeObjectURL()</code> as soon as a transformation completes, when a canvas is reset, or when navigating away from a tool page. Worker threads are terminated or garbage-collected by the browser upon teardown.
         </p>
       </section>
 
-      <section>
-        <h2 class="text-lg font-semibold text-white mb-3">3. Local Storage Usage</h2>
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] mb-3">3. Local Storage Usage</h2>
         <p>
-          We use browser <code class="text-xs bg-[#1c2028] px-1.5 py-0.5 rounded text-[#3b82f6]">localStorage</code> solely to preserve non-identifying interface preferences, such as your selected dark/light theme or preferred default export format. We never store image blobs, filenames, or user identifiers in persistent browser storage.
+          We use browser <code class="text-xs bg-[#FAF8F5] border border-[#E0DBD0] px-1.5 py-0.5 rounded text-[#3368A0]">localStorage</code> solely to preserve non-identifying interface preferences, such as your selected dark/light theme or preferred default export format. We never store image blobs, filenames, or user identifiers in persistent browser storage.
         </p>
       </section>
 
-      <section>
-        <h2 class="text-lg font-semibold text-white mb-3">4. Content Delivery & Third-Party Services</h2>
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] mb-3">4. Content Delivery & Third-Party Services</h2>
         <p class="mb-3">
           This static website is served through Cloudflare Pages to provide global SSL encryption, DDoS protection, and edge asset caching.
         </p>
@@ -49,8 +49,8 @@ import Layout from '../layouts/Layout.astro';
         </p>
       </section>
 
-      <section>
-        <h2 class="text-lg font-semibold text-white mb-3">5. Disclaimer Regarding Discord, Inc.</h2>
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] mb-3">5. Disclaimer Regarding Discord, Inc.</h2>
         <p>
           Discord Asset Studio is an independent utility created to assist digital creators. It is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Discord, Inc. All trademarks and registered trademarks are the property of their respective owners.
         </p>

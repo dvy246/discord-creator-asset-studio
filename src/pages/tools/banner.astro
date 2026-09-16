@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
 ---
 
 <Layout 
@@ -8,33 +9,35 @@ import Layout from '../../layouts/Layout.astro';
 >
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
-      <div class="flex items-center gap-2 text-xs text-[#9da6b8] mb-2 font-mono">
-        <a href="/" class="hover:text-white transition-colors">Studio</a>
+      <div class="flex items-center gap-2 text-xs text-[#6B7A90] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
-        <span class="text-white">Banner Studio</span>
+        <span class="text-[#192538] font-semibold">Banner Studio</span>
       </div>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Discord Banner Studio</h1>
-          <p class="text-xs sm:text-sm text-[#9da6b8] mt-1">Profile Banners (680x240 & 600x240) • Server Banners (960x540 / 1920x1080) with top 48px safe zone guide</p>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            Discord Banner <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Studio</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] mt-1">Profile Banners (680x240 & 600x240) • Server Banners (960x540 / 1920x1080) with top 48px safe zone guide</p>
         </div>
-        <div class="flex items-center gap-2 text-xs bg-[#15181e] px-3 py-1.5 rounded-[8px] border border-[#2b313e] text-[#10b981]">
-          <span class="w-2 h-2 rounded-full bg-[#10b981]"></span>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] text-[#3368A0] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
           Zero Server Uploads
         </div>
       </div>
     </div>
 
     <!-- Banner Preset Selector -->
-    <div class="bg-[#15181e] border border-[#2b313e] rounded-[12px] p-4 mb-8 flex flex-wrap items-center gap-3">
-      <span class="text-xs font-semibold text-[#9da6b8] uppercase tracking-wider mr-2">Preset Mode:</span>
-      <button id="presetServerBanner" class="text-xs px-3 py-1.5 rounded-[6px] bg-[#3b82f6] text-white font-medium transition-colors">
+    <div class="card-panel rounded-[14px] p-4 mb-8 flex flex-wrap items-center gap-3">
+      <span class="text-xs font-bold text-[#192538] uppercase tracking-wider mr-2">Preset Mode:</span>
+      <button id="presetServerBanner" class="btn-primary text-xs px-3.5 py-2 rounded-[8px]">
         Server Banner (960 × 540)
       </button>
-      <button id="presetGlobalProfile" class="text-xs px-3 py-1.5 rounded-[6px] bg-[#1c2028] text-[#9da6b8] hover:text-white font-medium transition-colors">
+      <button id="presetGlobalProfile" class="btn-secondary text-xs px-3.5 py-2 rounded-[8px]">
         Global Profile Banner (680 × 240)
       </button>
-      <button id="presetServerProfile" class="text-xs px-3 py-1.5 rounded-[6px] bg-[#1c2028] text-[#9da6b8] hover:text-white font-medium transition-colors">
+      <button id="presetServerProfile" class="btn-secondary text-xs px-3.5 py-2 rounded-[8px]">
         Per-Server Profile Banner (600 × 240)
       </button>
     </div>
@@ -42,46 +45,44 @@ import Layout from '../../layouts/Layout.astro';
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       <!-- Left Column: Upload & Canvas -->
       <div class="lg:col-span-8 space-y-6">
-        <div id="dropzone" class="border-2 border-dashed border-[#2b313e] hover:border-[#3b82f6] rounded-[12px] bg-[#15181e] p-8 text-center transition-all cursor-pointer relative">
+        <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs">
           <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
           <div class="space-y-2 pointer-events-none">
-            <div class="w-12 h-12 rounded-[10px] bg-[#1c2028] text-[#3b82f6] flex items-center justify-center mx-auto text-xl font-bold">
+            <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 text-[#3368A0] flex items-center justify-center mx-auto text-xl font-bold">
               🖼️
             </div>
-            <p class="text-sm font-semibold text-white">Select banner artwork</p>
-            <p class="text-xs text-[#6b7385]">PNG, JPG, or GIF (Auto-cropped to active preset aspect ratio)</p>
+            <p class="text-sm font-bold text-[#192538]">Select banner artwork</p>
+            <p class="text-xs text-[#6B7A90]">PNG, JPG, or GIF (Auto-cropped to active preset aspect ratio)</p>
           </div>
         </div>
 
-        <div id="editorPanel" class="bg-[#15181e] border border-[#2b313e] rounded-[12px] p-6 hidden">
-          <div class="flex items-center justify-between pb-4 border-b border-[#2b313e] mb-4">
-            <h2 class="text-sm font-semibold text-white" id="editorTitle">Canvas Surface</h2>
+        <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden">
+          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-4">
+            <h2 class="text-sm font-bold text-[#192538]" id="editorTitle">Canvas Surface</h2>
             <div class="flex items-center gap-3">
-              <label class="flex items-center gap-1.5 text-xs text-[#9da6b8] cursor-pointer">
-                <input type="checkbox" id="safeZoneToggle" checked class="rounded bg-[#1c2028] border-[#2b313e] text-[#3b82f6]" />
+              <label class="flex items-center gap-1.5 text-xs text-[#475569] font-medium cursor-pointer">
+                <input type="checkbox" id="safeZoneToggle" checked class="rounded border-[#D8D3C8] text-[#3368A0]" />
                 Show Top 48px Safe Zone
               </label>
-              <button id="resetBtn" class="text-xs px-2.5 py-1 rounded-[6px] bg-[#1c2028] hover:bg-[#242934] border border-[#2b313e] text-[#9da6b8] hover:text-white">
+              <button id="resetBtn" class="btn-secondary text-xs px-2.5 py-1 rounded-[6px]">
                 Reset
               </button>
             </div>
           </div>
 
-          <!-- Canvas container with safe zone guide overlay -->
-          <div class="relative bg-[#0d0f12] rounded-[8px] border border-[#2b313e] overflow-hidden mb-6 flex items-center justify-center p-4">
+          <div class="relative bg-[#FAF8F5] rounded-[10px] border border-[#E0DBD0] overflow-hidden mb-6 flex items-center justify-center p-4">
             <div class="relative">
-              <canvas id="mainCanvas" class="max-w-full h-auto shadow-sm rounded-[4px] bg-[repeating-conic-gradient(#1c2028_0%_25%,#15181e_0%_50%)] [background-size:16px_16px]"></canvas>
+              <canvas id="mainCanvas" class="max-w-full h-auto shadow-sm rounded-[6px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] [background-size:16px_16px]"></canvas>
               
-              <!-- Safe zone overlay bar -->
-              <div id="safeZoneOverlay" class="absolute top-0 left-0 right-0 h-[10%] bg-[#ef4444]/30 border-b border-[#ef4444] pointer-events-none flex items-center justify-center">
-                <span class="text-[10px] font-mono text-white bg-[#0d0f12]/80 px-2 py-0.5 rounded">
+              <div id="safeZoneOverlay" class="absolute top-0 left-0 right-0 h-[10%] bg-[#DC2626]/20 border-b-2 border-[#DC2626] pointer-events-none flex items-center justify-center">
+                <span class="text-[10px] font-mono font-bold text-white bg-[#192538]/85 px-2.5 py-0.5 rounded shadow-xs">
                   Top 48px Header Overlay Zone (Keep text below)
                 </span>
               </div>
             </div>
           </div>
 
-          <button id="exportBtn" class="w-full py-3 rounded-[8px] bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold transition-colors shadow-sm">
+          <button id="exportBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center shadow-sm">
             Export Formatted Banner
           </button>
         </div>
@@ -89,31 +90,31 @@ import Layout from '../../layouts/Layout.astro';
 
       <!-- Right Column: Receipt & Requirements -->
       <div class="lg:col-span-4 space-y-6">
-        <div class="bg-[#15181e] border border-[#2b313e] rounded-[12px] p-6">
-          <div class="flex items-center justify-between pb-3 border-b border-[#2b313e] mb-4">
-            <h2 class="text-sm font-semibold text-white">Validation Receipt</h2>
-            <span id="receiptBadge" class="text-[10px] font-mono uppercase bg-[#242934] text-[#9da6b8] px-2 py-0.5 rounded">
+        <div class="card-panel rounded-[14px] p-6">
+          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+            <h2 class="text-sm font-bold text-[#192538]">Validation Receipt</h2>
+            <span id="receiptBadge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
               Awaiting Media
             </span>
           </div>
 
           <div class="space-y-3 text-xs font-mono">
-            <div class="flex items-center justify-between p-2.5 rounded-[6px] bg-[#1c2028] border border-[#2b313e]">
-              <span class="text-[#9da6b8]">Preset Mode:</span>
-              <span id="statPreset" class="text-white">Server Banner</span>
+            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+              <span class="text-[#6B7A90]">Preset Mode:</span>
+              <span id="statPreset" class="text-[#192538] font-bold">Server Banner</span>
             </div>
 
-            <div class="flex items-center justify-between p-2.5 rounded-[6px] bg-[#1c2028] border border-[#2b313e]">
-              <span class="text-[#9da6b8]">Target Size:</span>
-              <span id="statTarget" class="text-white">960 × 540 px</span>
+            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+              <span class="text-[#6B7A90]">Target Size:</span>
+              <span id="statTarget" class="text-[#3368A0] font-bold">960 × 540 px</span>
             </div>
 
-            <div class="flex items-center justify-between p-2.5 rounded-[6px] bg-[#1c2028] border border-[#2b313e]">
-              <span class="text-[#9da6b8]">Platform Gate:</span>
-              <span id="statGate" class="text-[#f59e0b]">Boost Level 2</span>
+            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+              <span class="text-[#6B7A90]">Platform Gate:</span>
+              <span id="statGate" class="text-[#D97706] font-bold">Boost Level 2</span>
             </div>
 
-            <div class="pt-2 border-t border-[#2b313e] text-[11px] text-[#6b7385] font-sans">
+            <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans leading-relaxed">
               <strong>Official Guidance:</strong> Server Banners require Boost Level 2 (static) or Level 3 (animated). Discord overlays channel navigation over the top 48px.
             </div>
           </div>
@@ -140,7 +141,7 @@ import Layout from '../../layouts/Layout.astro';
     const statGate = document.getElementById('statGate');
     const receiptBadge = document.getElementById('receiptBadge');
 
-    let currentMode = 'server'; // 'server', 'global', 'profile'
+    let currentMode = 'server';
     let currentImage: HTMLImageElement | null = null;
     let currentBlob: Blob | null = null;
     let currentObjectUrl: string | null = null;
@@ -153,19 +154,19 @@ import Layout from '../../layouts/Layout.astro';
 
     function updatePresetButtons() {
       [presetServerBanner, presetGlobalProfile, presetServerProfile].forEach(b => {
-        b?.classList.remove('bg-[#3b82f6]', 'text-white');
-        b?.classList.add('bg-[#1c2028]', 'text-[#9da6b8]');
+        b?.classList.remove('btn-primary');
+        b?.classList.add('btn-secondary');
       });
 
       if (currentMode === 'server') {
-        presetServerBanner?.classList.add('bg-[#3b82f6]', 'text-white');
-        presetServerBanner?.classList.remove('bg-[#1c2028]', 'text-[#9da6b8]');
+        presetServerBanner?.classList.add('btn-primary');
+        presetServerBanner?.classList.remove('btn-secondary');
       } else if (currentMode === 'global') {
-        presetGlobalProfile?.classList.add('bg-[#3b82f6]', 'text-white');
-        presetGlobalProfile?.classList.remove('bg-[#1c2028]', 'text-[#9da6b8]');
+        presetGlobalProfile?.classList.add('btn-primary');
+        presetGlobalProfile?.classList.remove('btn-secondary');
       } else {
-        presetServerProfile?.classList.add('bg-[#3b82f6]', 'text-white');
-        presetServerProfile?.classList.remove('bg-[#1c2028]', 'text-[#9da6b8]');
+        presetServerProfile?.classList.add('btn-primary');
+        presetServerProfile?.classList.remove('btn-secondary');
       }
 
       const p = PRESETS[currentMode as keyof typeof PRESETS];
@@ -217,7 +218,6 @@ import Layout from '../../layouts/Layout.astro';
       mainCanvas.width = p.w;
       mainCanvas.height = p.h;
 
-      // Crop to cover aspect ratio
       const imgAspect = currentImage.width / currentImage.height;
       const targetAspect = p.w / p.h;
       let sx = 0, sy = 0, sw = currentImage.width, sh = currentImage.height;
@@ -233,7 +233,7 @@ import Layout from '../../layouts/Layout.astro';
       ctx.drawImage(currentImage, sx, sy, sw, sh, 0, 0, p.w, p.h);
       editorPanel?.classList.remove('hidden');
       receiptBadge!.innerText = 'Compliant';
-      receiptBadge!.className = 'text-[10px] font-mono uppercase bg-[#10b981]/10 text-[#10b981] px-2 py-0.5 rounded';
+      receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
 
       mainCanvas.toBlob((blob) => {
         if (blob) {
@@ -250,7 +250,7 @@ import Layout from '../../layouts/Layout.astro';
       if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
       editorPanel?.classList.add('hidden');
       receiptBadge!.innerText = 'Awaiting Media';
-      receiptBadge!.className = 'text-[10px] font-mono uppercase bg-[#242934] text-[#9da6b8] px-2 py-0.5 rounded';
+      receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
       fileInput.value = '';
     });
 

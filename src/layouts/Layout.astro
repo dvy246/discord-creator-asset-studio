@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import SEOHead from '../components/SEOHead.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 interface Props {
   title?: string;
@@ -17,36 +18,47 @@ const {
   <head>
     <SEOHead title={title} description={description} />
     <link rel="icon" href="/favicon.svg" />
+    <script is:inline>
+      (function() {
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
   </head>
-  <body class="min-h-screen flex flex-col bg-[#0d0f12] text-[#f0f2f5]">
+  <body class="min-h-screen flex flex-col bg-[#F2EFE7] text-[#192538] transition-colors duration-200">
     <!-- Top Navigation: Single-line, restrained, <80px height -->
-    <header class="h-16 border-b border-[#2b313e] bg-[#15181e]/80 backdrop-blur-md sticky top-0 z-50">
+    <header class="h-16 border-b border-[#E0DBD0] bg-[#FAF8F5]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
       <div class="max-w-7xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between">
         <!-- Logo -->
-        <a href="/" class="flex items-center gap-3 text-lg font-semibold tracking-tight text-white hover:opacity-90 transition-opacity">
-          <div class="w-8 h-8 rounded-[8px] bg-[#3b82f6] flex items-center justify-center text-white font-bold text-sm shadow-sm">
+        <a href="/" class="flex items-center gap-3 text-lg font-bold tracking-tight text-[#192538] hover:opacity-90 transition-opacity">
+          <div class="w-8 h-8 rounded-[8px] bg-[#3368A0] flex items-center justify-center text-white font-bold text-sm shadow-sm">
             D
           </div>
           <span>Asset Studio</span>
-          <span class="text-xs px-2 py-0.5 rounded-full bg-[#3b82f6]/10 text-[#3b82f6] border border-[#3b82f6]/20 font-medium">
+          <span class="text-xs px-2 py-0.5 rounded-full bg-[#C8DFDB]/60 text-[#3368A0] border border-[#66A3BF]/30 font-semibold hidden sm:inline-block">
             Client-Side
           </span>
         </a>
 
         <!-- Desktop Navigation Links -->
-        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#9da6b8]">
-          <a href="/tools/emoji" class="hover:text-white transition-colors">Emoji</a>
-          <a href="/tools/sticker" class="hover:text-white transition-colors">Sticker</a>
-          <a href="/tools/banner" class="hover:text-white transition-colors">Banner</a>
-          <a href="/tools/avatar" class="hover:text-white transition-colors">Avatar</a>
-          <a href="/tools/role-icon" class="hover:text-white transition-colors">Role Icon</a>
-          <a href="/guides/discord-sizes" class="hover:text-white transition-colors">Size Guide</a>
+        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-[#475569]">
+          <a href="/tools/emoji" class="hover:text-[#3368A0] transition-colors">Emoji</a>
+          <a href="/tools/sticker" class="hover:text-[#3368A0] transition-colors">Sticker</a>
+          <a href="/tools/banner" class="hover:text-[#3368A0] transition-colors">Banner</a>
+          <a href="/tools/avatar" class="hover:text-[#3368A0] transition-colors">Avatar</a>
+          <a href="/tools/role-icon" class="hover:text-[#3368A0] transition-colors">Role Icon</a>
+          <a href="/guides/discord-sizes" class="hover:text-[#3368A0] transition-colors">Size Guide</a>
         </nav>
 
-        <!-- Right Side: Privacy Badge -->
+        <!-- Right Side: Theme Slider & Privacy Badge -->
         <div class="flex items-center gap-3">
-          <span class="hidden sm:inline-flex items-center gap-1.5 text-xs text-[#9da6b8] bg-[#1c2028] px-2.5 py-1 rounded-[6px] border border-[#2b313e]">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#10b981]"></span>
+          <ThemeToggle />
+          <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-[#3368A0] bg-[#FFFFFF] px-3 py-1.5 rounded-[8px] border border-[#C8DFDB] shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
             Zero Server Uploads
           </span>
         </div>
@@ -59,53 +71,53 @@ const {
     </main>
 
     <!-- Footer: Authoritative, crawlable, AdSense compliant -->
-    <footer class="border-t border-[#2b313e] bg-[#15181e] text-[#9da6b8] text-sm py-12">
+    <footer class="border-t border-[#E0DBD0] bg-[#FAF8F5] text-[#475569] text-sm py-12 transition-colors duration-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <div class="flex items-center gap-2 text-white font-semibold mb-3">
-              <div class="w-6 h-6 rounded-[6px] bg-[#3b82f6] flex items-center justify-center text-white text-xs">
+            <div class="flex items-center gap-2 text-[#192538] font-bold mb-3">
+              <div class="w-6 h-6 rounded-[6px] bg-[#3368A0] flex items-center justify-center text-white text-xs">
                 D
               </div>
               <span>Discord Asset Studio</span>
             </div>
-            <p class="text-xs text-[#6b7385] leading-relaxed">
+            <p class="text-xs text-[#6B7A90] leading-relaxed">
               Autonomous, browser-only validation and formatting engine for Discord creator assets. All processing executes locally inside Web Workers.
             </p>
           </div>
 
           <div>
-            <h4 class="text-xs font-semibold text-white uppercase tracking-wider mb-3">Core Utilities</h4>
+            <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Core Utilities</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="/tools/emoji" class="hover:text-white transition-colors">Emoji Maker & Validator</a></li>
-              <li><a href="/tools/sticker" class="hover:text-white transition-colors">Sticker Compressor (512 KiB)</a></li>
-              <li><a href="/tools/banner" class="hover:text-white transition-colors">Profile & Server Banners</a></li>
-              <li><a href="/tools/avatar" class="hover:text-white transition-colors">Avatar Optimizer</a></li>
-              <li><a href="/tools/role-icon" class="hover:text-white transition-colors">Role Icon Resizer (64x64)</a></li>
+              <li><a href="/tools/emoji" class="hover:text-[#3368A0] transition-colors">Emoji Maker & Validator</a></li>
+              <li><a href="/tools/sticker" class="hover:text-[#3368A0] transition-colors">Sticker Compressor (512 KiB)</a></li>
+              <li><a href="/tools/banner" class="hover:text-[#3368A0] transition-colors">Profile & Server Banners</a></li>
+              <li><a href="/tools/avatar" class="hover:text-[#3368A0] transition-colors">Avatar Optimizer</a></li>
+              <li><a href="/tools/role-icon" class="hover:text-[#3368A0] transition-colors">Role Icon Resizer (64x64)</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 class="text-xs font-semibold text-white uppercase tracking-wider mb-3">Documentation</h4>
+            <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Documentation</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="/guides/discord-sizes" class="hover:text-white transition-colors">Discord Size Cheat Sheet (2026)</a></li>
-              <li><a href="/sitemap-index.xml" class="hover:text-white transition-colors">XML Sitemap</a></li>
-              <li><a href="/robots.txt" class="hover:text-white transition-colors">Robots.txt</a></li>
+              <li><a href="/guides/discord-sizes" class="hover:text-[#3368A0] transition-colors">Discord Size Cheat Sheet (2026)</a></li>
+              <li><a href="/sitemap-index.xml" class="hover:text-[#3368A0] transition-colors">XML Sitemap</a></li>
+              <li><a href="/robots.txt" class="hover:text-[#3368A0] transition-colors">Robots.txt</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 class="text-xs font-semibold text-white uppercase tracking-wider mb-3">Trust & Governance</h4>
+            <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Trust & Governance</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="/terms" class="hover:text-white transition-colors">Terms of Service</a></li>
-              <li><a href="/about" class="hover:text-white transition-colors">About the Project</a></li>
-              <li><a href="/contact" class="hover:text-white transition-colors">Contact & Feedback</a></li>
+              <li><a href="/privacy" class="hover:text-[#3368A0] transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms" class="hover:text-[#3368A0] transition-colors">Terms of Service</a></li>
+              <li><a href="/about" class="hover:text-[#3368A0] transition-colors">About the Project</a></li>
+              <li><a href="/contact" class="hover:text-[#3368A0] transition-colors">Contact & Feedback</a></li>
             </ul>
           </div>
         </div>
 
-        <div class="pt-8 border-t border-[#2b313e]/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6b7385]">
+        <div class="pt-8 border-t border-[#E0DBD0] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6B7A90]">
           <p>© {new Date().getFullYear()} Discord Asset Studio. Not affiliated with or endorsed by Discord, Inc.</p>
           <p>Verified against official Discord documentation. 100% Client-Side.</p>
         </div>

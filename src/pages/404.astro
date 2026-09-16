@@ -1,33 +1,36 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import SketchUnderline from '../components/SketchUnderline.astro';
 ---
 
 <Layout title="Page Not Found | Discord Asset Studio" description="The requested Discord asset tool or guide could not be found. Navigate back to our verified creators suite.">
   <div class="max-w-3xl mx-auto px-4 py-24 text-center">
-    <div class="inline-flex items-center justify-center w-16 h-16 rounded-[12px] bg-[#242934] border border-[#2b313e] text-[#3b82f6] text-2xl font-bold mb-6">
+    <div class="inline-flex items-center justify-center w-16 h-16 rounded-[12px] bg-[#C8DFDB]/60 dark:bg-[#1F2E45] border border-[#66A3BF]/40 text-[#3368A0] dark:text-[#66A3BF] text-2xl font-black mb-6 shadow-sm">
       404
     </div>
-    <h1 class="text-3xl font-bold text-white tracking-tight mb-4">Asset Specification Not Found</h1>
-    <p class="text-[#9da6b8] text-base leading-relaxed mb-8 max-w-lg mx-auto">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight mb-4">
+      Asset Specification <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Not Found</span><SketchUnderline color="#66A3BF" /></span>
+    </h1>
+    <p class="text-[#475569] text-base leading-relaxed mb-8 max-w-lg mx-auto">
       The requested route does not map to a released Discord asset validator or guide. Choose one of our verified creator utilities below:
     </p>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto mb-10 text-left">
-      <a href="/tools/emoji" class="p-4 rounded-[12px] bg-[#15181e] border border-[#2b313e] hover:border-[#3b82f6] transition-colors block group">
-        <h2 class="text-sm font-semibold text-white group-hover:text-[#3b82f6]">Emoji Studio</h2>
-        <p class="text-xs text-[#6b7385] mt-1">256 KiB limit & 128x128 resize</p>
+      <a href="/tools/emoji" class="card-panel p-4 rounded-[12px] block group">
+        <h2 class="text-sm font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Emoji Studio</h2>
+        <p class="text-xs text-[#6B7A90] mt-1">256 KiB limit & 128x128 resize</p>
       </a>
-      <a href="/tools/sticker" class="p-4 rounded-[12px] bg-[#15181e] border border-[#2b313e] hover:border-[#3b82f6] transition-colors block group">
-        <h2 class="text-sm font-semibold text-white group-hover:text-[#3b82f6]">Sticker Studio</h2>
-        <p class="text-xs text-[#6b7385] mt-1">Exact 320x320 & 512 KiB APNG</p>
+      <a href="/tools/sticker" class="card-panel p-4 rounded-[12px] block group">
+        <h2 class="text-sm font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Sticker Studio</h2>
+        <p class="text-xs text-[#6B7A90] mt-1">Exact 320x320 & 512 KiB APNG</p>
       </a>
-      <a href="/tools/banner" class="p-4 rounded-[12px] bg-[#15181e] border border-[#2b313e] hover:border-[#3b82f6] transition-colors block group">
-        <h2 class="text-sm font-semibold text-white group-hover:text-[#3b82f6]">Banner Studio</h2>
-        <p class="text-xs text-[#6b7385] mt-1">Profile & Server banners</p>
+      <a href="/tools/banner" class="card-panel p-4 rounded-[12px] block group">
+        <h2 class="text-sm font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Banner Studio</h2>
+        <p class="text-xs text-[#6B7A90] mt-1">Profile & Server banners</p>
       </a>
     </div>
 
-    <a href="/" class="inline-flex items-center justify-center px-6 py-2.5 rounded-[8px] bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-medium transition-colors">
+    <a href="/" class="btn-primary inline-flex items-center justify-center px-7 py-3 rounded-[8px] text-sm font-semibold">
       Return to Studio Home
     </a>
   </div>

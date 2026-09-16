@@ -1,0 +1,25 @@
+---
+interface Props {
+  class?: string;
+  color?: string; // CSS color or default
+}
+
+const { class: className = "", color } = Astro.props;
+---
+
+<svg
+  class={`sketch-underline absolute -bottom-1.5 left-0 w-full h-[10px] sm:h-[12px] overflow-visible pointer-events-none ${className}`}
+  viewBox="0 0 240 14"
+  fill="none"
+  preserveAspectRatio="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M 3 9 C 28 4, 60 12, 95 6 C 130 1, 165 11, 198 5 C 215 2, 228 8, 238 6"
+    stroke={color || "currentColor"}
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="sketch-path"
+  />
+</svg>

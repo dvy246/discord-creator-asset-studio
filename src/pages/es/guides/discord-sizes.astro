@@ -1,5 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
+import SketchUnderline from '../../../components/SketchUnderline.astro';
 ---
 
 <Layout 
@@ -8,57 +9,58 @@ import Layout from '../../../layouts/Layout.astro';
 >
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-12">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3b82f6]/10 text-[#3b82f6] text-xs font-semibold border border-[#3b82f6]/20 mb-4">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4 shadow-xs">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
         Actualizado para Versiones 2026
       </div>
-      <h1 class="text-3xl sm:text-5xl font-bold text-white tracking-tight mb-4">
-        Tabla Oficial de Tamaños y Dimensiones de Discord
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-[#192538] tracking-tight mb-4">
+        Tabla Oficial de Tamaños y <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Dimensiones</span><SketchUnderline color="#66A3BF" /></span>
       </h1>
-      <p class="text-[#9da6b8] text-lg leading-relaxed max-w-3xl">
+      <p class="text-[#475569] text-lg leading-relaxed max-w-3xl">
         Cada dimensión oficial, límite binario de bytes, formato admitido y requisito de suscripción para creadores de Discord.
       </p>
     </div>
 
     <!-- Tabla -->
-    <div class="overflow-x-auto rounded-[12px] border border-[#2b313e] bg-[#15181e] mb-12">
+    <div class="overflow-x-auto rounded-[14px] border border-[#E0DBD0] bg-[#FFFFFF] shadow-sm mb-12">
       <table class="w-full text-left text-sm">
-        <thead class="bg-[#1c2028] text-xs uppercase text-[#9da6b8] border-b border-[#2b313e]">
+        <thead class="bg-[#FAF8F5] text-xs uppercase font-bold text-[#192538] border-b border-[#E0DBD0]">
           <tr>
-            <th class="py-3.5 px-4">Tipo de Asset</th>
-            <th class="py-3.5 px-4">Dimensiones</th>
-            <th class="py-3.5 px-4">Peso Máximo</th>
-            <th class="py-3.5 px-4">Formatos</th>
-            <th class="py-3.5 px-4">Requisitos</th>
+            <th class="py-4 px-5">Tipo de Asset</th>
+            <th class="py-4 px-5">Dimensiones</th>
+            <th class="py-4 px-5">Peso Máximo</th>
+            <th class="py-4 px-5">Formatos</th>
+            <th class="py-4 px-5">Requisitos</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-[#2b313e] text-[#f0f2f5]">
-          <tr class="hover:bg-[#1c2028]/50">
-            <td class="py-3.5 px-4 font-semibold text-white">Banner de Perfil Global</td>
-            <td class="py-3.5 px-4 font-mono text-xs text-[#3b82f6]">Mín 680 × 240</td>
-            <td class="py-3.5 px-4 font-mono text-xs">10 MB</td>
-            <td class="py-3.5 px-4 text-xs text-[#9da6b8]">PNG, JPG, GIF</td>
-            <td class="py-3.5 px-4 text-xs"><span class="px-2 py-0.5 rounded bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20">Discord Nitro</span></td>
+        <tbody class="divide-y divide-[#E0DBD0] text-[#192538]">
+          <tr class="hover:bg-[#FAF8F5]/80 transition-colors">
+            <td class="py-4 px-5 font-semibold text-[#192538]">Banner de Perfil Global</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF]">Mín 680 × 240</td>
+            <td class="py-4 px-5 font-mono text-xs">10 MB</td>
+            <td class="py-4 px-5 text-xs text-[#475569]">PNG, JPG, GIF</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2 py-0.5 rounded bg-[#C8DFDB]/50 text-[#3368A0] dark:text-[#66A3BF] border border-[#66A3BF]/30 font-medium">Discord Nitro</span></td>
           </tr>
-          <tr class="hover:bg-[#1c2028]/50">
-            <td class="py-3.5 px-4 font-semibold text-white">Banner del Servidor</td>
-            <td class="py-3.5 px-4 font-mono text-xs text-[#3b82f6]">960 × 540 (16:9)</td>
-            <td class="py-3.5 px-4 font-mono text-xs">10 MB</td>
-            <td class="py-3.5 px-4 text-xs text-[#9da6b8]">PNG, JPG, GIF</td>
-            <td class="py-3.5 px-4 text-xs"><span class="px-2 py-0.5 rounded bg-[#3b82f6]/10 text-[#3b82f6] border border-[#3b82f6]/20">Boost Nivel 2 / 3</span></td>
+          <tr class="hover:bg-[#FAF8F5]/80 transition-colors">
+            <td class="py-4 px-5 font-semibold text-[#192538]">Banner del Servidor</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF]">960 × 540 (16:9)</td>
+            <td class="py-4 px-5 font-mono text-xs">10 MB</td>
+            <td class="py-4 px-5 text-xs text-[#475569]">PNG, JPG, GIF</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2 py-0.5 rounded bg-[#C8DFDB]/50 text-[#3368A0] dark:text-[#66A3BF] border border-[#66A3BF]/30 font-medium">Boost Nivel 2 / 3</span></td>
           </tr>
-          <tr class="hover:bg-[#1c2028]/50">
-            <td class="py-3.5 px-4 font-semibold text-white">Emoji Personalizado</td>
-            <td class="py-3.5 px-4 font-mono text-xs text-[#3b82f6]">128 × 128 (vista 32px)</td>
-            <td class="py-3.5 px-4 font-mono text-xs text-[#ef4444]">256 KiB</td>
-            <td class="py-3.5 px-4 text-xs text-[#9da6b8]">PNG, JPG, GIF, WEBP</td>
-            <td class="py-3.5 px-4 text-xs">Ranura de Servidor</td>
+          <tr class="hover:bg-[#FAF8F5]/80 transition-colors">
+            <td class="py-4 px-5 font-semibold text-[#192538]">Emoji Personalizado</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF]">128 × 128 (vista 32px)</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#DC2626] font-bold">256 KiB</td>
+            <td class="py-4 px-5 text-xs text-[#475569]">PNG, JPG, GIF, WEBP</td>
+            <td class="py-4 px-5 text-xs font-medium text-[#475569]">Ranura de Servidor</td>
           </tr>
-          <tr class="hover:bg-[#1c2028]/50">
-            <td class="py-3.5 px-4 font-semibold text-white">Sticker de Servidor</td>
-            <td class="py-3.5 px-4 font-mono text-xs text-[#3b82f6]">Exacto 320 × 320</td>
-            <td class="py-3.5 px-4 font-mono text-xs text-[#ef4444]">512 KiB</td>
-            <td class="py-3.5 px-4 text-xs text-[#9da6b8]">PNG / APNG animado</td>
-            <td class="py-3.5 px-4 text-xs">Máx 5s y 60 FPS</td>
+          <tr class="hover:bg-[#FAF8F5]/80 transition-colors">
+            <td class="py-4 px-5 font-semibold text-[#192538]">Sticker de Servidor</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF]">Exacto 320 × 320</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#DC2626] font-bold">512 KiB</td>
+            <td class="py-4 px-5 text-xs text-[#475569]">PNG / APNG animado</td>
+            <td class="py-4 px-5 text-xs font-medium text-[#475569]">Máx 5s y 60 FPS</td>
           </tr>
         </tbody>
       </table>

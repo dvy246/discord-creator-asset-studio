@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
 ---
 
 <Layout 
@@ -8,18 +9,20 @@ import Layout from '../../layouts/Layout.astro';
 >
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
-      <div class="flex items-center gap-2 text-xs text-[#9da6b8] mb-2 font-mono">
-        <a href="/" class="hover:text-white transition-colors">Studio</a>
+      <div class="flex items-center gap-2 text-xs text-[#6B7A90] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
-        <span class="text-white">Role Icon Studio</span>
+        <span class="text-[#192538] font-semibold">Role Icon Studio</span>
       </div>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Discord Role Icon Studio</h1>
-          <p class="text-xs sm:text-sm text-[#9da6b8] mt-1">Exactly 64 × 64 px • 256 KB max • Boost Level 2 & Manage Roles required</p>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            Discord Role Icon <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Studio</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] mt-1">Exactly 64 × 64 px • 256 KB max • Boost Level 2 & Manage Roles required</p>
         </div>
-        <div class="flex items-center gap-2 text-xs bg-[#15181e] px-3 py-1.5 rounded-[8px] border border-[#2b313e] text-[#10b981]">
-          <span class="w-2 h-2 rounded-full bg-[#10b981]"></span>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] text-[#3368A0] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
           Local Processing
         </div>
       </div>
@@ -27,30 +30,30 @@ import Layout from '../../layouts/Layout.astro';
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       <div class="lg:col-span-7 space-y-6">
-        <div id="dropzone" class="border-2 border-dashed border-[#2b313e] hover:border-[#3b82f6] rounded-[12px] bg-[#15181e] p-8 text-center transition-all cursor-pointer relative">
+        <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs">
           <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
           <div class="space-y-2 pointer-events-none">
-            <div class="w-12 h-12 rounded-[10px] bg-[#1c2028] text-[#3b82f6] flex items-center justify-center mx-auto text-xl font-bold">
+            <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 text-[#3368A0] flex items-center justify-center mx-auto text-xl font-bold">
               🛡️
             </div>
-            <p class="text-sm font-semibold text-white">Select badge or role icon artwork</p>
-            <p class="text-xs text-[#6b7385]">PNG, JPG, or WebP (Rescaled to exact 64x64)</p>
+            <p class="text-sm font-bold text-[#192538]">Select badge or role icon artwork</p>
+            <p class="text-xs text-[#6B7A90]">PNG, JPG, or WebP (Rescaled to exact 64x64)</p>
           </div>
         </div>
 
-        <div id="editorPanel" class="bg-[#15181e] border border-[#2b313e] rounded-[12px] p-6 hidden">
-          <div class="flex items-center justify-between pb-4 border-b border-[#2b313e] mb-4">
-            <h2 class="text-sm font-semibold text-white">64 × 64 Icon Surface</h2>
-            <button id="resetBtn" class="text-xs px-2.5 py-1 rounded-[6px] bg-[#1c2028] hover:bg-[#242934] border border-[#2b313e] text-[#9da6b8] hover:text-white">
+        <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden">
+          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-4">
+            <h2 class="text-sm font-bold text-[#192538]">64 × 64 Icon Surface</h2>
+            <button id="resetBtn" class="btn-secondary text-xs px-2.5 py-1 rounded-[6px]">
               Reset
             </button>
           </div>
 
-          <div class="flex items-center justify-center p-6 bg-[#0d0f12] rounded-[8px] border border-[#2b313e] overflow-hidden mb-6">
-            <canvas id="mainCanvas" width="64" height="64" class="w-16 h-16 shadow-sm rounded-[4px] bg-[repeating-conic-gradient(#1c2028_0%_25%,#15181e_0%_50%)] [background-size:8px_8px]"></canvas>
+          <div class="flex items-center justify-center p-6 bg-[#FAF8F5] rounded-[10px] border border-[#E0DBD0] overflow-hidden mb-6">
+            <canvas id="mainCanvas" width="64" height="64" class="w-16 h-16 shadow-sm rounded-[4px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] [background-size:8px_8px]"></canvas>
           </div>
 
-          <button id="exportBtn" class="w-full py-3 rounded-[8px] bg-[#3b82f6] hover:bg-[#2563eb] text-white text-sm font-semibold transition-colors shadow-sm">
+          <button id="exportBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold shadow-sm">
             Export Role Icon (64x64)
           </button>
         </div>
@@ -58,12 +61,11 @@ import Layout from '../../layouts/Layout.astro';
 
       <div class="lg:col-span-5 space-y-6">
         <!-- Live Role Badge Chat Preview -->
-        <div class="bg-[#15181e] border border-[#2b313e] rounded-[12px] p-6">
-          <h2 class="text-sm font-semibold text-white pb-3 border-b border-[#2b313e] mb-4">Chat Nameplate Preview</h2>
-          <div class="p-4 rounded-[8px] bg-[#313338] text-white">
+        <div class="card-panel rounded-[14px] p-6">
+          <h2 class="text-sm font-bold text-[#192538] pb-3 border-b border-[#E0DBD0] mb-4">Chat Nameplate Preview</h2>
+          <div class="p-4 rounded-[10px] bg-[#313338] text-white">
             <div class="flex items-center gap-2">
               <span class="text-xs font-semibold text-[#f59e0b]">Guild Master</span>
-              <!-- 16px or 20px role badge display -->
               <div class="w-4 h-4 flex items-center justify-center">
                 <img id="roleBadgeImg" class="w-4 h-4 object-contain hidden" alt="Role Icon Badge Preview" />
                 <span id="badgePlaceholder" class="w-3 h-3 rounded-full bg-[#f59e0b]/40"></span>
@@ -74,22 +76,22 @@ import Layout from '../../layouts/Layout.astro';
           </div>
         </div>
 
-        <div class="bg-[#15181e] border border-[#2b313e] rounded-[12px] p-6">
-          <h2 class="text-sm font-semibold text-white pb-3 border-b border-[#2b313e] mb-4">Specification Receipt</h2>
+        <div class="card-panel rounded-[14px] p-6">
+          <h2 class="text-sm font-bold text-[#192538] pb-3 border-b border-[#E0DBD0] mb-4">Specification Receipt</h2>
           <div class="space-y-3 text-xs font-mono">
-            <div class="flex items-center justify-between p-2.5 rounded-[6px] bg-[#1c2028] border border-[#2b313e]">
-              <span class="text-[#9da6b8]">Dimensions:</span>
-              <span id="statDimensions" class="text-white">64 × 64 px</span>
+            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+              <span class="text-[#6B7A90]">Dimensions:</span>
+              <span id="statDimensions" class="text-[#192538] font-bold">64 × 64 px</span>
             </div>
-            <div class="flex items-center justify-between p-2.5 rounded-[6px] bg-[#1c2028] border border-[#2b313e]">
-              <span class="text-[#9da6b8]">Max Size:</span>
-              <span class="text-[#10b981]">256 KB</span>
+            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+              <span class="text-[#6B7A90]">Max Size:</span>
+              <span class="text-[#0D9488] font-bold">256 KB</span>
             </div>
-            <div class="flex items-center justify-between p-2.5 rounded-[6px] bg-[#1c2028] border border-[#2b313e]">
-              <span class="text-[#9da6b8]">Platform Gate:</span>
-              <span class="text-[#f59e0b]">Boost L2 + Manage Roles</span>
+            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+              <span class="text-[#6B7A90]">Platform Gate:</span>
+              <span class="text-[#D97706] font-bold">Boost L2 + Manage Roles</span>
             </div>
-            <div class="pt-2 border-t border-[#2b313e] text-[11px] text-[#6b7385] font-sans">
+            <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans leading-relaxed">
               <strong>Requirement:</strong> Server must reach Server Boost Level 2 to unlock custom role icons. Requires Manage Roles permission.
             </div>
           </div>
