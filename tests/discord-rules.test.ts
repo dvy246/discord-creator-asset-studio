@@ -1,33 +1,37 @@
 import test from 'node:test';
 import assert from 'node:assert';
-import { discordRules } from '../src/data/discord-rules.ts';
+import { DISCORD_RULES } from '../src/data/discord-rules.ts';
 
 test('discord rules registry contains baseline rules', () => {
-  assert.ok(Array.isArray(discordRules), 'discordRules should be an array');
-  assert.ok(discordRules.length >= 8, 'Should have at least 8 rules');
+  assert.ok(Array.isArray(DISCORD_RULES), 'DISCORD_RULES should be an array');
+  assert.ok(DISCORD_RULES.length >= 24, 'Should have at least 24 rules');
 
-  const ruleIds = discordRules.map(r => r.id);
-  assert.ok(ruleIds.includes('profile-banner'));
-  assert.ok(ruleIds.includes('server-banner'));
-  assert.ok(ruleIds.includes('invite-splash'));
-  assert.ok(ruleIds.includes('server-icon'));
-  assert.ok(ruleIds.includes('avatar'));
-  assert.ok(ruleIds.includes('role-icon'));
-  assert.ok(ruleIds.includes('custom-emoji'));
-  assert.ok(ruleIds.includes('custom-sticker'));
+  const assetTypes = new Set(DISCORD_RULES.map(r => r.assetType));
+  assert.ok(assetTypes.has('global-profile-banner'));
+  assert.ok(assetTypes.has('server-profile-banner'));
+  assert.ok(assetTypes.has('server-banner'));
+  assert.ok(assetTypes.has('invite-background'));
+  assert.ok(assetTypes.has('server-icon'));
+  assert.ok(assetTypes.has('avatar'));
+  assert.ok(assetTypes.has('role-icon'));
+  assert.ok(assetTypes.has('custom-emoji'));
+  assert.ok(assetTypes.has('custom-sticker'));
+  assert.ok(assetTypes.has('chat-attachment'));
 });
 
-test('discord rules have valid constraints', () => {
-  const emojiRule = discordRules.find(r => r.id === 'custom-emoji');
-  assert.ok(emojiRule, 'Emoji rule must exist');
-  assert.strictEqual(emojiRule.maxFileSizeBytes, 256 * 1024, 'Emoji limit should be 256KB');
-  assert.strictEqual(emojiRule.dimensions.width, 128);
-  assert.strictEqual(emojiRule.dimensions.height, 128);
+test('discord rules have valid constraints for specific items', () => {
+  const emojiRuleSize = DISCORD_RULES.find(r => r.ruleId === 'custom-emoji-max-file-size');
+  assert.ok(emojiRuleSize, 'Emoji file size rule must exist');
+  assert.strictEqual(emojiRuleSize.value, 256, 'Emoji limit should be 256');
+  assert.strictEqual(emojiRuleSize.units, 'KB', 'Emoji limit should be in KB');
 
-  const stickerRule = discordRules.find(r => r.id === 'custom-sticker');
-  assert.ok(stickerRule, 'Sticker rule must exist');
-  assert.strictEqual(stickerRule.maxFileSizeBytes, 512 * 1024, 'Sticker limit should be 512KB');
-  assert.strictEqual(stickerRule.dimensions.width, 320);
-  assert.strictEqual(stickerRule.dimensions.height, 320);
-  assert.strictEqual(stickerRule.dimensions.exact, true, 'Sticker dimensions must be exact');
+  const stickerRuleSize = DISCORD_RULES.find(r => r.ruleId === 'custom-sticker-max-file-size');
+  assert.ok(stickerRuleSize, 'Sticker file size rule must exist');
+  assert.strictEqual(stickerRuleSize.value, 512, 'Sticker limit should be 512');
+  assert.strictEqual(stickerRuleSize.units, 'KB', 'Sticker limit should be in KB');
+
+  const inviteSizeRule = DISCORD_RULES.find(r => r.ruleId === 'invite-background-size');
+  assert.ok(inviteSizeRule, 'Invite size rule must exist');
+  assert.strictEqual(inviteSizeRule.value, '1920x1080');
+  assert.strictEqual(inviteSizeRule.operator, 'eq');
 });

@@ -1,38 +1,50 @@
-import { discordRules } from '../src/data/discord-rules.ts';
+import { DISCORD_RULES } from '../src/data/discord-rules.ts';
 
 function verifyRules() {
-  const now = new Date();
   let hasErrors = false;
+  const now = new Date();
 
-  for (const rule of discordRules) {
-    // 1. Check if required fields are missing
-    if (!rule.id || !rule.name || !rule.dimensions || !rule.maxFileSizeBytes || !rule.formats || !rule.status || !rule.reviewDueAt) {
-      console.error(`[Error] Rule "${rule.id || 'unknown'}" is missing required fields.`);
+  const requiredFields = [
+    'ruleId',
+    'assetType',
+    'constraint',
+    'operator',
+    'formats',
+    'gate',
+    'verifiedAt',
+    'confidence',
+    'reviewDueAt',
+    'copyKey',
+  ];
+
+  for (const rule of DISCORD_RULES) {
+    // 1. Check reviewDueAt
+    const reviewDueAt = new Date(rule.reviewDueAt);
+    if (reviewDueAt < now) {
+      console.error(`Error: Rule ${rule.ruleId} is overdue for review! (Due: ${rule.reviewDueAt})`);
       hasErrors = true;
     }
 
-    // 2. Check if dimensions are valid
-    if (!rule.dimensions.width || !rule.dimensions.height) {
-      console.error(`[Error] Rule "${rule.id}" has invalid dimensions.`);
-      hasErrors = true;
+    // 2. Check required fields
+    for (const field of requiredFields) {
+      if (rule[field as keyof typeof rule] === undefined) {
+        console.error(`Error: Rule ${rule.ruleId} is missing required field: ${field}`);
+        hasErrors = true;
+      }
     }
-
-    // 3. Check if reviewDueAt has passed
-    const reviewDate = new Date(rule.reviewDueAt);
-    if (isNaN(reviewDate.getTime())) {
-      console.error(`[Error] Rule "${rule.id}" has an invalid reviewDueAt date: ${rule.reviewDueAt}`);
-      hasErrors = true;
-    } else if (reviewDate < now) {
-      console.error(`[Error] Rule "${rule.id}" review due date has passed (${rule.reviewDueAt}). Please verify the rule against Discord documentation and update the date.`);
+    
+    // Value can be null for constraint like file-types but it should be defined
+    if (rule.value === undefined) {
+      console.error(`Error: Rule ${rule.ruleId} value is undefined.`);
       hasErrors = true;
     }
   }
 
   if (hasErrors) {
-    console.error('\nVerification failed. Please fix the errors above.');
+    console.error('Validation failed. Some rules are invalid or overdue.');
     process.exit(1);
   } else {
-    console.log('All discord rules verified successfully.');
+    console.log(`Successfully verified ${DISCORD_RULES.length} Discord rules.`);
     process.exit(0);
   }
 }
