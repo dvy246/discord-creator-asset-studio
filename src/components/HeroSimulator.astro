@@ -45,14 +45,14 @@
   </div>
 
   <!-- Visual Artwork Stage: With Dynamic Motion & Scanner Beam -->
-  <div id="stageViewport" class="relative rounded-[14px] p-3 sm:p-4 bg-[#FAF8F5] dark:bg-[#111620] border border-[#E0DBD0] dark:border-[#263346] overflow-hidden mb-4 min-h-[205px] flex flex-col justify-center items-center group">
+  <div id="stageViewport" class="relative rounded-[14px] p-3 sm:p-4 bg-[#FAF8F5] dark:bg-[#111620] border border-[#E0DBD0] dark:border-[#263346] overflow-hidden mb-4 min-h-[230px] flex flex-col justify-center items-center group">
     
     <!-- Stage 1: Banner Artwork & Discord Server Card Preview -->
     <div id="stage-banner" class="sim-stage stage-active w-full flex flex-col items-center">
-      <div class="relative w-full rounded-[12px] bg-[#2B2D31] dark:bg-[#181C26] border border-[#E0DBD0] dark:border-[#2E3C52] overflow-hidden shadow-md">
+      <div class="relative w-full rounded-[12px] bg-[#2B2D31] dark:bg-[#181C26] border border-[#E0DBD0] dark:border-[#2E3C52] overflow-hidden shadow-lg">
         
-        <!-- Banner Graphic (16:9 Artwork with Living Cosmic Motion) -->
-        <div class="relative w-full aspect-[16/9] max-h-[140px] overflow-hidden">
+        <!-- Banner Graphic (16:9 Art-Directed Celestial Sanctuary with Living Cosmic Motion) -->
+        <div class="relative w-full aspect-[16/9] max-h-[165px] overflow-hidden">
           
           <!-- Moving Laser Calibration Scanner Line -->
           <div class="laser-scanner pointer-events-none absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_10px_#22d3ee] z-20"></div>
@@ -60,20 +60,29 @@
           <svg class="w-full h-full object-cover" viewBox="0 0 960 540" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="bannerSkyGrad" x1="0" y1="0" x2="960" y2="540" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#0E1420" />
-                <stop offset="45%" stop-color="#192A45" />
-                <stop offset="80%" stop-color="#3368A0" />
-                <stop offset="100%" stop-color="#66A3BF" />
+                <stop offset="0%" stop-color="#080C16" />
+                <stop offset="35%" stop-color="#141830" />
+                <stop offset="65%" stop-color="#241B48" />
+                <stop offset="85%" stop-color="#1E3A8A" />
+                <stop offset="100%" stop-color="#0F284E" />
               </linearGradient>
-              <linearGradient id="nebulaGlow" x1="480" y1="120" x2="480" y2="400" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#C8DFDB" stop-opacity="0.4" />
-                <stop offset="100%" stop-color="#3368A0" stop-opacity="0" />
-              </linearGradient>
-              <radialGradient id="celestialMoon" cx="480" cy="180" r="140" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#F2EFE7" />
-                <stop offset="60%" stop-color="#C8DFDB" />
-                <stop offset="100%" stop-color="#66A3BF" stop-opacity="0" />
+              <radialGradient id="ringedGiant" cx="620" cy="180" r="160" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FFFDF7" />
+                <stop offset="40%" stop-color="#E2F1F8" />
+                <stop offset="70%" stop-color="#66A3BF" />
+                <stop offset="100%" stop-color="#1E3A8A" stop-opacity="0" />
               </radialGradient>
+              <linearGradient id="auroraRibbonA" x1="0" y1="200" x2="960" y2="120" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#58E1FF" stop-opacity="0" />
+                <stop offset="30%" stop-color="#58E1FF" stop-opacity="0.6" />
+                <stop offset="65%" stop-color="#57F287" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="#58E1FF" stop-opacity="0" />
+              </linearGradient>
+              <linearGradient id="auroraRibbonB" x1="960" y1="260" x2="0" y2="180" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#EB459E" stop-opacity="0" />
+                <stop offset="50%" stop-color="#9B59B6" stop-opacity="0.4" />
+                <stop offset="100%" stop-color="#5865F2" stop-opacity="0" />
+              </linearGradient>
               <linearGradient id="cometGrad" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stop-color="#FFFFFF" />
                 <stop offset="100%" stop-color="#58E1FF" stop-opacity="0" />
@@ -82,37 +91,58 @@
 
             <!-- Sky & Space Background -->
             <rect width="960" height="540" fill="url(#bannerSkyGrad)" />
-            
+
+            <!-- Aurora Borealis Ribbons -->
+            <path d="M0 240 C 240 140, 520 280, 960 160 L 960 320 C 640 220, 360 340, 0 240 Z" fill="url(#auroraRibbonA)" />
+            <path d="M0 290 C 320 210, 680 320, 960 210 L 960 380 C 680 280, 340 370, 0 290 Z" fill="url(#auroraRibbonB)" />
+
             <!-- Animated Twinkling Starfield -->
             <g fill="#FFFFFF">
-              <circle class="anim-twinkle-1" cx="80" cy="60" r="2.0" />
-              <circle class="anim-twinkle-2" cx="210" cy="90" r="1.5" />
-              <circle class="anim-twinkle-3" cx="340" cy="40" r="2.2" />
-              <circle class="anim-twinkle-1" cx="580" cy="70" r="1.8" />
-              <circle class="anim-twinkle-2" cx="720" cy="50" r="2.4" />
-              <circle class="anim-twinkle-3" cx="850" cy="110" r="1.6" />
-              <circle class="anim-twinkle-2" cx="150" cy="160" r="1.4" />
-              <circle class="anim-twinkle-1" cx="790" cy="180" r="1.8" />
-              <circle class="anim-twinkle-3" cx="910" cy="80" r="2.0" />
+              <circle class="anim-twinkle-1" cx="80" cy="50" r="1.8" />
+              <circle class="anim-twinkle-2" cx="190" cy="85" r="1.4" />
+              <circle class="anim-twinkle-3" cx="310" cy="35" r="2.2" />
+              <circle class="anim-twinkle-1" cx="440" cy="75" r="1.6" />
+              <circle class="anim-twinkle-2" cx="740" cy="45" r="2.4" />
+              <circle class="anim-twinkle-3" cx="860" cy="95" r="1.5" />
+              <circle class="anim-twinkle-2" cx="140" cy="140" r="1.4" />
+              <circle class="anim-twinkle-1" cx="820" cy="160" r="1.8" />
+              <circle class="anim-twinkle-3" cx="920" cy="65" r="2.0" />
             </g>
 
-            <!-- Animated Shooting Star / Cosmic Trail -->
+            <!-- Constellation Lines -->
+            <path d="M80 50 L 190 85 L 310 35 L 440 75" stroke="#FFFFFF" stroke-width="0.75" stroke-opacity="0.3" stroke-dasharray="3 3" />
+
+            <!-- Shooting Star / Cosmic Trail -->
             <g class="anim-shooting-star">
-              <line x1="240" y1="30" x2="330" y2="85" stroke="url(#cometGrad)" stroke-width="2.5" stroke-linecap="round" />
+              <line x1="220" y1="20" x2="320" y2="75" stroke="url(#cometGrad)" stroke-width="2.5" stroke-linecap="round" />
             </g>
 
-            <!-- Glowing Celestial Core with Breathing Pulse -->
-            <circle class="anim-pulse-slow" cx="480" cy="180" r="140" fill="url(#celestialMoon)" />
+            <!-- Ringed Planetary Giant -->
+            <g class="anim-pulse-slow">
+              <!-- Back half of planetary ring -->
+              <ellipse cx="620" cy="180" rx="210" ry="42" fill="none" stroke="#C8DFDB" stroke-width="12" stroke-opacity="0.25" transform="rotate(-18 620 180)" />
+              <!-- Planet Sphere -->
+              <circle cx="620" cy="180" r="110" fill="url(#ringedGiant)" />
+              <!-- Front half of planetary ring -->
+              <path d="M420 245 C 500 270, 740 200, 820 115" fill="none" stroke="#FAF8F5" stroke-width="10" stroke-opacity="0.5" stroke-linecap="round" />
+            </g>
+
+            <!-- Distant Mountain Ridge -->
+            <path d="M0 410 L 140 330 L 260 380 L 420 280 L 560 350 L 710 260 L 840 330 L 960 270 L 960 540 L 0 540 Z" fill="#111B2E" opacity="0.95" />
             
-            <!-- Nebula Cloud -->
-            <path d="M0 320 C 300 240, 600 360, 960 270 L 960 540 L 0 540 Z" fill="url(#nebulaGlow)" />
+            <!-- Midground Alpine Ridge with Cyber Signal Beacon -->
+            <path d="M0 450 L 180 370 L 340 430 L 490 320 L 640 400 L 780 330 L 960 410 L 960 540 L 0 540 Z" fill="#0A111E" />
+            <!-- Radio Mast Beacon on Peak -->
+            <line x1="490" y1="320" x2="490" y2="280" stroke="#66A3BF" stroke-width="2" />
+            <circle cx="490" cy="278" r="3" fill="#EF4444" class="animate-ping" />
+            <circle cx="490" cy="278" r="2" fill="#EF4444" />
+
+            <!-- Foreground Floating Monolith / Archway -->
+            <polygon points="120,490 135,390 150,490" fill="#060A12" />
+            <polygon points="135,390 142,390 140,490 135,490" fill="#3368A0" opacity="0.4" />
             
-            <!-- Mountain Silhouette Layers -->
-            <path d="M0 430 L 160 310 L 320 380 L 480 260 L 640 370 L 800 290 L 960 390 L 960 540 L 0 540 Z" fill="#141E30" opacity="0.9" />
-            <path d="M0 480 L 220 380 L 410 440 L 590 350 L 760 420 L 960 360 L 960 540 L 0 540 Z" fill="#0C121C" />
-            
-            <!-- Foreground Mist Horizon Line -->
-            <line x1="0" y1="538" x2="960" y2="538" stroke="#66A3BF" stroke-width="3" stroke-opacity="0.6" />
+            <!-- Misty Valley Glow Line -->
+            <line x1="0" y1="538" x2="960" y2="538" stroke="#58E1FF" stroke-width="3" stroke-opacity="0.7" />
           </svg>
 
           <!-- Discord Top 48px Header Safe Zone Overlay -->
@@ -128,17 +158,20 @@
         <!-- Discord Server Card Bottom Info Bar -->
         <div class="p-2.5 sm:p-3 flex items-center justify-between bg-[#232428] text-white">
           <div class="flex items-center gap-2.5">
-            <div class="w-7 h-7 rounded-full bg-[#3368A0] border border-white/20 flex items-center justify-center text-xs font-bold shadow-xs anim-pulse-subtle">
-              ✦
+            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-[#5865F2] to-[#3368A0] border border-white/30 flex items-center justify-center text-xs font-bold shadow-xs anim-pulse-subtle">
+              💎
             </div>
             <div>
-              <div class="text-xs font-bold leading-none">ASTRAL HORIZON</div>
-              <div class="text-[10px] text-[#949BA4] mt-0.5">3,420 Members • Level 3 Boosted</div>
+              <div class="text-xs font-bold leading-none flex items-center gap-1.5">
+                <span>ASTRAL SANCTUARY</span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-[#5865F2] text-white font-mono">VERIFIED</span>
+              </div>
+              <div class="text-[10px] text-[#949BA4] mt-0.5">16,840 Members • Level 3 Boosted</div>
             </div>
           </div>
-          <span class="text-[10px] font-semibold text-[#0D9488] bg-[#0D9488]/15 px-2 py-0.5 rounded border border-[#0D9488]/30 flex items-center gap-1">
+          <span class="text-[10px] font-semibold text-[#0D9488] bg-[#0D9488]/15 px-2.5 py-0.5 rounded-full border border-[#0D9488]/30 flex items-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-[#0D9488] animate-pulse"></span>
-            Ready
+            Discord Ready
           </span>
         </div>
       </div>
@@ -342,26 +375,16 @@
     </div>
   </div>
 
-  <!-- Studio Outcome Specifications (Creative & Accurate) -->
-  <div class="space-y-2.5 text-xs font-mono mb-4">
-    <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-      <span class="text-[#6B7A90] dark:text-[#8494A7]">Canvas Format:</span>
-      <span id="simFormatText" class="text-[#192538] dark:text-[#F0F4F8] font-bold">16:9 Discord Server Banner</span>
+  <!-- Consolidated Studio Calibration & Verification Bar -->
+  <div class="p-2.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex items-center justify-between text-xs font-mono mb-4">
+    <div class="flex items-center gap-2 truncate">
+      <span class="w-2 h-2 rounded-full bg-[#3368A0] dark:bg-[#66A3BF] flex-shrink-0"></span>
+      <span id="simSpecText" class="font-bold text-[#192538] dark:text-[#F0F4F8] truncate">960 × 540 (16:9) • Top 48px Cleared</span>
     </div>
-
-    <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-      <span class="text-[#6B7A90] dark:text-[#8494A7]">Discord Calibration:</span>
-      <span id="simSpecText" class="text-[#0D9488] font-bold">960 × 540 • Top 48px Cleared</span>
-    </div>
-
-    <!-- Live Compliance Status Indicator -->
-    <div id="simResultBox" class="p-2.5 rounded-[8px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-[#192538] dark:text-[#CBD5E1] text-[11px] flex items-center justify-between transition-colors">
-      <span id="simResultText" class="font-medium">Output: 100% upload-ready for Discord</span>
-      <span id="simStatusBadge" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-        VERIFIED READY
-      </span>
-    </div>
+    <span id="simStatusBadge" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1 flex-shrink-0 ml-2">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+      VERIFIED READY
+    </span>
   </div>
 
   <!-- Action CTAs -->
@@ -576,25 +599,25 @@
   const STUDIO_SPECS: Record<string, StudioSpec> = {
     banner: {
       formatName: '16:9 Discord Server Banner',
-      specs: '960 × 540 • Top 48px Cleared',
+      specs: '960 × 540 (16:9) • Top 48px Cleared',
       toolUrl: '/tools/banner',
       buttonLabel: 'Open Banner Studio'
     },
     avatar: {
       formatName: 'Square Avatar Master',
-      specs: '512 × 512 • 1:1 Circle Mask Safe',
+      specs: '512 × 512 (1:1) • Circle Mask Safe',
       toolUrl: '/tools/avatar',
       buttonLabel: 'Open Avatar Studio'
     },
     sticker: {
       formatName: 'Custom Server Sticker',
-      specs: 'Exact 320 × 320 • Lossless APNG',
+      specs: '320 × 320 • Lossless APNG Ready',
       toolUrl: '/tools/sticker',
       buttonLabel: 'Open Sticker Studio'
     },
     emoji: {
       formatName: 'Custom Server Emoji',
-      specs: '128 × 128 Master • 32px Chat Tested',
+      specs: '128 × 128 • 32px Chat Tested',
       toolUrl: '/tools/emoji',
       buttonLabel: 'Open Emoji Studio'
     }
