@@ -7,8 +7,9 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node --experimental-strip-types scripts/verify-rules.ts && astro build",
     "preview": "astro preview",
+    "test": "node --experimental-strip-types --test tests/discord-rules.test.ts",
     "astro": "astro"
   },
   "dependencies": {
