@@ -32,4 +32,16 @@ test('E2E SEO: Title is under 60 chars and meta description is under 150 chars',
     const desc = descMatch[1];
     assert.ok(desc.length <= 150, `Meta description must be <= 150 characters. Current length: ${desc.length}`);
   }
+
+  // Check canonical link
+  const canonicalMatch = html.match(/<link[^>]*rel=["']canonical["'][^>]*href=["'](.*?)["'][^>]*>/i) || html.match(/<link[^>]*href=["'](.*?)["'][^>]*rel=["']canonical["'][^>]*>/i);
+  assert.ok(canonicalMatch, 'Canonical link must exist');
+  assert.ok(canonicalMatch[1].startsWith('https://discordassets.studio'), 'Canonical link must be absolute');
+
+  // Check hreflang
+  const hreflangEnMatch = html.match(/<link[^>]*rel=["']alternate["'][^>]*hreflang=["']en["'][^>]*>/i) || html.match(/<link[^>]*hreflang=["']en["'][^>]*rel=["']alternate["'][^>]*>/i);
+  assert.ok(hreflangEnMatch, 'Hreflang for en must exist');
+
+  const hreflangEsMatch = html.match(/<link[^>]*rel=["']alternate["'][^>]*hreflang=["']es["'][^>]*>/i) || html.match(/<link[^>]*hreflang=["']es["'][^>]*rel=["']alternate["'][^>]*>/i);
+  assert.ok(hreflangEsMatch, 'Hreflang for es must exist');
 });

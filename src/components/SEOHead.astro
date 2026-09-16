@@ -1,0 +1,54 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  canonicalUrl?: string;
+  ogType?: string;
+  ogImage?: string;
+}
+
+const { 
+  title, 
+  description, 
+  canonicalUrl,
+  ogType = 'website',
+  ogImage = 'https://discordassets.studio/og-image.jpg'
+} = Astro.props;
+
+const site = Astro.site ? new URL(Astro.site).origin : 'https://discordassets.studio';
+const pathname = Astro.url.pathname;
+const canonical = canonicalUrl || new URL(pathname, site).toString();
+
+const isEs = pathname.startsWith('/es');
+const basePath = isEs ? pathname.replace(/^\/es/, '') || '/' : pathname;
+
+// Ensure consistent trailing slash behavior for URLs if needed
+const enUrl = new URL(basePath, site).toString();
+const esUrl = new URL(basePath === '/' ? '/es/' : `/es${basePath}`, site).toString();
+const xDefaultUrl = enUrl;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<link rel="alternate" hreflang="en" href={enUrl} />
+<link rel="alternate" hreflang="es" href={esUrl} />
+<link rel="alternate" hreflang="x-default" href={xDefaultUrl} />
+
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:site_name" content="Discord Asset Studio" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
