@@ -68,6 +68,22 @@ export const DISCORD_RULES: DiscordRule[] = [
     copyKey: 'rules.globalBannerMinSize'
   },
   {
+    ruleId: 'global-banner-safe-zone',
+    assetType: 'global-profile-banner',
+    constraint: 'safe-zone',
+    operator: 'none',
+    value: 'none',
+    units: null,
+    formats: [],
+    gate: 'none',
+    sourceUrl: null,
+    quotedSourceNote: 'no official safe zone.',
+    verifiedAt: '2025-01-01T00:00:00Z',
+    confidence: 'high',
+    reviewDueAt: '2027-01-01T00:00:00Z',
+    copyKey: 'rules.globalBannerSafeZone'
+  },
+  {
     ruleId: 'global-banner-max-file-size',
     assetType: 'global-profile-banner',
     constraint: 'max-size',
@@ -134,6 +150,22 @@ export const DISCORD_RULES: DiscordRule[] = [
     copyKey: 'rules.serverBannerMinSize'
   },
   {
+    ruleId: 'server-banner-recommended-size',
+    assetType: 'server-banner',
+    constraint: 'dimensions',
+    operator: 'eq',
+    value: '1920x1080',
+    units: 'px',
+    formats: [],
+    gate: 'none',
+    sourceUrl: null,
+    quotedSourceNote: 'recommended 1920x1080 (16:9)',
+    verifiedAt: '2025-01-01T00:00:00Z',
+    confidence: 'high',
+    reviewDueAt: '2027-01-01T00:00:00Z',
+    copyKey: 'rules.serverBannerRecommendedSize'
+  },
+  {
     ruleId: 'server-banner-animated',
     assetType: 'server-banner',
     constraint: 'file-types',
@@ -181,6 +213,22 @@ export const DISCORD_RULES: DiscordRule[] = [
     confidence: 'high',
     reviewDueAt: '2027-01-01T00:00:00Z',
     copyKey: 'rules.inviteBackgroundSize'
+  },
+  {
+    ruleId: 'invite-background-safe-zone',
+    assetType: 'invite-background',
+    constraint: 'safe-zone',
+    operator: 'none',
+    value: 'central modal',
+    units: null,
+    formats: [],
+    gate: 'none',
+    sourceUrl: null,
+    quotedSourceNote: 'central modal simulation.',
+    verifiedAt: '2025-01-01T00:00:00Z',
+    confidence: 'high',
+    reviewDueAt: '2027-01-01T00:00:00Z',
+    copyKey: 'rules.inviteBackgroundSafeZone'
   },
   // Server icon
   {
@@ -313,6 +361,22 @@ export const DISCORD_RULES: DiscordRule[] = [
     confidence: 'high',
     reviewDueAt: '2027-01-01T00:00:00Z',
     copyKey: 'rules.customEmojiMaxDimensions'
+  },
+  {
+    ruleId: 'custom-emoji-preview-size',
+    assetType: 'custom-emoji',
+    constraint: 'dimensions',
+    operator: 'eq',
+    value: '32x32',
+    units: 'px',
+    formats: [],
+    gate: 'none',
+    sourceUrl: null,
+    quotedSourceNote: '32x32 preview',
+    verifiedAt: '2025-01-01T00:00:00Z',
+    confidence: 'high',
+    reviewDueAt: '2027-01-01T00:00:00Z',
+    copyKey: 'rules.customEmojiPreviewSize'
   },
   {
     ruleId: 'custom-emoji-max-file-size',
