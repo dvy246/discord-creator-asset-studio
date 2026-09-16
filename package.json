@@ -10,6 +10,7 @@
     "build": "node --experimental-strip-types scripts/verify-rules.ts && astro build",
     "preview": "astro preview",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "deploy": "npm run build && npx wrangler pages deploy dist --project-name=discord-creator-asset-studio --force --commit-dirty=true",
     "astro": "astro"
   },
   "dependencies": {

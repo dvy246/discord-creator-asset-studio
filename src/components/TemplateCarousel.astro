@@ -1,0 +1,851 @@
+---
+// Hyper-Optimized 3D Stacked Template Showcase
+// 100% GPU-Accelerated, 0% CPU Thrash, Zero DOM Rebuilds during interactions
+---
+
+<div class="w-full select-none" id="templateCarouselRoot">
+  <!-- Controls Bar: Category Filters & Instructions -->
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 px-2">
+    <!-- Filter Pills -->
+    <div class="flex items-center gap-1.5 p-1 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] overflow-x-auto" id="carouselFilters">
+      <button type="button" data-filter="all" class="carousel-filter-btn px-3.5 py-1.5 rounded-[8px] text-xs font-bold bg-[#3368A0] text-white shadow-xs transition-colors cursor-pointer">
+        All
+      </button>
+      <button type="button" data-filter="banner" class="carousel-filter-btn px-3.5 py-1.5 rounded-[8px] text-xs font-bold text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white transition-colors cursor-pointer">
+        Banner
+      </button>
+      <button type="button" data-filter="avatar" class="carousel-filter-btn px-3.5 py-1.5 rounded-[8px] text-xs font-bold text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white transition-colors cursor-pointer">
+        Avatar
+      </button>
+      <button type="button" data-filter="sticker" class="carousel-filter-btn px-3.5 py-1.5 rounded-[8px] text-xs font-bold text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white transition-colors cursor-pointer">
+        Sticker
+      </button>
+      <button type="button" data-filter="emoji" class="carousel-filter-btn px-3.5 py-1.5 rounded-[8px] text-xs font-bold text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white transition-colors cursor-pointer">
+        Emoji
+      </button>
+    </div>
+
+    <!-- Navigation Tip -->
+    <div class="hidden sm:flex items-center gap-2 text-xs font-medium text-[#6B7A90] dark:text-[#8494A7]">
+      <svg class="w-4 h-4 text-[#3368A0] dark:text-[#66A3BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+      </svg>
+      <span>Swipe or click side cards to navigate</span>
+    </div>
+  </div>
+
+  <!-- 3D Carousel Stage -->
+  <div class="relative w-full h-[400px] sm:h-[460px] lg:h-[500px] flex items-center justify-center overflow-hidden touch-pan-y" id="carouselStage">
+    <!-- Prev Chevron Button -->
+    <button
+      type="button"
+      id="carouselPrevBtn"
+      class="absolute left-2 sm:left-4 lg:left-8 z-50 p-3 rounded-full bg-white/95 dark:bg-[#1B2330]/95 border border-[#E0DBD0] dark:border-[#263346] shadow-md text-[#192538] dark:text-white hover:scale-110 active:scale-95 transition-transform cursor-pointer focus:outline-none"
+      aria-label="Previous template"
+    >
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Next Chevron Button -->
+    <button
+      type="button"
+      id="carouselNextBtn"
+      class="absolute right-2 sm:right-4 lg:right-8 z-50 p-3 rounded-full bg-white/95 dark:bg-[#1B2330]/95 border border-[#E0DBD0] dark:border-[#263346] shadow-md text-[#192538] dark:text-white hover:scale-110 active:scale-95 transition-transform cursor-pointer focus:outline-none"
+      aria-label="Next template"
+    >
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+
+    <!-- 3D Card Stack Container -->
+    <div class="relative w-full h-full flex items-center justify-center pointer-events-auto" id="carouselCardDeck">
+
+      <!-- Card 1: Neo Tokyo Nights (Banner) -->
+      <div
+        class="carousel-card absolute w-[260px] h-[340px] sm:w-[300px] sm:h-[400px] lg:w-[330px] lg:h-[440px] rounded-[20px] overflow-hidden bg-[#0A0E1A] border-2 border-white/10 shadow-xl pointer-events-auto cursor-pointer group"
+        data-category="banner"
+        data-tool="/tools/banner"
+        data-index="0"
+      >
+        <div class="relative w-full h-full overflow-hidden flex flex-col justify-between">
+          <svg class="card-artwork absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" viewBox="0 0 400 300" fill="none" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="ntSky3DFast" x1="0" y1="0" x2="0" y2="300" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#080718" />
+                <stop offset="45%" stop-color="#1E1236" />
+                <stop offset="75%" stop-color="#3A1752" />
+                <stop offset="100%" stop-color="#0D1122" />
+              </linearGradient>
+              <linearGradient id="neonCyanGleam3DFast" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#58E1FF" />
+                <stop offset="100%" stop-color="#5865F2" />
+              </linearGradient>
+            </defs>
+            <rect width="400" height="300" fill="url(#ntSky3DFast)" />
+            <polygon points="40,300 40,110 65,95 90,110 90,300" fill="#0E0D22" />
+            <polygon points="110,300 110,70 140,50 170,70 170,300" fill="#12102A" />
+            <polygon points="190,300 190,120 220,105 250,120 250,300" fill="#0C0B1E" />
+            <polygon points="270,300 270,80 300,60 330,80 330,300" fill="#13102C" />
+            <polygon points="345,300 345,130 380,115 395,130 395,300" fill="#0B0A1C" />
+            <line x1="140" y1="50" x2="140" y2="25" stroke="#58E1FF" stroke-width="2" />
+            <circle cx="140" cy="23" r="3" fill="#EF4444" />
+            <rect x="125" y="90" width="30" height="4" rx="2" fill="#58E1FF" />
+            <rect x="125" y="105" width="30" height="4" rx="2" fill="#FF5E7E" />
+            <rect x="125" y="120" width="30" height="4" rx="2" fill="#58E1FF" />
+            <rect x="285" y="95" width="30" height="4" rx="2" fill="#57F287" />
+            <rect x="285" y="110" width="30" height="4" rx="2" fill="#EB459E" />
+            <rect y="270" width="400" height="30" fill="#180F33" opacity="0.8" />
+            <line x1="0" y1="270" x2="400" y2="270" stroke="url(#neonCyanGleam3DFast)" stroke-width="2" stroke-opacity="0.8" />
+            <rect width="400" height="28" fill="#000000" fill-opacity="0.45" />
+            <line x1="0" y1="28" x2="400" y2="28" stroke="#FFFFFF" stroke-width="0.75" stroke-opacity="0.2" />
+          </svg>
+
+          <!-- Top Badge -->
+          <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-black/75 text-white text-[11px] font-mono font-bold border border-white/15">
+              16:9 BANNER
+            </span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+
+          <div class="card-depth-overlay absolute inset-0 bg-black/60 pointer-events-none transition-opacity duration-300 z-10 opacity-0 group-hover:opacity-10"></div>
+
+          <!-- Bottom Content Bar -->
+          <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+            <span class="text-[11px] font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">
+              960 × 540 • SAFE ZONE VERIFIED
+            </span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
+              Neo Tokyo Nights
+            </h3>
+            <p class="text-xs text-white/70 line-clamp-2 mb-4">
+              Cyberpunk skyline with clear top 48px Discord header safe margin.
+            </p>
+            <a
+              href="/tools/banner"
+              class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
+            >
+              <span>Customize in Studio</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Celestial Horizon (Banner) -->
+      <div
+        class="carousel-card absolute w-[260px] h-[340px] sm:w-[300px] sm:h-[400px] lg:w-[330px] lg:h-[440px] rounded-[20px] overflow-hidden bg-[#080B14] border-2 border-white/10 shadow-xl pointer-events-auto cursor-pointer group"
+        data-category="banner"
+        data-tool="/tools/banner"
+        data-index="1"
+      >
+        <div class="relative w-full h-full overflow-hidden flex flex-col justify-between">
+          <svg class="card-artwork absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" viewBox="0 0 400 300" fill="none" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="chSky3DFast" x1="0" y1="0" x2="0" y2="300" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#080B14" />
+                <stop offset="50%" stop-color="#141E33" />
+                <stop offset="100%" stop-color="#1E3A8A" />
+              </linearGradient>
+              <radialGradient id="chPlanet3DFast" cx="280" cy="110" r="90" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FFFDF7" />
+                <stop offset="45%" stop-color="#C8DFDB" />
+                <stop offset="100%" stop-color="#3368A0" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <rect width="400" height="300" fill="url(#chSky3DFast)" />
+            <g fill="#FFFFFF" opacity="0.8">
+              <circle cx="50" cy="40" r="1.2" /><circle cx="120" cy="60" r="1.5" /><circle cx="200" cy="30" r="1.0" />
+              <circle cx="340" cy="45" r="1.8" /><circle cx="70" cy="120" r="1.2" /><circle cx="370" cy="110" r="1.4" />
+            </g>
+            <circle cx="280" cy="110" r="60" fill="url(#chPlanet3DFast)" />
+            <ellipse cx="280" cy="110" rx="110" ry="22" fill="none" stroke="#C8DFDB" stroke-width="4" stroke-opacity="0.4" transform="rotate(-15 280 110)" />
+            <path d="M0 160 C 120 110, 260 190, 400 130 L 400 220 C 280 170, 140 230, 0 160 Z" fill="#58E1FF" opacity="0.35" />
+            <path d="M0 240 L 90 180 L 190 225 L 290 160 L 400 230 L 400 300 L 0 300 Z" fill="#0C121D" />
+            <line x1="0" y1="298" x2="400" y2="298" stroke="#58E1FF" stroke-width="2" stroke-opacity="0.6" />
+          </svg>
+
+          <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-black/75 text-white text-[11px] font-mono font-bold border border-white/15">
+              16:9 BANNER
+            </span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+
+          <div class="card-depth-overlay absolute inset-0 bg-black/60 pointer-events-none transition-opacity duration-300 z-10 opacity-0 group-hover:opacity-10"></div>
+
+          <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+            <span class="text-[11px] font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">
+              960 × 540 • 48PX HEADER SAFE
+            </span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
+              Celestial Horizon
+            </h3>
+            <p class="text-xs text-white/70 line-clamp-2 mb-4">
+              Ringed planetary giant with aurora ribbons and alpine ridge horizons.
+            </p>
+            <a
+              href="/tools/banner"
+              class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
+            >
+              <span>Customize in Studio</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Cyber Samurai (Avatar) -->
+      <div
+        class="carousel-card absolute w-[260px] h-[340px] sm:w-[300px] sm:h-[400px] lg:w-[330px] lg:h-[440px] rounded-[20px] overflow-hidden bg-[#121620] border-2 border-white/10 shadow-xl pointer-events-auto cursor-pointer group"
+        data-category="avatar"
+        data-tool="/tools/avatar"
+        data-index="2"
+      >
+        <div class="relative w-full h-full overflow-hidden flex flex-col justify-between">
+          <div class="absolute inset-0 flex items-center justify-center pb-24">
+            <div class="card-artwork w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-3 border-[#5865F2] shadow-lg transition-transform duration-500 group-hover:scale-108">
+              <svg class="w-full h-full" viewBox="0 0 200 200" fill="none">
+                <rect width="200" height="200" fill="#141E30" />
+                <circle cx="100" cy="85" r="44" fill="#F2EFE7" />
+                <rect x="68" y="76" width="64" height="16" rx="8" fill="#3368A0" />
+                <line x1="74" y1="84" x2="126" y2="84" stroke="#58E1FF" stroke-width="3" stroke-linecap="round" />
+                <polygon points="100,28 112,50 88,50" fill="#66A3BF" />
+                <path d="M40 185 C 45 135, 75 125, 100 125 C 125 125, 155 135, 160 185 Z" fill="#0A0E18" />
+                <path d="M85 125 L 100 155 L 115 125 Z" fill="#3368A0" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-black/75 text-white text-[11px] font-mono font-bold border border-white/15">
+              512×512 AVATAR
+            </span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+
+          <div class="card-depth-overlay absolute inset-0 bg-black/60 pointer-events-none transition-opacity duration-300 z-10 opacity-0 group-hover:opacity-10"></div>
+
+          <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+            <span class="text-[11px] font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">
+              1:1 CIRCLE SAFE • HD 512PX
+            </span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
+              Cyber Samurai
+            </h3>
+            <p class="text-xs text-white/70 line-clamp-2 mb-4">
+              Visor warrior calibrated to Discord's circular crop mask.
+            </p>
+            <a
+              href="/tools/avatar"
+              class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
+            >
+              <span>Customize in Studio</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Astral Kitsune (Avatar) -->
+      <div
+        class="carousel-card absolute w-[260px] h-[340px] sm:w-[300px] sm:h-[400px] lg:w-[330px] lg:h-[440px] rounded-[20px] overflow-hidden bg-[#0D121F] border-2 border-white/10 shadow-xl pointer-events-auto cursor-pointer group"
+        data-category="avatar"
+        data-tool="/tools/avatar"
+        data-index="3"
+      >
+        <div class="relative w-full h-full overflow-hidden flex flex-col justify-between">
+          <div class="absolute inset-0 flex items-center justify-center pb-24">
+            <div class="card-artwork w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-3 border-[#58E1FF] shadow-lg transition-transform duration-500 group-hover:scale-108">
+              <svg class="w-full h-full" viewBox="0 0 200 200" fill="none">
+                <defs>
+                  <radialGradient id="kitsuneBg3DFast" cx="100" cy="100" r="100" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#1A2D4A" />
+                    <stop offset="100%" stop-color="#080C14" />
+                  </radialGradient>
+                </defs>
+                <rect width="200" height="200" fill="url(#kitsuneBg3DFast)" />
+                <polygon points="50,45 80,95 40,105" fill="#111A2B" />
+                <polygon points="150,45 120,95 160,105" fill="#111A2B" />
+                <polygon points="58,58 80,95 50,100" fill="#58E1FF" opacity="0.6" />
+                <polygon points="142,58 120,95 150,100" fill="#58E1FF" opacity="0.6" />
+                <ellipse cx="100" cy="115" rx="55" ry="48" fill="#F2EFE7" />
+                <polygon points="100,145 85,115 115,115" fill="#3368A0" />
+                <ellipse cx="80" cy="110" rx="8" ry="4" fill="#58E1FF" transform="rotate(-15 80 110)" />
+                <ellipse cx="120" cy="110" rx="8" ry="4" fill="#58E1FF" transform="rotate(15 120 110)" />
+                <circle cx="100" cy="88" r="4" fill="#EF4444" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-black/75 text-white text-[11px] font-mono font-bold border border-white/15">
+              512×512 AVATAR
+            </span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+
+          <div class="card-depth-overlay absolute inset-0 bg-black/60 pointer-events-none transition-opacity duration-300 z-10 opacity-0 group-hover:opacity-10"></div>
+
+          <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+            <span class="text-[11px] font-mono text-purple-400 font-bold uppercase tracking-wider block mb-1">
+              STREAM STATUS SAFE • 512PX
+            </span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
+              Astral Kitsune
+            </h3>
+            <p class="text-xs text-white/70 line-clamp-2 mb-4">
+              Celestial spirit fox avatar designed with safe clearance for Discord status pips.
+            </p>
+            <a
+              href="/tools/avatar"
+              class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
+            >
+              <span>Customize in Studio</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5: Sunset Outrun (Banner) -->
+      <div
+        class="carousel-card absolute w-[260px] h-[340px] sm:w-[300px] sm:h-[400px] lg:w-[330px] lg:h-[440px] rounded-[20px] overflow-hidden bg-[#100D1C] border-2 border-white/10 shadow-xl pointer-events-auto cursor-pointer group"
+        data-category="banner"
+        data-tool="/tools/banner"
+        data-index="4"
+      >
+        <div class="relative w-full h-full overflow-hidden flex flex-col justify-between">
+          <svg class="card-artwork absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" viewBox="0 0 400 300" fill="none" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="outrunSky3DFast" x1="0" y1="0" x2="0" y2="200" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#120A2A" />
+                <stop offset="50%" stop-color="#3B1254" />
+                <stop offset="100%" stop-color="#FF5E7E" />
+              </linearGradient>
+            </defs>
+            <rect width="400" height="300" fill="#0A0614" />
+            <rect width="400" height="200" fill="url(#outrunSky3DFast)" />
+            <circle cx="200" cy="140" r="60" fill="#FEE75C" />
+            <line x1="140" y1="125" x2="260" y2="125" stroke="#3B1254" stroke-width="3" />
+            <line x1="145" y1="140" x2="255" y2="140" stroke="#3B1254" stroke-width="4.5" />
+            <line x1="155" y1="155" x2="245" y2="155" stroke="#3B1254" stroke-width="6" />
+            <path d="M0 200 L 400 200 M 0 220 L 400 220 M 0 248 L 400 248 M 0 280 L 400 280" stroke="#58E1FF" stroke-width="1.2" stroke-opacity="0.5" />
+            <line x1="200" y1="200" x2="200" y2="300" stroke="#58E1FF" stroke-width="1.5" stroke-opacity="0.7" />
+            <line x1="200" y1="200" x2="40" y2="300" stroke="#58E1FF" stroke-width="1.5" stroke-opacity="0.6" />
+            <line x1="200" y1="200" x2="360" y2="300" stroke="#58E1FF" stroke-width="1.5" stroke-opacity="0.6" />
+          </svg>
+
+          <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-black/75 text-white text-[11px] font-mono font-bold border border-white/15">
+              16:9 BANNER
+            </span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+
+          <div class="card-depth-overlay absolute inset-0 bg-black/60 pointer-events-none transition-opacity duration-300 z-10 opacity-0 group-hover:opacity-10"></div>
+
+          <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+            <span class="text-[11px] font-mono text-amber-400 font-bold uppercase tracking-wider block mb-1">
+              960 × 540 • SYNTHWAVE 16:9
+            </span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
+              Sunset Outrun
+            </h3>
+            <p class="text-xs text-white/70 line-clamp-2 mb-4">
+              80s synthwave perspective grid with giant sliced sun.
+            </p>
+            <a
+              href="/tools/banner"
+              class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
+            >
+              <span>Customize in Studio</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6: Mecha Cat (Sticker) -->
+      <div
+        class="carousel-card absolute w-[260px] h-[340px] sm:w-[300px] sm:h-[400px] lg:w-[330px] lg:h-[440px] rounded-[20px] overflow-hidden bg-[#121622] border-2 border-white/10 shadow-xl pointer-events-auto cursor-pointer group"
+        data-category="sticker"
+        data-tool="/tools/sticker"
+        data-index="5"
+      >
+        <div class="relative w-full h-full overflow-hidden flex flex-col justify-between">
+          <div class="absolute inset-0 flex items-center justify-center pb-24">
+            <div class="card-artwork w-32 h-32 sm:w-40 sm:h-40 shadow-md transition-transform duration-500 group-hover:scale-108">
+              <svg class="w-full h-full" viewBox="0 0 320 320" fill="none">
+                <path d="M160 25 C 235 25, 295 85, 295 160 C 295 235, 235 295, 160 295 C 85 295, 25 235, 25 160 C 25 85, 85 25, 160 25 Z" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="5" />
+                <path d="M160 38 C 228 38, 282 92, 282 160 C 282 228, 228 282, 160 282 C 92 282, 38 228, 38 160 C 38 92, 92 38, 160 38 Z" fill="#3368A0" />
+                <polygon points="90,75 125,120 70,125" fill="#0E1420" />
+                <polygon points="230,75 195,120 250,125" fill="#0E1420" />
+                <polygon points="95,88 120,118 80,122" fill="#66A3BF" />
+                <polygon points="225,88 200,118 240,122" fill="#66A3BF" />
+                <ellipse cx="160" cy="165" rx="80" ry="60" fill="#080C14" />
+                <circle cx="130" cy="160" r="14" fill="#C8DFDB" />
+                <circle cx="190" cy="160" r="14" fill="#C8DFDB" />
+                <circle cx="134" cy="157" r="5" fill="#0E1420" />
+                <circle cx="194" cy="157" r="5" fill="#0E1420" />
+                <path d="M160 115 Q 160 130 175 130 Q 160 130 160 145 Q 160 130 145 130 Q 160 130 160 115 Z" fill="#FFFFFF" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-black/75 text-white text-[11px] font-mono font-bold border border-white/15">
+              320×320 STICKER
+            </span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+
+          <div class="card-depth-overlay absolute inset-0 bg-black/60 pointer-events-none transition-opacity duration-300 z-10 opacity-0 group-hover:opacity-10"></div>
+
+          <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+            <span class="text-[11px] font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">
+              EXACT 320PX • LOSSLESS APNG
+            </span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
+              Mecha Cat Sticker
+            </h3>
+            <p class="text-xs text-white/70 line-clamp-2 mb-4">
+              Die-cut vinyl contour sticker with transparent background.
+            </p>
+            <a
+              href="/tools/sticker"
+              class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
+            >
+              <span>Customize in Studio</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 7: Boba Spirit (Sticker) -->
+      <div
+        class="carousel-card absolute w-[260px] h-[340px] sm:w-[300px] sm:h-[400px] lg:w-[330px] lg:h-[440px] rounded-[20px] overflow-hidden bg-[#141A26] border-2 border-white/10 shadow-xl pointer-events-auto cursor-pointer group"
+        data-category="sticker"
+        data-tool="/tools/sticker"
+        data-index="6"
+      >
+        <div class="relative w-full h-full overflow-hidden flex flex-col justify-between">
+          <div class="absolute inset-0 flex items-center justify-center pb-24">
+            <div class="card-artwork w-32 h-32 sm:w-40 sm:h-40 shadow-md transition-transform duration-500 group-hover:scale-108">
+              <svg class="w-full h-full" viewBox="0 0 200 200" fill="none">
+                <path d="M60 40 H140 V160 C140 175, 125 185, 100 185 C75 185, 60 175, 60 160 Z" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="8" stroke-linejoin="round" />
+                <path d="M65 48 H135 V155 C135 168, 122 178, 100 178 C78 178, 65 168, 65 155 Z" fill="#57F287" fill-opacity="0.85" />
+                <circle cx="85" cy="155" r="8" fill="#141E30" />
+                <circle cx="105" cy="160" r="7" fill="#141E30" />
+                <circle cx="120" cy="150" r="8" fill="#141E30" />
+                <circle cx="95" cy="140" r="7.5" fill="#141E30" />
+                <circle cx="85" cy="95" r="4.5" fill="#141E30" />
+                <circle cx="115" cy="95" r="4.5" fill="#141E30" />
+                <path d="M95 105 Q 100 112 105 105" stroke="#141E30" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                <line x1="100" y1="48" x2="115" y2="15" stroke="#5865F2" stroke-width="8" stroke-linecap="round" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-black/75 text-white text-[11px] font-mono font-bold border border-white/15">
+              320×320 STICKER
+            </span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+
+          <div class="card-depth-overlay absolute inset-0 bg-black/60 pointer-events-none transition-opacity duration-300 z-10 opacity-0 group-hover:opacity-10"></div>
+
+          <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+            <span class="text-[11px] font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">
+              320PX • ALPHA TRANSPARENT
+            </span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
+              Boba Spirit Sticker
+            </h3>
+            <p class="text-xs text-white/70 line-clamp-2 mb-4">
+              Kawaii bubble tea ghost sticker with alpha channel transparency.
+            </p>
+            <a
+              href="/tools/sticker"
+              class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
+            >
+              <span>Customize in Studio</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 8: Prismatic Mana Shard (Emoji) -->
+      <div
+        class="carousel-card absolute w-[260px] h-[340px] sm:w-[300px] sm:h-[400px] lg:w-[330px] lg:h-[440px] rounded-[20px] overflow-hidden bg-[#0F1420] border-2 border-white/10 shadow-xl pointer-events-auto cursor-pointer group"
+        data-category="emoji"
+        data-tool="/tools/emoji"
+        data-index="7"
+      >
+        <div class="relative w-full h-full overflow-hidden flex flex-col justify-between">
+          <div class="absolute inset-0 flex items-center justify-center pb-24">
+            <div class="card-artwork w-28 h-28 sm:w-36 sm:h-36 shadow-md transition-transform duration-500 group-hover:scale-108">
+              <svg class="w-full h-full" viewBox="0 0 128 128" fill="none">
+                <defs>
+                  <linearGradient id="gemVaultGrad3DFast" x1="64" y1="12" x2="64" y2="116" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#C8DFDB" />
+                    <stop offset="50%" stop-color="#66A3BF" />
+                    <stop offset="100%" stop-color="#3368A0" />
+                  </linearGradient>
+                </defs>
+                <polygon points="64,12 108,44 94,114 34,114 20,44" fill="url(#gemVaultGrad3DFast)" stroke="#192538" stroke-width="2" />
+                <polygon points="64,12 108,44 64,54" fill="#E8F4F2" opacity="0.6" />
+                <polygon points="64,12 20,44 64,54" fill="#FFFFFF" opacity="0.8" />
+                <polygon points="20,44 34,114 64,54" fill="#3368A0" opacity="0.4" />
+                <polygon points="108,44 94,114 64,54" fill="#141E30" opacity="0.3" />
+                <circle cx="48" cy="38" r="4" fill="#FFFFFF" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-black/75 text-white text-[11px] font-mono font-bold border border-white/15">
+              128×128 EMOJI
+            </span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+
+          <div class="card-depth-overlay absolute inset-0 bg-black/60 pointer-events-none transition-opacity duration-300 z-10 opacity-0 group-hover:opacity-10"></div>
+
+          <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/70 to-transparent">
+            <span class="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider block mb-1">
+              128PX HD • 32PX CHAT SHARP
+            </span>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
+              Prismatic Mana Shard
+            </h3>
+            <p class="text-xs text-white/70 line-clamp-2 mb-4">
+              Crystalline emoji preserving sharp contrast on all themes.
+            </p>
+            <a
+              href="/tools/emoji"
+              class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
+            >
+              <span>Customize in Studio</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Pagination Dots Indicator -->
+  <div class="flex items-center justify-center gap-2 mt-4" id="carouselDots"></div>
+</div>
+
+<style>
+  .carousel-card {
+    transition: transform 380ms cubic-bezier(0.16, 1, 0.3, 1), opacity 380ms ease, box-shadow 250ms ease, border-color 250ms ease;
+  }
+  
+  /* Center card hover highlight */
+  .carousel-card.is-center:hover,
+  .carousel-card.is-center.is-hovered {
+    border-color: #5865F2 !important;
+    box-shadow: 0 0 35px rgba(88, 101, 242, 0.5), 0 20px 40px -10px rgba(0, 0, 0, 0.8) !important;
+  }
+
+  /* Flanking card hover highlight */
+  .carousel-card:not(.is-center):hover,
+  .carousel-card:not(.is-center).is-hovered {
+    border-color: rgba(88, 225, 255, 0.6) !important;
+    box-shadow: 0 10px 30px -10px rgba(88, 225, 255, 0.3) !important;
+  }
+  .carousel-card:not(.is-center):hover .card-depth-overlay,
+  .carousel-card:not(.is-center).is-hovered .card-depth-overlay {
+    opacity: 0.1 !important;
+  }
+</style>
+
+<script>
+  function setup3DCarousel() {
+    const root = document.getElementById('templateCarouselRoot');
+    if (!root) return;
+
+    const stage = document.getElementById('carouselStage');
+    const prevBtn = document.getElementById('carouselPrevBtn');
+    const nextBtn = document.getElementById('carouselNextBtn');
+    const dotsContainer = document.getElementById('carouselDots');
+    const filterBtns = root.querySelectorAll<HTMLButtonElement>('.carousel-filter-btn');
+    const allCards = Array.from(root.querySelectorAll<HTMLElement>('.carousel-card'));
+
+    let activeFilter = 'all';
+    let visibleCards: HTMLElement[] = [...allCards];
+    let currentIndex = 0;
+
+    function getConfig() {
+      const width = window.innerWidth;
+      if (width < 640) {
+        return {
+          xMultiplier: 85,
+          yMultiplier: 16,
+          rotationMultiplier: 7,
+          scaleReduction: 0.08,
+        };
+      }
+      if (width < 1024) {
+        return {
+          xMultiplier: 135,
+          yMultiplier: 24,
+          rotationMultiplier: 9,
+          scaleReduction: 0.10,
+        };
+      }
+      return {
+        xMultiplier: 175,
+        yMultiplier: 32,
+        rotationMultiplier: 11,
+        scaleReduction: 0.12,
+      };
+    }
+
+    // Initialize dots once per filter change (0 CPU overhead during movement)
+    function initDots() {
+      if (!dotsContainer) return;
+      dotsContainer.innerHTML = '';
+      visibleCards.forEach((_, idx) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', `Go to template ${idx + 1}`);
+        dot.className = idx === currentIndex
+          ? 'w-7 h-2 rounded-full bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 cursor-pointer'
+          : 'w-2 h-2 rounded-full bg-[#E0DBD0] dark:bg-[#263346] hover:bg-[#9CB8B4] transition-all duration-300 cursor-pointer';
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          goToIndex(idx);
+        });
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    function updateDots() {
+      if (!dotsContainer) return;
+      const dots = dotsContainer.querySelectorAll<HTMLButtonElement>('button');
+      dots.forEach((dot, idx) => {
+        if (idx === currentIndex) {
+          dot.className = 'w-7 h-2 rounded-full bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 cursor-pointer';
+        } else {
+          dot.className = 'w-2 h-2 rounded-full bg-[#E0DBD0] dark:bg-[#263346] hover:bg-[#9CB8B4] transition-all duration-300 cursor-pointer';
+        }
+      });
+    }
+
+    // Set 3D transforms using native hardware-accelerated CSS
+    function updateCards() {
+      const total = visibleCards.length;
+      if (total === 0) return;
+
+      const config = getConfig();
+
+      visibleCards.forEach((card, index) => {
+        let diff = (index - currentIndex) % total;
+        if (diff > total / 2) diff -= total;
+        if (diff < -total / 2) diff += total;
+
+        const absDiff = Math.abs(diff);
+
+        if (absDiff > 2.5) {
+          card.style.opacity = '0';
+          card.style.pointerEvents = 'none';
+          card.style.visibility = 'hidden';
+          return;
+        }
+
+        card.style.visibility = 'visible';
+        card.style.pointerEvents = 'auto';
+
+        const x = diff * config.xMultiplier;
+        const y = absDiff * config.yMultiplier;
+        const rotate = diff * config.rotationMultiplier;
+        const scale = Math.max(0.72, 1 - absDiff * config.scaleReduction);
+        const zIndex = Math.round(100 - absDiff * 10);
+        const opacity = absDiff > 2.1 ? Math.max(0, 1 - (absDiff - 2.1) * 2.5) : 1;
+
+        card.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotate}deg) scale(${scale})`;
+        card.style.zIndex = `${zIndex}`;
+        card.style.opacity = `${opacity}`;
+
+        const overlay = card.querySelector<HTMLElement>('.card-depth-overlay');
+        if (overlay) {
+          const darkness = Math.min(0.65, absDiff * 0.3);
+          overlay.style.opacity = `${darkness}`;
+        }
+
+        if (absDiff === 0) {
+          card.classList.add('is-center', 'border-[#3368A0]', 'dark:border-[#66A3BF]', 'shadow-[0_20px_45px_rgba(51,104,160,0.35)]');
+          card.classList.remove('border-white/10');
+        } else {
+          card.classList.remove('is-center', 'border-[#3368A0]', 'dark:border-[#66A3BF]', 'shadow-[0_20px_45px_rgba(51,104,160,0.35)]');
+          card.classList.add('border-white/10');
+        }
+      });
+
+      updateDots();
+    }
+
+    function goToIndex(idx: number) {
+      const total = visibleCards.length;
+      if (total === 0) return;
+
+      currentIndex = ((idx % total) + total) % total;
+      updateCards();
+    }
+
+    function filterDeck(category: string) {
+      activeFilter = category;
+
+      filterBtns.forEach(btn => {
+        const cat = btn.getAttribute('data-filter');
+        if (cat === category) {
+          btn.classList.add('bg-[#3368A0]', 'text-white', 'shadow-xs');
+          btn.classList.remove('text-[#475569]', 'dark:text-[#CBD5E1]');
+        } else {
+          btn.classList.remove('bg-[#3368A0]', 'text-white', 'shadow-xs');
+          btn.classList.add('text-[#475569]', 'dark:text-[#CBD5E1]');
+        }
+      });
+
+      allCards.forEach(card => {
+        const cardCat = card.getAttribute('data-category');
+        if (category === 'all' || cardCat === category) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+          card.style.opacity = '0';
+        }
+      });
+
+      visibleCards = allCards.filter(card => category === 'all' || card.getAttribute('data-category') === category);
+      currentIndex = 0;
+
+      initDots();
+      updateCards();
+    }
+
+    // Ultra-Fast Swipe Gestures (zero drag lag)
+    if (stage) {
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let isSwiping = false;
+
+      stage.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isSwiping = true;
+      }, { passive: true });
+
+      stage.addEventListener('touchend', (e) => {
+        if (!isSwiping) return;
+        isSwiping = false;
+
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const dx = touchEndX - touchStartX;
+        const dy = touchEndY - touchStartY;
+
+        // If horizontal swipe is dominant and > 35px
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 35) {
+          if (dx < 0) {
+            goToIndex(currentIndex + 1);
+          } else {
+            goToIndex(currentIndex - 1);
+          }
+        }
+      }, { passive: true });
+
+      // Desktop mouse drag / flick
+      let mouseStartX = 0;
+      let isMouseDown = false;
+
+      stage.addEventListener('mousedown', (e) => {
+        if ((e.target as HTMLElement).closest('#carouselPrevBtn') || (e.target as HTMLElement).closest('#carouselNextBtn')) {
+          return;
+        }
+        isMouseDown = true;
+        mouseStartX = e.clientX;
+      });
+
+      window.addEventListener('mouseup', (e) => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+
+        const dx = e.clientX - mouseStartX;
+        if (Math.abs(dx) > 40) {
+          if (dx < 0) {
+            goToIndex(currentIndex + 1);
+          } else {
+            goToIndex(currentIndex - 1);
+          }
+        }
+      });
+    }
+
+    // Prev / Next button clicks
+    prevBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      goToIndex(currentIndex - 1);
+    });
+    nextBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      goToIndex(currentIndex + 1);
+    });
+
+    // Card hover & click
+    allCards.forEach(card => {
+      card.addEventListener('pointerenter', () => {
+        card.classList.add('is-hovered');
+      });
+      card.addEventListener('pointerleave', () => {
+        card.classList.remove('is-hovered');
+      });
+
+      card.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest('.card-cta-btn')) {
+          return;
+        }
+
+        const idx = visibleCards.indexOf(card);
+        if (idx !== -1 && idx !== currentIndex) {
+          e.preventDefault();
+          goToIndex(idx);
+        }
+      });
+    });
+
+    // Category filter button clicks
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = btn.getAttribute('data-filter') || 'all';
+        filterDeck(cat);
+      });
+    });
+
+    window.addEventListener('resize', () => {
+      updateCards();
+    });
+
+    initDots();
+    updateCards();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setup3DCarousel);
+  } else {
+    setup3DCarousel();
+  }
+  document.addEventListener('astro:after-swap', setup3DCarousel);
+</script>
