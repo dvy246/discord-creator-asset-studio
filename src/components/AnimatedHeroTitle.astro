@@ -1,0 +1,156 @@
+---
+interface Props {
+  words?: string[];
+  class?: string;
+}
+
+const {
+  words = [
+    "creators.",
+    "communities.",
+    "servers.",
+    "artists.",
+    "gamers."
+  ],
+  class: className = ""
+} = Astro.props;
+
+// Longest word for geometric sizing to completely prevent CLS
+const longestWord = words.reduce((a, b) => (a.length > b.length ? a : b), words[0]);
+---
+
+<span
+  class={`relative inline-flex items-center overflow-hidden align-top whitespace-nowrap py-1 ${className}`}
+  id="hero-rotating-word-container"
+  aria-live="polite"
+>
+  <!-- Invisible sizer: reserves width & height for longest word, never wraps (0 CLS) -->
+  <span class="invisible pointer-events-none select-none font-extrabold opacity-0 whitespace-nowrap" aria-hidden="true">
+    {longestWord}
+  </span>
+
+  <!-- Stacked animated words -->
+  {words.map((word, index) => (
+    <span
+      class="hero-word-item absolute inset-0 flex items-center bg-gradient-to-r from-[#3368A0] to-[#5865F2] dark:from-[#66A3BF] dark:to-[#939BF7] bg-clip-text text-transparent font-extrabold select-none whitespace-nowrap will-change-[transform,opacity]"
+      data-state={index === 0 ? "active" : "idle"}
+      data-index={index}
+    >
+      {word}
+    </span>
+  ))}
+</span>
+
+<style>
+  .hero-word-item {
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1), opacity 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Active: rock-solid in center view */
+  .hero-word-item[data-state="active"] {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 2;
+  }
+
+  /* Exiting: moves upward and fades out */
+  .hero-word-item[data-state="prev"] {
+    transform: translateY(-110%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Idle: positioned below viewport, transition disabled so reposition is instant */
+  .hero-word-item[data-state="idle"] {
+    transform: translateY(110%);
+    opacity: 0;
+    transition: none !important;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-word-item {
+      transition: none !important;
+    }
+    .hero-word-item[data-state="active"] {
+      transform: none !important;
+      opacity: 1 !important;
+    }
+    .hero-word-item:not([data-state="active"]) {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  function setupRotatingWords() {
+    const container = document.getElementById('hero-rotating-word-container');
+    if (!container) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    const items = Array.from(container.querySelectorAll<HTMLElement>('.hero-word-item'));
+    if (items.length <= 1) return;
+
+    let currentIndex = 0;
+    let timer: number | null = null;
+
+    function advance() {
+      const prevIndex = currentIndex;
+      currentIndex = (currentIndex + 1) % items.length;
+
+      const prevItem = items[prevIndex];
+      const nextItem = items[currentIndex];
+
+      // Outgoing item slides up and out
+      prevItem.setAttribute('data-state', 'prev');
+
+      // Incoming item immediately slides in from below
+      requestAnimationFrame(() => {
+        nextItem.setAttribute('data-state', 'active');
+      });
+
+      // Once animation completes, silently reset prevItem to idle below
+      setTimeout(() => {
+        if (prevItem.getAttribute('data-state') === 'prev') {
+          prevItem.setAttribute('data-state', 'idle');
+        }
+      }, 450);
+    }
+
+    function startTimer() {
+      stopTimer();
+      timer = window.setInterval(advance, 2200);
+    }
+
+    function stopTimer() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    // Clean pause/resume on browser tab switch to avoid accumulated frames
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopTimer();
+      } else {
+        startTimer();
+      }
+    });
+
+    startTimer();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupRotatingWords);
+  } else {
+    setupRotatingWords();
+  }
+  document.addEventListener('astro:after-swap', setupRotatingWords);
+</script>
