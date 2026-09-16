@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "build": "node --experimental-strip-types scripts/verify-rules.ts && astro build",
     "preview": "astro preview",
-    "test": "node --experimental-strip-types --test tests/discord-rules.test.ts",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "astro": "astro"
   },
   "dependencies": {
