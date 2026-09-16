@@ -6,6 +6,23 @@ import SketchCircle from '../../components/SketchCircle.astro';
 const pageTitle = "Discord Asset Studio | Validador y Redimensionador de Assets";
 const pageDescription = "Inspecciona, redimensiona y valida imágenes para Discord. Procesamiento 100% en el navegador sin servidores para emojis, stickers y banners.";
 
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Discord Creator Asset Studio",
+  "url": "https://discord-creator-asset-studio.pages.dev/es/",
+  "inLanguage": "es",
+  "description": pageDescription
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Discord Creator Asset Studio",
+  "url": "https://discord-creator-asset-studio.pages.dev/",
+  "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+};
+
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -30,7 +47,9 @@ const faqSchema = {
 };
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<Layout title={pageTitle} description={pageDescription} lang="es">
+  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-20">
@@ -51,10 +70,10 @@ const faqSchema = {
         </p>
 
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-8">
-          <a href="/tools/emoji" class="btn-primary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold">
+          <a href="/tools/emoji/" class="btn-primary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold">
             Crear y Validar Emoji
           </a>
-          <a href="/es/guides/discord-sizes" class="btn-secondary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold">
+          <a href="/es/guides/discord-sizes/" class="btn-secondary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold">
             Guía Oficial de Tamaños
           </a>
         </div>
@@ -88,7 +107,7 @@ const faqSchema = {
               <span class="text-[#6B7A90]">Límite Binario:</span>
               <span class="text-[#0D9488] font-bold">256 KiB (262,144 bytes)</span>
             </div>
-            <a href="/tools/emoji" class="btn-primary w-full py-3 rounded-[8px] text-xs font-semibold text-center block">
+            <a href="/tools/emoji/" class="btn-primary w-full py-3 rounded-[8px] text-xs font-semibold text-center block">
               Abrir Validador →
             </a>
           </div>
@@ -108,19 +127,19 @@ const faqSchema = {
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-      <a href="/tools/emoji" class="card-panel p-6 rounded-[14px] block group">
+      <a href="/tools/emoji/" class="card-panel p-6 rounded-[14px] block group">
         <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">😀</div>
         <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Editor de Emojis</h3>
         <p class="text-xs text-[#475569] mt-2 leading-relaxed">128x128 y compresión exacta a 256 KiB con vista previa a 32px.</p>
         <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Inspeccionar →</span>
       </a>
-      <a href="/tools/sticker" class="card-panel p-6 rounded-[14px] block group">
+      <a href="/tools/sticker/" class="card-panel p-6 rounded-[14px] block group">
         <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">🏷️</div>
         <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Compresor de Stickers</h3>
         <p class="text-xs text-[#475569] mt-2 leading-relaxed">Exactamente 320x320 píxeles y menos de 512 KiB en PNG/APNG.</p>
         <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Formatear →</span>
       </a>
-      <a href="/tools/banner" class="card-panel p-6 rounded-[14px] block group">
+      <a href="/tools/banner/" class="card-panel p-6 rounded-[14px] block group">
         <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">🖼️</div>
         <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Banners de Servidor</h3>
         <p class="text-xs text-[#475569] mt-2 leading-relaxed">Guía de zona segura superior de 48px y soporte para Nitro y Boosts.</p>

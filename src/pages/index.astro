@@ -10,6 +10,30 @@ import { DISCORD_RULES } from '../data/discord-rules';
 const pageTitle = "Discord Asset Studio | Creator Resizer & Validator";
 const pageDescription = "Inspect, resize, and validate Discord assets against official rules. 100% in-browser processing for emojis, stickers, banners, and avatars.";
 
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Discord Creator Asset Studio",
+  "url": "https://discord-creator-asset-studio.pages.dev/",
+  "description": pageDescription,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Discord Creator Asset Studio",
+  "url": "https://discord-creator-asset-studio.pages.dev/",
+  "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+};
+
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -51,7 +75,9 @@ const faqSchema = {
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-  <!-- Inject FAQ Schema -->
+  <!-- Inject Schemas -->
+  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <!-- Hero Section: Creative Studio First -->
@@ -87,7 +113,7 @@ const faqSchema = {
           <a href="#asset-vault" class="btn-primary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold shadow-sm">
             Create an Asset
           </a>
-          <a href="/tools/emoji" class="btn-secondary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold">
+          <a href="/tools/emoji/" class="btn-secondary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold">
             Check a File
           </a>
         </div>
@@ -95,16 +121,16 @@ const faqSchema = {
         <!-- Quick Asset Category Selector -->
         <div class="flex flex-wrap items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6">
           <span class="font-medium">Or start with:</span>
-          <a href="/tools/banner" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
+          <a href="/tools/banner/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
             🖼️ Banner
           </a>
-          <a href="/tools/avatar" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
+          <a href="/tools/avatar/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
             👤 Avatar
           </a>
-          <a href="/tools/emoji" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
+          <a href="/tools/emoji/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
             😀 Emoji
           </a>
-          <a href="/tools/sticker" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
+          <a href="/tools/sticker/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
             🏷️ Sticker
           </a>
         </div>
@@ -154,7 +180,7 @@ const faqSchema = {
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Emoji Card -->
-      <a href="/tools/emoji" class="card-panel p-6 rounded-[14px] block group">
+      <a href="/tools/emoji/" class="card-panel p-6 rounded-[14px] block group">
         <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">
           😀
         </div>
@@ -166,7 +192,7 @@ const faqSchema = {
       </a>
 
       <!-- Sticker Card -->
-      <a href="/tools/sticker" class="card-panel p-6 rounded-[14px] block group">
+      <a href="/tools/sticker/" class="card-panel p-6 rounded-[14px] block group">
         <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">
           🏷️
         </div>
@@ -178,7 +204,7 @@ const faqSchema = {
       </a>
 
       <!-- Banner Card -->
-      <a href="/tools/banner" class="card-panel p-6 rounded-[14px] block group">
+      <a href="/tools/banner/" class="card-panel p-6 rounded-[14px] block group">
         <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">
           🖼️
         </div>
@@ -190,7 +216,7 @@ const faqSchema = {
       </a>
 
       <!-- Avatar Card -->
-      <a href="/tools/avatar" class="card-panel p-6 rounded-[14px] block group">
+      <a href="/tools/avatar/" class="card-panel p-6 rounded-[14px] block group">
         <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">
           👤
         </div>
@@ -202,7 +228,7 @@ const faqSchema = {
       </a>
 
       <!-- Role Icon Card -->
-      <a href="/tools/role-icon" class="card-panel p-6 rounded-[14px] block group">
+      <a href="/tools/role-icon/" class="card-panel p-6 rounded-[14px] block group">
         <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">
           🛡️
         </div>
@@ -214,7 +240,7 @@ const faqSchema = {
       </a>
 
       <!-- Size Guide Card -->
-      <a href="/guides/discord-sizes" class="card-panel p-6 rounded-[14px] block group">
+      <a href="/guides/discord-sizes/" class="card-panel p-6 rounded-[14px] block group">
         <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">
           📋
         </div>
@@ -281,7 +307,7 @@ const faqSchema = {
         </div>
 
         <div class="pt-2">
-          <a href="/tools/emoji" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-[10px] text-xs font-semibold">
+          <a href="/tools/emoji/" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-[10px] text-xs font-semibold">
             <span>Test With Your Artwork</span>
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -440,7 +466,7 @@ const faqSchema = {
         </div>
 
         <div class="pt-2">
-          <a href="/guides/discord-sizes" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-[10px] text-xs font-semibold">
+          <a href="/guides/discord-sizes/" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-[10px] text-xs font-semibold">
             <span>Open Comprehensive Spec Guide</span>
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />

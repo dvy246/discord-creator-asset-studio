@@ -1,12 +1,50 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import SketchUnderline from '../../../components/SketchUnderline.astro';
+import { generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Tamaños de Discord (2026): Guía Oficial de Dimensiones";
+const pageDescription = "Guía completa y verificada de tamaños para Discord 2026. Dimensiones en píxeles, límites de peso y requisitos de Nitro y Boosts.";
+
+const techArticleSchema = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": pageTitle,
+  "description": pageDescription,
+  "inLanguage": "es",
+  "url": "https://discord-creator-asset-studio.pages.dev/es/guides/discord-sizes/",
+  "datePublished": "2026-01-01T00:00:00+00:00",
+  "dateModified": "2026-03-01T00:00:00+00:00",
+  "author": {
+    "@type": "Organization",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+    }
+  }
+};
+
+const breadcrumbJson = generateBreadcrumbSchema([
+  { name: "Inicio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Guía de Tamaños", url: "https://discord-creator-asset-studio.pages.dev/es/guides/discord-sizes/" }
+]);
 ---
 
 <Layout 
-  title="Tamaños de Discord (2026): Guía Oficial de Dimensiones" 
-  description="Guía completa y verificada de tamaños para Discord 2026. Dimensiones en píxeles, límites de peso y requisitos de Nitro y Boosts."
+  title={pageTitle} 
+  description={pageDescription}
+  lang="es"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
+  <script type="application/ld+json" set:html={breadcrumbJson} />
+
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-12">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4 shadow-xs">

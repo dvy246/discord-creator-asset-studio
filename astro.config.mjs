@@ -6,7 +6,8 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://discordassets.studio',
+  site: 'https://discord-creator-asset-studio.pages.dev',
+  trailingSlash: 'always',
   vite: {
     plugins: [tailwindcss()]
   },

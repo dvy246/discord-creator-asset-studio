@@ -2,9 +2,22 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import SketchCircle from '../../components/SketchCircle.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Avatar Maker & PFP Cropper | 512x512";
 const pageDescription = "Crop, resize, and preview Discord avatars with a live circular mask. 512x512 square authoring with 100% private in-browser processing.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/avatar/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Avatar Maker & PFP Cropper",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Home", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Avatar Studio", url: pageUrl }
+]);
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -47,7 +60,9 @@ const faqSchema = {
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-  <!-- Inject FAQ Schema -->
+  <!-- Inject Schemas -->
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">

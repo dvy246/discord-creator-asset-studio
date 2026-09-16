@@ -1,3 +1,19 @@
 User-agent: *
 Allow: /
-Sitemap: https://discordassets.studio/sitemap-index.xml
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Disallow: /
+
+Sitemap: https://discord-creator-asset-studio.pages.dev/sitemap-index.xml

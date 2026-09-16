@@ -6,18 +6,31 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 interface Props {
   title?: string;
   description?: string;
+  lang?: string;
+  noindex?: boolean;
+  canonicalUrl?: string;
+  hasSpanishAlternate?: boolean;
 }
 
 const { 
   title = "Discord Asset Studio | Creator Rules & Registry", 
-  description = "The ultimate validation registry and toolkit for Discord creator assets. Verify sizes, formats, and rules for banners, icons, emojis, and stickers." 
+  description = "The ultimate validation registry and toolkit for Discord creator assets. Verify sizes, formats, and rules for banners, icons, emojis, and stickers.",
+  lang = "en",
+  noindex = false,
+  canonicalUrl,
+  hasSpanishAlternate,
 } = Astro.props;
 ---
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
-    <SEOHead title={title} description={description} />
-    <link rel="icon" href="/favicon.svg" />
+    <SEOHead 
+      title={title} 
+      description={description} 
+      noindex={noindex} 
+      canonicalUrl={canonicalUrl} 
+      hasSpanishAlternate={hasSpanishAlternate} 
+    />
     <script is:inline>
       (function() {
         const storedTheme = localStorage.getItem('theme');
@@ -31,8 +44,8 @@ const {
   </head>
   <body class="min-h-screen flex flex-col bg-[#F2EFE7] text-[#192538] transition-colors duration-200">
     <!-- Top Navigation: Single-line, restrained, <80px height -->
-    <header class="h-16 border-b border-[#E0DBD0] bg-[#FAF8F5]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
-      <div class="max-w-7xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between">
+    <header class="border-b border-[#E0DBD0] bg-[#FAF8F5]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
+      <div class="max-w-7xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between">
         <!-- Logo -->
         <a href="/" class="flex items-center gap-3 text-lg font-bold tracking-tight text-[#192538] hover:opacity-90 transition-opacity">
           <img src="/favicon.svg" alt="Discord Creator Asset Studio" class="w-8 h-8 rounded-[8px] shadow-xs hover:scale-105 transition-transform" width="32" height="32" />
@@ -44,24 +57,71 @@ const {
 
         <!-- Desktop Navigation Links -->
         <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-[#475569]">
-          <a href="/tools/emoji" class="hover:text-[#3368A0] transition-colors">Emoji</a>
-          <a href="/tools/sticker" class="hover:text-[#3368A0] transition-colors">Sticker</a>
-          <a href="/tools/banner" class="hover:text-[#3368A0] transition-colors">Banner</a>
-          <a href="/tools/avatar" class="hover:text-[#3368A0] transition-colors">Avatar</a>
-          <a href="/tools/role-icon" class="hover:text-[#3368A0] transition-colors">Role Icon</a>
-          <a href="/guides/discord-sizes" class="hover:text-[#3368A0] transition-colors">Size Guide</a>
+          <a href="/tools/emoji/" class="hover:text-[#3368A0] transition-colors">Emoji</a>
+          <a href="/tools/sticker/" class="hover:text-[#3368A0] transition-colors">Sticker</a>
+          <a href="/tools/banner/" class="hover:text-[#3368A0] transition-colors">Banner</a>
+          <a href="/tools/avatar/" class="hover:text-[#3368A0] transition-colors">Avatar</a>
+          <a href="/tools/role-icon/" class="hover:text-[#3368A0] transition-colors">Role Icon</a>
+          <a href="/guides/discord-sizes/" class="hover:text-[#3368A0] transition-colors">Size Guide</a>
         </nav>
 
-        <!-- Right Side: Theme Slider & Privacy Badge -->
+        <!-- Right Side: Theme Slider & Privacy Badge & Mobile Hamburger -->
         <div class="flex items-center gap-3">
           <ThemeToggle />
           <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-[#3368A0] bg-[#FFFFFF] px-3 py-1.5 rounded-[8px] border border-[#C8DFDB] shadow-xs">
             <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
             Zero Server Uploads
           </span>
+
+          <!-- Mobile Hamburger Button -->
+          <button 
+            id="mobile-nav-toggle" 
+            type="button" 
+            aria-label="Toggle navigation menu" 
+            aria-expanded="false" 
+            class="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-[#475569] hover:text-[#192538] hover:bg-[#E0DBD0]/50 transition-colors focus:outline-none focus:ring-2 focus:ring-[#3368A0]"
+          >
+            <svg id="hamburger-icon" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="close-icon" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       </div>
+
+      <!-- Mobile Navigation Drawer -->
+      <nav id="mobile-nav-menu" class="hidden md:hidden border-t border-[#E0DBD0] bg-[#FAF8F5] px-4 py-4 space-y-1 transition-all duration-200">
+        <a href="/tools/emoji/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Emoji Studio</a>
+        <a href="/tools/sticker/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Sticker Studio</a>
+        <a href="/tools/banner/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Banner Studio</a>
+        <a href="/tools/avatar/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Avatar Studio</a>
+        <a href="/tools/role-icon/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Role Icon Studio</a>
+        <a href="/guides/discord-sizes/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Size Cheat Sheet (2026)</a>
+      </nav>
     </header>
+
+    <script is:inline>
+      (function() {
+        const toggleBtn = document.getElementById('mobile-nav-toggle');
+        const menu = document.getElementById('mobile-nav-menu');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        if (toggleBtn && menu) {
+          toggleBtn.addEventListener('click', function() {
+            const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+            toggleBtn.setAttribute('aria-expanded', String(!isExpanded));
+            menu.classList.toggle('hidden');
+            if (hamburgerIcon && closeIcon) {
+              hamburgerIcon.classList.toggle('hidden');
+              closeIcon.classList.toggle('hidden');
+            }
+          });
+        }
+      })();
+    </script>
 
     <!-- Main Content Area -->
     <main class="flex-1">
@@ -87,18 +147,18 @@ const {
           <div>
             <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Core Utilities</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="/tools/emoji" class="hover:text-[#3368A0] transition-colors">Emoji Maker & Validator</a></li>
-              <li><a href="/tools/sticker" class="hover:text-[#3368A0] transition-colors">Sticker Compressor (512 KiB)</a></li>
-              <li><a href="/tools/banner" class="hover:text-[#3368A0] transition-colors">Profile & Server Banners</a></li>
-              <li><a href="/tools/avatar" class="hover:text-[#3368A0] transition-colors">Avatar Optimizer</a></li>
-              <li><a href="/tools/role-icon" class="hover:text-[#3368A0] transition-colors">Role Icon Resizer (64x64)</a></li>
+              <li><a href="/tools/emoji/" class="hover:text-[#3368A0] transition-colors">Emoji Maker & Validator</a></li>
+              <li><a href="/tools/sticker/" class="hover:text-[#3368A0] transition-colors">Sticker Compressor (512 KiB)</a></li>
+              <li><a href="/tools/banner/" class="hover:text-[#3368A0] transition-colors">Profile & Server Banners</a></li>
+              <li><a href="/tools/avatar/" class="hover:text-[#3368A0] transition-colors">Avatar Optimizer</a></li>
+              <li><a href="/tools/role-icon/" class="hover:text-[#3368A0] transition-colors">Role Icon Resizer (64x64)</a></li>
             </ul>
           </div>
 
           <div>
             <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Documentation</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="/guides/discord-sizes" class="hover:text-[#3368A0] transition-colors">Discord Size Cheat Sheet (2026)</a></li>
+              <li><a href="/guides/discord-sizes/" class="hover:text-[#3368A0] transition-colors">Discord Size Cheat Sheet (2026)</a></li>
               <li><a href="/sitemap-index.xml" class="hover:text-[#3368A0] transition-colors">XML Sitemap</a></li>
               <li><a href="/robots.txt" class="hover:text-[#3368A0] transition-colors">Robots.txt</a></li>
             </ul>
@@ -107,10 +167,10 @@ const {
           <div>
             <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Trust & Governance</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="/privacy" class="hover:text-[#3368A0] transition-colors">Privacy Policy</a></li>
-              <li><a href="/terms" class="hover:text-[#3368A0] transition-colors">Terms of Service</a></li>
-              <li><a href="/about" class="hover:text-[#3368A0] transition-colors">About the Project</a></li>
-              <li><a href="/contact" class="hover:text-[#3368A0] transition-colors">Contact & Feedback</a></li>
+              <li><a href="/privacy/" class="hover:text-[#3368A0] transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms/" class="hover:text-[#3368A0] transition-colors">Terms of Service</a></li>
+              <li><a href="/about/" class="hover:text-[#3368A0] transition-colors">About the Project</a></li>
+              <li><a href="/contact/" class="hover:text-[#3368A0] transition-colors">Contact & Feedback</a></li>
             </ul>
           </div>
         </div>

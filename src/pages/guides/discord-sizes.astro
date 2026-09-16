@@ -1,12 +1,49 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
+import { generateBreadcrumbSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Asset Sizes (2026): Official Dimensions Guide";
+const pageDescription = "Verified Discord asset size guide for 2026. Exact pixel dimensions, file size limits, formats, and Nitro/Boost requirements for all creator assets.";
+
+const techArticleSchema = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": pageTitle,
+  "description": pageDescription,
+  "inLanguage": "en",
+  "url": "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/",
+  "datePublished": "2026-01-01T00:00:00+00:00",
+  "dateModified": "2026-03-01T00:00:00+00:00",
+  "author": {
+    "@type": "Organization",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+    }
+  }
+};
+
+const breadcrumbJson = generateBreadcrumbSchema([
+  { name: "Home", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Size Guide", url: "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/" }
+]);
 ---
 
 <Layout 
-  title="Discord Asset Sizes (2026): Official Dimensions Guide" 
-  description="Verified Discord asset size guide for 2026. Exact pixel dimensions, file size limits, formats, and Nitro/Boost requirements for all creator assets."
+  title={pageTitle} 
+  description={pageDescription}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
+  <script type="application/ld+json" set:html={breadcrumbJson} />
+
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
     <!-- Header -->
     <div class="mb-12">
@@ -102,7 +139,7 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
         <p class="text-[#475569] text-sm leading-relaxed mb-4">
           Discord officially specifies that the <strong>top 48 pixels</strong> of a server banner are partially overlaid by the server title and navigation UI on desktop clients. Keep critical artwork, logos, and typography below this 48px boundary to avoid awkward visual obstruction.
         </p>
-        <a href="/tools/banner" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
+        <a href="/tools/banner/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
           Open Banner Studio with live safe zone overlay →
         </a>
       </div>
@@ -112,7 +149,7 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
         <p class="text-[#475569] text-sm leading-relaxed mb-4">
           Discord's backend enforces a strict binary kilobyte limit: <strong>256 KiB (262,144 bytes)</strong>. Files that are 257,000 bytes will fail upload even though some operating systems report them as "256 KB" using decimal prefixes. Discord Asset Studio measures the exact encoded Blob byte length in memory before allowing download.
         </p>
-        <a href="/tools/emoji" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
+        <a href="/tools/emoji/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
           Format & compress emojis to 256 KiB now →
         </a>
       </div>
@@ -122,7 +159,7 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
         <p class="text-[#475569] text-sm leading-relaxed mb-4">
           Discord custom stickers must be <strong>exactly 320x320 pixels</strong> and under <strong>512 KiB (524,288 bytes)</strong>. For animated stickers, Discord recommends Animated PNG (APNG) with a maximum duration of 5 seconds and up to 60 frames per second. While developer documentation mentions Lottie files, standard user and server uploads rely on APNG.
         </p>
-        <a href="/tools/sticker" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
+        <a href="/tools/sticker/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
           Format stickers to exact 320x320 specifications →
         </a>
       </div>

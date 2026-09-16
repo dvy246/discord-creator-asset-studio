@@ -2,9 +2,22 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import SketchCircle from '../../components/SketchCircle.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Emoji Maker & Validator | 256 KiB Resizer";
 const pageDescription = "Resize, validate, and compress Discord custom emojis to 128x128 and under 256 KiB. 100% private in-browser tool with 32x32 chat preview.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/emoji/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Emoji Maker & Validator",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Home", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Emoji Studio", url: pageUrl }
+]);
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -47,7 +60,9 @@ const faqSchema = {
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-  <!-- Inject FAQ Schema -->
+  <!-- Inject Schemas -->
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">

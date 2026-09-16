@@ -6,7 +6,12 @@ export function generateSoftwareApplicationSchema(name: string, description: str
     "description": description,
     "url": url,
     "applicationCategory": "UtilitiesApplication",
-    "operatingSystem": "Any"
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
   });
 }
 

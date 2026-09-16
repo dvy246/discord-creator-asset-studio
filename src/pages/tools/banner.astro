@@ -2,9 +2,22 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import SketchCircle from '../../components/SketchCircle.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Banner Maker & Safe Zone Validator | 2026";
 const pageDescription = "Resize and validate Discord profile and server banners with official top 48px safe zone overlays. 100% private in-browser tool.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/banner/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Banner Maker & Safe Zone Validator",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Home", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Banner Studio", url: pageUrl }
+]);
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -47,7 +60,9 @@ const faqSchema = {
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-  <!-- Inject FAQ Schema -->
+  <!-- Inject Schemas -->
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">

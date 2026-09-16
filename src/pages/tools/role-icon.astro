@@ -2,9 +2,22 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import SketchCircle from '../../components/SketchCircle.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Role Icon Maker & Resizer | 64x64";
 const pageDescription = "Format, validate, and resize Discord custom role icons to exact 64x64 dimensions and under 256 KB. Zero server uploads.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/role-icon/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Role Icon Maker & Resizer",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Home", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Role Icon Studio", url: pageUrl }
+]);
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -47,7 +60,9 @@ const faqSchema = {
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-  <!-- Inject FAQ Schema -->
+  <!-- Inject Schemas -->
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
