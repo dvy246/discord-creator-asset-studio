@@ -25,3 +25,10 @@ pnpm-debug.log*
 
 # temporary audit screenshots
 screenshots/
+
+# local agent and workspace artifacts
+.agents/
+Project-artifacts/
+seo-keyowrds/
+brag-output/
+skills-lock.json
