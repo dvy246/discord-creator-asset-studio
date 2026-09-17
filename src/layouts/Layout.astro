@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import SEOHead from '../components/SEOHead.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import PaletteSelector from '../components/PaletteSelector.astro';
 
 interface Props {
   title?: string;
@@ -39,6 +40,11 @@ const {
         } else {
           document.documentElement.classList.remove('dark');
         }
+
+        const storedPalette = localStorage.getItem('site-palette');
+        if (storedPalette && storedPalette !== 'default') {
+          document.documentElement.setAttribute('data-palette', storedPalette);
+        }
       })();
     </script>
   </head>
@@ -55,18 +61,31 @@ const {
           </span>
         </a>
 
-        <!-- Desktop Navigation Links -->
-        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-[#475569]">
-          <a href="/tools/emoji/" class="hover:text-[#3368A0] transition-colors">Emoji</a>
-          <a href="/tools/sticker/" class="hover:text-[#3368A0] transition-colors">Sticker</a>
-          <a href="/tools/banner/" class="hover:text-[#3368A0] transition-colors">Banner</a>
-          <a href="/tools/avatar/" class="hover:text-[#3368A0] transition-colors">Avatar</a>
-          <a href="/tools/role-icon/" class="hover:text-[#3368A0] transition-colors">Role Icon</a>
-          <a href="/guides/discord-sizes/" class="hover:text-[#3368A0] transition-colors">Size Guide</a>
+        <!-- Desktop Navigation Links: Premium Tactile Buttons with Refined Borders -->
+        <nav class="hidden md:flex items-center gap-2 text-xs font-semibold">
+          <a href="/tools/emoji/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+            Emoji
+          </a>
+          <a href="/tools/sticker/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+            Sticker
+          </a>
+          <a href="/tools/banner/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+            Banner
+          </a>
+          <a href="/tools/avatar/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+            Avatar
+          </a>
+          <a href="/tools/role-icon/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+            Role Icon
+          </a>
+          <a href="/guides/discord-sizes/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+            Size Guide
+          </a>
         </nav>
 
-        <!-- Right Side: Theme Slider & Privacy Badge & Mobile Hamburger -->
-        <div class="flex items-center gap-3">
+        <!-- Right Side: Palette Selector, Theme Slider & Privacy Badge & Mobile Hamburger -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <PaletteSelector />
           <ThemeToggle />
           <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-[#3368A0] bg-[#FFFFFF] px-3 py-1.5 rounded-[8px] border border-[#C8DFDB] shadow-xs">
             <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
@@ -99,6 +118,65 @@ const {
         <a href="/tools/avatar/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Avatar Studio</a>
         <a href="/tools/role-icon/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Role Icon Studio</a>
         <a href="/guides/discord-sizes/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Size Cheat Sheet (2026)</a>
+
+        <!-- Mobile Palette Options -->
+        <div class="pt-3 pb-1 border-t border-[#E0DBD0]/70 dark:border-[#263346] mt-3">
+          <span class="block px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7]">Color Palette</span>
+          <div class="grid grid-cols-2 gap-1.5 px-1 mt-1.5 max-h-56 overflow-y-auto">
+            <button type="button" data-palette="default" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#3368A0"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#66A3BF"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#C8DFDB"></span></span>
+              <span>Classic</span>
+            </button>
+            <button type="button" data-palette="burgundy" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#800020"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#D45060"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#F3E6D5"></span></span>
+              <span>Burgundy</span>
+            </button>
+            <button type="button" data-palette="pastel" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#FDF4D2"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#B0CDE6"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#A290B7"></span></span>
+              <span>Pastel</span>
+            </button>
+            <button type="button" data-palette="terracotta" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#315B8C"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#F2765E"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#F5EBDD"></span></span>
+              <span>Terracotta</span>
+            </button>
+            <button type="button" data-palette="crimson" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#C62828"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#FF8F00"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#FBC02D"></span></span>
+              <span>Crimson</span>
+            </button>
+            <button type="button" data-palette="blush" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#E2B4BD"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#F7D6D0"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#FFF5F5"></span></span>
+              <span>Blush</span>
+            </button>
+            <button type="button" data-palette="mint" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#BADFDB"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#FFA4A4"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#FFBDBD"></span></span>
+              <span>Mint</span>
+            </button>
+            <button type="button" data-palette="retropop" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#F599C6"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#FFEA88"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#7DCCAD"></span></span>
+              <span>Retro Pop</span>
+            </button>
+            <button type="button" data-palette="cottoncandy" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#F9F5F6"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#FDCEDF"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#F2BED1"></span></span>
+              <span>Cotton Candy</span>
+            </button>
+            <button type="button" data-palette="mahogany" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#6D0808"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#2D0000"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#757D6F"></span></span>
+              <span>Mahogany</span>
+            </button>
+            <button type="button" data-palette="gelato" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#FF9D9D"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#FFC5AA"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#BBF1D2"></span></span>
+              <span>Gelato</span>
+            </button>
+            <button type="button" data-palette="electric" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#FF84BA"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#FFDF82"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#99C2FF"></span></span>
+              <span>Cosmic</span>
+            </button>
+            <button type="button" data-palette="coastal" class="mobile-palette-btn col-span-2 flex items-center justify-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
+              <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#FFF6DE"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#8BDFDD"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#F48F68"></span></span>
+              <span>Coastal Sunshine</span>
+            </button>
+          </div>
+        </div>
       </nav>
     </header>
 

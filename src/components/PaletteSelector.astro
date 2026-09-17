@@ -1,0 +1,464 @@
+---
+// PaletteSelector.astro - Tactile Color Palette Selector with live swatches and persistent selection
+---
+
+<div class="relative inline-block text-left" id="palette-selector-root">
+  <!-- Trigger Button -->
+  <button
+    id="palette-dropdown-btn"
+    type="button"
+    aria-haspopup="true"
+    aria-expanded="false"
+    aria-label="Select color palette"
+    class="header-nav-btn relative inline-flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#192538] dark:text-[#CBD5E1] text-xs font-semibold shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:border-[#3368A0] dark:hover:border-[#66A3BF] hover:bg-white dark:hover:bg-[#1E2738] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3368A0]"
+    title="Choose site color theme"
+  >
+    <!-- Palette Art Icon -->
+    <svg class="w-4 h-4 text-[#3368A0] dark:text-[#66A3BF] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+      <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+      <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+      <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+      <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+    </svg>
+
+    <!-- Active Palette Dot Preview (4 dots) -->
+    <div id="active-palette-preview" class="flex items-center -space-x-1">
+      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-0 bg-[#3368A0]"></span>
+      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-1 bg-[#66A3BF]"></span>
+      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-2 bg-[#C8DFDB]"></span>
+      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-3 bg-[#F2EFE7]"></span>
+    </div>
+
+    <!-- Dropdown Chevron -->
+    <svg class="w-3.5 h-3.5 text-[#6B7A90] dark:text-[#8494A7] transition-transform duration-200" id="palette-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+
+  <!-- Dropdown Popover Panel -->
+  <div
+    id="palette-dropdown-menu"
+    class="hidden absolute right-0 mt-2 w-76 max-h-[80vh] overflow-y-auto rounded-xl bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] shadow-xl p-2 z-50 transform origin-top-right transition-all duration-150 focus:outline-none"
+    role="menu"
+    aria-orientation="vertical"
+    aria-labelledby="palette-dropdown-btn"
+  >
+    <div class="sticky top-0 bg-white/95 dark:bg-[#141A24]/95 backdrop-blur-xs px-3 py-2 border-b border-[#E0DBD0]/60 dark:border-[#263346] mb-1.5 flex items-center justify-between z-10">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#192538] dark:text-[#CBD5E1]">Color Palettes</span>
+      <span class="text-[10px] text-[#6B7A90] dark:text-[#8494A7] font-medium">13 Curated Themes</span>
+    </div>
+
+    <div class="space-y-1" id="palette-options-list">
+      <!-- Default Studio -->
+      <button
+        type="button"
+        data-palette="default"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #3368A0;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #66A3BF;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #C8DFDB;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F2EFE7;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Classic Studio</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#3368A0] dark:text-[#66A3BF] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 1: Burgundy Bloom -->
+      <button
+        type="button"
+        data-palette="burgundy"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #800020;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #D45060;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F3E6D5;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FFF9F2;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Burgundy Bloom</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#800020] dark:text-[#D45060] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 2: Pastel Dream -->
+      <button
+        type="button"
+        data-palette="pastel"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FDF4D2;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #B0CDE6;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #A290B7;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #946D6D;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Pastel Dream</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#A290B7] dark:text-[#B0CDE6] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 3: Terracotta Ocean -->
+      <button
+        type="button"
+        data-palette="terracotta"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #315B8C;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F2765E;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F5EBDD;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #413333;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Terracotta Ocean</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#315B8C] dark:text-[#F2765E] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 4: Golden Crimson -->
+      <button
+        type="button"
+        data-palette="crimson"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #C62828;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FF8F00;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FBC02D;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F5F5DC;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Golden Crimson</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#C62828] dark:text-[#FF8F00] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 5: Blush Petal -->
+      <button
+        type="button"
+        data-palette="blush"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #E2B4BD;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F7D6D0;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FFF5F5;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #4A4A4A;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Blush Petal</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#B76E79] dark:text-[#E2B4BD] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 6: Mint Sherbet -->
+      <button
+        type="button"
+        data-palette="mint"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #BADFDB;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FFA4A4;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FFBDBD;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FCF9EA;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Mint Sherbet</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#2E7D73] dark:text-[#BADFDB] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 7: Retro Pop -->
+      <button
+        type="button"
+        data-palette="retropop"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F599C6;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FFEA88;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #7DCCAD;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #4D6787;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Retro Pop</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#4D6787] dark:text-[#7DCCAD] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 8: Cotton Candy -->
+      <button
+        type="button"
+        data-palette="cottoncandy"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F9F5F6;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F8E8EE;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FDCEDF;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F2BED1;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Cotton Candy</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#F2BED1] dark:text-[#FDCEDF] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 9: Gothic Mahogany -->
+      <button
+        type="button"
+        data-palette="mahogany"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #6D0808;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #2D0000;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #757D6F;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #EEEAD7;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Gothic Mahogany</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#6D0808] dark:text-[#EEEAD7] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 10: Pastel Gelato -->
+      <button
+        type="button"
+        data-palette="gelato"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FF9D9D;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FFC5AA;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #EEF8CD;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #BBF1D2;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Pastel Gelato</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#FF9D9D] dark:text-[#BBF1D2] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 11: Cosmic Sunset -->
+      <button
+        type="button"
+        data-palette="electric"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FF84BA;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FFDF82;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #99C2FF;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FFEFE3;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Cosmic Sunset</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#FF84BA] dark:text-[#99C2FF] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+
+      <!-- Palette 12: Coastal Sunshine -->
+      <button
+        type="button"
+        data-palette="coastal"
+        class="palette-option-btn w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] transition-colors cursor-pointer group"
+        role="menuitem"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="flex items-center -space-x-1 shrink-0">
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FFF6DE;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #8BDFDD;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #F48F68;"></span>
+            <span class="w-3.5 h-3.5 rounded-full border border-white shadow-xs" style="background-color: #FFE394;"></span>
+          </div>
+          <span class="palette-label font-semibold text-[#192538] dark:text-[#F0F4F8]">Coastal Sunshine</span>
+        </div>
+        <svg class="check-icon w-4 h-4 text-[#F48F68] dark:text-[#8BDFDD] hidden shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const PALETTE_DEFINITIONS: Record<string, string[]> = {
+    default: ['#3368A0', '#66A3BF', '#C8DFDB', '#F2EFE7'],
+    burgundy: ['#800020', '#D45060', '#F3E6D5', '#FFF9F2'],
+    pastel: ['#FDF4D2', '#B0CDE6', '#A290B7', '#946D6D'],
+    terracotta: ['#315B8C', '#F2765E', '#F5EBDD', '#413333'],
+    crimson: ['#C62828', '#FF8F00', '#FBC02D', '#F5F5DC'],
+    blush: ['#E2B4BD', '#F7D6D0', '#FFF5F5', '#4A4A4A'],
+    mint: ['#BADFDB', '#FFA4A4', '#FFBDBD', '#FCF9EA'],
+    retropop: ['#F599C6', '#FFEA88', '#7DCCAD', '#4D6787'],
+    cottoncandy: ['#F9F5F6', '#F8E8EE', '#FDCEDF', '#F2BED1'],
+    mahogany: ['#6D0808', '#2D0000', '#757D6F', '#EEEAD7'],
+    gelato: ['#FF9D9D', '#FFC5AA', '#EEF8CD', '#BBF1D2'],
+    electric: ['#FF84BA', '#FFDF82', '#99C2FF', '#FFEFE3'],
+    coastal: ['#FFF6DE', '#8BDFDD', '#F48F68', '#FFE394'],
+  };
+
+  function setupPaletteSelector() {
+    const dropdownBtn = document.getElementById('palette-dropdown-btn');
+    const dropdownMenu = document.getElementById('palette-dropdown-menu');
+    const chevron = document.getElementById('palette-chevron');
+    const optionBtns = document.querySelectorAll('.palette-option-btn');
+
+    if (!dropdownBtn || !dropdownMenu) return;
+
+    function getActivePalette() {
+      return document.documentElement.getAttribute('data-palette') || 'default';
+    }
+
+    function updateActiveUI(activePalette: string) {
+      // Update checkmarks and active highlights in dropdown
+      optionBtns.forEach(btn => {
+        const p = btn.getAttribute('data-palette');
+        const checkIcon = btn.querySelector('.check-icon');
+        const isMatch = p === activePalette;
+        if (checkIcon) {
+          if (isMatch) {
+            checkIcon.classList.remove('hidden');
+            btn.classList.add('bg-[#FAF8F5]', 'dark:bg-[#1E2738]', 'font-bold');
+          } else {
+            checkIcon.classList.add('hidden');
+            btn.classList.remove('bg-[#FAF8F5]', 'dark:bg-[#1E2738]', 'font-bold');
+          }
+        }
+      });
+
+      // Update the 4 preview dots in trigger button
+      const colors = PALETTE_DEFINITIONS[activePalette] || PALETTE_DEFINITIONS['default'];
+      const previewDots = document.querySelectorAll('#active-palette-preview span');
+      previewDots.forEach((dot, idx) => {
+        if (colors[idx]) {
+          (dot as HTMLElement).style.backgroundColor = colors[idx];
+        }
+      });
+
+      // Also update any mobile drawer swatches if present
+      document.querySelectorAll('.mobile-palette-btn').forEach(mBtn => {
+        const p = mBtn.getAttribute('data-palette');
+        if (p === activePalette) {
+          mBtn.classList.add('ring-2', 'ring-[#3368A0]', 'dark:ring-[#66A3BF]');
+        } else {
+          mBtn.classList.remove('ring-2', 'ring-[#3368A0]', 'dark:ring-[#66A3BF]');
+        }
+      });
+    }
+
+    function setPalette(paletteId: string) {
+      if (paletteId === 'default') {
+        document.documentElement.removeAttribute('data-palette');
+        localStorage.removeItem('site-palette');
+      } else {
+        document.documentElement.setAttribute('data-palette', paletteId);
+        localStorage.setItem('site-palette', paletteId);
+      }
+      updateActiveUI(paletteId);
+      window.dispatchEvent(new CustomEvent('palette-changed', { detail: { palette: paletteId } }));
+    }
+
+    // Toggle dropdown open/close
+    function toggleDropdown(show?: boolean) {
+      const willShow = typeof show === 'boolean' ? show : dropdownMenu.classList.contains('hidden');
+      if (willShow) {
+        dropdownMenu.classList.remove('hidden');
+        dropdownBtn.setAttribute('aria-expanded', 'true');
+        chevron?.classList.add('rotate-180');
+      } else {
+        dropdownMenu.classList.add('hidden');
+        dropdownBtn.setAttribute('aria-expanded', 'false');
+        chevron?.classList.remove('rotate-180');
+      }
+    }
+
+    dropdownBtn.onclick = (e) => {
+      e.stopPropagation();
+      toggleDropdown();
+    };
+
+    optionBtns.forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const chosen = btn.getAttribute('data-palette') || 'default';
+        setPalette(chosen);
+        toggleDropdown(false);
+      };
+    });
+
+    // Mobile palette options click handler
+    document.querySelectorAll('.mobile-palette-btn').forEach(mBtn => {
+      mBtn.onclick = () => {
+        const chosen = mBtn.getAttribute('data-palette') || 'default';
+        setPalette(chosen);
+      };
+    });
+
+    // Dismiss on click outside
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (!dropdownBtn.contains(target) && !dropdownMenu.contains(target)) {
+        toggleDropdown(false);
+      }
+    });
+
+    // Dismiss on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        toggleDropdown(false);
+      }
+    });
+
+    // Initialize UI on load
+    updateActiveUI(getActivePalette());
+  }
+
+  setupPaletteSelector();
+  document.addEventListener('astro:after-swap', setupPaletteSelector);
+</script>
