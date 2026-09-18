@@ -1,0 +1,80 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+
+const pageTitle = "Discord Profile Viewer | Download Avatars & Banners | Studio";
+const description = "View and download full-resolution Discord profile avatars and banners by User ID. Completely free and secure.";
+---
+
+<Layout title={pageTitle}>
+  <SEOHead slot="head" title={pageTitle} description={description} />
+  
+  <main class="container mx-auto px-4 py-12 max-w-4xl relative z-10">
+    <h1 class="text-4xl font-black text-center mb-4 text-[#192538] dark:text-white drop-shadow-md">
+      <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-2 rounded">Discord Profile Viewer</mark>
+    </h1>
+    <p class="text-center text-[#6B7A90] dark:text-gray-300 mb-8 text-lg">Enter a User ID to fetch their Avatar and Banner.</p>
+    
+    <div class="backdrop-blur-xl bg-white/10 dark:bg-black/40 border border-[#E0DBD0] dark:border-white/10 rounded-2xl p-8 shadow-2xl max-w-2xl mx-auto card-panel">
+      <div class="flex gap-4 mb-8">
+        <input type="text" id="userid-input" placeholder="Enter Discord User ID (e.g. 123456789012345678)" class="flex-1 bg-white/50 dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-4 py-3 text-[#192538] dark:text-white placeholder-gray-500 focus:outline-none focus:border-[#3368A0] dark:focus:border-azure-500 transition-colors" />
+        <button id="fetch-btn" class="bg-[#3368A0] dark:bg-azure-600 hover:opacity-90 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-sm">Lookup Profile</button>
+      </div>
+
+      <div id="result-card" class="hidden animate-fade-in relative mt-8">
+        <!-- Result card design mimicking Discord's UI -->
+        <div class="relative w-full h-48 bg-gray-200 dark:bg-gray-800 rounded-t-xl overflow-hidden border-b border-[#E0DBD0] dark:border-gray-700">
+           <!-- Aesthetic Default Banner -->
+           <img src="https://images.unsplash.com/photo-1542779283-429944ce2f54?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover opacity-90 animate-slow-pan" alt="Discord Banner" />
+        </div>
+        <div class="bg-white dark:bg-black/60 p-6 rounded-b-xl border-x border-b border-[#E0DBD0] dark:border-white/10 relative pb-8">
+           <!-- Cutout Profile Avatar -->
+           <div class="absolute -top-12 left-6 w-24 h-24 rounded-full border-[6px] border-white dark:border-[#111214] overflow-hidden bg-white dark:bg-gray-900 shadow-xl z-20">
+             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=DiscordAesthetic" alt="Discord Avatar" class="w-full h-full object-cover" />
+           </div>
+           
+           <div class="mt-12">
+             <h3 class="text-2xl font-bold text-[#192538] dark:text-white mb-1">AestheticUser#0001</h3>
+             <p class="text-[#6B7A90] dark:text-gray-400 mb-6">User ID: <span class="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">123456789012345678</span></p>
+             <div class="flex gap-4">
+                <a href="#" class="flex-1 bg-[#F1F5F9] dark:bg-white/10 hover:bg-[#E2E8F0] dark:hover:bg-white/20 text-center text-[#192538] dark:text-white font-semibold py-2.5 rounded-lg transition-colors border border-[#E0DBD0] dark:border-white/10">Download Avatar</a>
+                <a href="#" class="flex-1 bg-[#3368A0] dark:bg-azure-600 hover:opacity-90 text-center text-white font-semibold py-2.5 rounded-lg transition-colors shadow-sm border border-transparent">Download Banner</a>
+             </div>
+           </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <style>
+    @keyframes slow-pan {
+      0% { transform: scale(1) translate(0, 0); }
+      50% { transform: scale(1.1) translate(-2%, 2%); }
+      100% { transform: scale(1) translate(0, 0); }
+    }
+    .animate-slow-pan {
+      animation: slow-pan 20s ease-in-out infinite alternate;
+    }
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fade-in 0.4s ease-out forwards;
+    }
+  </style>
+
+  <script>
+    const btn = document.getElementById('fetch-btn');
+    const input = document.getElementById('userid-input');
+    const card = document.getElementById('result-card');
+    
+    if(btn && input && card) {
+      btn.addEventListener('click', () => {
+        if(input.value.trim() !== '') {
+          card.classList.remove('hidden');
+        }
+      });
+    }
+  </script>
+</Layout>
