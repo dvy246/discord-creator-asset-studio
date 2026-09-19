@@ -18,29 +18,29 @@ import {
 
 test('Catalog Data Architect: Presets counts and queries operate correctly', () => {
   const allPresets = getAllPresets();
-  assert.strictEqual(allPresets.length, 271, 'Should have 271 total presets');
+  assert.strictEqual(allPresets.length, 276, 'Should have 276 total presets');
 
   const pfps = getAllPfps();
-  assert.strictEqual(pfps.length, 89, 'Should have 89 total PFPs');
+  assert.strictEqual(pfps.length, 94, 'Should have 94 total PFPs');
   for (const pfp of pfps) {
     assert.ok(pfp.isPfp || pfp.pfpImageUrl, `PFP ${pfp.id} must have isPfp or pfpImageUrl`);
   }
 
   const banners = getAllBanners();
-  assert.strictEqual(banners.length, 204, 'Should have 204 total Banners');
+  assert.strictEqual(banners.length, 209, 'Should have 209 total Banners');
   for (const banner of banners) {
     assert.strictEqual(banner.isPfp, undefined, `Banner ${banner.id} must not have isPfp true`);
   }
 
   const femalePfps = getFemalePfps();
-  assert.strictEqual(femalePfps.length, 22, 'Should have 22 female aesthetic PFPs');
+  assert.strictEqual(femalePfps.length, 24, 'Should have 24 female aesthetic PFPs');
   for (const p of femalePfps) {
     assert.strictEqual(p.gender, 'female', `Female PFP ${p.id} must have gender female`);
     assert.ok(p.isPfp || p.pfpImageUrl, `Female PFP ${p.id} must be a PFP`);
   }
 
   const malePfps = getMalePfps();
-  assert.strictEqual(malePfps.length, 14, 'Should have 14 male aesthetic PFPs');
+  assert.strictEqual(malePfps.length, 16, 'Should have 16 male aesthetic PFPs');
   for (const p of malePfps) {
     assert.strictEqual(p.gender, 'male', `Male PFP ${p.id} must have gender male`);
   }

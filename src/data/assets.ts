@@ -323,6 +323,198 @@ export const ASSET_CATEGORIES: Record<AssetCategory, CategoryInfo> = {
  */
 const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   // =========================================================================
+  // NANO BANANA GENERATIVE HIGH-DEFINITION MATCHING BANNER & PFP SETS
+  // =========================================================================
+  {
+    id: 'nano-cyberpunk-ronin-neo-tokyo',
+    slug: 'cyberpunk-ronin-neo-tokyo',
+    title: 'Neo-Tokyo Ronin: Cyberpunk Rain Alley',
+    description: 'Cyborg ronin with a glowing plasma katana standing in a rain-slicked Neo-Tokyo alleyway illuminated by vibrant cyan and magenta neon signs.',
+    category: 'cyberpunk',
+    categoryLabel: 'Cyberpunk & Sci-Fi',
+    mood: 'futuristic',
+    style: 'cyberpunk-neon',
+    tags: ['cyberpunk', 'ronin', 'samurai', 'katana', 'neo-tokyo', 'neon', 'rain', 'banner', 'pfp', 'matching-set', 'male'],
+    gender: 'male',
+    isPopular: true,
+    isStaffPick: true,
+    isNew: true,
+    imageUrl: '/assets/banners/cyberpunk-ronin-neo-tokyo.webp',
+    pfpImageUrl: '/assets/pfps/cyberpunk-ronin-neo-tokyo.webp',
+    profileThemeHex: '#0B0E1B',
+    accentHex: '#00F0FF',
+    glowHex: '#FF007F',
+    paletteColors: ['#0B0E1B', '#1A1836', '#00F0FF', '#FF007F'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 40, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #0B0E1B 0%, #1A1836 60%, #00F0FF 100%)',
+      bgPattern: 'circuit',
+      primaryIcon: '⚡',
+      secondaryElements: ['neon-signs', 'plasma-katana', 'rain-reflections']
+    },
+    motionConfig: {
+      type: 'neon-rain-alley',
+      speed: 0.8,
+      intensity: 0.6,
+      glowColor: '#00F0FF'
+    },
+    searchQueries: ['cyberpunk discord banner', 'cyberpunk samurai pfp', 'neo tokyo banner discord', 'matching cyberpunk discord set']
+  },
+  {
+    id: 'nano-cosmic-lofi-stargazer-bedroom',
+    slug: 'cosmic-lofi-stargazer-bedroom',
+    title: 'Midnight Stargazer: Cosmic Lo-Fi Study Room',
+    description: 'Dreamy aesthetic bedroom with an expansive bay window opening to a pastel purple galaxy nebula, warm desk lamp, and vinyl player.',
+    category: 'lofi',
+    categoryLabel: 'Lo-Fi & Cozy',
+    mood: 'cozy',
+    style: 'lo-fi-grain',
+    tags: ['lofi', 'aesthetic', 'cozy', 'galaxy', 'nebula', 'bedroom', 'chill', 'banner', 'pfp', 'matching-set', 'female'],
+    gender: 'female',
+    isPopular: true,
+    isStaffPick: true,
+    isNew: true,
+    imageUrl: '/assets/banners/cosmic-lofi-stargazer-bedroom.webp',
+    pfpImageUrl: '/assets/pfps/cosmic-lofi-stargazer-bedroom.webp',
+    profileThemeHex: '#1E172F',
+    accentHex: '#B794F4',
+    glowHex: '#FFDF82',
+    paletteColors: ['#1E172F', '#352555', '#B794F4', '#FFDF82'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 45, zoom: 1.1 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #1E172F 0%, #352555 60%, #B794F4 100%)',
+      bgPattern: 'dots',
+      primaryIcon: '✨',
+      secondaryElements: ['galaxy-window', 'fairy-lights', 'lofi-cat']
+    },
+    motionConfig: {
+      type: 'stargazer-constellations',
+      speed: 0.6,
+      intensity: 0.5,
+      glowColor: '#B794F4'
+    },
+    searchQueries: ['lofi discord banner', 'cosmic anime girl pfp', 'aesthetic galaxy discord set', 'lofi bedroom banner']
+  },
+  {
+    id: 'nano-dark-void-knight-eclipse',
+    slug: 'dark-void-knight-eclipse',
+    title: 'Eclipsed Citadel: Dark Fantasy Void Knight',
+    description: 'Ominous blackened gothic fortress standing below a blood-red eclipsed sun, adrift with embers, ash, and glowing ancient runes.',
+    category: 'dark',
+    categoryLabel: 'Dark & Moody',
+    mood: 'moody',
+    style: 'cinematic-motion',
+    tags: ['dark', 'fantasy', 'knight', 'eclipse', 'gothic', 'castle', 'runes', 'banner', 'pfp', 'matching-set'],
+    isPopular: true,
+    isStaffPick: true,
+    isNew: true,
+    imageUrl: '/assets/banners/dark-void-knight-eclipse.webp',
+    pfpImageUrl: '/assets/pfps/dark-void-knight-eclipse.webp',
+    profileThemeHex: '#100A0E',
+    accentHex: '#EF4444',
+    glowHex: '#F97316',
+    paletteColors: ['#100A0E', '#2A131C', '#EF4444', '#F97316'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 35, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #100A0E 0%, #2A131C 60%, #EF4444 100%)',
+      bgPattern: 'lines',
+      primaryIcon: '⚔️',
+      secondaryElements: ['eclipsed-sun', 'gothic-castle', 'crimson-embers']
+    },
+    motionConfig: {
+      type: 'inferno-shimmer',
+      speed: 0.9,
+      intensity: 0.7,
+      glowColor: '#EF4444'
+    },
+    searchQueries: ['dark souls discord banner', 'dark knight pfp discord', 'gothic castle banner', 'blood moon discord set']
+  },
+  {
+    id: 'nano-synthwave-retro-sunset-cruiser',
+    slug: 'synthwave-retro-sunset-cruiser',
+    title: 'Outrun Odyssey: Synthwave Sunset Highway',
+    description: 'Sleek retro sports car cruising down an infinite neon purple laser grid towards a massive segmented 80s wireframe sunset.',
+    category: 'aesthetic',
+    categoryLabel: 'Aesthetic & Pastel',
+    mood: 'chill',
+    style: 'retro-pixel',
+    tags: ['synthwave', 'outrun', 'retro', '80s', 'vaporwave', 'sunset', 'neon', 'banner', 'pfp', 'matching-set', 'male'],
+    gender: 'male',
+    isPopular: true,
+    isStaffPick: true,
+    isNew: true,
+    imageUrl: '/assets/banners/synthwave-retro-sunset-cruiser.webp',
+    pfpImageUrl: '/assets/pfps/synthwave-retro-sunset-cruiser.webp',
+    profileThemeHex: '#1A0A2A',
+    accentHex: '#EC4899',
+    glowHex: '#F59E0B',
+    paletteColors: ['#1A0A2A', '#38104E', '#EC4899', '#F59E0B'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 40, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #1A0A2A 0%, #38104E 60%, #EC4899 100%)',
+      bgPattern: 'grid',
+      primaryIcon: '🌴',
+      secondaryElements: ['retro-car', 'laser-grid', 'segmented-sun']
+    },
+    motionConfig: {
+      type: 'cyber-grid',
+      speed: 1.0,
+      intensity: 0.7,
+      glowColor: '#EC4899'
+    },
+    searchQueries: ['synthwave discord banner', 'outrun car pfp', '80s vaporwave banner discord', 'retro sunset profile set']
+  },
+  {
+    id: 'nano-sakura-shrine-golden-sunset',
+    slug: 'sakura-shrine-golden-sunset',
+    title: 'Sacred Sakura: Shinto Mountaintop Sanctuary',
+    description: 'Ancient mountaintop shrine under a golden sunset with blooming cherry blossoms drifting across a glowing red torii gate.',
+    category: 'anime',
+    categoryLabel: 'Anime & Manga',
+    mood: 'ethereal',
+    style: 'anime-cinematic',
+    tags: ['anime', 'sakura', 'shrine', 'torii', 'japan', 'sunset', 'peaceful', 'banner', 'pfp', 'matching-set', 'female'],
+    gender: 'female',
+    isPopular: true,
+    isStaffPick: true,
+    isNew: true,
+    imageUrl: '/assets/banners/sakura-shrine-golden-sunset.webp',
+    pfpImageUrl: '/assets/pfps/sakura-shrine-golden-sunset.webp',
+    profileThemeHex: '#2B141E',
+    accentHex: '#F472B6',
+    glowHex: '#FBBF24',
+    paletteColors: ['#2B141E', '#501F31', '#F472B6', '#FBBF24'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 40, zoom: 1.1 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #2B141E 0%, #501F31 60%, #F472B6 100%)',
+      bgPattern: 'dots',
+      primaryIcon: '🌸',
+      secondaryElements: ['torii-gate', 'falling-sakura', 'golden-mountains']
+    },
+    motionConfig: {
+      type: 'windblown-grass',
+      speed: 0.7,
+      intensity: 0.5,
+      glowColor: '#F472B6'
+    },
+    searchQueries: ['sakura shrine discord banner', 'shrine maiden pfp', 'anime sunset discord set', 'torii gate banner']
+  },
+  // =========================================================================
   // BATCH 5 LIVE WALLPAPER ANIMATED PRESETS (FULL VIDEO FIT + MULTI-FORMAT)
   // =========================================================================
   {
