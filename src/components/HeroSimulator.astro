@@ -57,93 +57,13 @@
           <!-- Moving Laser Calibration Scanner Line -->
           <div class="laser-scanner pointer-events-none absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_10px_#22d3ee] z-20"></div>
 
-          <svg class="w-full h-full object-cover" viewBox="0 0 960 540" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bannerSkyGrad" x1="0" y1="0" x2="960" y2="540" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#080C16" />
-                <stop offset="35%" stop-color="#141830" />
-                <stop offset="65%" stop-color="#241B48" />
-                <stop offset="85%" stop-color="#1E3A8A" />
-                <stop offset="100%" stop-color="#0F284E" />
-              </linearGradient>
-              <radialGradient id="ringedGiant" cx="620" cy="180" r="160" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#FFFDF7" />
-                <stop offset="40%" stop-color="#E2F1F8" />
-                <stop offset="70%" stop-color="#66A3BF" />
-                <stop offset="100%" stop-color="#1E3A8A" stop-opacity="0" />
-              </radialGradient>
-              <linearGradient id="auroraRibbonA" x1="0" y1="200" x2="960" y2="120" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#58E1FF" stop-opacity="0" />
-                <stop offset="30%" stop-color="#58E1FF" stop-opacity="0.6" />
-                <stop offset="65%" stop-color="#57F287" stop-opacity="0.5" />
-                <stop offset="100%" stop-color="#58E1FF" stop-opacity="0" />
-              </linearGradient>
-              <linearGradient id="auroraRibbonB" x1="960" y1="260" x2="0" y2="180" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#EB459E" stop-opacity="0" />
-                <stop offset="50%" stop-color="#9B59B6" stop-opacity="0.4" />
-                <stop offset="100%" stop-color="#5865F2" stop-opacity="0" />
-              </linearGradient>
-              <linearGradient id="cometGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#FFFFFF" />
-                <stop offset="100%" stop-color="#58E1FF" stop-opacity="0" />
-              </linearGradient>
-            </defs>
-
-            <!-- Sky & Space Background -->
-            <rect width="960" height="540" fill="url(#bannerSkyGrad)" />
-
-            <!-- Aurora Borealis Ribbons -->
-            <path d="M0 240 C 240 140, 520 280, 960 160 L 960 320 C 640 220, 360 340, 0 240 Z" fill="url(#auroraRibbonA)" />
-            <path d="M0 290 C 320 210, 680 320, 960 210 L 960 380 C 680 280, 340 370, 0 290 Z" fill="url(#auroraRibbonB)" />
-
-            <!-- Animated Twinkling Starfield -->
-            <g fill="#FFFFFF">
-              <circle class="anim-twinkle-1" cx="80" cy="50" r="1.8" />
-              <circle class="anim-twinkle-2" cx="190" cy="85" r="1.4" />
-              <circle class="anim-twinkle-3" cx="310" cy="35" r="2.2" />
-              <circle class="anim-twinkle-1" cx="440" cy="75" r="1.6" />
-              <circle class="anim-twinkle-2" cx="740" cy="45" r="2.4" />
-              <circle class="anim-twinkle-3" cx="860" cy="95" r="1.5" />
-              <circle class="anim-twinkle-2" cx="140" cy="140" r="1.4" />
-              <circle class="anim-twinkle-1" cx="820" cy="160" r="1.8" />
-              <circle class="anim-twinkle-3" cx="920" cy="65" r="2.0" />
-            </g>
-
-            <!-- Constellation Lines -->
-            <path d="M80 50 L 190 85 L 310 35 L 440 75" stroke="#FFFFFF" stroke-width="0.75" stroke-opacity="0.3" stroke-dasharray="3 3" />
-
-            <!-- Shooting Star / Cosmic Trail -->
-            <g class="anim-shooting-star">
-              <line x1="220" y1="20" x2="320" y2="75" stroke="url(#cometGrad)" stroke-width="2.5" stroke-linecap="round" />
-            </g>
-
-            <!-- Ringed Planetary Giant -->
-            <g class="anim-pulse-slow">
-              <!-- Back half of planetary ring -->
-              <ellipse cx="620" cy="180" rx="210" ry="42" fill="none" stroke="#C8DFDB" stroke-width="12" stroke-opacity="0.25" transform="rotate(-18 620 180)" />
-              <!-- Planet Sphere -->
-              <circle cx="620" cy="180" r="110" fill="url(#ringedGiant)" />
-              <!-- Front half of planetary ring -->
-              <path d="M420 245 C 500 270, 740 200, 820 115" fill="none" stroke="#FAF8F5" stroke-width="10" stroke-opacity="0.5" stroke-linecap="round" />
-            </g>
-
-            <!-- Distant Mountain Ridge -->
-            <path d="M0 410 L 140 330 L 260 380 L 420 280 L 560 350 L 710 260 L 840 330 L 960 270 L 960 540 L 0 540 Z" fill="#111B2E" opacity="0.95" />
-            
-            <!-- Midground Alpine Ridge with Cyber Signal Beacon -->
-            <path d="M0 450 L 180 370 L 340 430 L 490 320 L 640 400 L 780 330 L 960 410 L 960 540 L 0 540 Z" fill="#0A111E" />
-            <!-- Radio Mast Beacon on Peak -->
-            <line x1="490" y1="320" x2="490" y2="280" stroke="#66A3BF" stroke-width="2" />
-            <circle cx="490" cy="278" r="3" fill="#EF4444" class="animate-ping" />
-            <circle cx="490" cy="278" r="2" fill="#EF4444" />
-
-            <!-- Foreground Floating Monolith / Archway -->
-            <polygon points="120,490 135,390 150,490" fill="#060A12" />
-            <polygon points="135,390 142,390 140,490 135,490" fill="#3368A0" opacity="0.4" />
-            
-            <!-- Misty Valley Glow Line -->
-            <line x1="0" y1="538" x2="960" y2="538" stroke="#58E1FF" stroke-width="3" stroke-opacity="0.7" />
-          </svg>
+          <img
+            src="/assets/banners/cyberpunk-ronin-neo-tokyo.webp"
+            alt="Neo-Tokyo Ronin Cyberpunk Discord Banner"
+            class="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
+          />
 
           <!-- Discord Top 48px Header Safe Zone Overlay -->
           <div class="absolute inset-x-0 top-0 h-8 sm:h-9 bg-black/45 backdrop-blur-[2px] border-b border-white/15 px-3 flex items-center justify-between z-10">
@@ -158,15 +78,15 @@
         <!-- Discord Server Card Bottom Info Bar -->
         <div class="p-2.5 sm:p-3 flex items-center justify-between bg-[#232428] text-white">
           <div class="flex items-center gap-2.5">
-            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-[#5865F2] to-[#3368A0] border border-white/30 flex items-center justify-center text-xs font-bold shadow-xs anim-pulse-subtle">
-              💎
+            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-[#5865F2] to-[#3368A0] border border-white/30 flex items-center justify-center text-xs font-bold shadow-xs anim-pulse-subtle overflow-hidden">
+              <img src="/assets/pfps/cyberpunk-ronin-neo-tokyo.webp" alt="Neo-Tokyo Server Icon" class="w-full h-full object-cover" />
             </div>
             <div>
               <div class="text-xs font-bold leading-none flex items-center gap-1.5">
-                <span>ASTRAL SANCTUARY</span>
+                <span>NEO-TOKYO SANCTUARY</span>
                 <span class="text-[9px] px-1.5 py-0.2 rounded bg-[#5865F2] text-white font-mono">VERIFIED</span>
               </div>
-              <div class="text-[10px] text-[#949BA4] mt-0.5">16,840 Members • Level 3 Boosted</div>
+              <div class="text-[10px] text-[#949BA4] mt-0.5">18,420 Members • Level 3 Boosted</div>
             </div>
           </div>
           <span class="text-[10px] font-semibold text-[#0D9488] bg-[#0D9488]/15 px-2.5 py-0.5 rounded-full border border-[#0D9488]/30 flex items-center gap-1">
@@ -183,38 +103,13 @@
         <div class="flex items-center gap-3.5">
           <!-- Circular Avatar with Online Ring & Living Float Physics -->
           <div class="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#5865F2] flex-shrink-0 shadow-lg anim-avatar-float">
-            <svg class="w-full h-full" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="avatarBgGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#141E30" />
-                  <stop offset="50%" stop-color="#243B55" />
-                  <stop offset="100%" stop-color="#3368A0" />
-                </linearGradient>
-                <linearGradient id="visorBeamGrad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#66A3BF" stop-opacity="0" />
-                  <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.9" />
-                  <stop offset="100%" stop-color="#66A3BF" stop-opacity="0" />
-                </linearGradient>
-              </defs>
-              <rect width="512" height="512" fill="url(#avatarBgGrad)" />
-              
-              <!-- Character Silhouette / Visor Illustration -->
-              <circle cx="256" cy="210" r="105" fill="#F2EFE7" />
-              
-              <!-- Neon Visor Base -->
-              <rect x="180" y="185" width="152" height="42" rx="21" fill="#3368A0" />
-              
-              <!-- Animated Visor Hologram Sweep -->
-              <g class="anim-visor-sweep">
-                <rect x="180" y="185" width="60" height="42" fill="url(#visorBeamGrad)" opacity="0.75" />
-              </g>
-
-              <line x1="200" y1="206" x2="312" y2="206" stroke="#C8DFDB" stroke-width="4" stroke-linecap="round" />
-              
-              <!-- Cyberpunk Jacket Shoulders -->
-              <path d="M120 460 C 130 350, 190 320, 256 320 C 322 320, 382 350, 392 460 Z" fill="#0C121C" />
-              <path d="M220 320 L 256 390 L 292 320 Z" fill="#3368A0" />
-            </svg>
+            <img
+              src="/assets/pfps/cyberpunk-ronin-neo-tokyo.webp"
+              alt="Cyber Ronin Oni Avatar"
+              class="w-full h-full object-cover"
+              loading="eager"
+              decoding="async"
+            />
             
             <!-- Discord Online Status Pill Badge with Live Ping -->
             <div class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#23A55A] border-2 border-[#232428] flex items-center justify-center">
@@ -253,44 +148,17 @@
     <div id="stage-sticker" class="sim-stage hidden w-full flex flex-col items-center justify-center">
       <div class="relative py-1 flex flex-col items-center">
         
-        <!-- Die-Cut Vinyl Sticker with Floating Physics & Iridescent Pulse -->
-        <div class="w-32 h-32 relative anim-sticker-float">
-          <svg class="w-full h-full drop-shadow-[0_16px_28px_rgba(51,104,160,0.45)]" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="stickerIridescent" x1="0" y1="0" x2="320" y2="320" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#3368A0" />
-                <stop offset="35%" stop-color="#66A3BF" />
-                <stop offset="70%" stop-color="#C8DFDB" />
-                <stop offset="100%" stop-color="#F2EFE7" />
-              </linearGradient>
-            </defs>
-            
-            <!-- White Die-Cut Contour Border -->
-            <path d="M160 25 C 235 25, 295 85, 295 160 C 295 235, 235 295, 160 295 C 85 295, 25 235, 25 160 C 25 85, 85 25, 160 25 Z" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="4" />
-            
-            <!-- Inner Sticker Art (Cyber Mecha Mascot) -->
-            <path d="M160 40 C 225 40, 280 95, 280 160 C 280 225, 225 280, 160 280 C 95 280, 40 225, 40 160 C 40 95, 95 40, 160 40 Z" fill="url(#stickerIridescent)" />
-            
-            <!-- Mascot Ears -->
-            <polygon points="90,75 125,120 70,125" fill="#141E30" />
-            <polygon points="230,75 195,120 250,125" fill="#141E30" />
-            <polygon points="95,88 120,118 80,122" fill="#66A3BF" />
-            <polygon points="225,88 200,118 240,122" fill="#66A3BF" />
-            
-            <!-- Mascot Face Visor -->
-            <ellipse cx="160" cy="165" rx="80" ry="60" fill="#0C121C" />
-            
-            <!-- Glowing Eyes with Dynamic Catchlight -->
-            <circle cx="130" cy="160" r="14" fill="#C8DFDB" />
-            <circle cx="190" cy="160" r="14" fill="#C8DFDB" />
-            <circle cx="134" cy="157" r="5" fill="#141E30" />
-            <circle cx="194" cy="157" r="5" fill="#141E30" />
-            <circle cx="136" cy="155" r="2" fill="#FFFFFF" class="animate-ping" />
-            <circle cx="196" cy="155" r="2" fill="#FFFFFF" class="animate-ping" />
-            
-            <!-- Star Sparkle Highlights -->
-            <path d="M160 115 Q 160 130 175 130 Q 160 130 160 145 Q 160 130 145 130 Q 160 130 160 115 Z" fill="#FFFFFF" class="anim-pulse-fast" />
-          </svg>
+        <!-- Die-Cut Vinyl Sticker with Floating Physics -->
+        <div class="w-32 h-32 relative anim-sticker-float flex items-center justify-center">
+          <div class="relative w-28 h-28 p-1.5 bg-white rounded-3xl shadow-[0_16px_32px_rgba(0,0,0,0.4)] ring-4 ring-white/90">
+            <img
+              src="/assets/pfps/totoro-forest-belly-nap-animated.webp"
+              alt="Totoro Forest Belly Nap Animated Discord Sticker"
+              class="w-full h-full object-cover rounded-2xl"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
         </div>
 
         <div class="mt-2.5 flex items-center gap-2">
@@ -312,25 +180,14 @@
         <!-- Left: 128x128 HD Master View with Floating Gemstone -->
         <div class="flex flex-col items-center">
           <div class="w-20 h-20 rounded-[12px] p-2 bg-[#FFFFFF] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] shadow-md flex items-center justify-center bg-[repeating-conic-gradient(#FAF8F5_0%_25%,#FFFFFF_0%_50%)] dark:bg-[repeating-conic-gradient(#141A24_0%_25%,#1B2330_0%_50%)] [background-size:12px_12px]">
-            <div class="w-full h-full anim-gem-float">
-              <svg class="w-full h-full drop-shadow-md" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="gemGrad" x1="64" y1="12" x2="64" y2="116" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#C8DFDB" />
-                    <stop offset="50%" stop-color="#66A3BF" />
-                    <stop offset="100%" stop-color="#3368A0" />
-                  </linearGradient>
-                </defs>
-                <!-- Faceted Crystal Polygon Gem -->
-                <polygon points="64,12 108,44 94,114 34,114 20,44" fill="url(#gemGrad)" stroke="#192538" stroke-width="2" />
-                <!-- Facet Highlights -->
-                <polygon points="64,12 108,44 64,54" fill="#E8F4F2" opacity="0.6" />
-                <polygon points="64,12 20,44 64,54" fill="#FFFFFF" opacity="0.8" />
-                <polygon points="20,44 34,114 64,54" fill="#3368A0" opacity="0.4" />
-                <polygon points="108,44 94,114 64,54" fill="#141E30" opacity="0.3" />
-                <!-- Glistening Sparkle Glint -->
-                <circle cx="48" cy="38" r="4" fill="#FFFFFF" class="anim-twinkle-1" />
-              </svg>
+            <div class="w-full h-full anim-gem-float flex items-center justify-center">
+              <img
+                src="/assets/pfps/pop-cat-animated.webp"
+                alt="Pop Cat Animated Discord Emoji Master"
+                class="w-full h-full object-contain"
+                loading="eager"
+                decoding="async"
+              />
             </div>
           </div>
           <span class="text-[10px] font-mono text-[#6B7A90] dark:text-[#8494A7] mt-1 font-semibold">128×128 HD Master</span>
@@ -340,7 +197,7 @@
         <div class="flex-1 max-w-[260px] bg-[#313338] text-white p-3 rounded-[10px] border border-black/25 shadow-md">
           <div class="flex items-start gap-2.5">
             <div class="w-7 h-7 rounded-full bg-[#5865F2] flex items-center justify-center text-[10px] font-bold shadow-xs">
-              U
+              V
             </div>
             <div class="flex-1 min-w-0">
               <div class="flex items-baseline gap-1.5">
@@ -349,24 +206,31 @@
               </div>
               
               <div class="flex items-center gap-2 mt-1">
-                <span class="text-xs text-[#DBDEE1]">new gem emote:</span>
+                <span class="text-xs text-[#DBDEE1]">new nitro emote:</span>
                 <!-- 32x32 Chat Rendered Size -->
-                <div class="w-6 h-6 inline-block flex-shrink-0 anim-pulse-subtle">
-                  <svg class="w-full h-full" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="64,12 108,44 94,114 34,114 20,44" fill="#66A3BF" stroke="#192538" stroke-width="4" />
-                    <polygon points="64,12 20,44 64,54" fill="#FFFFFF" opacity="0.9" />
-                  </svg>
+                <div class="w-7 h-7 inline-block flex-shrink-0">
+                  <img
+                    src="/assets/pfps/pop-cat-animated.webp"
+                    alt="Pop Cat in chat"
+                    class="w-full h-full object-contain"
+                    loading="eager"
+                    decoding="async"
+                  />
                 </div>
               </div>
 
               <!-- Animated Reaction Pill -->
-              <div class="mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[6px] bg-[#2B2D31] border border-[#5865F2]/50 text-white text-[10px] font-bold anim-pulse-subtle">
-                <span class="w-3.5 h-3.5 inline-block">
-                  <svg class="w-full h-full" viewBox="0 0 128 128" fill="none">
-                    <polygon points="64,12 108,44 94,114 34,114 20,44" fill="#66A3BF" />
-                  </svg>
+              <div class="mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[6px] bg-[#2B2D31] border border-[#5865F2]/50 text-white text-[10px] font-bold">
+                <span class="w-4 h-4 inline-block">
+                  <img
+                    src="/assets/pfps/pop-cat-animated.webp"
+                    alt="Pop Cat reaction"
+                    class="w-full h-full object-contain"
+                    loading="eager"
+                    decoding="async"
+                  />
                 </span>
-                <span class="text-[#58E1FF]">12</span>
+                <span class="text-[#58E1FF]">24</span>
               </div>
             </div>
           </div>
