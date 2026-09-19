@@ -1,0 +1,145 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SEOHead from '../../components/SEOHead.astro';
+
+const pageTitle = "Discord GIF Maker | Animated Banners & Avatars | Studio";
+const description = "Create optimized, high-quality Discord GIFs for animated banners, avatars, and emojis. Compress to fit the 10MB Nitro limit perfectly.";
+---
+
+<Layout title={pageTitle}>
+  <SEOHead slot="head" title={pageTitle} description={description} />
+  
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">GIF Maker</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord GIF</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Convert MP4 to GIF, add aesthetic text, and compress under 10MB for Discord Nitro.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+          10MB Auto-Compression
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+      <!-- Left Column: Upload & Canvas -->
+      <div class="lg:col-span-8 space-y-6">
+        
+        <!-- Aesthetic Video Dropzone -->
+        <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] dark:border-white/20 hover:border-[#3368A0] dark:hover:border-[#66A3BF] rounded-[14px] bg-white/50 dark:bg-black/40 backdrop-blur-md p-10 text-center transition-all cursor-pointer relative shadow-xl group">
+          <input type="file" id="fileInput" accept="video/mp4,video/webm,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
+          <div class="space-y-4 pointer-events-none">
+            <div class="w-16 h-16 rounded-[16px] bg-[#C8DFDB]/50 dark:bg-white/10 text-[#3368A0] dark:text-white flex items-center justify-center mx-auto text-3xl font-bold group-hover:scale-110 transition-transform">
+              🎞️
+            </div>
+            <div>
+              <p class="text-base font-bold text-[#192538] dark:text-white drop-shadow-sm">Drop Video or GIF to Convert</p>
+              <p class="text-xs text-[#6B7A90] dark:text-gray-400 mt-1">Supports MP4, WebM, and GIF (Max 50MB input)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Premium Editor Panel (Hidden until upload) -->
+        <div id="editorPanel" class="card-panel rounded-[14px] p-6 backdrop-blur-xl bg-white/70 dark:bg-[#111214]/80 border border-[#E0DBD0] dark:border-white/10 shadow-2xl hidden">
+          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] dark:border-white/10 mb-6">
+            <h2 class="text-sm font-bold text-[#192538] dark:text-white flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-azure-500 animate-pulse"></span>
+              Timeline & Canvas
+            </h2>
+          </div>
+
+          <div class="relative bg-black/90 rounded-[10px] overflow-hidden mb-6 flex items-center justify-center p-0 aspect-video shadow-inner">
+            <video id="previewVideo" class="max-w-full h-full object-contain" loop muted playsinline></video>
+            
+            <!-- Safe Zone Overlays (Toggleable) -->
+            <div id="gifSafeZone" class="absolute inset-0 pointer-events-none hidden">
+               <!-- Banner Mock UI Overlay -->
+               <div class="absolute bottom-[-20px] left-6 w-20 h-20 rounded-full border-[4px] border-[#313338] bg-black/60 backdrop-blur-md"></div>
+            </div>
+          </div>
+          
+          <!-- Aesthetic Settings -->
+          <div class="grid grid-cols-2 gap-4 mb-6">
+             <div>
+                <label class="text-xs text-[#6B7A90] dark:text-gray-400 font-semibold mb-2 block">Optimize For</label>
+                <select class="w-full bg-white dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-3 py-2 text-sm text-[#192538] dark:text-white focus:outline-none focus:border-azure-500">
+                   <option>Discord Server Banner (960x540)</option>
+                   <option>Discord Profile Banner (600x240)</option>
+                   <option>Discord Avatar (128x128)</option>
+                </select>
+             </div>
+             <div>
+                <label class="text-xs text-[#6B7A90] dark:text-gray-400 font-semibold mb-2 block">Frame Rate</label>
+                <select class="w-full bg-white dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-3 py-2 text-sm text-[#192538] dark:text-white focus:outline-none focus:border-azure-500">
+                   <option>Smooth (30 FPS) - Larger File</option>
+                   <option>Standard (15 FPS) - Balanced</option>
+                   <option>Anime/Lo-Fi (12 FPS) - Aesthetic</option>
+                </select>
+             </div>
+          </div>
+
+          <button id="generateBtn" class="bg-[#3368A0] dark:bg-azure-600 hover:opacity-90 w-full py-3.5 rounded-[10px] text-white text-sm font-bold flex items-center justify-center shadow-lg transition-all">
+            Generate Discord GIF
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Column: Settings & Constraints -->
+      <div class="lg:col-span-4 space-y-6">
+        <div class="card-panel rounded-[14px] p-6 backdrop-blur-md bg-white/50 dark:bg-[#111214]/60 border border-[#E0DBD0] dark:border-white/10">
+          <h2 class="text-sm font-bold text-[#192538] dark:text-white mb-4">Export Constraints</h2>
+          
+          <div class="space-y-4 font-mono text-xs">
+            <div class="bg-amber-500/10 border border-amber-500/20 p-3 rounded-lg text-amber-700 dark:text-amber-400">
+              <strong>Nitro Limit:</strong> Discord enforces a strict 10MB limit for animated banners and avatars. We will automatically compress your output to fit this limit.
+            </div>
+            
+            <div class="flex justify-between py-2 border-b border-[#E0DBD0] dark:border-gray-800">
+              <span class="text-[#6B7A90] dark:text-gray-400">Target Size:</span>
+              <span class="font-bold text-[#0D9488]">≤ 10.0 MB</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-[#E0DBD0] dark:border-gray-800">
+              <span class="text-[#6B7A90] dark:text-gray-400">Max Duration:</span>
+              <span class="font-bold text-[#192538] dark:text-white">~5 Seconds (Recommended)</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-[#E0DBD0] dark:border-gray-800">
+              <span class="text-[#6B7A90] dark:text-gray-400">Playback:</span>
+              <span class="font-bold text-[#192538] dark:text-white">Hover Only (Discord Spec)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple mock logic for UI interaction
+    const fileInput = document.getElementById('fileInput');
+    const dropzone = document.getElementById('dropzone');
+    const editorPanel = document.getElementById('editorPanel');
+    const previewVideo = document.getElementById('previewVideo') as HTMLVideoElement;
+    
+    fileInput?.addEventListener('change', (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      
+      const objectUrl = URL.createObjectURL(file);
+      if (previewVideo) {
+        previewVideo.src = objectUrl;
+        previewVideo.play();
+      }
+      
+      dropzone?.classList.add('hidden');
+      editorPanel?.classList.remove('hidden');
+    });
+  </script>
+</Layout>
