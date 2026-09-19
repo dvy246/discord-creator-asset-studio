@@ -3,6 +3,7 @@ import '../styles/global.css';
 import SEOHead from '../components/SEOHead.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import PaletteSelector from '../components/PaletteSelector.astro';
+import LanguagePicker from '../components/LanguagePicker.astro';
 
 interface Props {
   title?: string;
@@ -11,6 +12,7 @@ interface Props {
   noindex?: boolean;
   canonicalUrl?: string;
   hasSpanishAlternate?: boolean;
+  ogImage?: string;
 }
 
 const { 
@@ -20,6 +22,7 @@ const {
   noindex = false,
   canonicalUrl,
   hasSpanishAlternate,
+  ogImage,
 } = Astro.props;
 ---
 <!doctype html>
@@ -30,7 +33,8 @@ const {
       description={description} 
       noindex={noindex} 
       canonicalUrl={canonicalUrl} 
-      hasSpanishAlternate={hasSpanishAlternate} 
+      hasSpanishAlternate={hasSpanishAlternate}
+      ogImage={ogImage}
     />
     <script is:inline>
       (function() {
@@ -81,6 +85,10 @@ const {
           <a href="/guides/discord-sizes/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
             Size Guide
           </a>
+          <a href="/blog/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+            Blog
+          </a>
+          <LanguagePicker lang={lang} variant="desktop" />
         </nav>
 
         <!-- Right Side: Palette Selector, Theme Slider & Privacy Badge & Mobile Hamburger -->
@@ -117,7 +125,13 @@ const {
         <a href="/tools/banner/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Banner Studio</a>
         <a href="/tools/avatar/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Avatar Studio</a>
         <a href="/tools/role-icon/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Role Icon Studio</a>
+        <a href="/tools/gif-maker/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">GIF Maker</a>
+        <a href="/tools/profile-viewer/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Profile Viewer</a>
         <a href="/guides/discord-sizes/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Size Cheat Sheet (2026)</a>
+        <a href="/guides/discord-gif-guide/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Discord GIF Guide</a>
+        <a href="/blog/" class="block px-3 py-2 rounded-md text-sm font-semibold text-[#475569] hover:text-[#3368A0] hover:bg-[#E0DBD0]/40 transition-colors">Creator Blog & Guides</a>
+
+        <LanguagePicker lang={lang} variant="mobile" />
 
         <!-- Mobile Palette Options -->
         <div class="pt-3 pb-1 border-t border-[#E0DBD0]/70 dark:border-[#263346] mt-3">
@@ -230,6 +244,8 @@ const {
               <li><a href="/tools/banner/" class="hover:text-[#3368A0] transition-colors">Profile & Server Banners</a></li>
               <li><a href="/tools/avatar/" class="hover:text-[#3368A0] transition-colors">Avatar Optimizer</a></li>
               <li><a href="/tools/role-icon/" class="hover:text-[#3368A0] transition-colors">Role Icon Resizer (64x64)</a></li>
+              <li><a href="/tools/gif-maker/" class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>
+              <li><a href="/tools/profile-viewer/" class="hover:text-[#3368A0] transition-colors">Profile Viewer & Grabber</a></li>
             </ul>
           </div>
 
@@ -237,7 +253,11 @@ const {
             <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Documentation</h4>
             <ul class="space-y-2 text-xs">
               <li><a href="/guides/discord-sizes/" class="hover:text-[#3368A0] transition-colors">Discord Size Cheat Sheet (2026)</a></li>
+              <li><a href="/guides/discord-gif-guide/" class="hover:text-[#3368A0] transition-colors">Discord GIF Guide</a></li>
+              <li><a href="/blog/" class="hover:text-[#3368A0] transition-colors">Creator Blog & Tutorials</a></li>
+              <li><a href="/es/" class="hover:text-[#3368A0] transition-colors">Versión en Español (ES)</a></li>
               <li><a href="/sitemap-index.xml" class="hover:text-[#3368A0] transition-colors">XML Sitemap</a></li>
+              <li><a href="/rss.xml" class="hover:text-[#3368A0] transition-colors">RSS Feed</a></li>
               <li><a href="/robots.txt" class="hover:text-[#3368A0] transition-colors">Robots.txt</a></li>
             </ul>
           </div>

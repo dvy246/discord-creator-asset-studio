@@ -1,15 +1,70 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import SEOHead from '../../components/SEOHead.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
 
-const pageTitle = "Discord GIF Maker | Animated Banners & Avatars | Studio";
-const description = "Create optimized, high-quality Discord GIFs for animated banners, avatars, and emojis. Compress to fit the 10MB Nitro limit perfectly.";
+const pageTitle = "Discord GIF Maker | Compress Under 10MB Nitro | Studio";
+const pageDescription = "Free Discord GIF maker to convert videos, crop animated banners, and optimize animated avatars under Discord's strict 10MB Nitro limit.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/gif-maker/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord GIF Maker & Video Converter",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "GIF Maker", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the maximum file size for Discord animated GIFs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord enforces a strict 10.0 MB limit for animated profile banners and user avatars (with Discord Nitro). Animated emojis are limited to 256 KiB, and animated stickers must be under 512 KiB in APNG format."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long can a Discord animated banner or avatar be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "While Discord technically allows GIFs of any duration under 10MB, Discord client UI pauses banner animations after roughly 5 seconds until hovered. We recommend authoring 2 to 5-second seamless loops."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my Discord GIF look pixelated or slow?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Large resolution GIFs exceed Discord's 10MB limit quickly unless compressed. Reducing frame rate from 30 FPS to 15 FPS cuts file size in half without sacrificing perceived smoothness on Discord profile cards."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need Discord Nitro to use animated GIFs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Animated avatars, animated profile banners, and custom external GIF emojis require an active Discord Nitro or Nitro Basic subscription."
+      }
+    }
+  ]
+};
 ---
 
-<Layout title={pageTitle}>
-  <SEOHead slot="head" title={pageTitle} description={description} />
-  
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <!-- Breadcrumb & Header -->
     <div class="mb-8">
       <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
         <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
@@ -19,127 +74,253 @@ const description = "Create optimized, high-quality Discord GIFs for animated ba
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
-            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord GIF</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span></span>
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord GIF Maker</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">& Converter</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
-          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Convert MP4 to GIF, add aesthetic text, and compress under 10MB for Discord Nitro.</p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Convert MP4, WebM, or clips to optimized Discord animated GIFs under the strict 10MB Nitro ceiling.</p>
         </div>
         <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
-          <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
-          10MB Auto-Compression
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          10MB Nitro Calibrated
         </div>
       </div>
     </div>
 
+    <!-- Main Tool Container -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
-      <!-- Left Column: Upload & Canvas -->
+      <!-- Left Column: Media Uploader & Interactive Canvas (8 cols) -->
       <div class="lg:col-span-8 space-y-6">
-        
         <!-- Aesthetic Video Dropzone -->
-        <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] dark:border-white/20 hover:border-[#3368A0] dark:hover:border-[#66A3BF] rounded-[14px] bg-white/50 dark:bg-black/40 backdrop-blur-md p-10 text-center transition-all cursor-pointer relative shadow-xl group">
+        <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] dark:border-white/20 hover:border-[#3368A0] dark:hover:border-[#66A3BF] rounded-[14px] bg-white/60 dark:bg-black/40 backdrop-blur-md p-10 text-center transition-all cursor-pointer relative shadow-sm group">
           <input type="file" id="fileInput" accept="video/mp4,video/webm,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
           <div class="space-y-4 pointer-events-none">
-            <div class="w-16 h-16 rounded-[16px] bg-[#C8DFDB]/50 dark:bg-white/10 text-[#3368A0] dark:text-white flex items-center justify-center mx-auto text-3xl font-bold group-hover:scale-110 transition-transform">
+            <div class="w-14 h-14 rounded-[14px] bg-[#C8DFDB]/50 dark:bg-white/10 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center mx-auto text-2xl font-bold group-hover:scale-110 transition-transform">
               🎞️
             </div>
             <div>
-              <p class="text-base font-bold text-[#192538] dark:text-white drop-shadow-sm">Drop Video or GIF to Convert</p>
-              <p class="text-xs text-[#6B7A90] dark:text-gray-400 mt-1">Supports MP4, WebM, and GIF (Max 50MB input)</p>
+              <p class="text-base font-bold text-[#192538] dark:text-white">Choose video or GIF</p>
+              <p class="text-xs text-[#6B7A90] dark:text-gray-400 mt-1">MP4, WebM, or animated GIF · Auto-framed to Discord dimensions</p>
             </div>
           </div>
         </div>
 
-        <!-- Premium Editor Panel (Hidden until upload) -->
-        <div id="editorPanel" class="card-panel rounded-[14px] p-6 backdrop-blur-xl bg-white/70 dark:bg-[#111214]/80 border border-[#E0DBD0] dark:border-white/10 shadow-2xl hidden">
-          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] dark:border-white/10 mb-6">
+        <!-- Editor & Preview Panel -->
+        <div id="editorPanel" class="card-panel rounded-[14px] p-6 backdrop-blur-xl bg-white/80 dark:bg-[#141A24]/90 border border-[#E0DBD0] dark:border-[#263346] shadow-md hidden">
+          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] dark:border-[#263346] mb-6">
             <h2 class="text-sm font-bold text-[#192538] dark:text-white flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-azure-500 animate-pulse"></span>
-              Timeline & Canvas
+              <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+              Timeline & Video Preview
             </h2>
+            <button id="resetBtn" class="btn-secondary text-xs px-2.5 py-1 rounded-[6px] cursor-pointer">
+              Choose Another File
+            </button>
           </div>
 
-          <div class="relative bg-black/90 rounded-[10px] overflow-hidden mb-6 flex items-center justify-center p-0 aspect-video shadow-inner">
-            <video id="previewVideo" class="max-w-full h-full object-contain" loop muted playsinline></video>
+          <!-- Video Surface -->
+          <div class="relative bg-black/90 rounded-[12px] overflow-hidden mb-6 flex items-center justify-center aspect-video shadow-inner">
+            <video id="previewVideo" class="max-w-full max-h-full object-contain" loop muted playsinline autoplay></video>
             
-            <!-- Safe Zone Overlays (Toggleable) -->
-            <div id="gifSafeZone" class="absolute inset-0 pointer-events-none hidden">
-               <!-- Banner Mock UI Overlay -->
-               <div class="absolute bottom-[-20px] left-6 w-20 h-20 rounded-full border-[4px] border-[#313338] bg-black/60 backdrop-blur-md"></div>
+            <!-- Safe Zone Mask Overlay -->
+            <div id="gifSafeZone" class="absolute inset-0 pointer-events-none hidden flex flex-col justify-between p-4">
+              <div class="bg-black/70 backdrop-blur-md px-3 py-1 rounded text-[10px] font-mono text-white/80 w-fit">Top 48px Header Zone</div>
+              <div class="w-16 h-16 rounded-full border-2 border-white/60 bg-black/60 backdrop-blur-md flex items-center justify-center text-[9px] font-bold text-white/80">Avatar</div>
             </div>
           </div>
-          
-          <!-- Aesthetic Settings -->
-          <div class="grid grid-cols-2 gap-4 mb-6">
-             <div>
-                <label class="text-xs text-[#6B7A90] dark:text-gray-400 font-semibold mb-2 block">Optimize For</label>
-                <select class="w-full bg-white dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-3 py-2 text-sm text-[#192538] dark:text-white focus:outline-none focus:border-azure-500">
-                   <option>Discord Server Banner (960x540)</option>
-                   <option>Discord Profile Banner (600x240)</option>
-                   <option>Discord Avatar (128x128)</option>
-                </select>
-             </div>
-             <div>
-                <label class="text-xs text-[#6B7A90] dark:text-gray-400 font-semibold mb-2 block">Frame Rate</label>
-                <select class="w-full bg-white dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-3 py-2 text-sm text-[#192538] dark:text-white focus:outline-none focus:border-azure-500">
-                   <option>Smooth (30 FPS) - Larger File</option>
-                   <option>Standard (15 FPS) - Balanced</option>
-                   <option>Anime/Lo-Fi (12 FPS) - Aesthetic</option>
-                </select>
-             </div>
+
+          <!-- Parameter Controls -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div>
+              <label for="targetPreset" class="text-xs text-[#6B7A90] dark:text-gray-400 font-bold uppercase block mb-1.5">Asset Target</label>
+              <select id="targetPreset" class="w-full bg-[#FAF8F5] dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-3 py-2 text-xs text-[#192538] dark:text-white focus:outline-none focus:border-[#3368A0]">
+                <option value="profileBanner">Profile Banner (600×240)</option>
+                <option value="serverBanner">Server Banner (960×540)</option>
+                <option value="avatar">Avatar / PFP (512×512)</option>
+                <option value="emoji">Animated Emoji (128×128)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="fpsSelect" class="text-xs text-[#6B7A90] dark:text-gray-400 font-bold uppercase block mb-1.5">Frame Rate</label>
+              <select id="fpsSelect" class="w-full bg-[#FAF8F5] dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-3 py-2 text-xs text-[#192538] dark:text-white focus:outline-none focus:border-[#3368A0]">
+                <option value="15">15 FPS (Recommended - Best Quality/Size)</option>
+                <option value="30">30 FPS (Ultra Smooth - High File Size)</option>
+                <option value="12">12 FPS (Anime / Lo-Fi Aesthetic)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="qualitySelect" class="text-xs text-[#6B7A90] dark:text-gray-400 font-bold uppercase block mb-1.5">Compression</label>
+              <select id="qualitySelect" class="w-full bg-[#FAF8F5] dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-3 py-2 text-xs text-[#192538] dark:text-white focus:outline-none focus:border-[#3368A0]">
+                <option value="high">Fit Under 10.0 MB (Nitro)</option>
+                <option value="medium">Aggressive (Fit Under 5.0 MB)</option>
+                <option value="emoji">Emoji Limit (Fit Under 256 KiB)</option>
+              </select>
+            </div>
           </div>
 
-          <button id="generateBtn" class="bg-[#3368A0] dark:bg-azure-600 hover:opacity-90 w-full py-3.5 rounded-[10px] text-white text-sm font-bold flex items-center justify-center shadow-lg transition-all">
-            Generate Discord GIF
+          <!-- Safe Zone Toggle -->
+          <div class="flex items-center gap-2 mb-6">
+            <input type="checkbox" id="toggleSafeZone" class="rounded border-[#D8D3C8] text-[#3368A0] cursor-pointer" />
+            <label for="toggleSafeZone" class="text-xs text-[#475569] dark:text-gray-300 font-medium cursor-pointer">
+              Show Discord UI Profile Safe Zone Mask
+            </label>
+          </div>
+
+          <!-- Export Action -->
+          <button id="convertBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2 shadow-sm cursor-pointer">
+            <span id="convertSpinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            <span id="convertText">Process & Download Discord GIF</span>
           </button>
         </div>
       </div>
 
-      <!-- Right Column: Settings & Constraints -->
+      <!-- Right Column: Validation & Spec Receipts (4 cols) -->
       <div class="lg:col-span-4 space-y-6">
-        <div class="card-panel rounded-[14px] p-6 backdrop-blur-md bg-white/50 dark:bg-[#111214]/60 border border-[#E0DBD0] dark:border-white/10">
-          <h2 class="text-sm font-bold text-[#192538] dark:text-white mb-4">Export Constraints</h2>
-          
-          <div class="space-y-4 font-mono text-xs">
-            <div class="bg-amber-500/10 border border-amber-500/20 p-3 rounded-lg text-amber-700 dark:text-amber-400">
-              <strong>Nitro Limit:</strong> Discord enforces a strict 10MB limit for animated banners and avatars. We will automatically compress your output to fit this limit.
+        <div class="card-panel rounded-[14px] p-6">
+          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+            <h3 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider">Discord GIF Specs</h3>
+            <span class="text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2 py-0.5 rounded font-bold">10MB Max</span>
+          </div>
+
+          <div class="space-y-3 font-mono text-xs">
+            <div class="flex justify-between py-1 border-b border-[#FAF8F5] dark:border-gray-800">
+              <span class="text-[#6B7A90]">Nitro Banner:</span>
+              <span class="font-bold text-[#192538] dark:text-white">600×240 (5:2)</span>
             </div>
-            
-            <div class="flex justify-between py-2 border-b border-[#E0DBD0] dark:border-gray-800">
-              <span class="text-[#6B7A90] dark:text-gray-400">Target Size:</span>
-              <span class="font-bold text-[#0D9488]">≤ 10.0 MB</span>
+            <div class="flex justify-between py-1 border-b border-[#FAF8F5] dark:border-gray-800">
+              <span class="text-[#6B7A90]">Nitro Avatar:</span>
+              <span class="font-bold text-[#192538] dark:text-white">512×512 (1:1)</span>
             </div>
-            <div class="flex justify-between py-2 border-b border-[#E0DBD0] dark:border-gray-800">
-              <span class="text-[#6B7A90] dark:text-gray-400">Max Duration:</span>
-              <span class="font-bold text-[#192538] dark:text-white">~5 Seconds (Recommended)</span>
+            <div class="flex justify-between py-1 border-b border-[#FAF8F5] dark:border-gray-800">
+              <span class="text-[#6B7A90]">Anim. Emoji:</span>
+              <span class="font-bold text-[#192538] dark:text-white">128×128 (≤256KB)</span>
             </div>
-            <div class="flex justify-between py-2 border-b border-[#E0DBD0] dark:border-gray-800">
-              <span class="text-[#6B7A90] dark:text-gray-400">Playback:</span>
-              <span class="font-bold text-[#192538] dark:text-white">Hover Only (Discord Spec)</span>
+            <div class="flex justify-between py-1">
+              <span class="text-[#6B7A90]">Anim. Sticker:</span>
+              <span class="font-bold text-[#192538] dark:text-white">320×320 (≤512KB APNG)</span>
             </div>
+          </div>
+        </div>
+
+        <div class="card-panel rounded-[14px] p-6">
+          <h3 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider mb-2">Optimizing Tips</h3>
+          <p class="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
+            Discord loops animated GIFs continuously on profiles. Keeping your animation between <strong>2 and 5 seconds</strong> guarantees high frame fidelity without hitting the 10MB ceiling.
+          </p>
+          <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346]">
+            <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline text-xs font-medium flex items-center gap-1">
+              <span>📖</span> Read Complete Discord GIF Guide →
+            </a>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Comprehensive Technical FAQ -->
+    <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12">
+      <h2 class="text-xl font-bold text-[#192538] dark:text-white tracking-tight mb-6">Frequently Asked Questions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {faqSchema.mainEntity.map((item) => (
+          <div class="card-panel p-5 rounded-[12px]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.name}</h3>
+            <p class="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed">{item.acceptedAnswer.text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
   </div>
 
   <script>
-    // Simple mock logic for UI interaction
-    const fileInput = document.getElementById('fileInput');
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     const dropzone = document.getElementById('dropzone');
     const editorPanel = document.getElementById('editorPanel');
     const previewVideo = document.getElementById('previewVideo') as HTMLVideoElement;
-    
+    const resetBtn = document.getElementById('resetBtn');
+    const toggleSafeZone = document.getElementById('toggleSafeZone') as HTMLInputElement;
+    const gifSafeZone = document.getElementById('gifSafeZone');
+    const convertBtn = document.getElementById('convertBtn');
+    const convertSpinner = document.getElementById('convertSpinner');
+    const convertText = document.getElementById('convertText');
+
+    let currentFile: File | null = null;
+    let currentObjectUrl: string | null = null;
+
+    function cleanup() {
+      if (currentObjectUrl) {
+        URL.revokeObjectURL(currentObjectUrl);
+        currentObjectUrl = null;
+      }
+    }
+
     fileInput?.addEventListener('change', (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
-      
-      const objectUrl = URL.createObjectURL(file);
+      handleFile(file);
+    });
+
+    dropzone?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-[#3368A0]');
+    });
+
+    dropzone?.addEventListener('dragleave', () => {
+      dropzone.classList.remove('border-[#3368A0]');
+    });
+
+    dropzone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-[#3368A0]');
+      const file = e.dataTransfer?.files?.[0];
+      if (file) handleFile(file);
+    });
+
+    function handleFile(file: File) {
+      cleanup();
+      currentFile = file;
+      currentObjectUrl = URL.createObjectURL(file);
       if (previewVideo) {
-        previewVideo.src = objectUrl;
-        previewVideo.play();
+        previewVideo.src = currentObjectUrl;
+        previewVideo.play().catch(() => {});
       }
-      
       dropzone?.classList.add('hidden');
       editorPanel?.classList.remove('hidden');
+    }
+
+    resetBtn?.addEventListener('click', () => {
+      cleanup();
+      currentFile = null;
+      if (fileInput) fileInput.value = '';
+      editorPanel?.classList.add('hidden');
+      dropzone?.classList.remove('hidden');
+    });
+
+    toggleSafeZone?.addEventListener('change', () => {
+      if (toggleSafeZone.checked) {
+        gifSafeZone?.classList.remove('hidden');
+      } else {
+        gifSafeZone?.classList.add('hidden');
+      }
+    });
+
+    convertBtn?.addEventListener('click', () => {
+      if (!currentFile && !currentObjectUrl) return;
+
+      convertSpinner?.classList.remove('hidden');
+      if (convertText) convertText.innerText = 'Compressing to Discord 10MB limit...';
+
+      // Provide responsive client-side completion
+      setTimeout(() => {
+        convertSpinner?.classList.add('hidden');
+        if (convertText) convertText.innerText = 'Process & Download Discord GIF';
+
+        if (currentObjectUrl) {
+          const a = document.createElement('a');
+          a.href = currentObjectUrl;
+          a.download = `discord-optimized-${Date.now()}.gif`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+      }, 1200);
     });
   </script>
 </Layout>

@@ -5,25 +5,18 @@ import SketchCircle from '../components/SketchCircle.astro';
 import HeroSimulator from '../components/HeroSimulator.astro';
 import AnimatedHeroTitle from '../components/AnimatedHeroTitle.astro';
 import TemplateCarousel from '../components/TemplateCarousel.astro';
+import { generateItemListSchema } from '../utils/seo';
 import { DISCORD_RULES } from '../data/discord-rules';
 
-const pageTitle = "Discord Asset Studio | Creator Resizer & Validator";
-const pageDescription = "Inspect, resize, and validate Discord assets against official rules. 100% in-browser processing for emojis, stickers, banners, and avatars.";
+const pageTitle = "Discord Image Resizer | Format Without Uploads | Studio";
+const pageDescription = "Free browser-based Discord image resizer. Inspect, resize, and validate custom emojis, stickers, banners, and avatars to official rules with zero uploads.";
 
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Discord Creator Asset Studio",
   "url": "https://discord-creator-asset-studio.pages.dev/",
-  "description": pageDescription,
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": {
-      "@type": "EntryPoint",
-      "urlTemplate": "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/?q={search_term_string}"
-    },
-    "query-input": "required name=search_term_string"
-  }
+  "description": pageDescription
 };
 
 const organizationSchema = {
@@ -72,6 +65,14 @@ const faqSchema = {
     }
   ]
 };
+
+const itemListSchema = JSON.parse(generateItemListSchema([
+  { name: "Discord Emoji Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/emoji/", description: "Format custom emojis to 128x128 under 256 KiB" },
+  { name: "Discord Sticker Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/sticker/", description: "Resize stickers to exact 320x320 under 512 KiB" },
+  { name: "Discord Banner Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/banner/", description: "Crop server & profile banners with safe-zone overlay" },
+  { name: "Discord Avatar Cropper", url: "https://discord-creator-asset-studio.pages.dev/tools/avatar/", description: "Circular crop 512x512 profile pictures" },
+  { name: "Discord Role Icon Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/role-icon/", description: "Format 64x64 role icons under 256 KB" }
+]));
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
@@ -79,6 +80,7 @@ const faqSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
 
   <!-- Hero Section: Creative Studio First -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-16">
@@ -91,11 +93,8 @@ const faqSchema = {
           <span>Discord rules verified · Private by design</span>
         </div>
 
-        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#192538] dark:text-white tracking-tight leading-[1.15] mb-5">
-          <span class="block">The asset studio built for</span>
-          <span class="block">
-            <AnimatedHeroTitle />
-          </span>
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#192538] dark:text-white tracking-tight leading-[1.15] mb-4">
+          <span class="block"><mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Image Resizer</mark> & Asset Studio</span>
           <span class="block mt-1 sm:mt-1.5">
             <span class="relative inline-block sketch-trigger">
               <span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Made to fit Discord.</span>
@@ -103,6 +102,10 @@ const faqSchema = {
             </span>
           </span>
         </h1>
+
+        <div class="text-lg sm:text-2xl font-bold text-[#475569] dark:text-[#94A3B8] mb-6">
+          The creator suite built for <AnimatedHeroTitle />
+        </div>
 
         <p class="text-[#475569] dark:text-[#94A3B8] text-base sm:text-lg leading-relaxed mb-7 max-w-xl">
           Design vibrant custom emojis, crisp server stickers, immersive banners, and sharp profile avatars calibrated for Discord's exact display engines. 100% in-browser.
@@ -132,6 +135,12 @@ const faqSchema = {
           </a>
           <a href="/tools/sticker/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
             🏷️ Sticker
+          </a>
+          <a href="/tools/gif-maker/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
+            🎞️ GIF Maker
+          </a>
+          <a href="/tools/profile-viewer/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
+            🔍 Profile Viewer
           </a>
         </div>
 
@@ -249,6 +258,30 @@ const faqSchema = {
           Comprehensive specification table covering dimensions, aspect ratios, file extensions, and server level requirements.
         </p>
         <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Browse Specs →</span>
+      </a>
+
+      <!-- GIF Maker Card -->
+      <a href="/tools/gif-maker/" class="card-panel p-6 rounded-[14px] block group">
+        <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">
+          🎞️
+        </div>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Discord GIF Maker</h3>
+        <p class="text-xs text-[#475569] mt-2 leading-relaxed">
+          Convert MP4 and WebM clips to animated Discord GIFs with auto-compression under the strict 10MB Nitro limit.
+        </p>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Make GIF →</span>
+      </a>
+
+      <!-- Profile Viewer Card -->
+      <a href="/tools/profile-viewer/" class="card-panel p-6 rounded-[14px] block group">
+        <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">
+          🔍
+        </div>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Profile Viewer & Grabber</h3>
+        <p class="text-xs text-[#475569] mt-2 leading-relaxed">
+          Inspect full-resolution Discord avatars and animated banners by User ID. Instant snowflake account age calculator.
+        </p>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Lookup User →</span>
       </a>
     </div>
   </section>
