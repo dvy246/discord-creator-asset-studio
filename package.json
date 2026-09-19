@@ -12,7 +12,7 @@
     "preview": "astro preview",
     "test": "node --experimental-strip-types --test tests/*.test.ts && node scripts/verify-seo-onpage.mjs",
     "verify:live": "node scripts/verify-live.mjs",
-    "deploy": "npm run build && npx -y wrangler pages deploy dist --project-name=discord-creator-asset-studio --force --commit-dirty=true && node scripts/indexnow.mjs",
+    "deploy": "npm run build && CLOUDFLARE_ACCOUNT_ID=32391b78f28b0354231ed31ce0395c08 npx -y wrangler pages deploy dist --project-name=discord-creator-asset-studio --force --commit-dirty=true && node scripts/indexnow.mjs",
     "astro": "astro"
   },
   "dependencies": {
