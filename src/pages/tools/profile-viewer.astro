@@ -48,6 +48,14 @@ const faqSchema = {
     },
     {
       "@type": "Question",
+      "name": "Can I lookup a Discord profile by username instead of User ID?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord's official API does not support global lookups by username due to platform privacy and anti-scraping protections. Assets on Discord's CDN are indexed strictly by numeric User IDs (Snowflake IDs). You can easily copy any user's ID by right-clicking their avatar in Discord and selecting 'Copy User ID'."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "What are the maximum resolutions for Discord banners and avatars?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -90,13 +98,21 @@ const faqSchema = {
       <!-- Left Column: Search & Preview Profile Card (8 Cols) -->
       <div class="lg:col-span-8 space-y-6">
         <div class="card-panel rounded-[14px] p-6 backdrop-blur-xl bg-white/80 dark:bg-[#141A24]/90 border border-[#E0DBD0] dark:border-[#263346] shadow-sm">
-          <label for="userid-input" class="block text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider mb-2">Discord User ID (Snowflake):</label>
+          <div class="flex items-center justify-between mb-2">
+            <label for="userid-input" class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider">
+              Discord User ID (Snowflake):
+            </label>
+            <span class="text-[11px] font-medium text-[#6B7A90] dark:text-[#8494A7]">
+              17–19 Digit Numeric ID
+            </span>
+          </div>
+
           <div class="flex flex-col sm:flex-row gap-3">
             <div class="relative flex-1">
               <input 
                 type="text" 
                 id="userid-input" 
-                placeholder="Paste User ID (e.g., 80351110224678912)" 
+                placeholder="Paste User ID or mention (e.g., 80351110224678912)" 
                 class="w-full bg-[#FAF8F5] dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-[10px] px-4 py-3 text-sm text-[#192538] dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3368A0] dark:focus:border-[#66A3BF] font-mono transition-colors" 
               />
             </div>
@@ -108,9 +124,41 @@ const faqSchema = {
               <span>Lookup Profile</span>
             </button>
           </div>
-          <div class="flex items-center justify-between text-xs text-[#6B7A90] dark:text-[#8494A7] mt-3">
-            <span>Don't know the ID? <button type="button" id="demo-id-btn" class="text-[#3368A0] dark:text-[#66A3BF] underline hover:opacity-80">Try demo user</button></span>
-            <span class="font-mono">Format: 17–19 digits</span>
+
+          <!-- Quick Demos & Why ID Helper Toggle -->
+          <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mt-3.5 pt-3 border-t border-[#E0DBD0]/60 dark:border-[#263346]">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span>Quick Demos:</span>
+              <button type="button" class="demo-tag px-2 py-0.5 rounded bg-white/70 dark:bg-white/10 border border-[#E0DBD0] dark:border-[#263346] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors cursor-pointer" data-id="80351110224678912">Wumpus</button>
+              <button type="button" class="demo-tag px-2 py-0.5 rounded bg-white/70 dark:bg-white/10 border border-[#E0DBD0] dark:border-[#263346] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors cursor-pointer" data-id="936929561302675456">Midjourney</button>
+              <button type="button" class="demo-tag px-2 py-0.5 rounded bg-white/70 dark:bg-white/10 border border-[#E0DBD0] dark:border-[#263346] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors cursor-pointer" data-id="235148962103951360">Carl-bot</button>
+            </div>
+            <button type="button" id="toggle-id-help" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline flex items-center gap-1 cursor-pointer">
+              <span>❓ Why can't I search by username?</span>
+            </button>
+          </div>
+
+          <!-- Collapsible ID Explanation Box -->
+          <div id="id-help-box" class="hidden mt-4 p-4 rounded-xl bg-[#FAF8F5] dark:bg-black/40 border border-[#E0DBD0] dark:border-white/10 text-xs space-y-2 text-[#475569] dark:text-[#CBD5E1]">
+            <div class="font-bold text-[#192538] dark:text-white flex items-center gap-1.5">
+              <span>🔒</span> Why Discord Requires a User ID (Snowflake):
+            </div>
+            <p class="leading-relaxed">
+              Discord specifically restricts global username searches to protect user privacy and prevent mass scraping. Furthermore, Discord's global CDN indexes avatars and banners <strong>strictly by numeric User IDs</strong> (<code class="text-[11px] font-mono bg-black/5 dark:bg-white/10 px-1 py-0.5 rounded">cdn.discordapp.com/avatars/USER_ID/hash.png</code>).
+            </p>
+            <div class="pt-2 border-t border-[#E0DBD0]/60 dark:border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <strong class="text-[#192538] dark:text-white block mb-1">💻 On PC / Mac Desktop:</strong>
+                <p>Enable <em>Settings → Advanced → Developer Mode</em>. Right-click any username or profile picture and click <strong>Copy User ID</strong>.</p>
+              </div>
+              <div>
+                <strong class="text-[#192538] dark:text-white block mb-1">📱 On Mobile App:</strong>
+                <p>Go to your Profile tab → tap the <strong>3 dots (•••)</strong> at the top right → tap <strong>Copy User ID</strong>.</p>
+              </div>
+            </div>
+            <div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] pt-1">
+              💡 <strong>Instant Chat Shortcut:</strong> Type <code class="bg-black/5 dark:bg-white/10 px-1 rounded font-mono">\@username</code> in any Discord chat box and send it. Discord will print your exact raw User ID!
+            </div>
           </div>
         </div>
 
@@ -267,7 +315,6 @@ const faqSchema = {
   <script>
     const input = document.getElementById('userid-input') as HTMLInputElement;
     const fetchBtn = document.getElementById('fetch-btn');
-    const demoBtn = document.getElementById('demo-id-btn');
     const statusMsg = document.getElementById('status-msg');
     const userBanner = document.getElementById('user-banner') as HTMLImageElement;
     const userAvatar = document.getElementById('user-avatar') as HTMLImageElement;
@@ -277,6 +324,9 @@ const faqSchema = {
     const userTag = document.getElementById('user-tag');
     const statCreated = document.getElementById('stat-created');
     const btnSpinner = document.getElementById('btn-spinner');
+    const toggleHelpBtn = document.getElementById('toggle-id-help');
+    const idHelpBox = document.getElementById('id-help-box');
+    const demoTags = document.querySelectorAll('.demo-tag');
 
     function calculateCreationDate(snowflakeId: string) {
       try {
@@ -293,10 +343,25 @@ const faqSchema = {
       }
     }
 
-    async function lookupUser(id: string) {
-      const cleanId = id.trim();
-      if (!/^\d{17,20}$/.test(cleanId)) {
-        showStatus('Please enter a valid 17-19 digit Discord Snowflake ID.', 'error');
+    async function lookupUser(rawId: string) {
+      if (!rawId) return;
+      let cleanId = rawId.trim();
+
+      // Automatically strip Discord mention wrapper if user pasted <@123456789012345678> or @123456789012345678
+      cleanId = cleanId.replace(/^[<@!]+|[>]+$/g, '').trim();
+
+      // If user typed a username with letters instead of a numeric ID
+      if (!/^\d+$/.test(cleanId)) {
+        showStatus(
+          `⚠️ Usernames like "${cleanId}" cannot be searched directly: Discord restricts public lookups by username for privacy reasons. Please enter the 17–19 digit numeric User ID (see instructions below).`,
+          'info'
+        );
+        idHelpBox?.classList.remove('hidden');
+        return;
+      }
+
+      if (cleanId.length < 17 || cleanId.length > 20) {
+        showStatus('Discord Snowflake User IDs must be 17–19 digits long. Please verify the copied ID.', 'error');
         return;
       }
 
@@ -378,11 +443,18 @@ const faqSchema = {
       }
     });
 
-    demoBtn?.addEventListener('click', () => {
-      if (input) {
-        input.value = '80351110224678912'; // Discord developer / Wumpus ID
-        lookupUser(input.value);
-      }
+    demoTags.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = (btn as HTMLElement).dataset.id;
+        if (id && input) {
+          input.value = id;
+          lookupUser(id);
+        }
+      });
+    });
+
+    toggleHelpBtn?.addEventListener('click', () => {
+      idHelpBox?.classList.toggle('hidden');
     });
   </script>
 </Layout>
