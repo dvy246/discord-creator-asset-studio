@@ -67,11 +67,15 @@ const faqSchema = {
 };
 
 const itemListSchema = JSON.parse(generateItemListSchema([
+  { name: "Discord Image Resizer", url: "https://discord-creator-asset-studio.pages.dev/", description: "Resize, compress, and validate Discord images directly in your browser" },
   { name: "Discord Emoji Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/emoji/", description: "Format custom emojis to 128x128 under 256 KiB" },
   { name: "Discord Sticker Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/sticker/", description: "Resize stickers to exact 320x320 under 512 KiB" },
   { name: "Discord Banner Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/banner/", description: "Crop server & profile banners with safe-zone overlay" },
   { name: "Discord Avatar Cropper", url: "https://discord-creator-asset-studio.pages.dev/tools/avatar/", description: "Circular crop 512x512 profile pictures" },
-  { name: "Discord Role Icon Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/role-icon/", description: "Format 64x64 role icons under 256 KB" }
+  { name: "Discord Role Icon Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/role-icon/", description: "Format 64x64 role icons under 256 KB" },
+  { name: "Discord GIF Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/gif-maker/", description: "Convert video to animated Discord GIFs under 10MB" },
+  { name: "Discord Asset Library", url: "https://discord-creator-asset-studio.pages.dev/assets/", description: "100+ free animated Discord banners, matching avatars & profile themes" },
+  { name: "Discord Profile Viewer", url: "https://discord-creator-asset-studio.pages.dev/tools/profile-viewer/", description: "Inspect full-resolution Discord avatars and banners by User ID" }
 ]));
 ---
 
@@ -108,39 +112,16 @@ const itemListSchema = JSON.parse(generateItemListSchema([
         </div>
 
         <p class="text-[#475569] dark:text-[#94A3B8] text-base sm:text-lg leading-relaxed mb-7 max-w-xl">
-          Design vibrant custom emojis, crisp server stickers, immersive banners, and sharp profile avatars calibrated for Discord's exact display engines. 100% in-browser.
+          Resize, crop, and format custom emojis, stickers, banners, and avatars to fit Discord perfectly. Everything runs right in your browser—fast, free, and completely private.
         </p>
 
         <!-- Primary & Secondary Action Group -->
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 mb-5">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 mb-7">
           <a href="#asset-vault" class="btn-primary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold shadow-sm">
             Create an Asset
           </a>
           <a href="/tools/emoji/" class="btn-secondary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold">
             Check a File
-          </a>
-        </div>
-
-        <!-- Quick Asset Category Selector -->
-        <div class="flex flex-wrap items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6">
-          <span class="font-medium">Or start with:</span>
-          <a href="/tools/banner/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
-            🖼️ Banner
-          </a>
-          <a href="/tools/avatar/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
-            👤 Avatar
-          </a>
-          <a href="/tools/emoji/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
-            😀 Emoji
-          </a>
-          <a href="/tools/sticker/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
-            🏷️ Sticker
-          </a>
-          <a href="/tools/gif-maker/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
-            🎞️ GIF Maker
-          </a>
-          <a href="/tools/profile-viewer/" class="px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold transition-colors">
-            🔍 Profile Viewer
           </a>
         </div>
 
@@ -205,11 +186,11 @@ const itemListSchema = JSON.parse(generateItemListSchema([
         <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">
           🏷️
         </div>
-        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Sticker Compressor</h3>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Sticker Studio & Photo Cropper</h3>
         <p class="text-xs text-[#475569] mt-2 leading-relaxed">
-          Format images to exactly 320x320 pixels and compress to under 512 KiB. Supports static PNG and animated APNG workflows.
+          Transform photos into custom Discord stickers with interactive pan & zoom framing, die-cut vinyl borders, and exact 320x320 PNG export.
         </p>
-        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Format Sticker →</span>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Create Sticker →</span>
       </a>
 
       <!-- Banner Card -->
@@ -295,15 +276,15 @@ const itemListSchema = JSON.parse(generateItemListSchema([
         <div class="space-y-4">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 shadow-xs">
             <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
-            Deterministic Pipeline
+            Built for Discord Rules
           </div>
 
           <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Every asset <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">locked</span><SketchUnderline color="#66A3BF" /></span> to official specs.
+            Never get rejected at <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">upload</span><SketchUnderline color="#66A3BF" /></span> again.
           </h2>
 
           <p class="text-[#475569] text-base leading-relaxed">
-            Scroll through our four-step client validation engine. Files never touch external servers, never compress into blurry artifacts, and never get rejected at upload.
+            See how our four-step checker works right in your browser. Your files never get uploaded to a server, text and edges stay crisp, and your assets pass Discord limits on the first try.
           </p>
         </div>
 
@@ -317,25 +298,25 @@ const itemListSchema = JSON.parse(generateItemListSchema([
           <!-- Step 01 -->
           <div class="scroll-step-indicator flex items-center gap-4 transition-all duration-200 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
             <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110 transition-transform">1</span>
-            <span class="text-sm tracking-wide">01 / Local Ingestion</span>
+            <span class="text-sm tracking-wide">01 / Open File</span>
           </div>
 
           <!-- Step 02 -->
           <div class="scroll-step-indicator flex items-center gap-4 transition-all duration-200 text-[#6B7A90] opacity-70" data-step="2">
             <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 transition-transform">2</span>
-            <span class="text-sm tracking-wide">02 / Rule Evaluation</span>
+            <span class="text-sm tracking-wide">02 / Check Limits</span>
           </div>
 
           <!-- Step 03 -->
           <div class="scroll-step-indicator flex items-center gap-4 transition-all duration-200 text-[#6B7A90] opacity-70" data-step="3">
             <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 transition-transform">3</span>
-            <span class="text-sm tracking-wide">03 / Canvas Cropping</span>
+            <span class="text-sm tracking-wide">03 / Crop & Resize</span>
           </div>
 
           <!-- Step 04 -->
           <div class="scroll-step-indicator flex items-center gap-4 transition-all duration-200 text-[#6B7A90] opacity-70" data-step="4">
             <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 transition-transform">4</span>
-            <span class="text-sm tracking-wide">04 / Verified Blob Export</span>
+            <span class="text-sm tracking-wide">04 / Ready to Upload</span>
           </div>
         </div>
 
@@ -361,9 +342,9 @@ const itemListSchema = JSON.parse(generateItemListSchema([
               </div>
               <span class="text-[11px] font-mono uppercase bg-[#C8DFDB]/60 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] px-2.5 py-0.5 rounded border border-[#66A3BF]/30 font-semibold">100% In-Browser</span>
             </div>
-            <h3 class="text-xl font-bold text-[#192538]">Zero-Server Local Media Ingestion</h3>
+            <h3 class="text-xl font-bold text-[#192538]">Everything Stays on Your Device</h3>
             <p class="text-sm text-[#475569] leading-relaxed">
-              Drag and drop images, animated GIFs, or paste directly from your operating system clipboard. Files are parsed strictly into browser RAM using HTML5 <code class="font-mono text-xs bg-[#FAF8F5] dark:bg-[#1B2330] px-1.5 py-0.5 rounded border border-[#E0DBD0] text-[#3368A0] dark:text-[#66A3BF]">FileReader</code> and <code class="font-mono text-xs bg-[#FAF8F5] dark:bg-[#1B2330] px-1.5 py-0.5 rounded border border-[#E0DBD0] text-[#3368A0] dark:text-[#66A3BF]">createObjectURL</code> APIs.
+              Drag and drop pictures, animated GIFs, or paste directly from your clipboard. Your files stay in your browser's local memory—nothing is ever uploaded to a remote server.
             </p>
             <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex items-center justify-between text-xs font-mono text-[#6B7A90]">
               <span>Network Transmission:</span>
@@ -382,9 +363,9 @@ const itemListSchema = JSON.parse(generateItemListSchema([
               </div>
               <span class="text-[11px] font-mono uppercase bg-[#C8DFDB]/60 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] px-2.5 py-0.5 rounded border border-[#66A3BF]/30 font-semibold">28 Active Rules</span>
             </div>
-            <h3 class="text-xl font-bold text-[#192538]">Deterministic Rule Specification Audit</h3>
+            <h3 class="text-xl font-bold text-[#192538]">Instant Rule Checking</h3>
             <p class="text-sm text-[#475569] leading-relaxed">
-              Your file is automatically benchmarked against the official Discord Rule Registry. We check binary byte boundaries (enforcing 256 KiB / 262,144 bytes vs naive 256 KB decimal limits), exact aspect ratios, and format requirements before any modification.
+              We check your file against Discord's official rules. That includes the exact byte limits (like 256 KiB / 262,144 bytes instead of rounded numbers), aspect ratios, and format requirements before you download.
             </p>
             <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex items-center justify-between text-xs font-mono text-[#6B7A90]">
               <span>Rule Evaluation Latency:</span>
@@ -403,9 +384,9 @@ const itemListSchema = JSON.parse(generateItemListSchema([
               </div>
               <span class="text-[11px] font-mono uppercase bg-[#C8DFDB]/60 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] px-2.5 py-0.5 rounded border border-[#66A3BF]/30 font-semibold">Lossless Canvas</span>
             </div>
-            <h3 class="text-xl font-bold text-[#192538]">Hardware-Accelerated Canvas Cropping</h3>
+            <h3 class="text-xl font-bold text-[#192538]">Smooth Resizing & Safe Zones</h3>
             <p class="text-sm text-[#475569] leading-relaxed">
-              Our multi-threaded Web Workers execute bicubic downscaling, transparent Alpha channel preservation, and safe-zone overlay alignment (such as the desktop client's top 48px banner obstruction) without altering your original source master.
+              Easily crop and scale your image without losing quality or transparency. For banners, we show you the top 48px safe zone overlay so Discord buttons won't hide your text or art.
             </p>
             <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex items-center justify-between text-xs font-mono text-[#6B7A90]">
               <span>Safe-Zone Precision:</span>
@@ -424,9 +405,9 @@ const itemListSchema = JSON.parse(generateItemListSchema([
               </div>
               <span class="text-[11px] font-mono uppercase bg-[#C8DFDB]/60 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] px-2.5 py-0.5 rounded border border-[#66A3BF]/30 font-semibold">Zero Upload Failures</span>
             </div>
-            <h3 class="text-xl font-bold text-[#192538]">Pre-Download Encoded Blob Verification</h3>
+            <h3 class="text-xl font-bold text-[#192538]">Guaranteed Upload on Discord</h3>
             <p class="text-sm text-[#475569] leading-relaxed">
-              Before triggering a download, we measure the exact byte count of the exported Blob directly in RAM. If the asset is within 1% of the platform limit, our quantizer iteratively recompresses until it passes with a verified cryptographic guarantee.
+              Before you download, we measure the exact file size down to the byte. If it's too big, our local compressor trims file size without muddying your pixels until it safely fits under Discord's upload ceiling.
             </p>
             <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex items-center justify-between text-xs font-mono text-[#6B7A90]">
               <span>Verification Status:</span>
@@ -448,15 +429,15 @@ const itemListSchema = JSON.parse(generateItemListSchema([
         <div class="space-y-4">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 shadow-xs">
             <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
-            Technical Architecture & Standards
+            Discord Specs Made Simple
           </div>
 
           <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Understanding Discord Asset Constraints: <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Sizes & Formats</span><SketchUnderline color="#66A3BF" /></span>
+            Discord Rules: <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Sizes & Formats</span><SketchUnderline color="#66A3BF" /></span>
           </h2>
 
           <p class="text-[#475569] text-base leading-relaxed">
-            Creating assets for Discord requires navigating an intricate combination of pixel dimensions, binary byte boundaries, container formats, and permission tiers. Scroll through our comprehensive technical dossier to master Discord's display engine.
+            Discord has strict limits for file sizes, pixel dimensions, and safe zones. If a file is even one byte or one pixel off, Discord rejects it. Here is everything you need to know in plain English.
           </p>
         </div>
 
@@ -470,13 +451,13 @@ const itemListSchema = JSON.parse(generateItemListSchema([
           <!-- Step 01 -->
           <div class="dossier-step-indicator flex items-center gap-4 transition-all duration-200 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
             <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110 transition-transform">1</span>
-            <span class="text-sm tracking-wide">01 / Byte Limits & 256 KiB</span>
+            <span class="text-sm tracking-wide">01 / The 256 KiB Upload Cap</span>
           </div>
 
           <!-- Step 02 -->
           <div class="dossier-step-indicator flex items-center gap-4 transition-all duration-200 text-[#6B7A90] opacity-70" data-step="2">
             <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 transition-transform">2</span>
-            <span class="text-sm tracking-wide">02 / 48px Header Safe Zone</span>
+            <span class="text-sm tracking-wide">02 / Banner 48px Safe Zone</span>
           </div>
 
           <!-- Step 03 -->
@@ -488,19 +469,19 @@ const itemListSchema = JSON.parse(generateItemListSchema([
           <!-- Step 04 -->
           <div class="dossier-step-indicator flex items-center gap-4 transition-all duration-200 text-[#6B7A90] opacity-70" data-step="4">
             <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 transition-transform">4</span>
-            <span class="text-sm tracking-wide">04 / sRGB & Alpha Transparency</span>
+            <span class="text-sm tracking-wide">04 / True Color & Transparency</span>
           </div>
 
           <!-- Step 05 -->
           <div class="dossier-step-indicator flex items-center gap-4 transition-all duration-200 text-[#6B7A90] opacity-70" data-step="5">
             <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 transition-transform">5</span>
-            <span class="text-sm tracking-wide">05 / Local Client-Side Privacy</span>
+            <span class="text-sm tracking-wide">05 / 100% In-Browser Privacy</span>
           </div>
         </div>
 
         <div class="pt-2">
           <a href="/guides/discord-sizes/" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-[10px] text-xs font-semibold">
-            <span>Open Comprehensive Spec Guide</span>
+            <span>Open Complete Size Guide</span>
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
@@ -517,21 +498,21 @@ const itemListSchema = JSON.parse(generateItemListSchema([
             <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
               <div class="flex items-center gap-2.5">
                 <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">01</span>
-                <h3 class="text-lg font-bold text-[#192538]">The Critical Difference Between Kilobytes and Kibibytes</h3>
+                <h3 class="text-lg font-bold text-[#192538]">Why Files Under "256 KB" Still Get Rejected</h3>
               </div>
-              <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Rule: 256 KiB Ceiling</span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Rule: 256 KiB Limit</span>
             </div>
             <p class="text-sm text-[#475569] leading-relaxed">
-              One of the most frequent points of failure when uploading custom emojis is the file size threshold. Discord’s backend specifies a hard ceiling of <strong>256 KiB (262,144 bytes)</strong> for custom emojis. However, modern operating systems and design software frequently display file sizes in decimal units where 1 kilobyte equals 1,000 bytes rather than 1,024 bytes. A creator exporting an image measured at "256 KB" in macOS Finder or Windows Explorer may actually have an image weighing 262,500 bytes. To Discord's server, this asset exceeds the 262,144-byte cap and is rejected. Discord Asset Studio guarantees that every export is validated directly from its final in-memory Blob byte length, eliminating this disparity before download.
+              Why does Discord say a file is too big when your computer says it is 256 KB? Windows and macOS count 1 kilobyte as 1,000 bytes. But Discord uses binary math, where 1 kibibyte (KiB) is exactly 1,024 bytes—making the real ceiling 262,144 bytes. If your file has 262,800 bytes, your file manager says "256 KB", but Discord blocks the upload immediately. Our studio checks the exact byte count so you never hit that error.
             </p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <div class="p-3 rounded-[10px] bg-red-500/10 border border-red-500/20 text-xs font-mono">
-                <div class="text-red-600 dark:text-red-400 font-bold mb-1">❌ Decimal 256 KB (Operating System)</div>
-                <div class="text-[#475569]">262,500 bytes ➔ Rejected by Discord API ("File too powerful")</div>
+                <div class="text-red-600 dark:text-red-400 font-bold mb-1">❌ What Your Computer Shows</div>
+                <div class="text-[#475569]">262,800 bytes ➔ Computer says 256 KB, but Discord rejects it</div>
               </div>
               <div class="p-3 rounded-[10px] bg-[#0D9488]/10 border border-[#0D9488]/30 text-xs font-mono">
-                <div class="text-[#0D9488] font-bold mb-1">✓ IEC Binary 256 KiB (Discord Asset Studio)</div>
-                <div class="text-[#475569]">262,144 bytes ➔ Exact cryptographic pass with verified byte check</div>
+                <div class="text-[#0D9488] font-bold mb-1">✓ What Discord Actually Checks</div>
+                <div class="text-[#475569]">Under 262,144 bytes ➔ Upload succeeds on the first try</div>
               </div>
             </div>
           </article>
@@ -543,16 +524,16 @@ const itemListSchema = JSON.parse(generateItemListSchema([
             <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
               <div class="flex items-center gap-2.5">
                 <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">02</span>
-                <h3 class="text-lg font-bold text-[#192538]">Server Banners and the Top 48-Pixel Safe Zone</h3>
+                <h3 class="text-lg font-bold text-[#192538]">Server Banners: Watch the Top 48 Pixels</h3>
               </div>
               <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Safe Zone: Top 48px</span>
             </div>
             <p class="text-sm text-[#475569] leading-relaxed">
-              Server banners represent one of the most prominent branding surfaces for community administrators. While Discord accepts banners starting at 960x540 pixels (and commonly recommends 1920x1080 to accommodate high-DPI displays), the desktop client overlays navigation headers, the server name, and dropdown menus across the upper 48 pixels of the artwork. Placing typography, critical badges, or character faces in this top region leads to obscured elements. Creators should structure banner compositions with focal points centered or positioned toward the lower two-thirds of the canvas.
+              Server banners make your community look professional. Discord recommends at least 960x540 pixels (or 1920x1080 for high-resolution screens). But on desktop, Discord covers the top 48 pixels with your server name, search bar, and dropdown menu. Keep text, logos, and faces in the middle or bottom of the banner so they never get hidden behind buttons.
             </p>
             <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-              <span class="text-[#6B7A90]">Desktop Safe Dimensions:</span>
-              <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold">960 × 492 px Safe Focal Area (below 48px header occlusion)</span>
+              <span class="text-[#6B7A90]">Desktop Safe Area:</span>
+              <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold">960 × 492 px Safe Focal Area (below top 48px overlay)</span>
             </div>
           </article>
         </div>
@@ -563,16 +544,16 @@ const itemListSchema = JSON.parse(generateItemListSchema([
             <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
               <div class="flex items-center gap-2.5">
                 <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">03</span>
-                <h3 class="text-lg font-bold text-[#192538]">Custom Stickers: Exact Dimension Enforcement</h3>
+                <h3 class="text-lg font-bold text-[#192538]">Stickers Must Be Exactly 320×320 Pixels</h3>
               </div>
-              <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Exact 320×320 APNG</span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Exact 320×320</span>
             </div>
             <p class="text-sm text-[#475569] leading-relaxed">
-              Unlike emojis, which can be uploaded at arbitrary square dimensions and scaled down by the Discord client, custom stickers must conform to exact geometric criteria. Discord mandates that custom stickers be exactly <strong>320x320 pixels</strong> and stay beneath <strong>512 KiB (524,288 bytes)</strong>. Animated stickers are further restricted: they must use the Animated PNG (APNG) format, have a total duration of 5 seconds or fewer, and not exceed 60 frames per second. Attempting to upload a GIF as a server sticker will result in an upload failure unless converted to APNG.
+              Emojis can be any square image because Discord scales them down automatically. But stickers have zero tolerance: your image must measure exactly 320x320 pixels and stay under 512 KiB (524,288 bytes). If it is 319x320, Discord immediately throws an "invalid asset" error. Also, animated stickers must be APNG (Animated PNG)—regular GIFs will not work for server stickers.
             </p>
             <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-              <span class="text-[#6B7A90]">Framerate & Duration Limits:</span>
-              <span class="text-[#0D9488] font-bold">Max 5.0 seconds • Max 60 FPS • APNG MIME type</span>
+              <span class="text-[#6B7A90]">Animated Sticker Limits:</span>
+              <span class="text-[#0D9488] font-bold">Max 5.0 seconds • Max 60 FPS • APNG format</span>
             </div>
           </article>
         </div>
@@ -583,16 +564,16 @@ const itemListSchema = JSON.parse(generateItemListSchema([
             <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
               <div class="flex items-center gap-2.5">
                 <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">04</span>
-                <h3 class="text-lg font-bold text-[#192538]">Color Space Management & Transparent Backgrounds</h3>
+                <h3 class="text-lg font-bold text-[#192538]">Color Profiles & Transparent Backgrounds</h3>
               </div>
-              <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Standard sRGB IEC</span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">Standard sRGB</span>
             </div>
             <p class="text-sm text-[#475569] leading-relaxed">
-              Discord clients render across a wide variety of hardware, from mobile OLED screens to desktop sRGB monitors. Assets exported in wide color gamuts such as Display P3 or Adobe RGB often appear desaturated or shifted when rendered inside Chromium-based desktop clients. For optimal color fidelity, all static and animated creator assets should be exported in standard sRGB with an 8-bit color depth. Additionally, preserving transparent Alpha channels in PNG files ensures emojis and role icons blend seamlessly across both Discord Dark and Light themes.
+              Discord runs on mobile screens, tablets, and gaming monitors. When exporting images, stick to the standard sRGB color space. If you export in wide-gamut profiles like Display P3 or Adobe RGB, your colors can look muted or muddy in Discord's desktop client. Always keep transparent backgrounds clean in PNG files so your art looks great in both Dark and Light themes.
             </p>
             <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-              <span class="text-[#6B7A90]">Target Gamut:</span>
-              <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold">sRGB (IEC 61966-2-1:1999) with 8-bit RGBA Channels</span>
+              <span class="text-[#6B7A90]">Recommended Profile:</span>
+              <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold">sRGB with 8-bit RGBA Transparent Channels</span>
             </div>
           </article>
         </div>
@@ -603,16 +584,16 @@ const itemListSchema = JSON.parse(generateItemListSchema([
             <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
               <div class="flex items-center gap-2.5">
                 <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">05</span>
-                <h3 class="text-lg font-bold text-[#192538]">Client-Side Privacy: Why Local Processing Matters</h3>
+                <h3 class="text-lg font-bold text-[#192538]">100% Private in Your Browser</h3>
               </div>
-              <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#0D9488]">Zero Cloud Uploads</span>
+              <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#0D9488]">Zero Server Uploads</span>
             </div>
             <p class="text-sm text-[#475569] leading-relaxed">
-              Many online conversion utilities route your images through backend cloud servers, creating privacy risks and latency. Discord Asset Studio executes 100% of its transformations inside your device's browser memory. By leveraging HTML5 Canvas contexts, Web Workers, and native Blob encoders, we provide immediate visual feedback and verified downloads while ensuring that zero bytes of your artwork or proprietary brand assets are transmitted across the internet.
+              Most online image converters send your artwork to remote servers, which can be slow and risky if you are preparing unreleased branding or private designs. Discord Asset Studio processes all images right inside your browser memory. We never upload, save, or track your images.
             </p>
             <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-              <span class="text-[#6B7A90]">Network Payload:</span>
-              <span class="text-[#0D9488] font-bold">0.00 KiB Transmitted • Auditable via Network Tab</span>
+              <span class="text-[#6B7A90]">Network Data Sent:</span>
+              <span class="text-[#0D9488] font-bold">0.00 KiB Transmitted (Verify anytime in DevTools)</span>
             </div>
           </article>
         </div>

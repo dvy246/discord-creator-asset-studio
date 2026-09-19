@@ -1,0 +1,751 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AssetCard from '../../components/AssetCard.astro';
+import AssetCustomizerModal from '../../components/AssetCustomizerModal.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import { 
+  getAllPresets, 
+  ASSET_CATEGORIES, 
+  getCategoryCounts, 
+  type AssetCategory 
+} from '../../data/assets';
+import { 
+  generateBreadcrumbSchema, 
+  generateSoftwareApplicationSchema 
+} from '../../utils/seo';
+
+const pageTitle = "Discord Asset Library — 270+ Free Banners & PFPs";
+const pageDescription = "Browse 270+ free Discord banners, animated profile loops, and matching avatar sets across Anime, Gaming, Cyberpunk, and Dark aesthetics with safe zones.";
+const canonicalUrl = "https://discord-creator-asset-studio.pages.dev/assets/";
+
+const presets = getAllPresets();
+const categoryCounts = getCategoryCounts();
+const totalPresetsCount = presets.length;
+
+// Structured Data Schemas
+const breadcrumbSchema = JSON.parse(generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Asset Library", url: canonicalUrl }
+]));
+
+const collectionPageSchema = {
+  "@context": "https://schema.org",
+  "@type": ["CollectionPage", "ImageGallery"],
+  "name": "Discord Asset Library & Customization Studio",
+  "headline": pageTitle,
+  "description": pageDescription,
+  "url": canonicalUrl,
+  "inLanguage": "en",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/"
+  },
+  "about": [
+    { "@type": "Thing", "name": "Discord Banners" },
+    { "@type": "Thing", "name": "Discord Profile Pictures" },
+    { "@type": "Thing", "name": "Discord Profile Theme Matching" },
+    { "@type": "Thing", "name": "Animated Discord Profile Loops" }
+  ],
+  "numberOfItems": totalPresetsCount
+};
+
+const appSchema = JSON.parse(generateSoftwareApplicationSchema(
+  "Discord Asset Library & Customization Studio",
+  "Interactive browser-based studio to preview, customize, and export Discord banners and matching profile pictures with safe zones.",
+  canonicalUrl
+));
+
+// Sorted categories for filter pills — Move 2D icons to the very end
+const rawCategoryKeys = Object.keys(ASSET_CATEGORIES) as AssetCategory[];
+const sortedCategoryKeys = [
+  ...rawCategoryKeys.filter(k => k !== 'icons-2d'),
+  'icons-2d' as AssetCategory
+];
+const categoriesList: { id: AssetCategory; shortName: string; icon: string; count: number }[] = sortedCategoryKeys.map((key) => ({
+  id: key,
+  shortName: ASSET_CATEGORIES[key].shortName,
+  icon: ASSET_CATEGORIES[key].icon,
+  count: categoryCounts[key] || 0
+}));
+---
+
+<Layout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl}>
+  <!-- Inject SEO Schemas -->
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(collectionPageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+
+  <!-- Ambient Cosmic Sunset Background Orbs -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10 aria-hidden">
+    <div class="absolute -top-40 left-1/4 w-96 h-96 rounded-full bg-[#FF84BA]/10 dark:bg-[#FF84BA]/15 blur-3xl transform -translate-x-1/2"></div>
+    <div class="absolute top-80 right-10 w-[30rem] h-[30rem] rounded-full bg-[#99C2FF]/10 dark:bg-[#99C2FF]/15 blur-3xl"></div>
+    <div class="absolute top-[48rem] left-10 w-80 h-80 rounded-full bg-[#FFDF82]/10 dark:bg-[#FFDF82]/10 blur-3xl"></div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-20">
+    <!-- Breadcrumb Navigation -->
+    <nav class="flex items-center gap-2 text-xs font-mono text-[#6B7A90] dark:text-[#8494A7] mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-[#3368A0] dark:hover:text-[#99C2FF] transition-colors">Studio</a>
+      <span>/</span>
+      <span class="text-[#192538] dark:text-[#FFEFE3] font-bold">Asset Library</span>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="text-center max-w-4xl mx-auto mb-10 sm:mb-14">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#FF84BA]/15 via-[#FFDF82]/15 to-[#99C2FF]/15 dark:from-[#FF84BA]/20 dark:via-[#FFDF82]/20 dark:to-[#99C2FF]/20 border border-[#FF84BA]/30 dark:border-[#FF84BA]/40 text-xs font-semibold text-[#192538] dark:text-[#FFEFE3] mb-6 shadow-xs backdrop-blur-xs">
+        <span class="w-2 h-2 rounded-full bg-[#FF84BA] animate-pulse"></span>
+        <span>✨ 270+ Free Discord Assets & Matching Sets</span>
+      </div>
+
+      <!-- H1 Heading with Sketch Accent -->
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#192538] dark:text-[#FFEFE3] tracking-tight leading-[1.15] mb-5">
+        <span>Discord Asset Library & </span>
+        <span class="relative inline-block sketch-trigger">
+          <span class="relative z-10 text-[#3368A0] dark:text-[#FF84BA]">Customization Studio</span>
+          <SketchUnderline color="#FF84BA" />
+        </span>
+      </h1>
+
+      <!-- Descriptive Paragraph -->
+      <p class="text-[#475569] dark:text-[#99C2FF] text-base sm:text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+        Browse, customize, and download 270+ handcrafted Discord assets — from cinematic anime banners and matching avatars to standalone downloadable 2D role icons and server stickers. Built-in safe zones, 1-click Discord profile color matching, and Nitro-safe loops.
+      </p>
+
+      <!-- Quick Stats Row -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] shadow-xs text-center transition-transform hover:-translate-y-0.5">
+          <div class="text-xl sm:text-2xl font-black text-[#192538] dark:text-[#FFEFE3] tracking-tight mb-0.5">270+</div>
+          <div class="text-[11px] sm:text-xs font-medium text-[#6B7A90] dark:text-[#99C2FF]">Original Presets</div>
+        </div>
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] shadow-xs text-center transition-transform hover:-translate-y-0.5">
+          <div class="text-xl sm:text-2xl font-black text-[#FF84BA] tracking-tight mb-0.5">12</div>
+          <div class="text-[11px] sm:text-xs font-medium text-[#6B7A90] dark:text-[#99C2FF]">Aesthetic Categories</div>
+        </div>
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] shadow-xs text-center transition-transform hover:-translate-y-0.5">
+          <div class="text-xl sm:text-2xl font-black text-[#FFDF82] tracking-tight mb-0.5">&lt;10MB</div>
+          <div class="text-[11px] sm:text-xs font-medium text-[#6B7A90] dark:text-[#99C2FF]">Nitro-Safe Loops</div>
+        </div>
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] shadow-xs text-center transition-transform hover:-translate-y-0.5">
+          <div class="text-xl sm:text-2xl font-black text-[#0D9488] tracking-tight mb-0.5">100%</div>
+          <div class="text-[11px] sm:text-xs font-medium text-[#6B7A90] dark:text-[#99C2FF]">Free & Client-Side</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED ANIMATED MOTION SHOWCASE STRIP -->
+    <section class="mb-10 p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#FF84BA]/15 via-[#FFDF82]/10 to-[#99C2FF]/15 border border-[#FF84BA]/30 dark:border-[#FF84BA]/40 shadow-lg backdrop-blur-md">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-lg">💎</span>
+            <h2 class="text-base sm:text-lg font-black text-[#192538] dark:text-[#FFEFE3] tracking-tight">
+              Featured Animated Presets & Live Motion Showcase
+            </h2>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FF84BA] text-black font-extrabold uppercase">60 FPS Motion</span>
+          </div>
+          <p class="text-xs text-[#6B7A90] dark:text-[#99C2FF] mt-0.5">
+            Original, loop-perfect animated Discord banners and motion presets. Nitro-ready (<10MB) and tuned with safe zones. Click any animation to customize or download.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        {presets.filter(p => p.isAnimated || Boolean(p.animatedWebpUrl)).slice(0, 10).map((preset) => (
+          <div 
+            class="group relative rounded-2xl overflow-hidden border border-white/20 dark:border-white/10 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer aspect-[16/9] bg-slate-900 select-none"
+            onclick={`const card = document.querySelector('.asset-card[data-id="${preset.id}"]'); if (card) { card.click(); }`}
+            title={`Customize ${preset.title}`}
+          >
+            <img 
+              src={preset.animatedWebpUrl || preset.imageUrl} 
+              alt={preset.title}
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent p-2.5 flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-black/70 text-[#FF84BA] backdrop-blur-xs uppercase flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse"></span>
+                  <span>ANIMATED</span>
+                </span>
+                <span class="w-2 h-2 rounded-full animate-pulse" style={`background-color: ${preset.glowHex};`}></span>
+              </div>
+              <div>
+                <h3 class="text-xs font-bold text-white line-clamp-1 group-hover:text-[#FF84BA] transition-colors">
+                  {preset.title}
+                </h3>
+                <span class="text-[10px] font-mono text-[#FFDF82]">
+                  {preset.profileThemeHex}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- INTERACTIVE FILTER & SEARCH BAR -->
+    <section 
+      id="filter-toolbar" 
+      class="rounded-3xl border border-[#E0DBD0] dark:border-[#263454] bg-white/90 dark:bg-[#101626]/90 backdrop-blur-xl p-4 sm:p-6 shadow-xl mb-8 space-y-5"
+      aria-label="Filter and Search Assets"
+    >
+      <!-- Top Row: Search Input & Results Summary -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3.5">
+        <!-- Live Search Input -->
+        <div class="relative flex-1">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#6B7A90] dark:text-[#8494A7]">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </div>
+          <input
+            type="search"
+            id="asset-search-input"
+            placeholder="Search 270+ assets by name, tag, or mood (e.g. 'anime', 'rain', 'neon', 'samurai')..."
+            autocomplete="off"
+            aria-label="Search Discord Assets"
+            class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-xs sm:text-sm text-[#192538] dark:text-[#FFEFE3] placeholder-[#6B7A90] dark:placeholder-[#8494A7] focus:outline-none focus:border-[#FF84BA] focus:ring-2 focus:ring-[#FF84BA]/20 transition-all"
+          />
+          <button
+            type="button"
+            id="search-clear-btn"
+            class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-[#6B7A90] hover:text-[#192538] dark:text-[#8494A7] dark:hover:text-white cursor-pointer"
+            aria-label="Clear search input"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Active Results Counter & Reset Action -->
+        <div class="flex items-center justify-between md:justify-end gap-3 shrink-0">
+          <span 
+            id="results-count" 
+            class="text-xs sm:text-sm font-mono font-semibold text-[#6B7A90] dark:text-[#99C2FF]"
+            aria-live="polite"
+          >
+            Showing {totalPresetsCount} of {totalPresetsCount} assets
+          </span>
+
+          <button
+            type="button"
+            id="clear-all-filters-btn"
+            class="hidden text-xs font-bold text-[#FF84BA] hover:text-[#FF84BA]/80 cursor-pointer underline flex items-center gap-1 transition-colors"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            <span>Clear Filters</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Middle Row: Category Pills Row -->
+      <div>
+        <div class="text-[11px] font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-2.5 flex items-center justify-between">
+          <span>Categories</span>
+          <span class="text-[10px] lowercase text-[#6B7A90] dark:text-[#8494A7] hidden sm:inline">scroll or click to filter</span>
+        </div>
+
+        <div 
+          id="category-pills-container" 
+          class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 scrollbar-thin scrollbar-thumb-[#E0DBD0] dark:scrollbar-thumb-[#263454]"
+          role="group"
+          aria-label="Filter assets by category"
+        >
+          <!-- 'All' Pill -->
+          <button
+            type="button"
+            class="category-pill active shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 bg-[#FF84BA] text-black shadow-xs"
+            data-category="all"
+            aria-pressed="true"
+          >
+            <span>🌟 All</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/15 font-bold">{totalPresetsCount}</span>
+          </button>
+
+          <!-- 12 Category Pills -->
+          {categoriesList.map(cat => (
+            <button
+              type="button"
+              class="category-pill shrink-0 px-3 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#99C2FF] hover:border-[#FF84BA]/60 hover:text-[#192538] dark:hover:text-white transition-all cursor-pointer flex items-center gap-1.5"
+              data-category={cat.id}
+              aria-pressed="false"
+            >
+              <span>{cat.icon} {cat.shortName}</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/5 dark:bg-white/10">{cat.count}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Bottom Row: Dropdown Selectors & Sort -->
+      <div class="pt-3 border-t border-[#E0DBD0]/60 dark:border-[#263454]/60 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+        <!-- Format Dropdown -->
+        <div>
+          <label for="filter-format" class="block text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-1">
+            Format
+          </label>
+          <select
+            id="filter-format"
+            class="w-full px-2.5 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#192538] dark:text-[#FFEFE3] focus:outline-none focus:border-[#FF84BA] cursor-pointer"
+          >
+            <option value="all">All Formats</option>
+            <option value="animated">Animated Loops</option>
+            <option value="static">Static Only</option>
+          </select>
+        </div>
+
+        <!-- Composition / Asset Type Dropdown -->
+        <div>
+          <label for="filter-composition" class="block text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-1">
+            Asset Type
+          </label>
+          <select
+            id="filter-composition"
+            class="w-full px-2.5 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#192538] dark:text-[#FFEFE3] focus:outline-none focus:border-[#FF84BA] cursor-pointer"
+          >
+            <option value="all">All Assets</option>
+            <option value="animated-webp">⚡ Animated WebP Banners</option>
+            <option value="pfps">👤 Discord PFPs & Avatars</option>
+            <option value="cinematic">🎬 Cinematic Widescreen Art</option>
+            <option value="2d-icons">🎨 2D Role Icons & Badges</option>
+            <option value="sets">✨ Matching Sets (Banner + PFP)</option>
+          </select>
+        </div>
+
+        <!-- Mood Dropdown -->
+        <div>
+          <label for="filter-mood" class="block text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-1">
+            Mood
+          </label>
+          <select
+            id="filter-mood"
+            class="w-full px-2.5 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#192538] dark:text-[#FFEFE3] focus:outline-none focus:border-[#FF84BA] cursor-pointer"
+          >
+            <option value="all">All Moods</option>
+            <option value="epic">Epic</option>
+            <option value="cozy">Cozy</option>
+            <option value="moody">Moody</option>
+            <option value="chill">Chill</option>
+            <option value="futuristic">Futuristic</option>
+            <option value="mysterious">Mysterious</option>
+            <option value="ethereal">Ethereal</option>
+            <option value="calm">Calm</option>
+            <option value="energetic">Energetic</option>
+            <option value="ominous">Ominous</option>
+          </select>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <div>
+          <label for="sort-select" class="block text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-1">
+            Sort Order
+          </label>
+          <select
+            id="sort-select"
+            class="w-full px-2.5 py-1.5 rounded-xl text-xs font-semibold border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#192538] dark:text-[#FFEFE3] focus:outline-none focus:border-[#FF84BA] cursor-pointer"
+          >
+            <option value="staff">★ Staff Picks</option>
+            <option value="popular">🔥 Most Popular</option>
+            <option value="a-z">A → Z (Alphabetical)</option>
+            <option value="z-a">Z → A (Reverse)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASSETS GRID SECTION -->
+    <section aria-label="Asset Presets Catalog">
+      <!-- Grid Container -->
+      <div 
+        id="assets-grid" 
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
+      >
+        {presets.map((preset, index) => (
+          <AssetCard preset={preset} index={index} />
+        ))}
+      </div>
+
+      <!-- Empty State (Shown when no items match filter) -->
+      <div 
+        id="empty-state" 
+        class="hidden py-16 px-6 text-center border border-dashed border-[#E0DBD0] dark:border-[#263454] rounded-3xl bg-white/50 dark:bg-[#101626]/50 max-w-lg mx-auto my-12"
+      >
+        <div class="w-16 h-16 rounded-2xl bg-[#FF84BA]/15 text-[#FF84BA] flex items-center justify-center text-3xl mx-auto mb-4">
+          🔍
+        </div>
+        <h2 class="text-lg sm:text-xl font-bold text-[#192538] dark:text-[#FFEFE3] mb-2">
+          No assets found
+        </h2>
+        <p class="text-xs sm:text-sm text-[#6B7A90] dark:text-[#99C2FF] max-w-sm mx-auto mb-6">
+          We couldn't find any Discord presets matching your current search query or filter combination.
+        </p>
+        <button 
+          type="button" 
+          id="empty-state-reset-btn"
+          class="btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold shadow-md cursor-pointer"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+          </svg>
+          <span>Reset all filters</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Customizer Studio Modal Integration -->
+  <AssetCustomizerModal />
+</Layout>
+
+<script>
+  // Unified Client-Side Filter & Search Controller
+  function initAssetHub() {
+    const searchInput = document.getElementById('asset-search-input') as HTMLInputElement | null;
+    const searchClearBtn = document.getElementById('search-clear-btn');
+    const categoryPills = document.querySelectorAll<HTMLButtonElement>('.category-pill');
+    const formatSelect = document.getElementById('filter-format') as HTMLSelectElement | null;
+    const compositionSelect = document.getElementById('filter-composition') as HTMLSelectElement | null;
+    const moodSelect = document.getElementById('filter-mood') as HTMLSelectElement | null;
+    const sortSelect = document.getElementById('sort-select') as HTMLSelectElement | null;
+    const resultsCount = document.getElementById('results-count');
+    const clearFiltersBtn = document.getElementById('clear-all-filters-btn');
+    const emptyStateResetBtn = document.getElementById('empty-state-reset-btn');
+    const grid = document.getElementById('assets-grid');
+    const emptyState = document.getElementById('empty-state');
+
+    if (!grid) return;
+
+    // Cache card elements
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>('.asset-card'));
+    const totalCount = cards.length;
+
+    // Filter state
+    const state = {
+      search: '',
+      category: 'all',
+      format: 'all',
+      composition: 'all',
+      mood: 'all',
+      sort: 'staff'
+    };
+
+    // 1. Read URL search params on initialization
+    function loadUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('category')) {
+        state.category = params.get('category')!.toLowerCase();
+      }
+      if (params.has('mood')) {
+        state.mood = params.get('mood')!.toLowerCase();
+      }
+      if (params.has('q')) {
+        state.search = params.get('q')!;
+      }
+      if (params.has('format')) {
+        state.format = params.get('format')!.toLowerCase();
+      }
+      if (params.has('composition')) {
+        state.composition = params.get('composition')!.toLowerCase();
+      }
+      if (params.has('sort')) {
+        state.sort = params.get('sort')!.toLowerCase();
+      }
+
+      // Synchronize inputs with state
+      if (searchInput) searchInput.value = state.search;
+      if (searchClearBtn) {
+        searchClearBtn.classList.toggle('hidden', !state.search);
+      }
+      if (formatSelect) formatSelect.value = state.format;
+      if (compositionSelect) compositionSelect.value = state.composition;
+      if (moodSelect) moodSelect.value = state.mood;
+      if (sortSelect) sortSelect.value = state.sort;
+
+      updateCategoryPillUI();
+    }
+
+    // 2. Update category pill styling
+    function updateCategoryPillUI() {
+      categoryPills.forEach(pill => {
+        const cat = pill.getAttribute('data-category');
+        const isActive = cat === state.category;
+        pill.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        if (isActive) {
+          pill.classList.add('active', 'bg-[#FF84BA]', 'text-black', 'font-bold', 'shadow-xs');
+          pill.classList.remove('border-[#E0DBD0]', 'dark:border-[#263454]', 'bg-[#FAF8F5]', 'dark:bg-[#161F2E]', 'text-[#6B7A90]', 'dark:text-[#99C2FF]');
+        } else {
+          pill.classList.remove('active', 'bg-[#FF84BA]', 'text-black', 'font-bold', 'shadow-xs');
+          pill.classList.add('border-[#E0DBD0]', 'dark:border-[#263454]', 'bg-[#FAF8F5]', 'dark:bg-[#161F2E]', 'text-[#6B7A90]', 'dark:text-[#99C2FF]');
+        }
+      });
+    }
+
+    // 3. Update URL query params without reloading
+    function updateUrlParams() {
+      const url = new URL(window.location.href);
+      url.search = '';
+
+      if (state.category !== 'all') url.searchParams.set('category', state.category);
+      if (state.mood !== 'all') url.searchParams.set('mood', state.mood);
+      if (state.search.trim()) url.searchParams.set('q', state.search.trim());
+      if (state.format !== 'all') url.searchParams.set('format', state.format);
+      if (state.composition !== 'all') url.searchParams.set('composition', state.composition);
+      if (state.sort !== 'staff') url.searchParams.set('sort', state.sort);
+
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    // 4. Filter and sort cards
+    function applyFilterAndSort() {
+      const query = state.search.trim().toLowerCase();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cardCategory = (card.getAttribute('data-category') || '').toLowerCase();
+        const cardMood = (card.getAttribute('data-mood') || '').toLowerCase();
+        const cardTitle = (card.getAttribute('data-title') || '').toLowerCase();
+        const cardDescription = (card.getAttribute('data-description') || '').toLowerCase();
+        const cardTags = (card.getAttribute('data-tags') || '').toLowerCase();
+
+        // Check Category
+        const matchesCategory = state.category === 'all' || cardCategory === state.category;
+
+        // Check Mood
+        const matchesMood = state.mood === 'all' || cardMood === state.mood;
+
+        // Check Search Query
+        const matchesSearch = !query || (
+          cardTitle.includes(query) ||
+          cardTags.includes(query) ||
+          cardDescription.includes(query) ||
+          cardCategory.includes(query)
+        );
+
+        // Check Format:
+        let matchesFormat = true;
+        const hasAnimatedWebp = Boolean(card.getAttribute('data-animated-url'));
+        if (state.format === 'animated') {
+          const speed = parseFloat(card.getAttribute('data-motion-speed') || '1.0');
+          matchesFormat = hasAnimatedWebp || speed > 0;
+        } else if (state.format === 'static') {
+          matchesFormat = !hasAnimatedWebp;
+        }
+
+        // Check Composition / Asset Type:
+        let matchesComposition = true;
+        const hasImage = Boolean(card.getAttribute('data-image-url'));
+        const hasPfp = Boolean(card.getAttribute('data-pfp-url'));
+        const isAnimatedWebp = Boolean(card.getAttribute('data-animated-url'));
+
+        if (state.composition === 'animated-webp') {
+          matchesComposition = isAnimatedWebp;
+        } else if (state.composition === 'pfps') {
+          matchesComposition = hasPfp || card.getAttribute('data-is-pfp') === 'true';
+        } else if (state.composition === 'cinematic') {
+          matchesComposition = hasImage && !hasPfp && !isAnimatedWebp;
+        } else if (state.composition === '2d-icons') {
+          matchesComposition = cardCategory === 'icons-2d' || (!hasImage && !isAnimatedWebp && !hasPfp);
+        } else if (state.composition === 'sets') {
+          matchesComposition = Boolean(hasImage || isAnimatedWebp);
+        }
+
+        const isVisible = matchesCategory && matchesMood && matchesSearch && matchesFormat && matchesComposition;
+
+        if (isVisible) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // Sort Cards in DOM
+      sortCards();
+
+      // Update Results Counter
+      if (resultsCount) {
+        resultsCount.textContent = `Showing ${visibleCount} of ${totalCount} assets`;
+      }
+
+      // Empty State Visibility
+      if (visibleCount === 0) {
+        emptyState?.classList.remove('hidden');
+        grid?.classList.add('hidden');
+      } else {
+        emptyState?.classList.add('hidden');
+        grid?.classList.remove('hidden');
+      }
+
+      // Toggle Clear Filters Button
+      const hasActiveFilters = (
+        state.category !== 'all' ||
+        state.mood !== 'all' ||
+        state.format !== 'all' ||
+        state.composition !== 'all' ||
+        Boolean(state.search.trim()) ||
+        state.sort !== 'staff'
+      );
+      clearFiltersBtn?.classList.toggle('hidden', !hasActiveFilters);
+    }
+
+    // 5. Sort DOM elements: Showcase animations on top, 2D icons at the bottom
+    function sortCards() {
+      if (!grid) return;
+      const sorted = [...cards].sort((a, b) => {
+        const aCategory = (a.getAttribute('data-category') || '').toLowerCase();
+        const bCategory = (b.getAttribute('data-category') || '').toLowerCase();
+        const aIs2d = (a.getAttribute('data-is-2d') === 'true' || aCategory === 'icons-2d') ? 1 : 0;
+        const bIs2d = (b.getAttribute('data-is-2d') === 'true' || bCategory === 'icons-2d') ? 1 : 0;
+
+        const aIsAnim = a.getAttribute('data-is-animated') === 'true' ? 1 : 0;
+        const bIsAnim = b.getAttribute('data-is-animated') === 'true' ? 1 : 0;
+
+        const aIsPfp = a.getAttribute('data-is-pfp') === 'true' ? 1 : 0;
+        const bIsPfp = b.getAttribute('data-is-pfp') === 'true' ? 1 : 0;
+
+        const getTier = (is2d: number, isAnim: number, isPfp: number) => {
+          if (is2d) return 1;
+          if (isAnim && !isPfp) return 4;
+          if (isAnim && isPfp) return 3;
+          return 2;
+        };
+
+        const aTier = getTier(aIs2d, aIsAnim, aIsPfp);
+        const bTier = getTier(bIs2d, bIsAnim, bIsPfp);
+
+        if (state.sort === 'staff') {
+          // Priority 1: Visual Hierarchy Tier (Tier 4 Banners -> Tier 3 Animated PFPs -> Tier 2 Static -> Tier 1 2D Icons)
+          if (bTier !== aTier) return bTier - aTier;
+          // Priority 2: Staff picks within tier
+          const aStaff = a.getAttribute('data-is-staff-pick') === 'true' ? 1 : 0;
+          const bStaff = b.getAttribute('data-is-staff-pick') === 'true' ? 1 : 0;
+          if (bStaff !== aStaff) return bStaff - aStaff;
+          return (a.getAttribute('data-title') || '').localeCompare(b.getAttribute('data-title') || '');
+        } else if (state.sort === 'popular') {
+          if (bTier !== aTier) return bTier - aTier;
+          const aPop = a.getAttribute('data-is-popular') === 'true' ? 1 : 0;
+          const bPop = b.getAttribute('data-is-popular') === 'true' ? 1 : 0;
+          if (bPop !== aPop) return bPop - aPop;
+          return (a.getAttribute('data-title') || '').localeCompare(b.getAttribute('data-title') || '');
+        } else if (state.sort === 'a-z') {
+          if (state.category === 'all' && aIs2d !== bIs2d) return aIs2d - bIs2d;
+          return (a.getAttribute('data-title') || '').localeCompare(b.getAttribute('data-title') || '');
+        } else if (state.sort === 'z-a') {
+          if (state.category === 'all' && aIs2d !== bIs2d) return aIs2d - bIs2d;
+          return (b.getAttribute('data-title') || '').localeCompare(a.getAttribute('data-title') || '');
+        }
+        return 0;
+      });
+
+      // Append in sorted order
+      sorted.forEach(card => grid.appendChild(card));
+    }
+
+    // 6. Reset all filters
+    function resetAllFilters() {
+      state.search = '';
+      state.category = 'all';
+      state.format = 'all';
+      state.composition = 'all';
+      state.mood = 'all';
+      state.sort = 'staff';
+
+      if (searchInput) searchInput.value = '';
+      if (searchClearBtn) searchClearBtn.classList.add('hidden');
+      if (formatSelect) formatSelect.value = 'all';
+      if (compositionSelect) compositionSelect.value = 'all';
+      if (moodSelect) moodSelect.value = 'all';
+      if (sortSelect) sortSelect.value = 'staff';
+
+      updateCategoryPillUI();
+      updateUrlParams();
+      applyFilterAndSort();
+    }
+
+    // Event Listeners
+    // Live Search
+    searchInput?.addEventListener('input', () => {
+      state.search = searchInput.value;
+      if (searchClearBtn) {
+        searchClearBtn.classList.toggle('hidden', !state.search);
+      }
+      updateUrlParams();
+      applyFilterAndSort();
+    });
+
+    searchClearBtn?.addEventListener('click', () => {
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+      }
+      state.search = '';
+      searchClearBtn.classList.add('hidden');
+      updateUrlParams();
+      applyFilterAndSort();
+    });
+
+    // Category Pills
+    categoryPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const cat = pill.getAttribute('data-category') || 'all';
+        state.category = cat;
+        updateCategoryPillUI();
+        updateUrlParams();
+        applyFilterAndSort();
+      });
+    });
+
+    // Select Dropdowns
+    formatSelect?.addEventListener('change', () => {
+      state.format = formatSelect.value;
+      updateUrlParams();
+      applyFilterAndSort();
+    });
+
+    compositionSelect?.addEventListener('change', () => {
+      state.composition = compositionSelect.value;
+      updateUrlParams();
+      applyFilterAndSort();
+    });
+
+    moodSelect?.addEventListener('change', () => {
+      state.mood = moodSelect.value;
+      updateUrlParams();
+      applyFilterAndSort();
+    });
+
+    sortSelect?.addEventListener('change', () => {
+      state.sort = sortSelect.value;
+      updateUrlParams();
+      applyFilterAndSort();
+    });
+
+    // Clear filters buttons
+    clearFiltersBtn?.addEventListener('click', resetAllFilters);
+    emptyStateResetBtn?.addEventListener('click', resetAllFilters);
+
+    // Keyboard shortcut to focus search with '/'
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput && !(document.activeElement instanceof HTMLInputElement) && !(document.activeElement instanceof HTMLTextAreaElement)) {
+        e.preventDefault();
+        searchInput?.focus();
+      }
+    });
+
+    // Run on initial load
+    loadUrlParams();
+    applyFilterAndSort();
+  }
+
+  // Initialize on page load and Astro view transitions
+  initAssetHub();
+  document.addEventListener('astro:page-load', initAssetHub);
+</script>

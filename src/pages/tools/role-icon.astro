@@ -4,8 +4,8 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
 import SketchCircle from '../../components/SketchCircle.astro';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
 
-const pageTitle = "Discord Role Icon Maker & Resizer | 64x64";
-const pageDescription = "Format, validate, and resize Discord custom role icons to exact 64x64 dimensions and under 256 KB. Zero server uploads.";
+const pageTitle = "Discord Role Icon Maker | Exact 64x64 Resize | Asset Studio";
+const pageDescription = "Create server badges with our Discord role icon maker. Resize PNG and JPEG graphics to exact 64x64 pixels under 256 KB. 100% private in your browser.";
 const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/role-icon/";
 
 const appSchema = generateSoftwareApplicationSchema(
@@ -15,7 +15,7 @@ const appSchema = generateSoftwareApplicationSchema(
 );
 
 const breadcrumbSchema = generateBreadcrumbSchema([
-  { name: "Home", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
   { name: "Role Icon Studio", url: pageUrl }
 ]);
 
@@ -25,10 +25,10 @@ const faqSchema = {
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "What are the exact dimensions required for Discord role icons?",
+      "name": "What is the official Discord role icon size and dimension standard?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Discord strictly requires custom role icons to be authored at exactly 64x64 pixels with a 1:1 aspect ratio. While Discord downscales the icon to 16x16 or 20x20 pixels beside usernames in chat and member sidebars, the 64x64 master ensures sharp rendering on Retina displays."
+        "text": "The official Discord role icon size is exactly 64x64 pixels with a 1:1 square ratio, under a 256 KB file cap. While Discord shrinks role icons down to 16x16 or 20x20 pixels next to usernames in chat, starting with a clean 64x64 file keeps them crisp on high-resolution screens."
       }
     },
     {
@@ -36,7 +36,7 @@ const faqSchema = {
       "name": "What server boost level is required to unlock custom role icons?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Custom role icons require Discord Server Boost Level 2 (which requires 7 active boosts). Administrators must also possess the 'Manage Roles' permission to upload and assign role icons in server settings."
+        "text": "Custom role icons require Server Boost Level 2 (which takes 7 server boosts). Server admins also need the 'Manage Roles' permission to upload icons and attach them to roles."
       }
     },
     {
@@ -44,7 +44,7 @@ const faqSchema = {
       "name": "What is the maximum file size for Discord role icons?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Discord enforces a 256 KB (262,144 bytes) file size ceiling for role icons. Supported formats include PNG, JPEG, and WebP (static icons only; animated role icons are not supported by Discord)."
+        "text": "Discord sets a 256 KB (262,144 bytes) file limit for role icons. You can upload PNG, JPEG, or WebP files. Note that Discord only supports static images for role icons, not animated GIFs."
       }
     },
     {
@@ -52,14 +52,14 @@ const faqSchema = {
       "name": "Why do intricate logos become unreadable as role icons?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "When an icon is displayed inline next to a username, it occupies a tiny 16x16 to 20x20 pixel footprint. Complex lettering, multi-colored gradients, or thin linework cannot resolve at this scale. Successful role icons rely on bold, single-subject silhouettes with distinct high-contrast shapes."
+        "text": "Next to a username in chat, a role icon shrinks down to just 16x16 or 20x20 pixels. Small text, thin lines, and complex illustrations turn into tiny blurry smudges at that size. Simple, bold symbols with clean outlines work best."
       }
     }
   ]
 };
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/role-icon.png">
   <!-- Inject Schemas -->
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
@@ -67,15 +67,15 @@ const faqSchema = {
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
-      <div class="flex items-center gap-2 text-xs text-[#6B7A90] mb-2 font-mono">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
         <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
-        <span class="text-[#192538] font-semibold">Role Icon Studio</span>
-      </div>
+        <span class="text-[#192538] dark:text-white font-semibold">Role Icon Studio</span>
+      </nav>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
-            Discord Role Icon <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Studio</span><SketchUnderline color="#66A3BF" /></span>
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Role Icon</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
           <p class="text-xs sm:text-sm text-[#475569] mt-1">Exact 64 × 64 px • 256 KB max • Boost Level 2 & Manage Roles required</p>
         </div>
@@ -153,6 +153,14 @@ const faqSchema = {
             <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans leading-relaxed">
               <strong>Requirement:</strong> Server must reach Server Boost Level 2 to unlock custom role icons. Requires Manage Roles permission.
             </div>
+            <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-sans font-medium">
+              <a href="/guides/discord-sizes/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+                <span>📖</span> Discord Role Icon Dimensions & Rules Guide
+              </a>
+              <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+                <span>✨</span> Animated Server Assets Guide
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -170,11 +178,11 @@ const faqSchema = {
           </div>
 
           <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Engineering <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">micro-scale</span><SketchUnderline color="#66A3BF" /></span> Discord role badges.
+            Designing clean <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Discord role icons</span><SketchUnderline color="#66A3BF" /></span> that stay readable.
           </h2>
 
           <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
-            Role icons operate at the smallest optical footprint in Discord's UI. From 64px master canvases to 16px inline chat badges, learn the raster principles that keep server badges legible.
+            Role icons are the smallest graphics anywhere in Discord. Even though you upload them at 64×64 pixels, Discord shrinks them down to 16×16 pixels next to usernames. Here is how to keep your badges recognizable at a glance.
           </p>
 
           <!-- Step Timeline -->
@@ -184,22 +192,22 @@ const faqSchema = {
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
-              <span class="text-xs sm:text-sm">01 / The Exact 64×64 Geometry</span>
+              <span class="text-xs sm:text-sm">01 / The Exact 64×64 Size</span>
             </div>
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
-              <span class="text-xs sm:text-sm">02 / The 16px Downsampling Physics</span>
+              <span class="text-xs sm:text-sm">02 / 16px Chat Downscaling</span>
             </div>
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
-              <span class="text-xs sm:text-sm">03 / High-Contrast Silhouette Theory</span>
+              <span class="text-xs sm:text-sm">03 / Bold Silhouettes & Contrast</span>
             </div>
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
-              <span class="text-xs sm:text-sm">04 / Boost Level 2 & Role Permissions</span>
+              <span class="text-xs sm:text-sm">04 / Boost Level 2 & Permissions</span>
             </div>
           </div>
         </div>
@@ -215,13 +223,13 @@ const faqSchema = {
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">64 × 64 PIXELS</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                The Exact 64x64 px Standard & Binary Boundaries
+                The Exact 64x64 Pixel Rule
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Discord strictly enforces an exact 64x64 pixel resolution for role icon uploads. Unlike server banners or emojis that allow dynamic aspect ratios or larger canvas masters, role icons must conform precisely to this square raster dimension. Files measuring 63x64 or 128x128 will be rejected or distorted during upload.
+                Discord requires role icons to be exactly 64×64 pixels. Unlike emojis or banners that give you room for different shapes, role icons must fit this precise square. Uploading odd sizes like 63×64 can cause Discord to reject or stretch your image.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                The file size cap is set at 256 KB (262,144 bytes). For a 64x64 pixel image, 256 KB provides more than ample headroom for uncompressed 32-bit RGBA color data. Discord Asset Studio crops, centers, and pads arbitrary artwork directly onto a clean 64x64 canvas, ensuring zero dimension mismatches.
+                The file size limit is 256 KB (262,144 bytes), which is plenty of space for a sharp 64px PNG. Our Discord role icon maker centers and resizes your artwork onto an exact 64×64 canvas so you can export without worrying about upload errors.
               </p>
               <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
                 <div>
@@ -241,13 +249,13 @@ const faqSchema = {
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">16px CHAT DISPLAY</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                16px Nameplate Display: The 4:1 Downscaling Factor
+                16px Chat Display: How Small It Really Looks
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                While authoring occurs at 64x64 pixels, Discord client applications downsample the role icon to 16x16 CSS pixels directly beside the username in message headers, and to 20x20 pixels inside the server member list. This represents an aggressive 4:1 hardware downsampling reduction.
+                Even though you upload at 64×64 pixels, Discord displays role icons at just 16×16 pixels in chat messages, and 20×20 pixels in the member list. That is a 4:1 reduction.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                At 16x16 pixels, each display pixel represents 16 pixels of original artwork. Detailed textures, complex heraldic crests, and multiple lines of text turn into unrecognizable blur. Our preview panel simulates the native 16x16 inline chat rendering so creators can instantly identify whether a badge retains its identity at glance scale.
+                At 16 pixels across, tiny details like text, fine shading, or intricate crests blur together. Our live preview shows your icon right next to a mock username so you can see how it looks at actual chat scale before adding it to your server.
               </p>
               <div class="grid grid-cols-2 gap-3 text-xs font-mono">
                 <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
@@ -270,13 +278,13 @@ const faqSchema = {
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">SILHOUETTE THEORY</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                High-Contrast Silhouettes & Role Color Harmonization
+                Simple Silhouettes & Role Color Matching
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Effective role icons function like road signs: instant shape recognition in peripheral vision. The best performing Discord role icons feature simple glyphs—such as a single shield, lightning bolt, crown, star, or sword—rendered with strong contrasting edges and an outer 1-pixel highlight stroke.
+                The best role icons work like road signs: you recognize the shape immediately. Simple symbols like a crown, sword, star, shield, or lightning bolt work much better than complex illustrations. Adding a faint outline also helps the icon stand out on both dark and light backgrounds.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Furthermore, remember that Discord users assign custom HEX colors to roles. If your server assigns a gold role color (`#F59E0B`), an icon using similar yellow hues will blend into the username text. Design icons with either a neutral monochrome palette or bold complementary tones that elevate the role's rank color.
+                Keep role colors in mind too. If your role has a vibrant gold name, an all-yellow icon might blend right into the username. Choosing contrasting or clean white elements makes your badge stand out clearly.
               </p>
               <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
                 <span class="text-[#0D9488] font-bold">✓ Dual Contrast Check:</span>
@@ -293,13 +301,13 @@ const faqSchema = {
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">BOOST LEVEL 2</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Boost Tier Requirements & Administrator Permissions
+                Boost Tier Requirements & Permissions
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Custom role icons are not available on baseline Discord servers. To unlock custom role icon uploading, a server must reach Server Boost Level 2 (a minimum of 7 active boosts from community members). If the server loses boosts and falls back to Level 1, role icons remain saved in server settings but cease to display publicly until Level 2 is restored.
+                Role icons unlock when a server reaches Server Boost Level 2 (which takes 7 boosts from members). If your server's boosts ever drop below Level 2, your uploaded icons remain saved in your settings, but Discord hides them from chat until you reach Level 2 again.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Additionally, assigning role icons requires the "Manage Roles" permission in Discord's server hierarchy. Unlike custom emojis, Discord does not support animated role icons (APNG or GIF); all role icons must be static raster images (PNG or WebP recommended).
+                To upload and manage them, you need the 'Manage Roles' permission in your server. Also note that Discord only allows static PNG, JPEG, or WebP images for role badges; animated GIFs and APNGs are not supported.
               </p>
               <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

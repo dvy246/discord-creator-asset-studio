@@ -1,0 +1,624 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import AssetCustomizerModal from '../../../components/AssetCustomizerModal.astro';
+import SketchUnderline from '../../../components/SketchUnderline.astro';
+import { 
+  getAllPresets, 
+  ASSET_CATEGORIES,
+  type DiscordAssetPreset 
+} from '../../../data/assets';
+import { 
+  generateBreadcrumbSchema, 
+  generateSoftwareApplicationSchema 
+} from '../../../utils/seo';
+
+const pageTitle = "Discord PFP — 60+ Free Anime, Aesthetic & Animated Profile Pictures";
+const pageDescription = "Browse 60+ free aesthetic Discord PFPs. Download aesthetic female PFPs, gym mirror selfies, animated cat avatars, dark anime avatars, and matching profile pictures ready to use.";
+const canonicalUrl = "https://discord-creator-asset-studio.pages.dev/assets/pfps/";
+
+// Get all presets
+const allPresets = getAllPresets();
+
+// Separate presets: prioritize those flagged as isPfp, or with pfpImageUrl, or showcase presets
+const pfpPresets: DiscordAssetPreset[] = allPresets.filter(p => (p as any).isPfp || (p as any).pfpImageUrl || p.imageUrl);
+
+// Structured Data Schemas
+const breadcrumbSchema = JSON.parse(generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Asset Library", url: "https://discord-creator-asset-studio.pages.dev/assets/" },
+  { name: "Discord PFPs", url: canonicalUrl }
+]));
+
+const collectionPageSchema = {
+  "@context": "https://schema.org",
+  "@type": ["CollectionPage", "ImageGallery"],
+  "name": "Discord PFP — Free Anime, Aesthetic & Animated Profile Pictures",
+  "headline": pageTitle,
+  "description": pageDescription,
+  "url": canonicalUrl,
+  "inLanguage": "en",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/"
+  },
+  "about": [
+    { "@type": "Thing", "name": "Discord Profile Pictures" },
+    { "@type": "Thing", "name": "Discord PFPs" },
+    { "@type": "Thing", "name": "Anime Discord Avatars" },
+    { "@type": "Thing", "name": "Aesthetic Female PFPs" },
+    { "@type": "Thing", "name": "Animated Discord Avatars" }
+  ],
+  "numberOfItems": pfpPresets.length
+};
+
+const appSchema = JSON.parse(generateSoftwareApplicationSchema(
+  "Discord PFP & Avatar Studio",
+  "Interactive browser-based studio to preview, customize, and download Discord profile pictures with safe zones and theme matching.",
+  canonicalUrl
+));
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the recommended size and resolution for a Discord PFP?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord displays profile pictures inside a 1:1 circular mask. While Discord renders avatars at 128x128 pixels in chat, exporting at 512x512 pixels (PNG or WebP) is the recommended standard to ensure crisp rendering on 4K desktop displays and mobile retina screens."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use animated GIF or WebP PFPs on Discord without Nitro?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Animated avatars on personal profiles require an active Discord Nitro or Nitro Basic subscription. However, all animated PFPs in our library can also be downloaded as high-resolution static PNGs, which work on 100% free standard Discord accounts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I match my Discord PFP with my profile theme and banner?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Every avatar preset in our studio comes with a pre-sampled Discord Profile Theme Hex code. Copy the hex code, open Discord > User Settings > Profiles > Theme Colors, and paste it into the primary color field for a seamless borderless aesthetic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I find aesthetic female Discord PFPs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our aesthetic female PFP collection includes black and white motion-blurred noir silhouettes, angelic halo anime girls, dark gothic portraits, and cyberpunk fashion avatars, all downloadable in lossless 512x512."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are these Discord PFPs free to download and use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, 100% of the profile pictures and avatars in our studio are completely free to download, customize, and use on your Discord profile with zero watermarks or server uploads."
+      }
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl}>
+  <!-- Inject SEO Schemas -->
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(collectionPageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+
+    <!-- BREADCRUMBS -->
+    <nav aria-label="Breadcrumb" class="text-xs font-mono flex items-center gap-2 text-[#6B7A90] dark:text-[#8494A7]">
+      <a href="/" class="hover:text-[#3368A0] dark:hover:text-[#99C2FF] transition-colors">Studio</a>
+      <span>/</span>
+      <a href="/assets/" class="hover:text-[#3368A0] dark:hover:text-[#99C2FF] transition-colors">Asset Library</a>
+      <span>/</span>
+      <span class="text-[#FF84BA] font-bold" aria-current="page">Discord PFPs</span>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="text-center space-y-4 max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#FF84BA]/30 bg-[#FF84BA]/10 text-xs font-mono font-bold text-[#FF84BA] shadow-xs">
+        <span>👤 60+ Free Discord PFPs & Matching Avatars</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-[#192538] dark:text-[#FFEFE3]">
+        Discord PFPs & <span class="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#FF84BA] via-[#FFDF82] to-[#99C2FF]">Aesthetic Avatars<SketchUnderline /></span>
+      </h1>
+
+      <p class="text-sm sm:text-base text-[#475569] dark:text-[#99C2FF] leading-relaxed max-w-2xl mx-auto">
+        Browse curated anime avatars, aesthetic female silhouettes, dark gothic portraits, and animated WebP profile pictures. Handcrafted for circular Discord masks with 1-click downloads and profile theme matching.
+      </p>
+
+      <!-- Quick Stats / Trust Badges -->
+      <div class="flex flex-wrap justify-center items-center gap-3 pt-2 text-xs font-mono text-[#6B7A90] dark:text-[#8494A7]">
+        <div class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/60 dark:bg-[#161F2E]/60 border border-[#E0DBD0] dark:border-[#263454]">
+          <span class="text-[#FF84BA]">✨</span>
+          <span>50+ Curated Avatars</span>
+        </div>
+        <div class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/60 dark:bg-[#161F2E]/60 border border-[#E0DBD0] dark:border-[#263454]">
+          <span class="text-[#FFDF82]">⚡</span>
+          <span>Animated WebP Loops</span>
+        </div>
+        <div class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/60 dark:bg-[#161F2E]/60 border border-[#E0DBD0] dark:border-[#263454]">
+          <span class="text-[#99C2FF]">🌸</span>
+          <span>Aesthetic Female & Anime</span>
+        </div>
+        <div class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/60 dark:bg-[#161F2E]/60 border border-[#E0DBD0] dark:border-[#263454]">
+          <span class="text-[#22C55E]">🛡️</span>
+          <span>100% Free & Client-Side</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- INTERACTIVE FILTER & SEARCH TOOLBAR -->
+    <section 
+      id="pfp-filter-toolbar" 
+      class="card-panel p-4 sm:p-6 rounded-2xl border border-[#E0DBD0] dark:border-[#263454] bg-white/90 dark:bg-[#101626]/90 backdrop-blur-xl shadow-lg space-y-4"
+      aria-label="Filter and Search Discord PFPs"
+    >
+      <!-- Top Row: Search Input & Global Controls -->
+      <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+        <!-- Live Search Input -->
+        <div class="relative flex-1">
+          <svg class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B7A90] dark:text-[#8494A7]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input
+            type="text"
+            id="pfp-search-input"
+            placeholder="Search PFPs by anime, character, style, mood (e.g., Sukuna, Samurai, Cat, Noir, Female)..."
+            class="w-full pl-10 pr-4 py-2 rounded-xl text-xs sm:text-sm border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#192538] dark:text-[#FFEFE3] placeholder-[#6B7A90] dark:placeholder-[#64748B] focus:outline-none focus:border-[#FF84BA] focus:ring-1 focus:ring-[#FF84BA]"
+          />
+        </div>
+
+        <!-- Animation Toggle & Clear Filters Button -->
+        <div class="flex items-center gap-2">
+          <!-- GIF / Animated Toggle Button -->
+          <button
+            type="button"
+            id="pfp-toggle-animation-btn"
+            class="px-3 py-2 rounded-xl text-xs font-mono font-bold border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#192538] dark:text-[#CBD5E1] hover:border-[#FF84BA] flex items-center gap-1.5 transition-colors cursor-pointer"
+            aria-pressed="true"
+          >
+            <span class="w-2 h-2 rounded-full bg-[#22C55E]" id="pfp-anim-indicator"></span>
+            <span>GIF <span id="pfp-anim-status">ON</span></span>
+          </button>
+
+          <!-- Clear Filters Button (Hidden by default) -->
+          <button
+            type="button"
+            id="pfp-clear-filters-btn"
+            class="hidden px-3 py-2 rounded-xl text-xs font-mono font-bold text-[#FF84BA] border border-[#FF84BA]/40 bg-[#FF84BA]/10 hover:bg-[#FF84BA]/20 transition-colors cursor-pointer"
+          >
+            Clear Filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Category & Style Pills Row -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none" id="pfp-category-pills">
+        <button
+          type="button"
+          class="pfp-filter-pill active px-3 py-1.5 rounded-xl text-xs font-medium border border-[#FF84BA] bg-[#FF84BA]/15 text-[#FF84BA] transition-all cursor-pointer whitespace-nowrap"
+          data-filter="all"
+        >
+          All Avatars
+        </button>
+        <button
+          type="button"
+          class="pfp-filter-pill px-3 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#CBD5E1] hover:border-[#FF84BA] hover:text-[#FF84BA] transition-all cursor-pointer whitespace-nowrap"
+          data-filter="female"
+        >
+          🌸 Aesthetic Female
+        </button>
+        <button
+          type="button"
+          class="pfp-filter-pill px-3 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#CBD5E1] hover:border-[#FF84BA] hover:text-[#FF84BA] transition-all cursor-pointer whitespace-nowrap"
+          data-filter="male"
+        >
+          💪 Aesthetic Guys
+        </button>
+        <button
+          type="button"
+          class="pfp-filter-pill px-3 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#CBD5E1] hover:border-[#FF84BA] hover:text-[#FF84BA] transition-all cursor-pointer whitespace-nowrap"
+          data-filter="anime"
+        >
+          ⚔️ Anime & Manga
+        </button>
+        <button
+          type="button"
+          class="pfp-filter-pill px-3 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#CBD5E1] hover:border-[#FF84BA] hover:text-[#FF84BA] transition-all cursor-pointer whitespace-nowrap"
+          data-filter="dark"
+        >
+          🌑 Dark & Gothic
+        </button>
+        <button
+          type="button"
+          class="pfp-filter-pill px-3 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#CBD5E1] hover:border-[#FF84BA] hover:text-[#FF84BA] transition-all cursor-pointer whitespace-nowrap"
+          data-filter="animated"
+        >
+          ⚡ Animated PFPs
+        </button>
+        <button
+          type="button"
+          class="pfp-filter-pill px-3 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#CBD5E1] hover:border-[#FF84BA] hover:text-[#FF84BA] transition-all cursor-pointer whitespace-nowrap"
+          data-filter="cats"
+        >
+          🐱 Cats & Animals
+        </button>
+        <button
+          type="button"
+          class="pfp-filter-pill px-3 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#CBD5E1] hover:border-[#FF84BA] hover:text-[#FF84BA] transition-all cursor-pointer whitespace-nowrap"
+          data-filter="streetwear"
+        >
+          🛹 Streetwear & Gaming
+        </button>
+      </div>
+
+      <!-- Bottom Row: Counter & View All Banners Link -->
+      <div class="flex items-center justify-between text-xs text-[#6B7A90] dark:text-[#8494A7] pt-1 border-t border-[#E0DBD0]/60 dark:border-[#263454]/60">
+        <div>
+          Showing <span id="pfp-results-count" class="font-bold text-[#FF84BA]">{pfpPresets.length}</span> Discord avatars
+        </div>
+        <a href="/assets/" class="text-xs font-semibold text-[#FF84BA] hover:underline flex items-center gap-1">
+          <span>Looking for Discord Banners?</span>
+          <span>→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- AVATARS GRID -->
+    <section aria-label="Discord PFPs Gallery">
+      <div 
+        id="pfps-grid-container"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
+      >
+        {pfpPresets.map((preset, index) => {
+          const pfpImg = (preset as any).pfpImageUrl || preset.imageUrl;
+          const isAnim = Boolean((preset as any).isAnimated || (preset as any).animatedWebpUrl);
+          const isFemale = (preset as any).gender === 'female' || preset.tags.includes('female');
+          const isMale = (preset as any).gender === 'male' || preset.tags.includes('male') || preset.tags.includes('gym') || preset.tags.includes('guys');
+          const isAnime = preset.category === 'anime' || preset.tags.includes('anime') || preset.tags.includes('manga');
+          const isDark = preset.category === 'dark' || preset.tags.includes('dark') || preset.tags.includes('gothic');
+          const isCat = preset.tags.includes('cat') || preset.tags.includes('cats') || preset.category === 'cute';
+          const isStreetwear = preset.tags.includes('streetwear') || preset.tags.includes('gaming') || preset.tags.includes('f1');
+          const pfpExt = pfpImg?.endsWith('.webp') ? 'webp' : (pfpImg?.endsWith('.jpg') ? 'jpg' : 'png');
+
+          return (
+            <div
+              class="pfp-card group relative flex flex-col items-center p-4 rounded-2xl border border-[#E0DBD0] dark:border-[#263454] bg-white dark:bg-[#101626] shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              data-id={preset.id}
+              data-slug={preset.slug}
+              data-title={preset.title}
+              data-category={preset.category}
+              data-tags={preset.tags.join(',')}
+              data-is-animated={isAnim ? 'true' : 'false'}
+              data-is-female={isFemale ? 'true' : 'false'}
+              data-is-male={isMale ? 'true' : 'false'}
+              data-is-anime={isAnime ? 'true' : 'false'}
+              data-is-dark={isDark ? 'true' : 'false'}
+              data-is-cat={isCat ? 'true' : 'false'}
+              data-is-streetwear={isStreetwear ? 'true' : 'false'}
+              data-image-url={pfpImg || ''}
+              data-theme-hex={preset.profileThemeHex}
+              data-accent-hex={preset.accentHex}
+              data-glow-hex={preset.glowHex}
+              data-focal-pfp-zoom={preset.focalPoint.pfp.zoom || 1.6}
+            >
+              <!-- Circular Avatar Container with Online Badge -->
+              <div class="relative w-24 h-24 sm:w-28 sm:h-28 mb-3">
+                <div 
+                  class="w-full h-full rounded-full overflow-hidden border-2 border-[#E0DBD0] dark:border-[#263454] group-hover:border-[#FF84BA] shadow-md transition-all duration-300 relative bg-[#090C16]"
+                  style={`box-shadow: 0 0 12px ${preset.glowHex}22;`}
+                >
+                  {pfpImg ? (
+                    <img
+                      src={pfpImg}
+                      alt={`${preset.title} Discord PFP`}
+                      class="pfp-avatar-img w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div 
+                      class="w-full h-full flex items-center justify-center text-3xl"
+                      style={`background: ${preset.visualTheme.gradient};`}
+                    >
+                      {preset.visualTheme.primaryIcon}
+                    </div>
+                  )}
+                </div>
+
+                <!-- Online Status Indicator -->
+                <span 
+                  class="absolute bottom-1 right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#22C55E] border-2 border-white dark:border-[#101626] shadow-xs"
+                  title="Discord Online Status Badge"
+                ></span>
+              </div>
+
+              <!-- Title & Meta -->
+              <div class="text-center w-full space-y-1 mb-3">
+                <h2 class="text-xs sm:text-sm font-bold text-[#192538] dark:text-[#FFEFE3] truncate group-hover:text-[#FF84BA] transition-colors" title={preset.title}>
+                  {preset.title}
+                </h2>
+                <div class="flex flex-wrap justify-center gap-1">
+                  {isAnim && (
+                    <span class="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-[#FFDF82]/20 text-[#FFDF82] border border-[#FFDF82]/40">
+                      ⚡ Animated
+                    </span>
+                  )}
+                  {isFemale && (
+                    <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#FF84BA]/15 text-[#FF84BA]">
+                      🌸 Female
+                    </span>
+                  )}
+                  {isMale && !isFemale && (
+                    <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#99C2FF]/15 text-[#99C2FF]">
+                      💪 Guy
+                    </span>
+                  )}
+                  {isCat && (
+                    <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#F59E0B]/15 text-[#F59E0B]">
+                      🐱 Cat
+                    </span>
+                  )}
+                  {preset.tags.slice(0, 1).map(tag => (
+                    <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-black/5 dark:bg-white/10 text-[#6B7A90] dark:text-[#CBD5E1]">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="w-full mt-auto flex flex-col gap-1.5">
+                <!-- 1-Click Download Button -->
+                <button
+                  type="button"
+                  class="pfp-download-btn w-full py-1.5 rounded-xl text-xs font-bold text-center bg-[#FF84BA] text-white hover:bg-[#FF6B9D] transition-colors shadow-xs cursor-pointer flex items-center justify-center gap-1"
+                  data-url={pfpImg || ''}
+                  data-filename={`${preset.slug}-pfp.${pfpExt}`}
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span>Download PFP</span>
+                </button>
+
+                <!-- Customize in Studio Button -->
+                <button
+                  type="button"
+                  class="pfp-customize-btn w-full py-1 rounded-xl text-[11px] font-medium text-center border border-[#E0DBD0] dark:border-[#263454] hover:border-[#FF84BA] text-[#6B7A90] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white transition-colors cursor-pointer"
+                  data-preset-id={preset.id}
+                >
+                  Customize
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- Empty State -->
+      <div 
+        id="pfp-empty-state" 
+        class="hidden card-panel p-12 text-center rounded-2xl border border-[#E0DBD0] dark:border-[#263454] bg-white/50 dark:bg-[#101626]/50 max-w-md mx-auto my-12 space-y-4"
+      >
+        <div class="text-4xl">🔍</div>
+        <h3 class="text-base font-bold text-[#192538] dark:text-[#FFEFE3]">No Discord PFPs Found</h3>
+        <p class="text-xs text-[#6B7A90] dark:text-[#8494A7]">
+          No profile pictures match your current search or filter. Try a different query or reset filters.
+        </p>
+        <button
+          type="button"
+          id="pfp-empty-reset-btn"
+          class="px-4 py-2 rounded-xl text-xs font-bold bg-[#FF84BA] text-white hover:bg-[#FF6B9D] transition-colors cursor-pointer"
+        >
+          Reset All Filters
+        </button>
+      </div>
+    </section>
+
+    <!-- CREATOR FAQ & TECHNICAL GUIDE -->
+    <section class="card-panel p-6 sm:p-8 rounded-2xl border border-[#E0DBD0] dark:border-[#263454] bg-white/80 dark:bg-[#101626]/80 backdrop-blur-xl shadow-lg space-y-6">
+      <div class="space-y-2">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-[#FFEFE3]">
+          Frequently Asked Questions About Discord PFPs
+        </h2>
+        <p class="text-xs sm:text-sm text-[#6B7A90] dark:text-[#8494A7]">
+          Everything you need to know about Discord profile picture dimensions, Nitro animated avatars, and theme matching.
+        </p>
+      </div>
+
+      <div class="space-y-3">
+        {faqSchema.mainEntity.map((item, idx) => (
+          <details class="group rounded-xl border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] p-4 transition-colors">
+            <summary class="flex justify-between items-center font-bold text-xs sm:text-sm text-[#192538] dark:text-[#FFEFE3] cursor-pointer select-none list-none">
+              <span>{item.name}</span>
+              <span class="text-xs text-[#FF84BA] transform group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <p class="mt-3 text-xs text-[#475569] dark:text-[#CBD5E1] leading-relaxed border-t border-[#E0DBD0]/60 dark:border-[#263454]/60 pt-3">
+              {item.acceptedAnswer.text}
+            </p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+  </div>
+
+  <!-- EMBED CUSTOMIZER MODAL -->
+  <AssetCustomizerModal />
+
+  <!-- CLIENT SCRIPT: FILTER & SEARCH CONTROLLER -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('pfp-search-input');
+      const categoryPills = document.querySelectorAll('.pfp-filter-pill');
+      const toggleAnimBtn = document.getElementById('pfp-toggle-animation-btn');
+      const animStatusText = document.getElementById('pfp-anim-status');
+      const animIndicator = document.getElementById('pfp-anim-indicator');
+      const clearBtn = document.getElementById('pfp-clear-filters-btn');
+      const countEl = document.getElementById('pfp-results-count');
+      const cards = Array.from(document.querySelectorAll('.pfp-card'));
+      const emptyState = document.getElementById('pfp-empty-state');
+      const emptyResetBtn = document.getElementById('pfp-empty-reset-btn');
+
+      let currentCategory = 'all';
+      let searchQuery = '';
+      let isAnimEnabled = true;
+
+      function applyFilters() {
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const title = (card.getAttribute('data-title') || '').toLowerCase();
+          const tags = (card.getAttribute('data-tags') || '').toLowerCase();
+          const isAnim = card.getAttribute('data-is-animated') === 'true';
+          const isFemale = card.getAttribute('data-is-female') === 'true';
+          const isMale = card.getAttribute('data-is-male') === 'true';
+          const isAnime = card.getAttribute('data-is-anime') === 'true';
+          const isDark = card.getAttribute('data-is-dark') === 'true';
+          const isCat = card.getAttribute('data-is-cat') === 'true';
+          const isStreetwear = card.getAttribute('data-is-streetwear') === 'true';
+
+          // Search match
+          const matchesSearch = !searchQuery || title.includes(searchQuery) || tags.includes(searchQuery);
+
+          // Category pill match
+          let matchesCategory = true;
+          if (currentCategory === 'female') matchesCategory = isFemale;
+          else if (currentCategory === 'male') matchesCategory = isMale;
+          else if (currentCategory === 'anime') matchesCategory = isAnime;
+          else if (currentCategory === 'dark') matchesCategory = isDark;
+          else if (currentCategory === 'animated') matchesCategory = isAnim;
+          else if (currentCategory === 'cats') matchesCategory = isCat;
+          else if (currentCategory === 'streetwear') matchesCategory = isStreetwear;
+
+          if (matchesSearch && matchesCategory) {
+            card.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        if (countEl) countEl.textContent = String(visibleCount);
+        if (emptyState) emptyState.classList.toggle('hidden', visibleCount > 0);
+
+        // Toggle clear filters button
+        const hasFilters = currentCategory !== 'all' || searchQuery.length > 0;
+        if (clearBtn) clearBtn.classList.toggle('hidden', !hasFilters);
+      }
+
+      // Search event
+      searchInput?.addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim().toLowerCase();
+        applyFilters();
+      });
+
+      // Category pill clicks
+      categoryPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          categoryPills.forEach(p => {
+            p.classList.remove('active', 'border-[#FF84BA]', 'bg-[#FF84BA]/15', 'text-[#FF84BA]');
+            p.classList.add('border-[#E0DBD0]', 'dark:border-[#263454]', 'bg-[#FAF8F5]', 'dark:bg-[#161F2E]', 'text-[#6B7A90]', 'dark:text-[#CBD5E1]');
+          });
+          pill.classList.remove('border-[#E0DBD0]', 'dark:border-[#263454]', 'bg-[#FAF8F5]', 'dark:bg-[#161F2E]', 'text-[#6B7A90]', 'dark:text-[#CBD5E1]');
+          pill.classList.add('active', 'border-[#FF84BA]', 'bg-[#FF84BA]/15', 'text-[#FF84BA]');
+
+          currentCategory = pill.getAttribute('data-filter') || 'all';
+          applyFilters();
+        });
+      });
+
+      // GIF On/Off Toggle
+      toggleAnimBtn?.addEventListener('click', () => {
+        isAnimEnabled = !isAnimEnabled;
+        if (animStatusText) animStatusText.textContent = isAnimEnabled ? 'ON' : 'OFF';
+        if (animIndicator) {
+          animIndicator.classList.toggle('bg-[#22C55E]', isAnimEnabled);
+          animIndicator.classList.toggle('bg-[#EF4444]', !isAnimEnabled);
+        }
+
+        // Toggle animation playback on webp images
+        document.querySelectorAll('.pfp-avatar-img').forEach(img => {
+          if (!isAnimEnabled) {
+            img.setAttribute('data-original-src', img.src);
+          } else {
+            const orig = img.getAttribute('data-original-src');
+            if (orig) img.src = orig;
+          }
+        });
+      });
+
+      // Reset / Clear
+      function resetFilters() {
+        currentCategory = 'all';
+        searchQuery = '';
+        if (searchInput) searchInput.value = '';
+        categoryPills.forEach((p, idx) => {
+          if (idx === 0) {
+            p.classList.add('active', 'border-[#FF84BA]', 'bg-[#FF84BA]/15', 'text-[#FF84BA]');
+          } else {
+            p.classList.remove('active', 'border-[#FF84BA]', 'bg-[#FF84BA]/15', 'text-[#FF84BA]');
+          }
+        });
+        applyFilters();
+      }
+
+      clearBtn?.addEventListener('click', resetFilters);
+      emptyResetBtn?.addEventListener('click', resetFilters);
+
+      // Download PFP Handler
+      document.querySelectorAll('.pfp-download-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const url = btn.getAttribute('data-url');
+          const filename = btn.getAttribute('data-filename') || 'discord-pfp.png';
+          if (!url) return;
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        });
+      });
+
+      // Customize in Studio Handler (Opens modal in PFP mode)
+      document.querySelectorAll('.pfp-customize-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const card = btn.closest('.pfp-card');
+          if (!card) return;
+
+          const modal = document.getElementById('asset-customizer-modal');
+          if (!modal) return;
+
+          // Dispatch event or trigger open
+          const presetId = btn.getAttribute('data-preset-id');
+          window.dispatchEvent(new CustomEvent('open-asset-customizer', {
+            detail: {
+              presetId: presetId,
+              mode: 'avatar'
+            }
+          }));
+        });
+      });
+
+    });
+  </script>
+</Layout>

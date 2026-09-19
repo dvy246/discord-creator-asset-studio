@@ -1,0 +1,259 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import { generateBreadcrumbSchema } from '../../utils/seo';
+import { BLOG_POSTS } from '../../data/blog-posts';
+
+const pageTitle = "Discord Guides & Tutorials — Asset Studio Blog";
+const pageDescription = "Authoritative guides for Discord creators. Master stickers, 960x540 banners, anime PFPs, spoiler images, and server boost rules with verified specs.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/blog/";
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Blog", url: pageUrl }
+]);
+
+const collectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": pageTitle,
+  "description": pageDescription,
+  "url": pageUrl,
+  "inLanguage": "en",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/",
+    "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+  }
+};
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-4 font-mono">
+      <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+      <span>/</span>
+      <span class="text-[#192538] dark:text-white font-semibold">Blog & Guides</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="mb-12">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4 shadow-xs">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        Knowledge Base & Tutorials
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-4">
+        Discord Creator <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Guides & Specs</span><SketchUnderline color="#66A3BF" /></span>
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-base sm:text-lg leading-relaxed max-w-3xl">
+        Guides, design ideas, and exact Discord dimensions. Learn how to format stickers, fit 16:9 banners, keep avatars centered in the circle crop, and avoid upload errors.
+      </p>
+    </div>
+
+    <!-- Blog Header Navbar -->
+    <nav aria-label="Blog Topics & Reference Guides" class="mb-10 p-2 sm:p-2.5 rounded-2xl bg-[#FAF8F5]/80 dark:bg-[#161F2E]/80 border border-[#E0DBD0] dark:border-[#263346] shadow-xs flex flex-wrap items-center justify-between gap-3">
+      <!-- Category Filter Tabs -->
+      <div class="flex flex-wrap items-center gap-1.5" id="blog-filter-tabs" role="tablist" aria-label="Article categories">
+        <button
+          type="button"
+          role="tab"
+          aria-selected="true"
+          data-category="all"
+          class="blog-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 bg-[#3368A0] text-white shadow-xs cursor-pointer"
+        >
+          All Articles <span class="ml-1 opacity-80 text-[11px] font-mono">({BLOG_POSTS.length})</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-category="Tutorials"
+          class="blog-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:bg-white dark:hover:bg-[#1E2738] border border-transparent hover:border-[#E0DBD0] dark:hover:border-[#263346] cursor-pointer"
+        >
+          Tutorials
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-category="Design & Inspiration"
+          class="blog-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:bg-white dark:hover:bg-[#1E2738] border border-transparent hover:border-[#E0DBD0] dark:hover:border-[#263346] cursor-pointer"
+        >
+          Design & Inspiration
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          data-category="Specifications & Guides"
+          class="blog-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:bg-white dark:hover:bg-[#1E2738] border border-transparent hover:border-[#E0DBD0] dark:hover:border-[#263346] cursor-pointer"
+        >
+          Specifications
+        </button>
+      </div>
+
+      <!-- Quick Reference Guides -->
+      <div class="flex items-center gap-1.5 text-xs">
+        <a
+          href="/guides/discord-sizes/"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#1A2332] text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:border-[#3368A0]/40 transition-colors font-medium shadow-2xs"
+        >
+          <span>📋</span> Size Cheat Sheet
+        </a>
+        <a
+          href="/guides/discord-gif-guide/"
+          class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#1A2332] text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:border-[#3368A0]/40 transition-colors font-medium shadow-2xs"
+        >
+          <span>✨</span> GIF Guide
+        </a>
+      </div>
+    </nav>
+
+    <!-- Article Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16" id="articles-container">
+      {BLOG_POSTS.map((post) => (
+        <article 
+          class="blog-post-card card-panel rounded-[16px] p-6 sm:p-8 flex flex-col justify-between hover:border-[#3368A0]/60 dark:hover:border-[#66A3BF]/60 transition-all duration-200 group shadow-sm"
+          data-category={post.category}
+        >
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-4 text-xs font-mono">
+              <span class="px-2.5 py-1 rounded-md bg-[#3368A0]/10 dark:bg-[#66A3BF]/10 text-[#3368A0] dark:text-[#66A3BF] font-semibold">
+                {post.category}
+              </span>
+              <span class="text-[#6B7A90] dark:text-[#8494A7] flex items-center gap-1">
+                ⏱ {post.readTime}
+              </span>
+            </div>
+
+            <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors mb-3 leading-snug">
+              <a href={`/blog/${post.slug}/`} class="focus:outline-hidden">
+                {post.title}
+              </a>
+            </h2>
+
+            <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-6">
+              {post.summary}
+            </p>
+
+            <!-- Keyword Tags -->
+            <div class="flex flex-wrap gap-1.5 mb-6">
+              {post.secondaryKeywords.slice(0, 3).map((kw) => (
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#6B7A90] dark:text-[#8494A7]">
+                  #{kw}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-[#E0DBD0] dark:border-[#263346] flex items-center justify-between">
+            <div class="text-xs text-[#6B7A90] dark:text-[#8494A7]">
+              By <span class="font-semibold text-[#192538] dark:text-white">{post.author.name}</span>
+            </div>
+            <a
+              href={`/blog/${post.slug}/`}
+              class="inline-flex items-center gap-1 text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] group-hover:translate-x-0.5 transition-transform"
+            >
+              Read Guide <span>&rarr;</span>
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Empty state message if filter yields no cards -->
+    <div id="no-articles-found" class="hidden text-center py-12 px-4 rounded-2xl bg-white/50 dark:bg-[#161F2E]/50 border border-dashed border-[#E0DBD0] dark:border-[#263346] mb-16">
+      <p class="text-sm text-[#6B7A90] dark:text-[#8494A7] mb-3">No articles match the selected category.</p>
+      <button type="button" id="reset-filter-btn" class="btn-primary text-xs px-4 py-2 rounded-lg cursor-pointer">
+        View All Articles
+      </button>
+    </div>
+
+    <script is:inline>
+      (function() {
+        const tabButtons = document.querySelectorAll('.blog-tab-btn');
+        const postCards = document.querySelectorAll('.blog-post-card');
+        const noResults = document.getElementById('no-articles-found');
+        const resetBtn = document.getElementById('reset-filter-btn');
+
+        function filterCategory(category) {
+          let visibleCount = 0;
+          postCards.forEach(card => {
+            const cardCat = card.getAttribute('data-category');
+            if (category === 'all' || cardCat === category || (category === 'Specifications & Guides' && (cardCat === 'Specifications' || cardCat === 'Specifications & Guides'))) {
+              card.style.display = 'flex';
+              visibleCount++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+
+          if (noResults) {
+            noResults.classList.toggle('hidden', visibleCount > 0);
+          }
+
+          tabButtons.forEach(btn => {
+            const btnCat = btn.getAttribute('data-category');
+            const isActive = (btnCat === category);
+            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            if (isActive) {
+              btn.className = 'blog-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 bg-[#3368A0] text-white shadow-xs cursor-pointer';
+            } else {
+              btn.className = 'blog-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:bg-white dark:hover:bg-[#1E2738] border border-transparent hover:border-[#E0DBD0] dark:hover:border-[#263346] cursor-pointer';
+            }
+          });
+        }
+
+        tabButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const cat = btn.getAttribute('data-category') || 'all';
+            filterCategory(cat);
+            if (cat === 'all') {
+              if (window.location.hash) history.replaceState(null, '', window.location.pathname);
+            } else if (cat === 'Tutorials') {
+              history.replaceState(null, '', '#tutorials');
+            } else if (cat === 'Design & Inspiration') {
+              history.replaceState(null, '', '#design');
+            } else if (cat === 'Specifications & Guides') {
+              history.replaceState(null, '', '#specs');
+            }
+          });
+        });
+
+        if (resetBtn) {
+          resetBtn.addEventListener('click', () => filterCategory('all'));
+        }
+
+        const hash = window.location.hash.toLowerCase();
+        if (hash === '#tutorials') filterCategory('Tutorials');
+        else if (hash === '#design') filterCategory('Design & Inspiration');
+        else if (hash === '#specs') filterCategory('Specifications & Guides');
+      })();
+    </script>
+
+    <!-- Hub CTA: Link to Studio Tools -->
+    <section class="card-panel p-8 sm:p-10 rounded-[18px] border border-[#E0DBD0] dark:border-[#263346] text-center bg-[#FAF8F5] dark:bg-[#1B2330]">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold mb-3">
+        <span>⚡</span> 100% In-Browser Studio Tools
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white mb-3">
+        Ready to resize and validate your Discord assets?
+      </h2>
+      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-xl mx-auto mb-6">
+        Crop and test your artwork right in your browser. No files are uploaded to any server, and everything stays sharp and private.
+      </p>
+      <div class="flex flex-wrap justify-center items-center gap-3">
+        <a href="/tools/banner/" class="btn-primary text-xs px-4 py-2.5 rounded-[8px]">Banner Studio (960×540)</a>
+        <a href="/tools/emoji/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Emoji Studio (128×128)</a>
+        <a href="/tools/avatar/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Avatar Studio (512×512)</a>
+        <a href="/tools/sticker/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Sticker Studio (320×320)</a>
+        <a href="/tools/role-icon/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Role Icon Studio (64×64)</a>
+      </div>
+    </section>
+  </div>
+</Layout>

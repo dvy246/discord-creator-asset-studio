@@ -1,0 +1,146 @@
+---
+/**
+ * LanguagePicker.astro — accessible, zero-JS language dropdown for the header.
+ *
+ * - Uses <details>/<summary> so it works without JavaScript (and is crawler-safe).
+ * - Smart routing: links to the ES/EN equivalent of the CURRENT page when a
+ *   translation exists; falls back to the locale homepage otherwise.
+ * - Emits plain <a> links (no hreflang attributes) so it never conflicts with
+ *   the site's canonical hreflang alternate tags or the SEO regression tests.
+ */
+interface Props {
+  lang?: string;
+  variant?: 'desktop' | 'mobile';
+}
+
+const { lang = 'en', variant = 'desktop' } = Astro.props;
+
+// Routes that have a Spanish translation (kept in sync with SEOHead SPANISH_ROUTES)
+const ES_ROUTES = new Set([
+  '/',
+  '/guides/discord-sizes',
+  '/tools/emoji',
+  '/tools/sticker',
+  '/tools/banner',
+  '/tools/avatar',
+  '/tools/role-icon'
+]);
+
+const rawPath = Astro.url.pathname;
+// Strip trailing slash (but keep root) and strip the /es prefix
+const normalizedPath = (rawPath.replace(/\/$/, '') || '/').replace(/^\/es(?=\/|$)/, '') || '/';
+const basePath = normalizedPath === '' ? '/' : normalizedPath;
+
+// Where should each language option point for THIS page?
+const enHref = `${basePath === '/' ? '' : basePath}/`;
+const esHref = ES_ROUTES.has(basePath)
+  ? `/es${basePath === '/' ? '' : basePath}/`
+  : '/es/';
+
+const LANGUAGES = [
+  { code: 'en', label: 'English', flag: '🇬🇧', href: enHref },
+  { code: 'es', label: 'Español', flag: '🇪🇸', href: esHref }
+];
+
+const current = LANGUAGES.find((l) => l.code === lang) ?? LANGUAGES[0];
+---
+
+{variant === 'desktop' && (
+  <details class="relative group" id="language-picker">
+    <summary
+      class="header-nav-btn list-none px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 font-mono cursor-pointer select-none flex items-center gap-1.5"
+      aria-label="Change language / Cambiar idioma"
+      aria-haspopup="true"
+    >
+      <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"></path>
+      </svg>
+      <span class="uppercase">{current.code}</span>
+      <svg class="w-3 h-3 opacity-60 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </summary>
+    <div
+      class="absolute right-0 top-[calc(100%+6px)] z-50 min-w-[190px] rounded-[12px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] shadow-xl shadow-[rgba(0,0,0,0.08)] dark:shadow-[rgba(0,0,0,0.4)] overflow-hidden"
+      role="menu"
+      aria-label="Language options"
+    >
+      <span class="block px-3 pt-2.5 pb-1 text-[10px] font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] font-mono">
+        {lang === 'es' ? 'Idioma' : 'Language'}
+      </span>
+      {LANGUAGES.map((l) => (
+        <a
+          href={l.href}
+          role="menuitem"
+          aria-current={l.code === lang ? 'true' : undefined}
+          class:list={[
+            'flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold transition-colors',
+            l.code === lang
+              ? 'bg-[#C8DFDB]/40 dark:bg-[#202E42]/60 text-[#3368A0] dark:text-[#66A3BF]'
+              : 'text-[#475569] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1B2330] hover:text-[#192538] dark:hover:text-white'
+          ]}
+        >
+          <span class="text-base leading-none" aria-hidden="true">{l.flag}</span>
+          <span class="flex-1">{l.label}</span>
+          {l.code === lang && (
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m5 13 4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          )}
+        </a>
+      ))}
+      {!ES_ROUTES.has(basePath) && (
+        <span class="block px-3 pb-2.5 pt-1 text-[10px] text-[#6B7A90] dark:text-[#8494A7] border-t border-[#E0DBD0]/60 dark:border-[#263346]/60">
+          {lang === 'es'
+            ? 'Esta página aún no tiene versión en español — te llevamos a la portada en español.'
+            : "This page isn't translated yet — taking you to the Spanish homepage."}
+        </span>
+      )}
+    </div>
+  </details>
+)}
+
+{variant === 'mobile' && (
+  <div class="pt-3 pb-1 border-t border-[#E0DBD0]/70 dark:border-[#263346] mt-3">
+    <span class="block px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7]">
+      {lang === 'es' ? 'Idioma / Language' : 'Language / Idioma'}
+    </span>
+    <div class="grid grid-cols-2 gap-1.5 px-1 mt-1.5">
+      {LANGUAGES.map((l) => (
+        <a
+          href={l.href}
+          aria-current={l.code === lang ? 'true' : undefined}
+          class:list={[
+            'flex items-center gap-2 p-2 rounded-lg text-xs font-semibold transition-colors',
+            l.code === lang
+              ? 'bg-[#C8DFDB]/40 dark:bg-[#202E42]/60 text-[#3368A0] dark:text-[#66A3BF] border border-[#66A3BF]/30'
+              : 'hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8]'
+          ]}
+        >
+          <span aria-hidden="true">{l.flag}</span>
+          <span>{l.label}</span>
+          {l.code === lang && <span class="ml-auto text-[#0D9488]" aria-hidden="true">✓</span>}
+        </a>
+      ))}
+    </div>
+  </div>
+)}
+
+<script is:inline>
+  // Close any open language dropdown when clicking outside of it
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('details#language-picker[open]').forEach(function (d) {
+      if (!d.contains(e.target)) d.removeAttribute('open');
+    });
+  });
+  // Close dropdown on Escape
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('details#language-picker[open]').forEach(function (d) {
+        d.removeAttribute('open');
+      });
+    }
+  });
+</script>
+

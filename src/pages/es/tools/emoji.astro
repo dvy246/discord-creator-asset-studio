@@ -1,0 +1,136 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Creador de Emojis Discord | Comprimir a 256 KiB";
+const pageDescription = "Creador de emojis Discord: redimensiona y comprime a 128×128 px por debajo de 256 KiB con vista previa de chat 32×32. 100% en tu navegador, sin subidas.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/emoji/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/emoji/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Creador y Validador de Emojis para Discord",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Estudio de Emojis", url: pageUrl }
+]);
+
+const faqItems = [
+  {
+    q: "¿Por qué Discord rechaza emojis que miden menos de 256 KB en mi ordenador?",
+    a: "Discord impone un límite binario estricto de 256 KiB, exactamente 262.144 bytes. Los sistemas operativos muestran tamaños en unidades decimales (1 KB = 1.000 bytes). Una imagen que aparece como 256 KB en tu gestor de archivos puede contener 262.500 bytes y superar el techo binario de Discord. Nuestra herramienta mide el recuento exacto de bytes antes de exportar."
+  },
+  {
+    q: "¿Cuál es el tamaño oficial de emoji de Discord?",
+    a: "El tamaño oficial es 128×128 píxeles (relación 1:1) con un máximo de 256 KiB. Aunque el chat renderiza emojis a 32×32, crear a 128×128 garantiza nitidez en pantallas Retina 2x y 3x."
+  },
+  {
+    q: "¿Qué formatos acepta Discord para emojis estáticos y animados?",
+    a: "Los emojis estáticos aceptan PNG, JPEG y WebP. Los emojis animados requieren el formato GIF y deben permanecer bajo el mismo límite de 256 KiB."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/emoji.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Estudio de Emojis</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Creador de Emojis Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Formatea emojis personalizados a <strong>128×128 píxeles</strong> por debajo de <strong>256 KiB</strong>, con vista previa de chat en vivo a 32×32. Todo el procesamiento ocurre localmente en tu navegador.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Tamaño</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">128×128 px</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Límite</p>
+        <p class="text-sm font-bold text-[#0D9488]">256 KiB</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Vista previa</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">32×32 chat</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Formatos</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">PNG GIF WebP</p>
+      </div>
+    </div>
+
+    <div class="rounded-[16px] border-2 border-[#3368A0]/30 dark:border-[#66A3BF]/30 bg-gradient-to-br from-[#FAF8F5] to-[#C8DFDB]/20 dark:from-[#141A24] dark:to-[#202E42]/50 p-6 sm:p-8 text-center mb-8">
+      <span class="inline-block px-3 py-1 rounded-full bg-[#0D9488]/15 text-[#0D9488] font-bold text-xs font-mono mb-3">HERRAMIENTA INTERACTIVA</span>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-[#192538] dark:text-white mb-2">Abrir el Estudio de Emojis</h2>
+      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-lg mx-auto mb-5">
+        La herramienta interactiva completa (recorte, compresión y vista previa de chat en vivo) está disponible en el estudio principal.
+      </p>
+      <a href={enUrl} class="btn-primary inline-block text-xs px-6 py-3 rounded-[10px] font-semibold shadow-sm">
+        Abrir Herramienta de Emojis →
+      </a>
+      <p class="text-[11px] text-[#6B7A90] mt-3">La herramienta funciona igual en todos los idiomas — tus archivos nunca salen de tu dispositivo.</p>
+    </div>
+
+    
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">El Límite Binario de 256 KiB</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          El fallo más común al subir emojis es la discrepancia entre la medición decimal del sistema operativo y la asignación binaria de Discord. macOS y Windows calculan 1 KB = 1.000 bytes; Discord aplica el estándar IEC donde 1 KiB = 1.024 bytes, con un techo duro de 262.144 bytes. Un archivo mostrado como "256 KB" puede registrar 262.800 bytes en disco y ser rechazado.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Reducción a 32px y Legibilidad</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          El chat renderiza emojis a 32×32 píxeles CSS. Al reducir de 128px a 32px, el 75% de la cuadrícula se interpola. Para máximo impacto, usa siluetas audaces, expresiones exageradas y bloques de color sólidos con un trazo mínimo de 2 píxeles a escala de creación de 128px.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>
+

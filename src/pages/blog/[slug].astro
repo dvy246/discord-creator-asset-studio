@@ -1,0 +1,356 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import { generateBreadcrumbSchema, generateBlogPostingSchema } from '../../utils/seo';
+import { BLOG_POSTS, type BlogPost } from '../../data/blog-posts';
+
+export function getStaticPaths() {
+  return BLOG_POSTS.map((post) => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
+}
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const pageUrl = `https://discord-creator-asset-studio.pages.dev/blog/${post.slug}/`;
+
+// Map each blog post to its branded per-page OG image
+const ogImageMap: Record<string, string> = {
+  'how-to-make-discord-stickers': 'https://discord-creator-asset-studio.pages.dev/og/blog-stickers.png',
+  'discord-banner-ideas-templates': 'https://discord-creator-asset-studio.pages.dev/og/blog-banners.png',
+  'discord-pfp-ideas-anime-avatars': 'https://discord-creator-asset-studio.pages.dev/og/blog-pfp.png',
+  'how-to-put-spoiler-on-discord-image': 'https://discord-creator-asset-studio.pages.dev/og/blog-spoiler.png',
+  'how-to-change-discord-server-banner': 'https://discord-creator-asset-studio.pages.dev/og/blog-server-banner.png'
+};
+const pageOgImage = ogImageMap[post.slug];
+
+const techArticleSchema = JSON.parse(generateBlogPostingSchema(post));
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Blog", url: "https://discord-creator-asset-studio.pages.dev/blog/" },
+  { name: post.title, url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": post.faqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+};
+
+const otherPosts = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
+---
+
+<Layout title={post.title} description={post.metaDescription} ogImage={pageOgImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <!-- Breadcrumbs -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-4 font-mono">
+      <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+      <span>/</span>
+      <a href="/blog/" class="hover:text-[#3368A0] transition-colors">Blog</a>
+      <span>/</span>
+      <span class="text-[#192538] dark:text-white font-semibold truncate max-w-[200px] sm:max-w-md">{post.title}</span>
+    </nav>
+
+    <!-- Blog Header Navbar -->
+    <nav aria-label="Blog Topics & Navigation" class="flex flex-wrap items-center justify-between gap-2.5 mb-8 p-2 sm:p-2.5 rounded-xl bg-[#FAF8F5]/90 dark:bg-[#161F2E]/90 border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium backdrop-blur-xs shadow-2xs">
+      <div class="flex flex-wrap items-center gap-1.5">
+        <a 
+          href="/blog/" 
+          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[#3368A0] dark:text-[#66A3BF] hover:bg-white dark:hover:bg-[#1E2738] font-bold border border-[#3368A0]/20 transition-all"
+        >
+          <span>←</span> Blog Hub
+        </a>
+        <span class="h-4 w-px bg-[#E0DBD0] dark:bg-[#263346] hidden sm:inline-block"></span>
+        <a 
+          href="/blog/#tutorials" 
+          class={`px-2.5 py-1.5 rounded-lg transition-colors ${post.category === 'Tutorials' ? 'bg-[#3368A0] text-white font-semibold shadow-2xs' : 'text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:bg-white dark:hover:bg-[#1E2738]'}`}
+        >
+          Tutorials
+        </a>
+        <a 
+          href="/blog/#design" 
+          class={`px-2.5 py-1.5 rounded-lg transition-colors ${post.category === 'Design & Inspiration' ? 'bg-[#3368A0] text-white font-semibold shadow-2xs' : 'text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:bg-white dark:hover:bg-[#1E2738]'}`}
+        >
+          Design & Inspiration
+        </a>
+        <a 
+          href="/blog/#specs" 
+          class={`px-2.5 py-1.5 rounded-lg transition-colors ${post.category === 'Specifications & Guides' ? 'bg-[#3368A0] text-white font-semibold shadow-2xs' : 'text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:bg-white dark:hover:bg-[#1E2738]'}`}
+        >
+          Specifications
+        </a>
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <a 
+          href="/guides/discord-sizes/" 
+          class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] transition-colors"
+        >
+          <span>📋</span> Size Guide
+        </a>
+        <a 
+          href="/guides/discord-gif-guide/" 
+          class="hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] transition-colors"
+        >
+          <span>✨</span> GIF Guide
+        </a>
+      </div>
+    </nav>
+
+    <!-- Header Meta & Title -->
+    <header class="mb-10 max-w-4xl">
+      <div class="flex flex-wrap items-center gap-3 text-xs font-mono mb-4">
+        <span class="px-2.5 py-1 rounded-md bg-[#3368A0]/10 dark:bg-[#66A3BF]/10 text-[#3368A0] dark:text-[#66A3BF] font-semibold">
+          {post.category}
+        </span>
+        <span class="text-[#6B7A90] dark:text-[#8494A7]">⏱ {post.readTime}</span>
+        <span class="text-[#6B7A90] dark:text-[#8494A7]">•</span>
+        <span class="text-[#6B7A90] dark:text-[#8494A7]">Updated {post.dateModified.split('T')[0]}</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-[#192538] dark:text-white tracking-tight leading-[1.15] mb-4">
+        {post.title}
+      </h1>
+
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-base sm:text-lg leading-relaxed">
+        {post.summary}
+      </p>
+
+      <!-- Author Trust Badge (E-E-A-T) -->
+      <div class="mt-6 flex items-center gap-3 pt-6 border-t border-[#E0DBD0] dark:border-[#263346]">
+        <div class="w-10 h-10 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-bold text-sm font-mono border border-[#66A3BF]/30">
+          AS
+        </div>
+        <div class="text-xs">
+          <div class="font-bold text-[#192538] dark:text-white">{post.author.name}</div>
+          <div class="text-[#6B7A90] dark:text-[#8494A7]">{post.author.role}</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Layout Grid (Sidebar TOC + Main Content) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      
+      <!-- Left Column: Table of Contents & Quick Tool Link (4 cols) -->
+      <aside class="lg:col-span-4 lg:sticky lg:top-24 space-y-6 order-2 lg:order-1">
+        
+        <!-- Table of Contents -->
+        <div class="card-panel rounded-[14px] p-5 shadow-xs">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-[#192538] dark:text-white font-mono mb-3 pb-2 border-b border-[#E0DBD0] dark:border-[#263346]">
+            Table of Contents
+          </h2>
+          <nav class="space-y-2 text-xs font-sans">
+            {post.sections.map((section, idx) => (
+              <a
+                href={`#${section.id}`}
+                class="block text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors leading-relaxed py-1"
+              >
+                {section.heading}
+              </a>
+            ))}
+            <a
+              href="#frequently-asked-questions"
+              class="block text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors leading-relaxed py-1"
+            >
+              Frequently Asked Questions
+            </a>
+          </nav>
+        </div>
+
+        <!-- Sticky Tool Mini-CTA -->
+        <div class="card-panel rounded-[14px] p-5 bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+          <span class="text-[10px] font-mono uppercase font-bold text-[#0D9488] block mb-1">
+            {post.toolCta.badge}
+          </span>
+          <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">
+            {post.toolCta.headline}
+          </h3>
+          <p class="text-xs text-[#475569] dark:text-[#CBD5E1] mb-4 leading-relaxed">
+            {post.toolCta.description}
+          </p>
+          <a
+            href={post.toolCta.href}
+            class="btn-primary text-xs w-full py-2.5 rounded-[8px] text-center block font-semibold"
+          >
+            {post.toolCta.buttonText} &rarr;
+          </a>
+        </div>
+      </aside>
+
+      <!-- Right Column: Main Editorial Body (8 cols) -->
+      <main class="lg:col-span-8 space-y-10 order-1 lg:order-2">
+        {post.sections.map((section) => (
+          <section id={section.id} class="card-panel rounded-[16px] p-6 sm:p-8 space-y-5">
+            <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white tracking-tight border-b border-[#E0DBD0] dark:border-[#263346] pb-3">
+              {section.heading}
+            </h2>
+
+            <!-- Section Content with Markdown-style paragraphs -->
+            <div class="prose dark:prose-invert max-w-none text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed space-y-4">
+              {section.content.split('\n\n').map((para) => {
+                if (para.startsWith('### ')) {
+                  return <h3 class="text-base sm:text-lg font-bold text-[#192538] dark:text-white pt-2">{para.replace('### ', '')}</h3>;
+                }
+                if (para.startsWith('- ')) {
+                  return (
+                    <ul class="list-disc pl-5 space-y-1.5 my-2">
+                      {para.split('\n').map((item) => (
+                        <li set:html={item.replace(/^- /, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`([^`]+)`/g, '<code class="font-mono text-xs bg-[#FAF8F5] dark:bg-[#1B2330] px-1.5 py-0.5 rounded border border-[#E0DBD0] dark:border-[#263346]">$1</code>')} />
+                      ))}
+                    </ul>
+                  );
+                }
+                if (para.match(/^\d+\. /)) {
+                  return (
+                    <ol class="list-decimal pl-5 space-y-2 my-2">
+                      {para.split('\n').map((item) => (
+                        <li set:html={item.replace(/^\d+\.\s*/, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`([^`]+)`/g, '<code class="font-mono text-xs bg-[#FAF8F5] dark:bg-[#1B2330] px-1.5 py-0.5 rounded border border-[#E0DBD0] dark:border-[#263346]">$1</code>')} />
+                      ))}
+                    </ol>
+                  );
+                }
+                return <p set:html={para.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`([^`]+)`/g, '<code class="font-mono text-xs bg-[#FAF8F5] dark:bg-[#1B2330] px-1.5 py-0.5 rounded border border-[#E0DBD0] dark:border-[#263346]">$1</code>')} />;
+              })}
+            </div>
+
+            <!-- Callout Box -->
+            {section.callout && (
+              <div class={`p-4 sm:p-5 rounded-[12px] border text-xs sm:text-sm leading-relaxed ${
+                section.callout.type === 'warning'
+                  ? 'bg-amber-500/10 border-amber-500/30 text-amber-900 dark:text-amber-200'
+                  : section.callout.type === 'tip'
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-900 dark:text-emerald-200'
+                  : 'bg-[#3368A0]/10 border-[#3368A0]/30 text-[#192538] dark:text-[#CBD5E1]'
+              }`}>
+                <div class="font-bold mb-1 flex items-center gap-1.5 font-mono uppercase tracking-wider text-xs">
+                  {section.callout.type === 'warning' && '⚠️ Warning:'}
+                  {section.callout.type === 'tip' && '💡 Pro Tip:'}
+                  {section.callout.type === 'info' && 'ℹ️ Note:'}
+                  <span>{section.callout.title}</span>
+                </div>
+                <p>{section.callout.text}</p>
+              </div>
+            )}
+
+            <!-- Data Table -->
+            {section.table && (
+              <div class="overflow-x-auto rounded-[12px] border border-[#E0DBD0] dark:border-[#263346] my-4">
+                <table class="w-full text-left text-xs sm:text-sm">
+                  <thead class="bg-[#FAF8F5] dark:bg-[#1B2330] uppercase text-[11px] font-bold text-[#192538] dark:text-[#CBD5E1] border-b border-[#E0DBD0] dark:border-[#263346]">
+                    <tr>
+                      {section.table.headers.map((h) => (
+                        <th class="py-3 px-4">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-[#E0DBD0] dark:divide-[#263346]">
+                    {section.table.rows.map((row) => (
+                      <tr class="hover:bg-[#FAF8F5]/80 dark:hover:bg-[#1B2330]/50 transition-colors">
+                        {row.map((col, cIdx) => (
+                          <td class={`py-3 px-4 ${cIdx === 0 ? 'font-bold text-[#192538] dark:text-white' : 'text-[#475569] dark:text-[#CBD5E1]'}`}>
+                            {col}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <!-- Code Snippet -->
+            {section.code && (
+              <div class="rounded-[12px] bg-[#141A24] border border-[#263346] p-4 text-xs font-mono text-[#F0F4F8] my-4 overflow-x-auto">
+                <div class="flex items-center justify-between pb-2 border-b border-[#263346] mb-3 text-[10px] text-[#8494A7] uppercase">
+                  <span>{section.code.language}</span>
+                  {section.code.caption && <span>{section.code.caption}</span>}
+                </div>
+                <pre class="whitespace-pre overflow-x-auto"><code>{section.code.snippet}</code></pre>
+              </div>
+            )}
+          </section>
+        ))}
+
+        <!-- In-Article Ad: below content fold, CLS-guarded -->
+        
+        <!-- Inline Tool Conversion Banner -->
+        <div class="card-panel rounded-[16px] p-8 border-2 border-[#3368A0]/30 dark:border-[#66A3BF]/30 bg-gradient-to-br from-[#FAF8F5] to-[#C8DFDB]/20 dark:from-[#141A24] dark:to-[#202E42]/50 text-center">
+          <span class="inline-block px-3 py-1 rounded-full bg-[#0D9488]/15 text-[#0D9488] font-bold text-xs font-mono mb-3">
+            {post.toolCta.badge}
+          </span>
+          <h2 class="text-2xl font-extrabold text-[#192538] dark:text-white mb-2">
+            {post.toolCta.headline}
+          </h2>
+          <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-lg mx-auto mb-6">
+            {post.toolCta.description}
+          </p>
+          <a href={post.toolCta.href} class="btn-primary text-xs px-6 py-3 rounded-[10px] font-semibold inline-block shadow-sm">
+            {post.toolCta.buttonText} &rarr;
+          </a>
+        </div>
+
+        <!-- FAQ Section -->
+        <section id="frequently-asked-questions" class="card-panel rounded-[16px] p-6 sm:p-8 space-y-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white border-b border-[#E0DBD0] dark:border-[#263346] pb-3">
+            Frequently Asked Questions
+          </h2>
+          <div class="space-y-4">
+            {post.faqs.map((faq) => (
+              <div class="p-4 sm:p-5 rounded-[12px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                <h3 class="text-sm sm:text-base font-bold text-[#192538] dark:text-white mb-2">
+                  {faq.question}
+                </h3>
+                <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+                  {faq.answer}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Related Guides -->
+        <section class="card-panel rounded-[16px] p-6 sm:p-8">
+          <h2 class="text-base font-bold text-[#192538] dark:text-white uppercase font-mono tracking-wider mb-4">
+            Related Discord Guides & Specs
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {otherPosts.map((op) => (
+              <a
+                href={`/blog/${op.slug}/`}
+                class="p-4 rounded-[12px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] dark:hover:border-[#66A3BF] transition-all flex flex-col justify-between group"
+              >
+                <div>
+                  <span class="text-[10px] font-mono text-[#3368A0] dark:text-[#66A3BF] font-semibold block mb-1">
+                    {op.category}
+                  </span>
+                  <div class="text-xs font-bold text-[#192538] dark:text-white group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors leading-snug mb-2">
+                    {op.title}
+                  </div>
+                </div>
+                <span class="text-[11px] font-semibold text-[#6B7A90] dark:text-[#8494A7] flex items-center gap-1 mt-2">
+                  Read &rarr;
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</Layout>

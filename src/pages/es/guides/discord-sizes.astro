@@ -11,6 +11,7 @@ const techArticleSchema = {
   "@type": "TechArticle",
   "headline": pageTitle,
   "description": pageDescription,
+  "image": "https://discord-creator-asset-studio.pages.dev/og-image.png",
   "inLanguage": "es",
   "url": "https://discord-creator-asset-studio.pages.dev/es/guides/discord-sizes/",
   "datePublished": "2026-01-01T00:00:00+00:00",
@@ -46,6 +47,18 @@ const breadcrumbJson = generateBreadcrumbSchema([
   <script type="application/ld+json" set:html={breadcrumbJson} />
 
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+    <!-- Breadcrumb & Alternate Language -->
+    <div class="flex items-center justify-between gap-4 mb-6 text-xs font-mono">
+      <nav aria-label="Migas de pan" class="flex items-center gap-2 text-[#6B7A90] dark:text-[#8494A7]">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Guía de Tamaños</span>
+      </nav>
+      <a href="/guides/discord-sizes/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold flex items-center gap-1">
+        🌐 Read in English
+      </a>
+    </div>
+
     <div class="mb-12">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4 shadow-xs">
         <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>

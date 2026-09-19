@@ -24,10 +24,10 @@
 
     <!-- Active Palette Dot Preview (4 dots) -->
     <div id="active-palette-preview" class="flex items-center -space-x-1">
-      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-0 bg-[#3368A0]"></span>
-      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-1 bg-[#66A3BF]"></span>
-      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-2 bg-[#C8DFDB]"></span>
-      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-3 bg-[#F2EFE7]"></span>
+      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-0 bg-[#FF84BA]"></span>
+      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-1 bg-[#FFDF82]"></span>
+      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-2 bg-[#99C2FF]"></span>
+      <span class="w-2.5 h-2.5 rounded-full border border-white/80 shadow-2xs preview-dot-3 bg-[#FFEFE3]"></span>
     </div>
 
     <!-- Dropdown Chevron -->
@@ -352,7 +352,7 @@
     if (!dropdownBtn || !dropdownMenu) return;
 
     function getActivePalette() {
-      return document.documentElement.getAttribute('data-palette') || 'default';
+      return document.documentElement.getAttribute('data-palette') || (localStorage.getItem('site-palette') === 'default' ? 'default' : 'electric');
     }
 
     function updateActiveUI(activePalette: string) {
@@ -373,7 +373,7 @@
       });
 
       // Update the 4 preview dots in trigger button
-      const colors = PALETTE_DEFINITIONS[activePalette] || PALETTE_DEFINITIONS['default'];
+      const colors = PALETTE_DEFINITIONS[activePalette] || PALETTE_DEFINITIONS['electric'];
       const previewDots = document.querySelectorAll('#active-palette-preview span');
       previewDots.forEach((dot, idx) => {
         if (colors[idx]) {
@@ -395,7 +395,7 @@
     function setPalette(paletteId: string) {
       if (paletteId === 'default') {
         document.documentElement.removeAttribute('data-palette');
-        localStorage.removeItem('site-palette');
+        localStorage.setItem('site-palette', 'default');
       } else {
         document.documentElement.setAttribute('data-palette', paletteId);
         localStorage.setItem('site-palette', paletteId);

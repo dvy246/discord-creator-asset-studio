@@ -4,8 +4,8 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
 import SketchCircle from '../../components/SketchCircle.astro';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
 
-const pageTitle = "Discord Emoji Maker & Validator | 256 KiB Resizer";
-const pageDescription = "Resize, validate, and compress Discord custom emojis to 128x128 and under 256 KiB. 100% private in-browser tool with 32x32 chat preview.";
+const pageTitle = "Discord Emoji Maker | Compress to 256KB | Asset Studio";
+const pageDescription = "Resize and compress custom emojis with our Discord emoji maker. Format PNG, GIF, and animated assets under 256 KiB with instant 32x32 chat preview.";
 const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/emoji/";
 
 const appSchema = generateSoftwareApplicationSchema(
@@ -15,7 +15,7 @@ const appSchema = generateSoftwareApplicationSchema(
 );
 
 const breadcrumbSchema = generateBreadcrumbSchema([
-  { name: "Home", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
   { name: "Emoji Studio", url: pageUrl }
 ]);
 
@@ -28,15 +28,15 @@ const faqSchema = {
       "name": "Why does Discord reject custom emojis that measure under 256 KB on desktop?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Discord strictly enforces a binary cap of 256 KiB, which translates to exactly 262,144 bytes. Modern desktop operating systems such as macOS and Windows frequently display file sizes in decimal units where 1 KB equals 1,000 bytes. Consequently, an image that appears as 258 KB or even 256 KB in your desktop file manager may contain 263,000 bytes, surpassing Discord's binary ceiling and causing an immediate upload failure. Discord Asset Studio inspects the raw encoded Blob byte count to guarantee compliance before you upload."
+        "text": "Discord enforces a strict binary limit of 256 KiB, which is exactly 262,144 bytes. Operating systems like Windows and macOS count 1 KB as 1,000 bytes. So an emoji showing as 256 KB on your computer might actually be 263,000 bytes, which Discord rejects. Discord Asset Studio checks the exact byte count so your upload works without errors."
       }
     },
     {
       "@type": "Question",
-      "name": "Why should Discord emojis be authored at 128x128 when chat displays them at 32x32?",
+      "name": "What is the official Discord emoji size, and why author at 128x128 when chat displays 32x32?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Discord serves emojis across multiple contexts: inline in chat messages at 32x32 pixels, inside jumbo emoji messages at 48x48 pixels, within the server emoji picker popup at 40x40 pixels, and on high-density Retina or mobile screens at 2x and 3x device pixel ratios. Uploading a master asset at 128x128 pixels ensures sufficient pixel density for high-resolution screens while allowing Discord's bilinear downsampler to render crisp glyphs at small sizes."
+        "text": "The recommended Discord emoji size is 128x128 pixels with a 256 KiB file limit. While Discord shows inline chat emojis at 32x32 pixels, making them at 128x128 keeps them looking sharp on high-resolution phone screens and desktop monitors. Our Discord emoji resizer scales your image to 128x128 automatically."
       }
     },
     {
@@ -44,7 +44,7 @@ const faqSchema = {
       "name": "How does transparent background handling work for custom emojis?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Transparent emojis must use an 8-bit alpha channel within a 32-bit RGBA PNG format. When exporting emojis with soft feathering or anti-aliased edges, semi-transparent pixels can blend into halo artifacts if exported against a matte color. Discord Asset Studio preserves full 8-bit alpha transparency with clean alpha matting so your emojis look pristine on both dark (#313338) and light (#FFFFFF) Discord themes."
+        "text": "Custom emojis look best when saved as PNG files with transparent backgrounds. If an emoji is saved with a white or gray background box, it will show an ugly square outline in Discord's dark mode. Saving with a clean alpha channel ensures your emoji looks great on both dark (#313338) and light (#FFFFFF) themes."
       }
     },
     {
@@ -52,14 +52,14 @@ const faqSchema = {
       "name": "What image formats can be used for static and animated Discord emojis?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Static custom emojis accept PNG, JPEG, and WebP formats, though PNG is strongly recommended due to its lossless compression and alpha channel support. Animated emojis require the GIF format, must remain under the same 256 KiB binary boundary, and should maintain a consistent frame rate between 20 to 50 frames per second."
+        "text": "Static custom emojis can be PNG, JPG, or WebP. For an animated Discord animated emoji, you must use GIF format under the same 256 KiB limit. When creating Discord gif emojis, keeping your animation to 20–25 FPS and reducing colors helps the file stay under 256 KiB."
       }
     }
   ]
 };
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/emoji.png">
   <!-- Inject Schemas -->
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
@@ -68,15 +68,15 @@ const faqSchema = {
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <!-- Breadcrumb & Header -->
     <div class="mb-8">
-      <div class="flex items-center gap-2 text-xs text-[#6B7A90] mb-2 font-mono">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
         <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
-        <span class="text-[#192538] font-semibold">Emoji Studio</span>
-      </div>
+        <span class="text-[#192538] dark:text-white font-semibold">Emoji Studio</span>
+      </nav>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
-            Discord Emoji <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Studio</span><SketchUnderline color="#66A3BF" /></span>
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Emoji</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
           <p class="text-xs sm:text-sm text-[#475569] mt-1">128×128 authoring canvas • 32×32 live chat preview • Strict 256 KiB binary ceiling</p>
         </div>
@@ -201,6 +201,21 @@ const faqSchema = {
 
           <div id="receiptAlert" class="mt-4 hidden p-3 rounded-[8px] text-xs"></div>
         </div>
+
+        <div class="card-panel rounded-[14px] p-6">
+          <h3 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-2">Technical Guides</h3>
+          <p class="text-xs text-[#475569] leading-relaxed mb-3">
+            Compare emoji limits with stickers and banners, or learn palette quantization techniques for animated GIF emojis.
+          </p>
+          <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-medium">
+            <a href="/guides/discord-sizes/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+              <span>📖</span> Discord Asset Sizes Cheat Sheet
+            </a>
+            <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+              <span>✨</span> Animated Emoji 256 KiB GIF Guide
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -212,15 +227,15 @@ const faqSchema = {
         <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
             <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
-            <span>Emoji Technical Blueprint</span>
+            <span>Emoji Guide</span>
           </div>
 
           <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Engineering <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">flawless</span><SketchUnderline color="#66A3BF" /></span> Discord emojis.
+            Create clean, <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">crisp</span><SketchUnderline color="#66A3BF" /></span> Discord emojis.
           </h2>
 
           <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
-            From 256 KiB binary boundaries to bilinear 32px chat downsampling, custom emojis require precise raster engineering to look crisp across Discord's desktop, mobile, and web applications.
+            From the strict 256 KiB file limit to how emojis look inside 32px chat, here is how to make sure your custom emojis look great on every device.
           </p>
 
           <!-- Step Timeline -->
@@ -230,22 +245,22 @@ const faqSchema = {
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
-              <span class="text-xs sm:text-sm">01 / The 256 KiB Binary Ceiling</span>
+              <span class="text-xs sm:text-sm">01 / The 256 KiB File Cap</span>
             </div>
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
-              <span class="text-xs sm:text-sm">02 / 32px Downsampling & Legibility</span>
+              <span class="text-xs sm:text-sm">02 / 32px Chat Scaling</span>
             </div>
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
-              <span class="text-xs sm:text-sm">03 / Alpha Channels & Clean Edges</span>
+              <span class="text-xs sm:text-sm">03 / Clean Transparent Edges</span>
             </div>
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
-              <span class="text-xs sm:text-sm">04 / Zero-Server Client Isolation</span>
+              <span class="text-xs sm:text-sm">04 / 100% In-Browser Privacy</span>
             </div>
           </div>
         </div>
@@ -257,24 +272,24 @@ const faqSchema = {
           <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
             <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
               <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">SPECIFICATION DOSSIER // 01</span>
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">GUIDE // 01</span>
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">262,144 BYTES MAX</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                The 256 KiB Binary Ceiling vs Decimal Kilobytes
+                The 256 KiB Limit vs Decimal Kilobytes
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                The single most pervasive failure when uploading Discord custom emojis is the discrepancy between decimal file size measurement and binary byte allocation. Standard desktop operating systems (macOS Finder and Windows Explorer) compute file sizes using base-10 mathematics: one decimal kilobyte (KB) equals exactly 1,000 bytes. Discord's media ingestion gateway, however, enforces strict IEC binary boundaries: one kibibyte (KiB) equals 1,024 bytes.
+                The most common reason Discord rejects an emoji is file size math. Operating systems like Windows and macOS calculate file sizes in decimal units: 1 kilobyte (KB) equals 1,000 bytes. Discord, however, counts in binary kibibytes (KiB), where 1 KiB equals 1,024 bytes.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Under this mathematical standard, Discord allows a hard ceiling of 262,144 bytes. An artwork file reporting as "256 KB" in your operating system may actually register as 262,800 bytes on disk. Discord's API validates the raw content length before writing to CDN storage and immediately rejects any file exceeding 262,144 bytes with an unhelpful generic error.
+                That sets Discord's hard ceiling at exactly 262,144 bytes. An image showing as "256 KB" on your desktop might actually contain 262,800 bytes. Discord checks the raw byte length and rejects the file right away. Our studio checks the exact byte count before you export, so you never get that generic upload failure.
               </p>
               <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
                 <div>
-                  <span class="text-[#6B7A90]">Binary Boundary:</span>
+                  <span class="text-[#6B7A90]">Real Upload Ceiling:</span>
                   <span class="text-[#0D9488] font-bold ml-1">262,144 Bytes (256 KiB)</span>
                 </div>
-                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">Strict API Rejection</span>
+                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">Strict API Limit</span>
               </div>
             </div>
           </div>
@@ -283,25 +298,25 @@ const faqSchema = {
           <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
             <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
               <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">DISPLAY OPTICS // 02</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">128px → 32px RESCALE</span>
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">DESIGN TIPS // 02</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">128px → 32px CHAT</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                32px Downsampling Dynamics & Chat Legibility
+                Why 32px Chat Scaling Matters
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                While Discord accepts uploads with resolutions up to 128x128 pixels, inline chat messages render the emoji at exactly 32x32 CSS pixels (and 48x48 pixels when an emoji is sent alone as a "jumbo" emote). When an image shrinks from 128px down to 32px, 75% of its pixel grid is interpolated through bilinear interpolation filters in the client's Chromium rendering thread.
+                You can upload emojis up to 128x128 pixels, but Discord shrinks them to 32x32 pixels in normal chat (and 48x48 pixels when sent as a standalone jumbo emote). When an image shrinks that much, 75% of its pixel grid is condensed by the app's rendering engine. Using a dedicated Discord emoji resizer lets you preview chat readability beforehand.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Subtle micro-gradients, intricate filigree, and thin 1-pixel strokes that appear breathtaking at full scale in Photoshop or Illustrator degenerate into muddy, unreadable gray smudges inside chat streams. To maintain maximum impact, emojis should feature bold silhouette geometry, exaggerated expressions, solid inner color blocks, and a minimum 2-pixel outline stroke at 128px authoring scale.
+                Tiny details, thin 1-pixel outlines, and faint color gradients that look great full-size can easily become blurry smudges in fast chat. Sticking to the standard 128x128 Discord emoji size with bold silhouettes and solid contrast ensures your emotes stay readable and fun.
               </p>
               <div class="grid grid-cols-2 gap-3 text-xs font-mono">
                 <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Inline Chat Scale:</span>
+                  <span class="text-[#6B7A90] block text-[10px]">Inline Chat Size:</span>
                   <span class="font-bold text-[#192538] dark:text-white">32 × 32 px</span>
                 </div>
                 <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Jumbo Message Scale:</span>
+                  <span class="text-[#6B7A90] block text-[10px]">Jumbo Message Size:</span>
                   <span class="font-bold text-[#192538] dark:text-white">48 × 48 px</span>
                 </div>
               </div>
@@ -312,21 +327,21 @@ const faqSchema = {
           <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
             <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
               <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">RASTER ENCODING // 03</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">8-BIT ALPHA CHANNEL</span>
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">CLEAN EDGES // 03</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">TRANSPARENT ALPHA</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Alpha Channel Integrity & Theme Halo Elimination
+                Avoid White Halos on Dark Mode
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Discord users alternate between dark mode (background `#313338`), light mode (background `#FFFFFF`), and Nitro themes (ranging from deep midnight obsidian to pastel gradients). An emoji designed with a solid background box or semi-transparent anti-aliased pixels blended against white will produce an unsightly white halo ring when posted in dark mode chat rooms.
+                Discord users switch between dark mode (#313338), light mode (#FFFFFF), and custom Nitro themes. An emoji created with a solid square background or feathered semi-transparent edges blended against white will produce an unsightly white halo ring when posted in dark mode chats.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Discord Asset Studio uses pure 32-bit RGBA canvas buffers with complete alpha transparency preservation. Our export engine isolates transparent pixel boundaries, prevents color bleeding, and validates edge contrast against both light and dark backgrounds so your emoji stands out cleanly regardless of the recipient's Discord theme settings.
+                Discord Asset Studio preserves full 32-bit RGBA transparency. Our export isolates transparent pixel edges, avoids color bleeding, and lets you preview your emoji against both light and dark backgrounds so it looks crisp wherever it is posted.
               </p>
               <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
                 <span class="text-[#0D9488] font-bold">✓ Dual-Theme Verified:</span>
-                <span>Calibrated for both #313338 Dark and #FFFFFF Light backgrounds.</span>
+                <span>Tested for both #313338 Dark and #FFFFFF Light backgrounds.</span>
               </div>
             </div>
           </div>
@@ -335,23 +350,23 @@ const faqSchema = {
           <div class="sticky-step-wrapper sticky top-36 z-40">
             <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
               <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">SECURITY ARCHITECTURE // 04</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">CLIENT MEMORY ISOLATION</span>
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">PRIVACY FIRST // 04</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">LOCAL BROWSER ONLY</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Zero Cloud Uploads & Sandboxed Memory Processing
+                Zero Cloud Uploads & Total Privacy
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Traditional online converters transmit your original artwork to third-party cloud servers, exposing unreleased community branding, game development assets, and proprietary illustrations to external databases and server logs. Discord Asset Studio eliminates all network transmission risks by executing all transformations entirely inside your client browser.
+                Many online converters send your original artwork to third-party cloud servers. If you are preparing unreleased branding, community emotes, or private illustrations, that introduces unnecessary privacy risks. Discord Asset Studio runs 100% in your local browser memory.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                When you drag artwork into our dropzone, the browser generates an ephemeral `Blob` URL via `URL.createObjectURL(file)`. The file bytes remain strictly inside your device's local RAM. Our canvas engine calculates exact dimensions, scales via high-quality bicubic interpolation, and exports the final PNG without sending a single packet over the network.
+                When you drop an image here, your browser creates a local temporary URL. The file bytes remain on your computer or phone. We calculate dimensions, scale the image, and export the final PNG without sending a single byte across the internet.
               </p>
               <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
-                <span>Zero Telemetry • Zero Server Transmission • GDPR Compliant</span>
+                <span>Zero Cloud Storage • Zero File Tracking • Private by Design</span>
               </div>
             </div>
           </div>

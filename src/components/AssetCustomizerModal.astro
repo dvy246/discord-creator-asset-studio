@@ -1,0 +1,1883 @@
+---
+// AssetCustomizerModal.astro — Interactive Customization Studio for Discord Presets
+---
+
+<div
+  id="asset-customizer-modal"
+  class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="customizer-modal-title"
+>
+  <!-- Modal Card -->
+  <div class="relative w-full max-w-5xl rounded-3xl border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-[#192538] dark:text-[#FFEFE3] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh]">
+    
+    <!-- Header Bar -->
+    <div class="px-5 py-4 border-b border-[#E0DBD0] dark:border-[#263454] bg-white dark:bg-[#141A24] flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-[#FF84BA]/20 text-[#FF84BA] flex items-center justify-center text-lg font-bold">
+          🎨
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 id="customizer-modal-title" class="font-extrabold text-base sm:text-lg tracking-tight">
+              Asset Customization Studio
+            </h2>
+            <span id="modal-category-badge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#FF84BA]/15 text-[#FF84BA] border border-[#FF84BA]/30 uppercase">
+              Preset
+            </span>
+          </div>
+          <p id="modal-preset-subtitle" class="text-xs text-[#6B7A90] dark:text-[#99C2FF] line-clamp-1">
+            Recompose, adjust colors, apply atmospheric motion, and export Discord-ready assets.
+          </p>
+        </div>
+      </div>
+
+      <!-- Close Button -->
+      <button
+        id="modal-close-btn"
+        type="button"
+        class="w-8 h-8 rounded-full flex items-center justify-center text-[#6B7A90] hover:text-[#192538] dark:text-[#8494A7] dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+        aria-label="Close customizer modal"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body: Interactive Viewport + Controls Panel -->
+    <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-y-auto">
+      
+      <!-- Left: Interactive Canvas & Simulator Viewport (7 Cols) -->
+      <div class="lg:col-span-7 p-4 sm:p-6 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-[#E0DBD0] dark:border-[#263454] bg-[#F2EFE7]/50 dark:bg-[#090C16]/50">
+        <div>
+          <!-- View Mode Switcher Tabs -->
+          <div class="flex items-center justify-between gap-2 mb-4">
+            <div class="inline-flex p-1 rounded-xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] text-xs font-semibold shadow-2xs">
+              <button
+                type="button"
+                id="view-tab-banner"
+                class="view-mode-tab active px-3 py-1.5 rounded-lg bg-[#FF84BA] text-black font-bold shadow-xs cursor-pointer transition-all"
+                data-mode="banner"
+              >
+                Banner (16:9)
+              </button>
+              <button
+                type="button"
+                id="view-tab-pfp"
+                class="view-mode-tab px-3 py-1.5 rounded-lg text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white cursor-pointer transition-all"
+                data-mode="pfp"
+              >
+                Avatar (1:1 PFP)
+              </button>
+              <button
+                type="button"
+                id="view-tab-icon"
+                class="view-mode-tab px-3 py-1.5 rounded-lg text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white cursor-pointer transition-all"
+                data-mode="icon"
+              >
+                2D Icon / Role
+              </button>
+              <button
+                type="button"
+                id="view-tab-profile"
+                class="view-mode-tab px-3 py-1.5 rounded-lg text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white cursor-pointer transition-all"
+                data-mode="profile"
+              >
+                Profile Card
+              </button>
+            </div>
+
+            <!-- Safe Zone Toggle -->
+            <label class="flex items-center gap-1.5 text-xs text-[#6B7A90] dark:text-[#99C2FF] cursor-pointer select-none font-medium">
+              <input type="checkbox" id="toggle-safe-zones" checked class="rounded accent-[#FF84BA] cursor-pointer" />
+              <span>Safe Zones</span>
+            </label>
+          </div>
+
+          <!-- Canvas Preview Container -->
+          <div class="relative w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-xl border border-[#E0DBD0] dark:border-[#263454] bg-black flex items-center justify-center select-none" id="preview-viewport-box">
+            
+            <!-- Generative Rendering Stage -->
+            <div
+              id="stage-element"
+              class="w-full h-full relative overflow-hidden transition-all duration-300"
+              style="background: linear-gradient(135deg, #090C16 0%, #FF84BA 100%);"
+            >
+              <!-- High-Resolution Image Artwork Layer -->
+              <img
+                id="stage-bg-image"
+                class="absolute inset-0 w-full h-full object-cover hidden pointer-events-none transition-transform duration-300 z-0"
+                alt="Stage artwork backdrop"
+              />
+
+              <!-- Animated Atmospheric Layer -->
+              <div id="stage-motion-layer" class="absolute inset-0 pointer-events-none z-1">
+                <!-- Procedural canvas for particles & light -->
+                <canvas id="motion-particle-canvas" class="w-full h-full absolute inset-0"></canvas>
+              </div>
+
+              <!-- Main Subject Icon / Graphic -->
+              <div id="stage-subject-wrapper" class="absolute inset-0 flex items-center justify-center p-6 transition-transform">
+                <span id="stage-icon" class="text-6xl sm:text-7xl filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.7)] transition-transform">
+                  ✨
+                </span>
+              </div>
+
+              <!-- Custom Text Overlay Layer -->
+              <div id="stage-text-overlay" class="absolute inset-0 flex items-center justify-center pointer-events-none p-4 text-center">
+                <span
+                  id="stage-custom-text"
+                  class="font-black tracking-widest uppercase text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] opacity-0 transition-opacity"
+                  style="text-shadow: 0 0 20px #FF84BA;"
+                >
+                  STUDIO
+                </span>
+              </div>
+
+              <!-- Safe Zone Guide Overlay -->
+              <div id="modal-safe-zone-overlay" class="absolute inset-0 pointer-events-none border-2 border-dashed border-[#99C2FF]/70 z-20 transition-opacity">
+                <!-- Top 48px Header Margin (Discord Banner Safe Margin) -->
+                <div class="absolute top-0 left-0 right-0 h-6 bg-amber-500/25 border-b border-amber-400/50 text-[10px] font-mono text-amber-200 flex items-center justify-between px-2.5 font-bold">
+                  <span>DISCORD TOP 48PX SAFE ZONE</span>
+                  <span>AVOID HEADER BUTTON OVERLAP</span>
+                </div>
+                <!-- Bottom-Left Avatar Cutout indicator -->
+                <div class="absolute -bottom-6 left-6 w-20 h-20 rounded-full border-2 border-[#FF84BA] bg-black/60 text-[10px] font-mono text-[#FF84BA] font-bold flex items-center justify-center text-center leading-tight">
+                  AVATAR
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Card Mockup Container (Shown in Profile Card Mode) -->
+            <div id="profile-card-mockup" class="hidden absolute inset-0 p-4 bg-[#090C16]/95 backdrop-blur-xl flex items-center justify-center z-30">
+              <div class="w-full max-w-sm rounded-2xl border border-white/10 overflow-hidden shadow-2xl transition-colors duration-300" id="discord-mockup-outer" style="background-color: #0D0814;">
+                <!-- Profile Banner in Mockup -->
+                <div class="w-full h-24 relative overflow-hidden" id="mockup-banner-bg" style="background: linear-gradient(135deg, #0D0814 0%, #FF84BA 100%);">
+                  <div class="absolute inset-0 flex items-center justify-center opacity-70">
+                    <span id="mockup-banner-icon" class="text-3xl">✨</span>
+                  </div>
+                </div>
+
+                <!-- Avatar & Profile Details -->
+                <div class="p-4 pt-0 relative">
+                  <!-- Overlapping Avatar -->
+                  <div class="relative -mt-10 mb-3 w-16 h-16 rounded-full border-4 border-[#0D0814] shadow-xl overflow-hidden flex items-center justify-center text-2xl" id="mockup-avatar-circle" style="background: linear-gradient(135deg, #0D0814 0%, #FF84BA 100%);">
+                    <span id="mockup-avatar-icon">✨</span>
+                    <!-- Online Status Dot -->
+                    <span class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#22C55E] border-2 border-[#0D0814]"></span>
+                  </div>
+
+                  <!-- Username -->
+                  <div class="mb-2">
+                    <div class="font-extrabold text-sm text-white flex items-center gap-1.5">
+                      <span id="mockup-username-text">DiscordCreator</span>
+                      <span class="text-[10px] px-1.5 py-0.2 rounded bg-[#5865F2] text-white font-bold">BOT</span>
+                    </div>
+                    <div class="text-[11px] text-[#99C2FF] font-mono">@creator_studio</div>
+                  </div>
+
+                  <!-- Seamless Theme Color Matching Box -->
+                  <div class="p-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 h-3 rounded-full border border-white/40" id="mockup-theme-color-dot" style="background-color: #0D0814;"></span>
+                      <span class="text-[11px] text-white/80">Theme Match:</span>
+                    </div>
+                    <button
+                      type="button"
+                      id="mockup-copy-hex"
+                      class="px-2 py-0.5 rounded bg-white/10 hover:bg-[#FF84BA] hover:text-black text-[11px] font-bold text-[#FF84BA] transition-colors cursor-pointer"
+                    >
+                      <span id="mockup-hex-text">#0D0814</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Matching Color One-Click Copy Bar -->
+        <div class="mt-4 p-3 rounded-xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] flex flex-wrap items-center justify-between gap-3 text-xs shadow-2xs">
+          <div class="flex items-center gap-2">
+            <span class="w-4 h-4 rounded-full border border-white/50 shadow-xs" id="customizer-profile-hex-dot" style="background-color: #0D0814;"></span>
+            <span class="font-semibold text-[#192538] dark:text-[#FFEFE3]">Discord Profile Theme Color:</span>
+            <code id="customizer-profile-hex-code" class="font-mono font-bold text-[#FF84BA]">#0D0814</code>
+          </div>
+          <button
+            type="button"
+            id="copy-profile-hex-btn"
+            class="px-3 py-1 rounded-lg bg-[#FF84BA]/15 text-[#FF84BA] hover:bg-[#FF84BA] hover:text-black font-bold font-mono transition-all cursor-pointer flex items-center gap-1"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span id="copy-hex-label">Copy Hex Code</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Intelligent Controls & Export Panel (5 Cols) -->
+      <div class="lg:col-span-5 p-4 sm:p-6 flex flex-col justify-between space-y-6 overflow-y-auto">
+        
+        <div class="space-y-5">
+          <!-- Recomposition & Focal Zoom -->
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-2">
+              <span>Intelligent Recomposition</span>
+              <button type="button" id="reset-focal-btn" class="text-[10px] text-[#FF84BA] hover:underline cursor-pointer">Auto Focal</button>
+            </div>
+
+            <div class="space-y-3 p-3 rounded-xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454]">
+              <!-- Focal Zoom Slider -->
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-[#6B7A90] dark:text-[#99C2FF]">Subject Zoom & Framing</span>
+                  <span id="zoom-val-text" class="font-mono font-bold text-xs">1.0x</span>
+                </div>
+                <input
+                  type="range"
+                  id="slider-zoom"
+                  min="0.8"
+                  max="2.5"
+                  step="0.1"
+                  value="1.0"
+                  class="w-full accent-[#FF84BA] cursor-pointer"
+                />
+              </div>
+
+              <!-- Recomposition X/Y Sliders -->
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <div class="flex justify-between text-[11px] mb-1">
+                    <span class="text-[#6B7A90] dark:text-[#99C2FF]">Focal X</span>
+                    <span id="focal-x-val" class="font-mono text-[10px]">50%</span>
+                  </div>
+                  <input type="range" id="slider-focal-x" min="10" max="90" value="50" class="w-full accent-[#FF84BA] cursor-pointer" />
+                </div>
+                <div>
+                  <div class="flex justify-between text-[11px] mb-1">
+                    <span class="text-[#6B7A90] dark:text-[#99C2FF]">Focal Y</span>
+                    <span id="focal-y-val" class="font-mono text-[10px]">50%</span>
+                  </div>
+                  <input type="range" id="slider-focal-y" min="10" max="90" value="50" class="w-full accent-[#FF84BA] cursor-pointer" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Color Grading & Lighting Adjustment -->
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-2">
+              <span>Color Grading & Mood</span>
+              <button type="button" id="reset-color-btn" class="text-[10px] text-[#FF84BA] hover:underline cursor-pointer">Reset</button>
+            </div>
+
+            <div class="space-y-3 p-3 rounded-xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454]">
+              <!-- Hue Rotation -->
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-[#6B7A90] dark:text-[#99C2FF]">Hue Shift</span>
+                  <span id="hue-val-text" class="font-mono font-bold text-xs">0°</span>
+                </div>
+                <input
+                  type="range"
+                  id="slider-hue"
+                  min="-180"
+                  max="180"
+                  value="0"
+                  class="w-full accent-[#FF84BA] cursor-pointer"
+                />
+              </div>
+
+              <!-- Saturation -->
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-[#6B7A90] dark:text-[#99C2FF]">Saturation</span>
+                  <span id="sat-val-text" class="font-mono font-bold text-xs">100%</span>
+                </div>
+                <input
+                  type="range"
+                  id="slider-sat"
+                  min="0"
+                  max="200"
+                  value="100"
+                  class="w-full accent-[#FF84BA] cursor-pointer"
+                />
+              </div>
+
+              <!-- Brightness / Contrast -->
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <div class="flex justify-between text-[11px] mb-1">
+                    <span class="text-[#6B7A90] dark:text-[#99C2FF]">Brightness</span>
+                    <span id="bright-val-text" class="font-mono text-[10px]">100%</span>
+                  </div>
+                  <input type="range" id="slider-brightness" min="60" max="140" value="100" class="w-full accent-[#FF84BA] cursor-pointer" />
+                </div>
+                <div>
+                  <div class="flex justify-between text-[11px] mb-1">
+                    <span class="text-[#6B7A90] dark:text-[#99C2FF]">Contrast</span>
+                    <span id="contrast-val-text" class="font-mono text-[10px]">100%</span>
+                  </div>
+                  <input type="range" id="slider-contrast" min="70" max="150" value="100" class="w-full accent-[#FF84BA] cursor-pointer" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Motion & Animation Controls -->
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-2">
+              Atmospheric Motion (Hyperframes Engine)
+            </div>
+
+            <div class="space-y-3 p-3 rounded-xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454]">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-medium text-[#192538] dark:text-[#FFEFE3]">Enable Animated Loop</span>
+                <input type="checkbox" id="toggle-animation" checked class="rounded accent-[#FF84BA] w-4 h-4 cursor-pointer" />
+              </div>
+
+              <!-- Bespoke Motion Style Selector -->
+              <div>
+                <label for="select-motion-style" class="block text-[11px] font-semibold text-[#6B7A90] dark:text-[#99C2FF] mb-1">
+                  Bespoke Scene Motion Style
+                </label>
+                <select
+                  id="select-motion-style"
+                  class="w-full px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-xs font-medium text-[#192538] dark:text-[#FFEFE3] focus:outline-none focus:border-[#FF84BA] cursor-pointer"
+                >
+                  <option value="auto">✨ Auto (Matched to Artwork)</option>
+                  <option value="windblown-grass">🌾 Windblown Grass & Moon Corona (Ronin)</option>
+                  <option value="birch-blizzard">❄️ Birch Forest Blizzard (Winter Vigilante)</option>
+                  <option value="inferno-shimmer">🔥 Inferno Ember Sparks & Heat Wave</option>
+                  <option value="cloud-drift">☁️ Summer Cloud Drift & Soaring Birds</option>
+                  <option value="iris-glint">👁️ Ethereal Iris Pulse & Prism Sheen</option>
+                  <option value="golden-prairie">🌾 Golden Wheat Waves & Sunbeam Rays</option>
+                  <option value="crimson-chakra">🔴 Crimson Flame Ring & Blizzard Flurry</option>
+                  <option value="neon-rain-alley">🌧️ Cyberpunk Neon Rain & Puddle Rings</option>
+                  <option value="orbital-weightless">🚀 Deep Space Stardust & Nebula Glow</option>
+                  <option value="arcane-dust-motes">✨ Ancient Sanctuary Motes & Runes</option>
+                  <option value="spider-web-glint">🕸️ Spider Web Glint & Spotlight (Hero)</option>
+                  <option value="stargazer-constellations">🌌 Stargazer Constellations & Meteors</option>
+                  <option value="alpine-wind-drift">🦅 Alpine Mountain Wind & Soaring Hawk</option>
+                  <option value="cumulus-sunburst">☀️ Golden Cumulus Cloud Sunburst</option>
+                  <option value="ambient-shimmer">⭐ Ambient Starlight Shimmer</option>
+                </select>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-[#6B7A90] dark:text-[#99C2FF]">Animation Speed</span>
+                  <span id="speed-val-text" class="font-mono font-bold text-xs">1.0x</span>
+                </div>
+                <input
+                  type="range"
+                  id="slider-speed"
+                  min="0.5"
+                  max="2.0"
+                  step="0.1"
+                  value="1.0"
+                  class="w-full accent-[#FF84BA] cursor-pointer"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Text & Server Name Overlay -->
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-2">
+              Custom Text Overlay
+            </div>
+
+            <div class="space-y-2 p-3 rounded-xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454]">
+              <input
+                type="text"
+                id="input-overlay-text"
+                placeholder="Type Server Name or Tag..."
+                maxlength="24"
+                class="w-full px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-xs font-semibold focus:outline-none focus:border-[#FF84BA]"
+              />
+              <div class="flex items-center justify-between text-[11px] text-[#6B7A90] dark:text-[#8494A7]">
+                <span>Rendered with neon drop-glow</span>
+                <button type="button" id="clear-text-btn" class="text-[#FF84BA] hover:underline cursor-pointer">Clear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Export & Download Actions -->
+        <div class="pt-4 border-t border-[#E0DBD0] dark:border-[#263454] space-y-2.5">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-[#192538] dark:text-white">Export Discord Asset</span>
+            <span class="text-[10px] font-mono text-[#0D9488]">✓ Under 10MB Nitro Safe</span>
+          </div>
+
+          <!-- Format Selector Pills -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="font-mono text-[#6B7A90] dark:text-[#8494A7] uppercase font-semibold">Format Option:</span>
+              <span id="modal-active-format-label" class="font-mono text-[#FF84BA] font-bold text-[10px]">Animated WebP</span>
+            </div>
+            <div class="grid grid-cols-5 gap-1 p-1 bg-[#FAF8F5] dark:bg-[#101626] rounded-xl border border-[#E0DBD0] dark:border-[#263454] text-[11px] font-semibold">
+              <button type="button" class="modal-format-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all bg-white dark:bg-[#1E293B] text-[#FF84BA] font-bold shadow-xs border border-[#E0DBD0] dark:border-[#263454]" data-format="webp">⚡ WebP</button>
+              <button type="button" class="modal-format-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white" data-format="gif">🎞️ GIF</button>
+              <button type="button" class="modal-format-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white" data-format="mp4">📹 MP4</button>
+              <button type="button" class="modal-format-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white" data-format="pfp">👤 PFP</button>
+              <button type="button" class="modal-format-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white" data-format="png">🖼️ PNG</button>
+            </div>
+          </div>
+
+          <!-- Primary Export Action Buttons -->
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              id="export-banner-btn"
+              class="btn-primary py-2 px-3 rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg transition-all"
+            >
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span id="export-banner-btn-text">Download Banner</span>
+            </button>
+
+            <button
+              type="button"
+              id="export-pfp-btn"
+              class="btn-secondary py-2 px-3 rounded-xl text-xs font-bold text-center border border-[#E0DBD0] dark:border-[#263454] text-[#192538] dark:text-white hover:text-[#FF84BA] dark:hover:text-[#FF84BA] flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+            >
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 8v8M8 12l4 4 4-4"></path>
+              </svg>
+              <span id="export-pfp-btn-text">Download Avatar</span>
+            </button>
+          </div>
+
+          <!-- Dedicated Full Video MP4 & Discord GIF Row -->
+          <div class="grid grid-cols-2 gap-2" id="modal-video-gif-row">
+            <button
+              type="button"
+              id="export-video-btn"
+              class="py-2 px-2.5 rounded-xl text-xs font-semibold text-center border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-[#192538] dark:text-[#FFEFE3] hover:border-[#99C2FF] hover:text-[#99C2FF] flex items-center justify-center gap-1.5 cursor-pointer transition-all shadow-xs hover:shadow-sm"
+              title="Download Full HD MP4 Video Loop (Horizontal Widescreen)"
+            >
+              <span>📹</span>
+              <span>Full Video (MP4)</span>
+            </button>
+
+            <button
+              type="button"
+              id="export-gif-btn"
+              class="py-2 px-2.5 rounded-xl text-xs font-semibold text-center border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-[#192538] dark:text-[#FFEFE3] hover:border-[#FFDF82] hover:text-[#FFDF82] flex items-center justify-center gap-1.5 cursor-pointer transition-all shadow-xs hover:shadow-sm"
+              title="Download Discord Optimized GIF"
+            >
+              <span>🎞️</span>
+              <span>Discord GIF</span>
+            </button>
+          </div>
+
+          <!-- 2D Asset Export Buttons (Role Icon & Sticker) -->
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              id="export-role-icon-btn"
+              class="py-2 px-2.5 rounded-xl text-xs font-semibold text-center border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-[#192538] dark:text-[#FFEFE3] hover:border-[#FF84BA] hover:text-[#FF84BA] flex items-center justify-center gap-1.5 cursor-pointer transition-all shadow-xs hover:shadow-sm"
+              title="Download 64x64 Discord Role Icon (Circular Badge)"
+            >
+              <span>🛡️</span>
+              <span>Role Icon (64px)</span>
+            </button>
+
+            <button
+              type="button"
+              id="export-sticker-btn"
+              class="py-2 px-2.5 rounded-xl text-xs font-semibold text-center border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-[#192538] dark:text-[#FFEFE3] hover:border-[#FF84BA] hover:text-[#FF84BA] flex items-center justify-center gap-1.5 cursor-pointer transition-all shadow-xs hover:shadow-sm"
+              title="Download 128x128 Transparent Discord Emoji / Sticker"
+            >
+              <span>🎨</span>
+              <span>2D Sticker (128px)</span>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            id="export-full-pack-btn"
+            class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#FF84BA] via-[#FFDF82] to-[#99C2FF] text-black font-extrabold text-xs shadow-md hover:shadow-xl hover:opacity-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>📦</span>
+            <span>Download Complete Matching Set (Banner + Avatar + 2D Icon + Hex)</span>
+          </button>
+
+          <!-- Cross-tool helpers -->
+          <div class="pt-2 flex items-center justify-center gap-2 text-[11px] font-mono text-[#6B7A90] dark:text-[#8494A7]">
+            <span>Create from scratch:</span>
+            <a href="/tools/role-icon" class="hover:text-[#FF84BA] underline transition-colors">Role Icon Studio</a>
+            <span>•</span>
+            <a href="/tools/sticker" class="hover:text-[#FF84BA] underline transition-colors">Sticker Maker</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Interactive Customizer Client Controller
+  function initAssetCustomizer() {
+    const modal = document.getElementById('asset-customizer-modal');
+    if (!modal) return;
+
+    const closeBtn = document.getElementById('modal-close-btn');
+    const modalTitle = document.getElementById('customizer-modal-title');
+    const modalSubtitle = document.getElementById('modal-preset-subtitle');
+    const categoryBadge = document.getElementById('modal-category-badge');
+    const stage = document.getElementById('stage-element');
+    const stageIcon = document.getElementById('stage-icon');
+    const stageSubjectWrapper = document.getElementById('stage-subject-wrapper');
+    const safeZoneOverlay = document.getElementById('modal-safe-zone-overlay');
+    const toggleSafeZones = document.getElementById('toggle-safe-zones') as HTMLInputElement | null;
+
+    // Sliders
+    const sliderHue = document.getElementById('slider-hue') as HTMLInputElement | null;
+    const sliderSat = document.getElementById('slider-sat') as HTMLInputElement | null;
+    const sliderBrightness = document.getElementById('slider-brightness') as HTMLInputElement | null;
+    const sliderContrast = document.getElementById('slider-contrast') as HTMLInputElement | null;
+    const sliderZoom = document.getElementById('slider-zoom') as HTMLInputElement | null;
+    const sliderFocalX = document.getElementById('slider-focal-x') as HTMLInputElement | null;
+    const sliderFocalY = document.getElementById('slider-focal-y') as HTMLInputElement | null;
+    const sliderSpeed = document.getElementById('slider-speed') as HTMLInputElement | null;
+    const toggleAnimation = document.getElementById('toggle-animation') as HTMLInputElement | null;
+    const inputOverlayText = document.getElementById('input-overlay-text') as HTMLInputElement | null;
+    const stageCustomText = document.getElementById('stage-custom-text');
+
+    // Theme Color Copy elements
+    const hexDot = document.getElementById('customizer-profile-hex-dot');
+    const hexCode = document.getElementById('customizer-profile-hex-code');
+    const copyHexBtn = document.getElementById('copy-profile-hex-btn');
+    const copyHexLabel = document.getElementById('copy-hex-label');
+
+    // Profile Mockup elements
+    const profileMockup = document.getElementById('profile-card-mockup');
+    const mockupOuter = document.getElementById('discord-mockup-outer');
+    const mockupBannerBg = document.getElementById('mockup-banner-bg');
+    const mockupBannerIcon = document.getElementById('mockup-banner-icon');
+    const mockupAvatarCircle = document.getElementById('mockup-avatar-circle');
+    const mockupAvatarIcon = document.getElementById('mockup-avatar-icon');
+    const mockupThemeDot = document.getElementById('mockup-theme-color-dot');
+    const mockupHexText = document.getElementById('mockup-hex-text');
+
+    // Export Buttons & Format Controls
+    const exportBannerBtn = document.getElementById('export-banner-btn');
+    const exportBannerBtnText = document.getElementById('export-banner-btn-text');
+    const exportPfpBtn = document.getElementById('export-pfp-btn');
+    const exportPfpBtnText = document.getElementById('export-pfp-btn-text');
+    const exportVideoBtn = document.getElementById('export-video-btn');
+    const exportGifBtn = document.getElementById('export-gif-btn');
+    const exportRoleIconBtn = document.getElementById('export-role-icon-btn');
+    const exportStickerBtn = document.getElementById('export-sticker-btn');
+    const exportFullPackBtn = document.getElementById('export-full-pack-btn');
+    const formatPills = document.querySelectorAll('.modal-format-pill');
+    const activeFormatLabel = document.getElementById('modal-active-format-label');
+
+    let selectedFormat: 'webp' | 'gif' | 'mp4' | 'pfp' | 'png' = 'webp';
+    let currentPresetData: any = null;
+    let currentMode: 'banner' | 'pfp' | 'profile' | 'icon' = 'banner';
+    let animationFrameId: number | null = null;
+    let particleOffset = 0;
+
+    // Canvas particle engine
+    const canvas = document.getElementById('motion-particle-canvas') as HTMLCanvasElement | null;
+    const ctx = canvas?.getContext('2d');
+    const selectMotionStyle = document.getElementById('select-motion-style') as HTMLSelectElement | null;
+
+    // Stateful particle pools for 60fps performance
+    interface Snowflake { x: number; y: number; r: number; vy: number; vx: number; alpha: number; layer: number }
+    interface Ember { x: number; y: number; r: number; vy: number; vx: number; life: number; maxLife: number; seed: number }
+    interface RainDrop { x: number; y: number; len: number; vy: number; vx: number; alpha: number }
+    interface Splash { x: number; y: number; r: number; maxR: number; alpha: number }
+    interface DustMote { x: number; y: number; r: number; vy: number; vx: number; alpha: number; seed: number }
+    interface SpaceStar { x: number; y: number; r: number; alpha: number; blinkSpeed: number; hasSpike: boolean }
+
+    let blizzardFlakes: Snowflake[] = [];
+    let fireEmbers: Ember[] = [];
+    let rainDrops: RainDrop[] = [];
+    let splashRings: Splash[] = [];
+    let dustMotes: DustMote[] = [];
+    let spaceStars: SpaceStar[] = [];
+
+    function initParticlePools() {
+      if (!canvas) return;
+      const W = canvas.width || 800;
+      const H = canvas.height || 450;
+
+      // Blizzard flakes: 3 depth layers
+      blizzardFlakes = Array.from({ length: 75 }, (_, i) => {
+        const layer = i < 10 ? 0 : i < 35 ? 1 : 2; // 0=foreground, 1=midground, 2=distant
+        return {
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: layer === 0 ? 3 + Math.random() * 2 : layer === 1 ? 1.6 + Math.random() * 1.2 : 0.6 + Math.random() * 0.8,
+          vy: layer === 0 ? 2.5 + Math.random() * 1.5 : layer === 1 ? 1.4 + Math.random() * 0.8 : 0.7 + Math.random() * 0.5,
+          vx: (Math.random() - 0.5) * 0.8,
+          alpha: layer === 0 ? 0.8 : layer === 1 ? 0.7 : 0.35,
+          layer
+        };
+      });
+
+      // Fire embers
+      fireEmbers = Array.from({ length: 45 }, () => ({
+        x: Math.random() * W,
+        y: H * 0.5 + Math.random() * (H * 0.5),
+        r: 1.5 + Math.random() * 2.5,
+        vy: 1.2 + Math.random() * 2.2,
+        vx: (Math.random() - 0.5) * 1.2,
+        life: Math.random() * 100,
+        maxLife: 80 + Math.random() * 60,
+        seed: Math.random() * 100
+      }));
+
+      // Rain drops
+      rainDrops = Array.from({ length: 65 }, () => ({
+        x: Math.random() * (W + 100),
+        y: Math.random() * H,
+        len: 12 + Math.random() * 16,
+        vy: 8 + Math.random() * 6,
+        vx: -2.5 - Math.random() * 1.5,
+        alpha: 0.4 + Math.random() * 0.4
+      }));
+
+      // Dust motes
+      dustMotes = Array.from({ length: 40 }, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: 1.2 + Math.random() * 2.2,
+        vy: -0.3 - Math.random() * 0.4,
+        vx: (Math.random() - 0.5) * 0.4,
+        alpha: 0.2 + Math.random() * 0.6,
+        seed: Math.random() * 50
+      }));
+
+      // Space stars
+      spaceStars = Array.from({ length: 70 }, (_, i) => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: 0.8 + Math.random() * 1.8,
+        alpha: 0.3 + Math.random() * 0.7,
+        blinkSpeed: 0.02 + Math.random() * 0.04,
+        hasSpike: i % 8 === 0
+      }));
+    }
+
+    function resizeCanvas() {
+      if (canvas && canvas.parentElement) {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+        initParticlePools();
+      }
+    }
+
+    function renderParticles() {
+      if (!ctx || !canvas) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (!toggleAnimation?.checked) return;
+
+      const speed = parseFloat(sliderSpeed?.value || '1.0');
+      particleOffset += 0.5 * speed;
+
+      const W = canvas.width;
+      const H = canvas.height;
+      let motionType = selectMotionStyle?.value || 'auto';
+      if (motionType === 'auto') {
+        motionType = currentPresetData?.motionType || 'ambient-shimmer';
+      }
+      const glowColor = currentPresetData?.glowHex || '#FF84BA';
+      const accentColor = currentPresetData?.accentHex || '#FFDF82';
+
+      ctx.save();
+
+      // 1. WINDBLOWN GRASS & MOON CORONA (Feudal Ronin)
+      if (motionType === 'windblown-grass') {
+        // Moon corona breathing aura
+        const moonX = W * 0.5;
+        const moonY = H * 0.38;
+        const moonPulse = Math.sin(particleOffset * 0.04) * 18;
+        const moonGrad = ctx.createRadialGradient(moonX, moonY, 35, moonX, moonY, 130 + moonPulse);
+        moonGrad.addColorStop(0, 'rgba(235, 245, 255, 0.22)');
+        moonGrad.addColorStop(0.5, 'rgba(150, 205, 255, 0.08)');
+        moonGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = moonGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Windblown tall grass stalks along bottom edge
+        const grassCount = 55;
+        for (let i = 0; i < grassCount; i++) {
+          const gx = (i / grassCount) * W + (Math.sin(i * 3.7) * 8);
+          const gh = H * 0.24 + Math.sin(i * 7.1) * 18;
+          const sway = Math.sin(particleOffset * 0.06 + i * 0.22) * 26 + (Math.cos(particleOffset * 0.03 + i) * 6);
+
+          ctx.beginPath();
+          ctx.moveTo(gx, H);
+          ctx.quadraticCurveTo(gx + sway * 0.45, H - gh * 0.55, gx + sway, H - gh);
+          ctx.strokeStyle = i % 2 === 0 ? 'rgba(18, 38, 52, 0.85)' : 'rgba(32, 68, 88, 0.65)';
+          ctx.lineWidth = i % 3 === 0 ? 3.0 : 2.0;
+          ctx.stroke();
+        }
+
+        // Drifting seeds / pollen motes
+        ctx.fillStyle = 'rgba(215, 235, 255, 0.7)';
+        for (let i = 0; i < 16; i++) {
+          const sx = ((i * 68 + particleOffset * 1.8) % (W + 40)) - 20;
+          const sy = H - ((i * 24 + Math.sin(particleOffset * 0.05 + i) * 30 + particleOffset * 0.6) % (H * 0.7));
+          ctx.beginPath();
+          ctx.arc(sx, sy, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // 2. BIRCH BLIZZARD (Winter Vigilante)
+      else if (motionType === 'birch-blizzard') {
+        const wind = 0.9 + Math.sin(particleOffset * 0.02) * 0.6;
+
+        blizzardFlakes.forEach(f => {
+          f.y += f.vy * speed;
+          f.x += (f.vx + wind) * speed;
+          if (f.y > H) { f.y = -5; f.x = Math.random() * W; }
+          if (f.x > W) { f.x = -5; }
+          if (f.x < -5) { f.x = W; }
+
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${f.alpha})`;
+          if (f.layer === 0) {
+            ctx.shadowBlur = 6;
+            ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+          } else {
+            ctx.shadowBlur = 0;
+          }
+          ctx.fill();
+        });
+
+        // Atmospheric ground snow fog drift
+        const fogPulse = Math.sin(particleOffset * 0.03) * 0.15 + 0.25;
+        const fogGrad = ctx.createLinearGradient(0, H * 0.7, 0, H);
+        fogGrad.addColorStop(0, 'rgba(230, 240, 245, 0)');
+        fogGrad.addColorStop(1, `rgba(220, 235, 245, ${fogPulse})`);
+        ctx.fillStyle = fogGrad;
+        ctx.fillRect(0, H * 0.7, W, H * 0.3);
+      }
+
+      // 3. INFERNO SHIMMER (Dark Knight Fire)
+      else if (motionType === 'inferno-shimmer') {
+        // Base firelight glow
+        const glowPulse = Math.sin(particleOffset * 0.1) * 0.15 + 0.35;
+        const fireGrad = ctx.createLinearGradient(0, H * 0.6, 0, H);
+        fireGrad.addColorStop(0, 'rgba(255, 90, 0, 0)');
+        fireGrad.addColorStop(1, `rgba(255, 110, 0, ${glowPulse})`);
+        ctx.fillStyle = fireGrad;
+        ctx.fillRect(0, H * 0.6, W, H * 0.4);
+
+        // Rising embers with heat turbulence
+        fireEmbers.forEach(e => {
+          e.life += 0.8 * speed;
+          if (e.life > e.maxLife) {
+            e.life = 0;
+            e.x = Math.random() * W;
+            e.y = H * 0.85 + Math.random() * (H * 0.15);
+          }
+          const progress = e.life / e.maxLife;
+          e.y -= e.vy * speed * (1 + progress * 0.5);
+          e.x += Math.sin(particleOffset * 0.08 + e.seed) * 1.8;
+
+          const currentR = Math.max(0.5, e.r * (1 - progress * 0.6));
+          const alpha = 1 - progress;
+
+          // Color shifts: white-yellow -> orange -> crimson
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, currentR, 0, Math.PI * 2);
+          ctx.fillStyle = progress < 0.35
+            ? `rgba(255, 245, 160, ${alpha})`
+            : progress < 0.7
+              ? `rgba(255, 120, 30, ${alpha})`
+              : `rgba(215, 30, 40, ${alpha})`;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = '#FF7A18';
+          ctx.fill();
+        });
+      }
+
+      // 4. CLOUD DRIFT & SOARING BIRDS (Summer Cats)
+      else if (motionType === 'cloud-drift') {
+        // Soft volumetric cumulus clouds drifting horizontally
+        const clouds = [
+          { x: 0.2, y: 0.25, r: 80, speed: 0.18 },
+          { x: 0.55, y: 0.18, r: 110, speed: 0.25 },
+          { x: 0.85, y: 0.3, r: 90, speed: 0.15 }
+        ];
+
+        clouds.forEach(c => {
+          const cx = ((c.x * W + particleOffset * c.speed * 2) % (W + c.r * 2)) - c.r;
+          const cy = c.y * H;
+          const cGrad = ctx.createRadialGradient(cx, cy, c.r * 0.2, cx, cy, c.r);
+          cGrad.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+          cGrad.addColorStop(0.7, 'rgba(255, 255, 255, 0.08)');
+          cGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+          ctx.fillStyle = cGrad;
+          ctx.beginPath();
+          ctx.arc(cx, cy, c.r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        // Soaring flock of birds in V-formation
+        const birdBaseX = ((particleOffset * 1.3) % (W + 200)) - 100;
+        const birdBaseY = H * 0.22 + Math.sin(particleOffset * 0.02) * 14;
+        const birdOffsets = [
+          { dx: 0, dy: 0, s: 7 },
+          { dx: -18, dy: 10, s: 5.5 },
+          { dx: -34, dy: 22, s: 4.5 },
+          { dx: -14, dy: -8, s: 5.0 }
+        ];
+
+        ctx.strokeStyle = 'rgba(20, 35, 50, 0.6)';
+        ctx.lineWidth = 1.6;
+        birdOffsets.forEach(b => {
+          const bx = birdBaseX + b.dx;
+          const by = birdBaseY + b.dy;
+          const flap = Math.sin(particleOffset * 0.12 + b.dx) * (b.s * 0.4);
+
+          ctx.beginPath();
+          ctx.moveTo(bx - b.s, by - flap);
+          ctx.quadraticCurveTo(bx - b.s * 0.4, by - flap * 0.5, bx, by);
+          ctx.quadraticCurveTo(bx + b.s * 0.4, by - flap * 0.5, bx + b.s, by - flap);
+          ctx.stroke();
+        });
+      }
+
+      // 5. IRIS GLINT & PRISM SHEEN (Euphoria Eyes)
+      else if (motionType === 'iris-glint') {
+        const eyeX = W * 0.5;
+        const eyeY = H * 0.46;
+
+        // Breathing radial iris glow
+        const irisPulse = Math.sin(particleOffset * 0.05) * 12;
+        const irisGrad = ctx.createRadialGradient(eyeX, eyeY, 15, eyeX, eyeY, 90 + irisPulse);
+        irisGrad.addColorStop(0, 'rgba(255, 220, 240, 0.35)');
+        irisGrad.addColorStop(0.5, 'rgba(255, 140, 195, 0.15)');
+        irisGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = irisGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Prismatic sweep sheen beam
+        const beamX = ((particleOffset * 1.6) % (W * 1.6)) - W * 0.3;
+        const beamGrad = ctx.createLinearGradient(beamX - 60, 0, beamX + 60, H);
+        beamGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+        beamGrad.addColorStop(0.5, 'rgba(255, 230, 245, 0.22)');
+        beamGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = beamGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Eyelash starlight glints
+        for (let i = 0; i < 8; i++) {
+          const gx = eyeX + (Math.sin(i * 1.8) * 120);
+          const gy = eyeY + (Math.cos(i * 2.3) * 45);
+          const glintAlpha = Math.sin(particleOffset * 0.1 + i * 2) * 0.5 + 0.5;
+          ctx.fillStyle = `rgba(255, 255, 255, ${glintAlpha})`;
+          ctx.beginPath();
+          ctx.arc(gx, gy, 1.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // 6. GOLDEN PRAIRIE (Prairie Dusk)
+      else if (motionType === 'golden-prairie') {
+        // Angled sunbeams
+        const rayPulse = Math.sin(particleOffset * 0.03) * 0.08 + 0.18;
+        const rayGrad = ctx.createLinearGradient(W * 0.6, 0, W * 0.3, H);
+        rayGrad.addColorStop(0, `rgba(255, 215, 120, ${rayPulse * 1.5})`);
+        rayGrad.addColorStop(0.7, `rgba(255, 175, 50, ${rayPulse * 0.8})`);
+        rayGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = rayGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Undulating golden wheat waves in foreground
+        for (let wave = 0; wave < 3; wave++) {
+          const waveY = H * (0.75 + wave * 0.08);
+          ctx.beginPath();
+          ctx.moveTo(0, H);
+          for (let x = 0; x <= W; x += 20) {
+            const y = waveY + Math.sin(x * 0.015 + particleOffset * 0.04 + wave) * 8;
+            ctx.lineTo(x, y);
+          }
+          ctx.lineTo(W, H);
+          ctx.closePath();
+          ctx.fillStyle = wave === 0 ? 'rgba(215, 145, 45, 0.15)' : wave === 1 ? 'rgba(180, 115, 30, 0.25)' : 'rgba(140, 85, 20, 0.35)';
+          ctx.fill();
+        }
+
+        // Floating golden dust motes
+        dustMotes.forEach(m => {
+          m.y += m.vy * speed;
+          m.x += m.vx * speed;
+          if (m.y < 0) { m.y = H; m.x = Math.random() * W; }
+
+          ctx.beginPath();
+          ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 225, 130, ${m.alpha})`;
+          ctx.shadowBlur = 4;
+          ctx.shadowColor = '#FFAA33';
+          ctx.fill();
+        });
+      }
+
+      // 7. CRIMSON CHAKRA (Frost Ronin Eye)
+      else if (motionType === 'crimson-chakra') {
+        const eyeX = W * 0.52;
+        const eyeY = H * 0.44;
+
+        // Pulsating crimson chakra aura
+        const chakraPulse = Math.sin(particleOffset * 0.06) * 14;
+        const chakraGrad = ctx.createRadialGradient(eyeX, eyeY, 10, eyeX, eyeY, 75 + chakraPulse);
+        chakraGrad.addColorStop(0, 'rgba(255, 30, 60, 0.4)');
+        chakraGrad.addColorStop(0.5, 'rgba(200, 10, 30, 0.18)');
+        chakraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = chakraGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        // 3 rotating energy tomoe orbs
+        const rotAngle = particleOffset * 0.04;
+        for (let i = 0; i < 3; i++) {
+          const theta = rotAngle + (i * Math.PI * 2 / 3);
+          const orbX = eyeX + Math.cos(theta) * 32;
+          const orbY = eyeY + Math.sin(theta) * 32;
+
+          ctx.beginPath();
+          ctx.arc(orbX, orbY, 3.2, 0, Math.PI * 2);
+          ctx.fillStyle = '#FF1744';
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = '#FF1744';
+          ctx.fill();
+        }
+
+        // Swirling blizzard flurries cutting diagonally
+        for (let i = 0; i < 35; i++) {
+          const fx = ((i * 35 + particleOffset * 4.5) % (W + 80)) - 40;
+          const fy = ((i * 22 + particleOffset * 3.0) % (H + 40)) - 20;
+          ctx.beginPath();
+          ctx.arc(fx, fy, 1.2, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(235, 245, 255, 0.75)';
+          ctx.shadowBlur = 0;
+          ctx.fill();
+        }
+      }
+
+      // 8. NEON RAIN ALLEY (Cyberpunk)
+      else if (motionType === 'neon-rain-alley') {
+        // Slanted neon rain streaks
+        ctx.lineWidth = 1.2;
+        rainDrops.forEach((d, idx) => {
+          d.y += d.vy * speed;
+          d.x += d.vx * speed;
+          if (d.y > H) {
+            d.y = -10;
+            d.x = Math.random() * (W + 80);
+            if (splashRings.length < 15 && Math.random() > 0.4) {
+              splashRings.push({ x: d.x, y: H - Math.random() * 20, r: 1, maxR: 6 + Math.random() * 6, alpha: 0.8 });
+            }
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(d.x, d.y);
+          ctx.lineTo(d.x + d.vx * 1.5, d.y + d.len);
+          ctx.strokeStyle = idx % 2 === 0 ? `rgba(0, 240, 255, ${d.alpha})` : `rgba(255, 0, 127, ${d.alpha})`;
+          ctx.stroke();
+        });
+
+        // Puddle splash rings
+        for (let i = splashRings.length - 1; i >= 0; i--) {
+          const sp = splashRings[i];
+          sp.r += 0.5 * speed;
+          sp.alpha -= 0.04 * speed;
+          if (sp.alpha <= 0) {
+            splashRings.splice(i, 1);
+            continue;
+          }
+          ctx.beginPath();
+          ctx.ellipse(sp.x, sp.y, sp.r * 2, sp.r * 0.7, 0, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(0, 240, 255, ${sp.alpha})`;
+          ctx.lineWidth = 1.0;
+          ctx.stroke();
+        }
+
+        // Horizontal neon scanline beam
+        const scanY = (particleOffset * 1.5) % H;
+        ctx.fillStyle = 'rgba(255, 0, 127, 0.06)';
+        ctx.fillRect(0, scanY, W, 2);
+      }
+
+      // 9. ORBITAL WEIGHTLESS (Space / Cosmic)
+      else if (motionType === 'orbital-weightless') {
+        // Deep space twinkling stars
+        spaceStars.forEach(s => {
+          const currentAlpha = Math.sin(particleOffset * s.blinkSpeed) * 0.4 + s.alpha;
+          ctx.fillStyle = `rgba(240, 245, 255, ${Math.max(0.1, currentAlpha)})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (s.hasSpike && currentAlpha > 0.6) {
+            ctx.strokeStyle = `rgba(180, 220, 255, ${currentAlpha * 0.6})`;
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(s.x - 7, s.y); ctx.lineTo(s.x + 7, s.y);
+            ctx.moveTo(s.x, s.y - 7); ctx.lineTo(s.x, s.y + 7);
+            ctx.stroke();
+          }
+        });
+
+        // Cosmic nebula gas curtain drift
+        const nebGrad = ctx.createRadialGradient(W * 0.7, H * 0.4, 40, W * 0.7, H * 0.4, 180);
+        nebGrad.addColorStop(0, 'rgba(138, 63, 252, 0.22)');
+        nebGrad.addColorStop(0.6, 'rgba(51, 177, 255, 0.1)');
+        nebGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = nebGrad;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      // 10. ARCANE DUST MOTES (Sanctuary / Fantasy)
+      else if (motionType === 'arcane-dust-motes') {
+        // Cathedral light beam
+        const beamGrad = ctx.createLinearGradient(W * 0.2, 0, W * 0.7, H);
+        beamGrad.addColorStop(0, 'rgba(245, 200, 105, 0.18)');
+        beamGrad.addColorStop(0.6, 'rgba(245, 200, 105, 0.06)');
+        beamGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = beamGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Rising golden dust motes
+        dustMotes.forEach(m => {
+          m.y += m.vy * speed;
+          m.x += m.vx * speed;
+          if (m.y < 0) { m.y = H; m.x = Math.random() * W; }
+
+          ctx.beginPath();
+          ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(245, 210, 110, ${m.alpha})`;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = '#F5C869';
+          ctx.fill();
+        });
+
+        // Floating arcane rune circle
+        const runeX = W * 0.5;
+        const runeY = H * 0.48;
+        const runePulse = Math.sin(particleOffset * 0.04) * 0.2 + 0.5;
+        ctx.strokeStyle = `rgba(245, 200, 105, ${runePulse * 0.6})`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(runeX, runeY, 40, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // 11. SPIDER WEB GLINT (Spider-Man Void)
+      else if (motionType === 'spider-web-glint') {
+        const spotX = W * 0.45;
+        const spotY = H * 0.4;
+        const spotPulse = Math.sin(particleOffset * 0.05) * 15;
+        const spotGrad = ctx.createRadialGradient(spotX, spotY, 20, spotX, spotY, 160 + spotPulse);
+        spotGrad.addColorStop(0, 'rgba(255, 60, 60, 0.12)');
+        spotGrad.addColorStop(0.5, 'rgba(40, 70, 180, 0.08)');
+        spotGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = spotGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.strokeStyle = 'rgba(200, 220, 255, 0.25)';
+        ctx.lineWidth = 1;
+        const cornerX = W * 0.95;
+        const cornerY = H * 0.05;
+        for (let i = 0; i < 7; i++) {
+          const angle = Math.PI * 0.6 + i * 0.15;
+          const len = 220 + Math.sin(particleOffset * 0.03 + i) * 10;
+          ctx.beginPath();
+          ctx.moveTo(cornerX, cornerY);
+          ctx.lineTo(cornerX + Math.cos(angle) * len, cornerY + Math.sin(angle) * len);
+          ctx.stroke();
+        }
+
+        for (let i = 0; i < 12; i++) {
+          const glintX = ((i * 73 + particleOffset * 0.8) % W);
+          const glintY = ((i * 37 + particleOffset * 0.6) % H);
+          const glintAlpha = Math.sin(particleOffset * 0.1 + i) * 0.4 + 0.5;
+          ctx.fillStyle = `rgba(255, 255, 255, ${glintAlpha})`;
+          ctx.beginPath();
+          ctx.arc(glintX, glintY, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // 12. STARGAZER CONSTELLATIONS (Ash & Pikachu)
+      else if (motionType === 'stargazer-constellations') {
+        const stars = [
+          { x: 0.55, y: 0.18 }, { x: 0.68, y: 0.14 }, { x: 0.78, y: 0.24 },
+          { x: 0.85, y: 0.16 }, { x: 0.62, y: 0.32 }, { x: 0.74, y: 0.38 }
+        ];
+
+        const linePulse = Math.sin(particleOffset * 0.04) * 0.2 + 0.35;
+        ctx.strokeStyle = `rgba(160, 210, 255, ${linePulse})`;
+        ctx.lineWidth = 1.0;
+        ctx.beginPath();
+        for (let i = 0; i < stars.length - 1; i++) {
+          ctx.moveTo(stars[i].x * W, stars[i].y * H);
+          ctx.lineTo(stars[i + 1].x * W, stars[i + 1].y * H);
+        }
+        ctx.stroke();
+
+        stars.forEach((s, idx) => {
+          const sx = s.x * W;
+          const sy = s.y * H;
+          const starPulse = Math.sin(particleOffset * 0.08 + idx * 1.5) * 0.4 + 0.6;
+          ctx.fillStyle = `rgba(255, 255, 255, ${starPulse})`;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = '#99C2FF';
+          ctx.beginPath();
+          ctx.arc(sx, sy, 2.0, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        const meteorCycle = (particleOffset * 2.5) % (W * 2);
+        if (meteorCycle < W) {
+          const mx = meteorCycle;
+          const my = (meteorCycle * 0.4) % (H * 0.6);
+          const mGrad = ctx.createLinearGradient(mx, my, mx - 60, my - 24);
+          mGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+          mGrad.addColorStop(1, 'rgba(150, 200, 255, 0)');
+          ctx.strokeStyle = mGrad;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(mx, my);
+          ctx.lineTo(mx - 60, my - 24);
+          ctx.stroke();
+        }
+      }
+
+      // 13. ALPINE WIND DRIFT (Jeep Cliff Summit)
+      else if (motionType === 'alpine-wind-drift') {
+        const c1X = ((particleOffset * 0.4) % (W + 200)) - 100;
+        const c1Grad = ctx.createRadialGradient(c1X, H * 0.28, 20, c1X, H * 0.28, 120);
+        c1Grad.addColorStop(0, 'rgba(255, 235, 200, 0.2)');
+        c1Grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = c1Grad;
+        ctx.fillRect(0, 0, W, H * 0.6);
+
+        const eagleX = ((particleOffset * 1.2) % (W + 150)) - 75;
+        const eagleY = H * 0.2 + Math.sin(particleOffset * 0.03) * 12;
+        ctx.strokeStyle = 'rgba(30, 25, 20, 0.65)';
+        ctx.lineWidth = 2.0;
+        ctx.beginPath();
+        ctx.moveTo(eagleX - 14, eagleY + 4);
+        ctx.quadraticCurveTo(eagleX - 7, eagleY - 4, eagleX, eagleY);
+        ctx.quadraticCurveTo(eagleX + 7, eagleY - 4, eagleX + 14, eagleY + 4);
+        ctx.stroke();
+
+        for (let i = 0; i < 14; i++) {
+          const wx = ((i * 85 + particleOffset * 3.5) % (W + 50)) - 25;
+          const wy = ((i * 32 + Math.sin(i + particleOffset * 0.04) * 20) % (H * 0.8));
+          ctx.fillStyle = 'rgba(255, 245, 220, 0.5)';
+          ctx.beginPath();
+          ctx.arc(wx, wy, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // 14. CUMULUS SUNBURST (Shin-chan & Shiro)
+      else if (motionType === 'cumulus-sunburst') {
+        const sunX = W * 0.85;
+        const sunY = H * 0.15;
+        const sunPulse = Math.sin(particleOffset * 0.05) * 20;
+        const sunGrad = ctx.createRadialGradient(sunX, sunY, 30, sunX, sunY, 180 + sunPulse);
+        sunGrad.addColorStop(0, 'rgba(255, 220, 120, 0.35)');
+        sunGrad.addColorStop(0.5, 'rgba(255, 180, 80, 0.12)');
+        sunGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = sunGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        const cloudPulse = Math.sin(particleOffset * 0.03) * 0.08 + 0.15;
+        const cloudGrad = ctx.createLinearGradient(0, H * 0.3, 0, H * 0.8);
+        cloudGrad.addColorStop(0, `rgba(255, 245, 230, ${cloudPulse})`);
+        cloudGrad.addColorStop(1, 'rgba(255, 220, 180, 0)');
+        ctx.fillStyle = cloudGrad;
+        ctx.fillRect(0, H * 0.2, W, H * 0.6);
+
+        for (let i = 0; i < 16; i++) {
+          const dx = ((i * 64 + particleOffset * 0.7) % W);
+          const dy = H * 0.3 + ((i * 28 + Math.sin(particleOffset * 0.04 + i) * 25) % (H * 0.5));
+          ctx.fillStyle = 'rgba(255, 250, 210, 0.65)';
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = '#FFDF82';
+          ctx.beginPath();
+          ctx.arc(dx, dy, 1.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // 15. DEFAULT AMBIENT SHIMMER
+      else {
+        ctx.fillStyle = glowColor;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = glowColor;
+
+        for (let i = 0; i < 24; i++) {
+          const x = (Math.sin(i * 137.5 + particleOffset * 0.02) * 0.5 + 0.5) * W;
+          const y = ((i * 37 + particleOffset * 1.5) % H);
+          const radius = (Math.sin(i + particleOffset * 0.05) * 1.5 + 2);
+
+          ctx.beginPath();
+          ctx.arc(x, H - y, Math.max(1, radius), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      ctx.restore();
+      animationFrameId = requestAnimationFrame(renderParticles);
+    }
+
+    function applyFilters() {
+      if (!stage) return;
+      const h = sliderHue?.value || '0';
+      const s = sliderSat?.value || '100';
+      const b = sliderBrightness?.value || '100';
+      const c = sliderContrast?.value || '100';
+
+      stage.style.filter = `hue-rotate(${h}deg) saturate(${s}%) brightness(${b}%) contrast(${c}%)`;
+
+      // Update text values
+      const hueText = document.getElementById('hue-val-text');
+      if (hueText) hueText.textContent = `${h}°`;
+      const satText = document.getElementById('sat-val-text');
+      if (satText) satText.textContent = `${s}%`;
+      const brightText = document.getElementById('bright-val-text');
+      if (brightText) brightText.textContent = `${b}%`;
+      const contrastText = document.getElementById('contrast-val-text');
+      if (contrastText) contrastText.textContent = `${c}%`;
+    }
+
+    function applyFocalZoom() {
+      const zoom = sliderZoom?.value || '1.0';
+      const x = sliderFocalX?.value || '50';
+      const y = sliderFocalY?.value || '50';
+
+      if (stageSubjectWrapper && stageIcon) {
+        stageSubjectWrapper.style.transform = `scale(${zoom}) translate(${(parseFloat(x) - 50) * 0.5}%, ${(parseFloat(y) - 50) * 0.5}%)`;
+      }
+
+      const stageBgImage = document.getElementById('stage-bg-image') as HTMLImageElement | null;
+      if (stageBgImage && currentPresetData?.imageUrl) {
+        stageBgImage.style.transform = `scale(${zoom})`;
+        stageBgImage.style.objectPosition = `${x}% ${y}%`;
+      }
+
+      const zoomText = document.getElementById('zoom-val-text');
+      if (zoomText) zoomText.textContent = `${zoom}x`;
+      const xText = document.getElementById('focal-x-val');
+      if (xText) xText.textContent = `${x}%`;
+      const yText = document.getElementById('focal-y-val');
+      if (yText) yText.textContent = `${y}%`;
+    }
+
+    function setViewMode(mode: 'banner' | 'pfp' | 'profile' | 'icon') {
+      currentMode = mode;
+      const tabs = document.querySelectorAll('.view-mode-tab');
+      tabs.forEach(tab => {
+        if (tab.getAttribute('data-mode') === mode) {
+          tab.classList.add('bg-[#FF84BA]', 'text-black', 'font-bold');
+          tab.classList.remove('text-[#6B7A90]', 'dark:text-[#99C2FF]');
+        } else {
+          tab.classList.remove('bg-[#FF84BA]', 'text-black', 'font-bold');
+          tab.classList.add('text-[#6B7A90]', 'dark:text-[#99C2FF]');
+        }
+      });
+
+      const viewport = document.getElementById('preview-viewport-box');
+      const stageBgImage = document.getElementById('stage-bg-image') as HTMLImageElement | null;
+      const stageIcon = document.getElementById('stage-icon');
+
+      if (mode === 'banner') {
+        profileMockup?.classList.add('hidden');
+        if (viewport) {
+          viewport.classList.remove('aspect-square', 'max-w-xs', 'max-w-[240px]');
+          viewport.classList.add('aspect-[16/9]');
+        }
+        if (safeZoneOverlay) safeZoneOverlay.style.display = toggleSafeZones?.checked ? 'block' : 'none';
+        if (sliderZoom && currentPresetData) sliderZoom.value = '1.0';
+        if (currentPresetData?.imageUrl) {
+          stageBgImage?.classList.remove('opacity-20');
+          stageIcon?.classList.add('opacity-0');
+        }
+      } else if (mode === 'pfp') {
+        profileMockup?.classList.add('hidden');
+        if (viewport) {
+          viewport.classList.remove('aspect-[16/9]', 'max-w-[240px]');
+          viewport.classList.add('aspect-square', 'max-w-xs');
+        }
+        if (safeZoneOverlay) safeZoneOverlay.style.display = 'none';
+        if (sliderZoom && currentPresetData) sliderZoom.value = currentPresetData.focalPfpZoom || '1.6';
+        if (sliderFocalX && currentPresetData) sliderFocalX.value = currentPresetData.focalPfpX || '50';
+        if (sliderFocalY && currentPresetData) sliderFocalY.value = currentPresetData.focalPfpY || '50';
+        if (currentPresetData?.imageUrl) {
+          stageBgImage?.classList.remove('opacity-20');
+          stageIcon?.classList.add('opacity-0');
+        }
+      } else if (mode === 'profile') {
+        profileMockup?.classList.remove('hidden');
+        if (viewport) {
+          viewport.classList.remove('aspect-square', 'max-w-xs', 'max-w-[240px]');
+          viewport.classList.add('aspect-[16/9]');
+        }
+        if (safeZoneOverlay) safeZoneOverlay.style.display = 'none';
+      } else if (mode === 'icon') {
+        profileMockup?.classList.add('hidden');
+        if (viewport) {
+          viewport.classList.remove('aspect-[16/9]', 'max-w-xs');
+          viewport.classList.add('aspect-square', 'max-w-[240px]');
+        }
+        if (safeZoneOverlay) safeZoneOverlay.style.display = 'none';
+        if (sliderZoom && currentPresetData) sliderZoom.value = '1.0';
+        // In 2D icon mode, make sure the 2D icon is prominently visible
+        stageBgImage?.classList.add('opacity-20');
+        stageIcon?.classList.remove('opacity-0');
+      }
+      applyFocalZoom();
+      resizeCanvas();
+    }
+
+    function updateFormatSelection(fmt: 'webp' | 'gif' | 'mp4' | 'pfp' | 'png') {
+      selectedFormat = fmt;
+      formatPills.forEach(pill => {
+        const pFmt = pill.getAttribute('data-format');
+        if (pFmt === fmt) {
+          pill.className = 'modal-format-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all bg-white dark:bg-[#1E293B] text-[#FF84BA] font-bold shadow-xs border border-[#E0DBD0] dark:border-[#263454]';
+        } else {
+          pill.className = 'modal-format-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white';
+        }
+      });
+
+      if (activeFormatLabel) {
+        const labels: Record<string, string> = {
+          webp: 'Animated WebP (Discord Nitro)',
+          gif: 'Discord GIF (<10MB)',
+          mp4: 'Full Video HD (MP4 Loop)',
+          pfp: 'Avatar Loop (320x320)',
+          png: 'Customized Snapshot (PNG)'
+        };
+        activeFormatLabel.textContent = labels[fmt] || fmt.toUpperCase();
+      }
+
+      if (exportBannerBtnText) {
+        const btnLabels: Record<string, string> = {
+          webp: 'Download WebP',
+          gif: 'Download GIF',
+          mp4: 'Download MP4',
+          pfp: 'Download PFP',
+          png: 'Download PNG'
+        };
+        exportBannerBtnText.textContent = btnLabels[fmt] || 'Download Banner';
+      }
+    }
+
+    function openModalWithPreset(cardEl: HTMLElement) {
+      currentPresetData = {
+        id: cardEl.getAttribute('data-id'),
+        slug: cardEl.getAttribute('data-slug'),
+        title: cardEl.getAttribute('data-title'),
+        category: cardEl.getAttribute('data-category'),
+        themeHex: cardEl.getAttribute('data-theme-hex'),
+        accentHex: cardEl.getAttribute('data-accent-hex'),
+        glowHex: cardEl.getAttribute('data-glow-hex'),
+        gradient: cardEl.getAttribute('data-gradient'),
+        icon: cardEl.getAttribute('data-icon'),
+        motionType: cardEl.getAttribute('data-motion-type'),
+        motionSpeed: cardEl.getAttribute('data-motion-speed'),
+        focalBannerX: cardEl.getAttribute('data-focal-banner-x'),
+        focalBannerY: cardEl.getAttribute('data-focal-banner-y'),
+        focalPfpX: cardEl.getAttribute('data-focal-pfp-x'),
+        focalPfpY: cardEl.getAttribute('data-focal-pfp-y'),
+        focalPfpZoom: cardEl.getAttribute('data-focal-pfp-zoom'),
+        imageUrl: cardEl.getAttribute('data-image-url') || '',
+        animatedUrl: cardEl.getAttribute('data-animated-url') || '',
+        gifUrl: cardEl.getAttribute('data-gif-url') || '',
+        videoUrl: cardEl.getAttribute('data-video-url') || '',
+        pfpUrl: cardEl.getAttribute('data-pfp-url') || '',
+        isAnimated: cardEl.getAttribute('data-is-animated') === 'true',
+      };
+
+      if (modalTitle) modalTitle.textContent = currentPresetData.title;
+      if (categoryBadge) categoryBadge.textContent = currentPresetData.category;
+      if (stage) stage.style.background = currentPresetData.gradient;
+      if (stageIcon) stageIcon.textContent = currentPresetData.icon;
+
+      // Handle Image / Animated Backdrop
+      const stageBgImage = document.getElementById('stage-bg-image') as HTMLImageElement | null;
+      const displayMedia = currentPresetData.animatedUrl || currentPresetData.imageUrl;
+      if (displayMedia) {
+        if (stageBgImage) {
+          stageBgImage.src = displayMedia;
+          stageBgImage.classList.remove('hidden');
+        }
+        if (stageIcon) stageIcon.classList.add('opacity-0');
+        if (mockupBannerBg) {
+          mockupBannerBg.style.backgroundImage = `url(${displayMedia})`;
+          mockupBannerBg.style.backgroundSize = 'cover';
+        }
+        if (mockupAvatarCircle) {
+          const pfpMedia = currentPresetData.pfpUrl || displayMedia;
+          mockupAvatarCircle.style.backgroundImage = `url(${pfpMedia})`;
+          mockupAvatarCircle.style.backgroundSize = 'cover';
+        }
+      } else {
+        if (stageBgImage) {
+          stageBgImage.src = '';
+          stageBgImage.classList.add('hidden');
+        }
+        if (stageIcon) stageIcon.classList.remove('opacity-0');
+        if (mockupBannerBg) {
+          mockupBannerBg.style.backgroundImage = '';
+          mockupBannerBg.style.background = currentPresetData.gradient;
+        }
+        if (mockupAvatarCircle) {
+          mockupAvatarCircle.style.backgroundImage = '';
+          mockupAvatarCircle.style.background = currentPresetData.gradient;
+        }
+      }
+
+      // Format Selector Default
+      if (currentPresetData.animatedUrl) {
+        updateFormatSelection('webp');
+      } else if (currentPresetData.pfpUrl) {
+        updateFormatSelection('pfp');
+      } else {
+        updateFormatSelection('png');
+      }
+
+      // Theme Colors
+      if (hexDot) hexDot.style.backgroundColor = currentPresetData.themeHex;
+      if (hexCode) hexCode.textContent = currentPresetData.themeHex;
+
+      // Profile Mockup elements
+      if (mockupOuter) mockupOuter.style.backgroundColor = currentPresetData.themeHex;
+      if (mockupBannerBg && !displayMedia) mockupBannerBg.style.background = currentPresetData.gradient;
+      if (mockupBannerIcon) mockupBannerIcon.textContent = currentPresetData.icon;
+      if (mockupAvatarCircle && !currentPresetData.pfpUrl && !displayMedia) mockupAvatarCircle.style.background = currentPresetData.gradient;
+      if (mockupAvatarIcon) mockupAvatarIcon.textContent = currentPresetData.icon;
+      if (mockupThemeDot) mockupThemeDot.style.backgroundColor = currentPresetData.themeHex;
+      if (mockupHexText) mockupHexText.textContent = currentPresetData.themeHex;
+
+      // Reset controls
+      if (selectMotionStyle) selectMotionStyle.value = currentPresetData.motionType || 'auto';
+      if (sliderHue) sliderHue.value = '0';
+      if (sliderSat) sliderSat.value = '100';
+      if (sliderBrightness) sliderBrightness.value = '100';
+      if (sliderContrast) sliderContrast.value = '100';
+      if (sliderZoom) sliderZoom.value = '1.0';
+      if (sliderFocalX) sliderFocalX.value = currentPresetData.focalBannerX || '50';
+      if (sliderFocalY) sliderFocalY.value = currentPresetData.focalBannerY || '50';
+      if (inputOverlayText) inputOverlayText.value = '';
+      if (stageCustomText) {
+        stageCustomText.textContent = '';
+        stageCustomText.classList.add('opacity-0');
+      }
+
+      applyFilters();
+      applyFocalZoom();
+      setViewMode('banner');
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+
+      resizeCanvas();
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      renderParticles();
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    }
+
+    // Bind Cards
+    document.querySelectorAll('.asset-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('.copy-hex-btn, .card-direct-download-btn, .card-format-dropdown-trigger, .card-format-menu')) return;
+        openModalWithPreset(card as HTMLElement);
+      });
+
+      const customizeBtn = card.querySelector('.customize-btn');
+      customizeBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openModalWithPreset(card as HTMLElement);
+      });
+
+      const quickExportBtn = card.querySelector('.quick-export-btn');
+      quickExportBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openModalWithPreset(card as HTMLElement);
+      });
+
+      // Quick Hex Copy on Card
+      const copyHex = card.querySelector('.copy-hex-btn');
+      copyHex?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const hex = copyHex.getAttribute('data-hex');
+        if (hex) {
+          navigator.clipboard.writeText(hex);
+          const original = copyHex.innerHTML;
+          copyHex.innerHTML = `<span class="text-[10px] font-bold text-[#0D9488]">Copied!</span>`;
+          setTimeout(() => { copyHex.innerHTML = original; }, 1500);
+        }
+      });
+    });
+
+    closeBtn?.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+
+    // View Mode Tabs
+    document.querySelectorAll('.view-mode-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const mode = tab.getAttribute('data-mode') as any;
+        if (mode) setViewMode(mode);
+      });
+    });
+
+    // Safe zone toggle
+    toggleSafeZones?.addEventListener('change', () => {
+      if (safeZoneOverlay && currentMode === 'banner') {
+        safeZoneOverlay.style.display = toggleSafeZones.checked ? 'block' : 'none';
+      }
+    });
+
+    // Slider inputs
+    [sliderHue, sliderSat, sliderBrightness, sliderContrast].forEach(s => {
+      s?.addEventListener('input', applyFilters);
+    });
+
+    [sliderZoom, sliderFocalX, sliderFocalY].forEach(s => {
+      s?.addEventListener('input', applyFocalZoom);
+    });
+
+    sliderSpeed?.addEventListener('input', () => {
+      const speedVal = document.getElementById('speed-val-text');
+      if (speedVal && sliderSpeed) speedVal.textContent = `${sliderSpeed.value}x`;
+    });
+
+    toggleAnimation?.addEventListener('change', () => {
+      if (toggleAnimation.checked) {
+        renderParticles();
+      }
+    });
+
+    selectMotionStyle?.addEventListener('change', () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      renderParticles();
+    });
+
+    // Text Overlay Input
+    inputOverlayText?.addEventListener('input', () => {
+      if (!stageCustomText) return;
+      const txt = inputOverlayText.value.trim();
+      if (txt) {
+        stageCustomText.textContent = txt;
+        stageCustomText.classList.remove('opacity-0');
+      } else {
+        stageCustomText.classList.add('opacity-0');
+      }
+    });
+
+    document.getElementById('clear-text-btn')?.addEventListener('click', () => {
+      if (inputOverlayText) inputOverlayText.value = '';
+      if (stageCustomText) {
+        stageCustomText.textContent = '';
+        stageCustomText.classList.add('opacity-0');
+      }
+    });
+
+    // Reset Buttons
+    document.getElementById('reset-color-btn')?.addEventListener('click', () => {
+      if (sliderHue) sliderHue.value = '0';
+      if (sliderSat) sliderSat.value = '100';
+      if (sliderBrightness) sliderBrightness.value = '100';
+      if (sliderContrast) sliderContrast.value = '100';
+      applyFilters();
+    });
+
+    document.getElementById('reset-focal-btn')?.addEventListener('click', () => {
+      if (sliderZoom) sliderZoom.value = '1.0';
+      if (sliderFocalX) sliderFocalX.value = '50';
+      if (sliderFocalY) sliderFocalY.value = '50';
+      applyFocalZoom();
+    });
+
+    // Copy Hex in Modal
+    copyHexBtn?.addEventListener('click', () => {
+      if (currentPresetData?.themeHex) {
+        navigator.clipboard.writeText(currentPresetData.themeHex);
+        if (copyHexLabel) {
+          copyHexLabel.textContent = 'Copied Hex!';
+          setTimeout(() => { copyHexLabel.textContent = 'Copy Hex Code'; }, 1500);
+        }
+      }
+    });
+
+    // Download helpers
+    function triggerDownload(dataUrl: string, filename: string) {
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = dataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportCanvasToImage(width: number, height: number, filename: string, isCircular: boolean = false) {
+      const offscreen = document.createElement('canvas');
+      offscreen.width = width;
+      offscreen.height = height;
+      const offCtx = offscreen.getContext('2d');
+      if (!offCtx) return;
+
+      function renderExportArt(img?: HTMLImageElement) {
+        if (!offCtx) return;
+        offCtx.clearRect(0, 0, width, height);
+
+        if (isCircular) {
+          offCtx.save();
+          offCtx.beginPath();
+          offCtx.arc(width / 2, height / 2, width / 2, 0, Math.PI * 2);
+          offCtx.closePath();
+          offCtx.clip();
+        }
+
+        // Apply filters
+        const h = sliderHue?.value || '0';
+        const s = sliderSat?.value || '100';
+        const b = sliderBrightness?.value || '100';
+        const c = sliderContrast?.value || '100';
+        offCtx.filter = `hue-rotate(${h}deg) saturate(${s}%) brightness(${b}%) contrast(${c}%)`;
+
+        if (img) {
+          const zoom = parseFloat(sliderZoom?.value || '1.0');
+          const fx = parseFloat(sliderFocalX?.value || '50') / 100;
+          const fy = parseFloat(sliderFocalY?.value || '50') / 100;
+
+          const drawW = width * zoom;
+          const drawH = height * zoom;
+          const drawX = (width - drawW) * fx;
+          const drawY = (height - drawH) * fy;
+          offCtx.drawImage(img, drawX, drawY, drawW, drawH);
+        } else {
+          // Draw background gradient
+          const grad = offCtx.createLinearGradient(0, 0, width, height);
+          grad.addColorStop(0, currentPresetData?.themeHex || '#090C16');
+          grad.addColorStop(1, currentPresetData?.accentHex || '#FF84BA');
+          offCtx.fillStyle = grad;
+          offCtx.fillRect(0, 0, width, height);
+
+          // Draw Icon
+          offCtx.font = `${Math.round(height * 0.35)}px sans-serif`;
+          offCtx.textAlign = 'center';
+          offCtx.textBaseline = 'middle';
+          offCtx.fillText(currentPresetData?.icon || '✨', width / 2, height / 2);
+        }
+
+        if (isCircular) {
+          offCtx.restore();
+        }
+
+        // If text overlay present
+        const overlayTxt = inputOverlayText?.value.trim();
+        if (overlayTxt && !isCircular) {
+          offCtx.save();
+          offCtx.font = `bold ${Math.round(height * 0.1)}px sans-serif`;
+          offCtx.fillStyle = '#FFFFFF';
+          offCtx.shadowColor = currentPresetData?.glowHex || '#FF84BA';
+          offCtx.shadowBlur = 20;
+          offCtx.textAlign = 'center';
+          offCtx.textBaseline = 'middle';
+          offCtx.fillText(overlayTxt.toUpperCase(), width / 2, height * 0.8);
+          offCtx.restore();
+        }
+
+        triggerDownload(offscreen.toDataURL('image/png'), filename);
+      }
+
+      if (currentPresetData?.imageUrl) {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => renderExportArt(img);
+        img.onerror = () => renderExportArt();
+        img.src = currentPresetData.imageUrl;
+      } else {
+        renderExportArt();
+      }
+    }
+
+    function export2DAsset(size: number, transparent: boolean, filename: string) {
+      const offscreen = document.createElement('canvas');
+      offscreen.width = size;
+      offscreen.height = size;
+      const offCtx = offscreen.getContext('2d');
+      if (!offCtx) return;
+
+      offCtx.clearRect(0, 0, size, size);
+
+      if (!transparent) {
+        // Draw circular badge with preset's gradient
+        offCtx.save();
+        offCtx.beginPath();
+        offCtx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
+        const grad = offCtx.createRadialGradient(size / 2, size / 2, 2, size / 2, size / 2, size / 2);
+        grad.addColorStop(0, currentPresetData?.glowHex || '#FF84BA');
+        grad.addColorStop(1, currentPresetData?.themeHex || '#090C16');
+        offCtx.fillStyle = grad;
+        offCtx.fill();
+        offCtx.lineWidth = 2;
+        offCtx.strokeStyle = currentPresetData?.accentHex || '#FFDF82';
+        offCtx.stroke();
+        offCtx.restore();
+      }
+
+      // Draw crisp vector glyph / emoji icon
+      offCtx.save();
+      const fontSize = Math.round(size * (transparent ? 0.72 : 0.52));
+      offCtx.font = `${fontSize}px sans-serif`;
+      offCtx.textAlign = 'center';
+      offCtx.textBaseline = 'middle';
+      if (!transparent) {
+        offCtx.shadowColor = currentPresetData?.glowHex || '#FF84BA';
+        offCtx.shadowBlur = Math.round(size * 0.1);
+      }
+      offCtx.fillText(currentPresetData?.icon || '✨', size / 2, size / 2 + (size * 0.04));
+      offCtx.restore();
+
+      triggerDownload(offscreen.toDataURL('image/png'), filename);
+    }
+
+    // Format Pills Event Handlers
+    formatPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const fmt = pill.getAttribute('data-format') as any;
+        if (fmt) updateFormatSelection(fmt);
+      });
+    });
+
+    exportBannerBtn?.addEventListener('click', () => {
+      if (selectedFormat === 'webp' && currentPresetData?.animatedUrl) {
+        triggerDownload(currentPresetData.animatedUrl, `${currentPresetData.slug}.webp`);
+      } else if (selectedFormat === 'gif' && currentPresetData?.gifUrl) {
+        triggerDownload(currentPresetData.gifUrl, `${currentPresetData.slug}.gif`);
+      } else if (selectedFormat === 'mp4' && currentPresetData?.videoUrl) {
+        triggerDownload(currentPresetData.videoUrl, `${currentPresetData.slug}.mp4`);
+      } else if (selectedFormat === 'pfp' && currentPresetData?.pfpUrl) {
+        triggerDownload(currentPresetData.pfpUrl, `${currentPresetData.slug}-avatar.webp`);
+      } else {
+        const name = `${currentPresetData?.slug || 'discord'}-banner-960x540.png`;
+        exportCanvasToImage(960, 540, name, false);
+      }
+    });
+
+    exportVideoBtn?.addEventListener('click', () => {
+      if (currentPresetData?.videoUrl) {
+        triggerDownload(currentPresetData.videoUrl, `${currentPresetData.slug}.mp4`);
+      } else if (currentPresetData?.animatedUrl) {
+        triggerDownload(currentPresetData.animatedUrl, `${currentPresetData.slug}.webp`);
+      } else {
+        const name = `${currentPresetData?.slug || 'discord'}-banner-960x540.png`;
+        exportCanvasToImage(960, 540, name, false);
+      }
+    });
+
+    exportGifBtn?.addEventListener('click', () => {
+      if (currentPresetData?.gifUrl) {
+        triggerDownload(currentPresetData.gifUrl, `${currentPresetData.slug}.gif`);
+      } else if (currentPresetData?.animatedUrl) {
+        triggerDownload(currentPresetData.animatedUrl, `${currentPresetData.slug}.webp`);
+      } else {
+        const name = `${currentPresetData?.slug || 'discord'}-banner-960x540.png`;
+        exportCanvasToImage(960, 540, name, false);
+      }
+    });
+
+    exportPfpBtn?.addEventListener('click', () => {
+      if (currentPresetData?.pfpUrl) {
+        triggerDownload(currentPresetData.pfpUrl, `${currentPresetData.slug}-avatar.webp`);
+      } else {
+        const name = `${currentPresetData?.slug || 'discord'}-avatar-512x512.png`;
+        exportCanvasToImage(512, 512, name, true);
+      }
+    });
+
+    exportRoleIconBtn?.addEventListener('click', () => {
+      const name = `${currentPresetData?.slug || 'discord'}-role-icon-64x64.png`;
+      export2DAsset(64, false, name);
+    });
+
+    exportStickerBtn?.addEventListener('click', () => {
+      const name = `${currentPresetData?.slug || 'discord'}-sticker-128x128.png`;
+      export2DAsset(128, true, name);
+    });
+
+    exportFullPackBtn?.addEventListener('click', () => {
+      const bannerName = `${currentPresetData?.slug || 'discord'}-banner-960x540.png`;
+      const pfpName = `${currentPresetData?.slug || 'discord'}-avatar-512x512.png`;
+      const roleName = `${currentPresetData?.slug || 'discord'}-role-icon-64x64.png`;
+
+      // If animated WebP or video exists, download the true high-res media files
+      if (currentPresetData?.animatedUrl) {
+        triggerDownload(currentPresetData.animatedUrl, `${currentPresetData.slug}.webp`);
+      } else {
+        exportCanvasToImage(960, 540, bannerName, false);
+      }
+
+      setTimeout(() => {
+        if (currentPresetData?.pfpUrl) {
+          triggerDownload(currentPresetData.pfpUrl, `${currentPresetData.slug}-avatar.webp`);
+        } else {
+          exportCanvasToImage(512, 512, pfpName, true);
+        }
+      }, 250);
+
+      setTimeout(() => {
+        export2DAsset(64, false, roleName);
+      }, 500);
+
+      if (currentPresetData?.videoUrl) {
+        setTimeout(() => {
+          triggerDownload(currentPresetData.videoUrl, `${currentPresetData.slug}.mp4`);
+        }, 750);
+      }
+
+      if (currentPresetData?.themeHex) {
+        navigator.clipboard.writeText(currentPresetData.themeHex);
+      }
+    });
+  }
+
+  // Setup on page load and on client route transition
+  initAssetCustomizer();
+  document.addEventListener('astro:page-load', initAssetCustomizer);
+</script>

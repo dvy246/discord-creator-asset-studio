@@ -16,6 +16,7 @@ test('E2E SEO: All generated HTML pages have valid titles, meta descriptions, an
     'about/index.html',
     'contact/index.html',
     'guides/discord-sizes/index.html',
+    'guides/discord-gif-guide/index.html',
     'es/index.html',
     'es/guides/discord-sizes/index.html',
     'tools/emoji/index.html',
@@ -23,6 +24,12 @@ test('E2E SEO: All generated HTML pages have valid titles, meta descriptions, an
     'tools/banner/index.html',
     'tools/avatar/index.html',
     'tools/role-icon/index.html',
+    'blog/index.html',
+    'blog/how-to-make-discord-stickers/index.html',
+    'blog/discord-banner-ideas-templates/index.html',
+    'blog/discord-pfp-ideas-anime-avatars/index.html',
+    'blog/how-to-put-spoiler-on-discord-image/index.html',
+    'blog/how-to-change-discord-server-banner/index.html',
     '404.html',
     '500.html'
   ];
@@ -67,12 +74,22 @@ test('E2E SEO: All generated HTML pages have valid titles, meta descriptions, an
 });
 
 test('E2E SEO: Hreflang tags are strictly validated and avoid broken 404 clusters', () => {
-  // Routes with Spanish alternates: index and guides/discord-sizes
+  // Routes with Spanish alternates: index, guides/discord-sizes, and all 5 tools
   const routesWithSpanish = [
     'index.html',
     'guides/discord-sizes/index.html',
     'es/index.html',
-    'es/guides/discord-sizes/index.html'
+    'es/guides/discord-sizes/index.html',
+    'tools/emoji/index.html',
+    'tools/sticker/index.html',
+    'tools/banner/index.html',
+    'tools/avatar/index.html',
+    'tools/role-icon/index.html',
+    'es/tools/emoji/index.html',
+    'es/tools/sticker/index.html',
+    'es/tools/banner/index.html',
+    'es/tools/avatar/index.html',
+    'es/tools/role-icon/index.html'
   ];
 
   for (const file of routesWithSpanish) {
@@ -83,13 +100,34 @@ test('E2E SEO: Hreflang tags are strictly validated and avoid broken 404 cluster
     assert.ok(html.includes(`${TARGET_ORIGIN}/`), `${file}: Hreflang URLs must reference live host`);
   }
 
+  // Every emitted hreflang target MUST resolve to a real page in dist (zero 404 clusters)
+  const allHtmlFiles: string[] = [];
+  function findHtml(dir: string) {
+    for (const item of fs.readdirSync(dir)) {
+      const full = path.join(dir, item);
+      if (fs.statSync(full).isDirectory()) findHtml(full);
+      else if (item.endsWith('.html')) allHtmlFiles.push(full);
+    }
+  }
+  findHtml(distDir);
+
+  for (const htmlFile of allHtmlFiles) {
+    const content = fs.readFileSync(htmlFile, 'utf-8');
+    const esTargets = [...content.matchAll(/hreflang="es"\s+href="([^"]+)"/g)].map((m) => m[1]);
+    for (const target of esTargets) {
+      const urlPath = target.replace(TARGET_ORIGIN, '');
+      const candidate1 = path.join(distDir, urlPath, 'index.html');
+      const candidate2 = path.join(distDir, urlPath);
+      assert.ok(
+        fs.existsSync(candidate1) || fs.existsSync(candidate2),
+        `${path.relative(distDir, htmlFile)}: hreflang="es" target ${urlPath} must resolve (404 cluster)`
+      );
+    }
+  }
+
   // Routes WITHOUT Spanish alternates must NOT emit hreflang="es" pointing to a 404
   const routesWithoutSpanish = [
-    'tools/emoji/index.html',
-    'tools/sticker/index.html',
-    'tools/banner/index.html',
-    'tools/avatar/index.html',
-    'tools/role-icon/index.html',
+    'guides/discord-gif-guide/index.html',
     'about/index.html',
     'contact/index.html',
     'privacy/index.html',
@@ -147,12 +185,33 @@ test('E2E SEO: Cloudflare security headers file exists and contains essential di
 
 test('E2E SEO: Open Graph social images exist and are referenced in meta tags', () => {
   const ogPng = path.join(distDir, 'og-image.png');
-  const ogJpg = path.join(distDir, 'og-image.jpg');
   assert.ok(fs.existsSync(ogPng), 'dist/og-image.png must exist');
-  assert.ok(fs.existsSync(ogJpg), 'dist/og-image.jpg must exist');
 
   const indexHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
   assert.ok(indexHtml.includes('property="og:image" content="https://discord-creator-asset-studio.pages.dev/og-image.png"'), 'OG image tag must reference live URL');
+  assert.ok(indexHtml.includes('property="og:image:width" content="1200"'), 'OG image must declare width 1200');
+  assert.ok(indexHtml.includes('property="og:image:height" content="630"'), 'OG image must declare height 630');
+});
+
+test('E2E SEO: Per-page branded OG images are generated and referenced', () => {
+  const perPageOg = [
+    { page: 'tools/emoji/index.html', og: 'og/emoji.png' },
+    { page: 'tools/sticker/index.html', og: 'og/sticker.png' },
+    { page: 'tools/banner/index.html', og: 'og/banner.png' },
+    { page: 'tools/avatar/index.html', og: 'og/avatar.png' },
+    { page: 'tools/role-icon/index.html', og: 'og/role-icon.png' },
+    { page: 'guides/discord-sizes/index.html', og: 'og/guide-sizes.png' },
+    { page: 'guides/discord-gif-guide/index.html', og: 'og/guide-gif.png' },
+    { page: 'blog/how-to-make-discord-stickers/index.html', og: 'og/blog-stickers.png' }
+  ];
+
+  for (const { page, og } of perPageOg) {
+    // The branded OG image file must exist in dist
+    assert.ok(fs.existsSync(path.join(distDir, og)), `dist/${og} must exist`);
+    // And the page must reference it
+    const html = fs.readFileSync(path.join(distDir, page), 'utf-8');
+    assert.ok(html.includes(`/${og}`), `${page} must reference its branded OG image /${og}`);
+  }
 });
 
 test('E2E SEO: All 5 tool pages contain valid JSON-LD SoftwareApplication, BreadcrumbList, and FAQPage schemas', () => {
@@ -212,4 +271,93 @@ test('E2E SEO: Homepage and Guides contain valid structured data', () => {
   const esGuideHtml = fs.readFileSync(path.join(distDir, 'es/guides/discord-sizes/index.html'), 'utf-8');
   assert.ok(esGuideHtml.includes('"@type":"TechArticle"') || esGuideHtml.includes('"@type": "TechArticle"'), 'es guide must include TechArticle schema');
   assert.ok(esGuideHtml.includes('"@type":"BreadcrumbList"') || esGuideHtml.includes('"@type": "BreadcrumbList"'), 'es guide must include BreadcrumbList schema');
+});
+
+
+// ============================================================
+// ELITE SEO REGRESSION SUITE — locks in the technical-elite plan
+// ============================================================
+
+test('ELITE: Sitemap emits accurate lastmod and hreflang xhtml:link alternates', () => {
+  const sitemapZero = fs.readFileSync(path.join(distDir, 'sitemap-0.xml'), 'utf-8');
+  assert.ok(sitemapZero.includes('<lastmod>'), 'sitemap-0.xml must include <lastmod> on URLs');
+  assert.ok(sitemapZero.includes('xhtml:link'), 'sitemap-0.xml must include xhtml:link hreflang alternates');
+  assert.ok(sitemapZero.includes('hreflang="es"'), 'sitemap must declare es alternate');
+  assert.ok(sitemapZero.includes('hreflang="en"'), 'sitemap must declare en alternate');
+});
+
+test('ELITE: ads.txt exists and is valid for AdSense monetization', () => {
+  const adsPath = path.join(distDir, 'ads.txt');
+  assert.ok(fs.existsSync(adsPath), 'dist/ads.txt must exist for AdSense verification');
+  const content = fs.readFileSync(adsPath, 'utf-8');
+  assert.ok(/google\.com,\s*pub-/.test(content), 'ads.txt must contain a google.com publisher record');
+  assert.ok(content.includes('f08c47fec0942fa0'), 'ads.txt must include the AdSense account token');
+});
+
+test('ELITE: CSP allows AdSense + Cloudflare Insights while keeping other directives intact', () => {
+  const headers = fs.readFileSync(path.join(distDir, '_headers'), 'utf-8');
+  // AdSense domains present
+  assert.ok(headers.includes('https://pagead2.googlesyndication.com'), 'CSP must allow AdSense script origin');
+  assert.ok(headers.includes('https://googleads.g.doubleclick.net'), 'CSP must allow AdSense frame origin');
+  assert.ok(headers.includes('https://tpc.googlesyndication.com'), 'CSP must allow AdSense tpc origin');
+  // Still locked down elsewhere
+  assert.ok(headers.includes("default-src 'self'"), 'CSP must keep default-src self');
+  // Immutable caching for hashed assets
+  assert.ok(headers.includes('max-age=31536000, immutable'), '_headers must set immutable cache for /_astro/*');
+  assert.ok(headers.includes('stale-while-revalidate'), '_headers must set stale-while-revalidate on HTML');
+});
+
+test('ELITE: _redirects file exists to canonicalize legacy/mistyped URLs', () => {
+  const redirectsPath = path.join(distDir, '_redirects');
+  assert.ok(fs.existsSync(redirectsPath), 'dist/_redirects must exist');
+  const content = fs.readFileSync(redirectsPath, 'utf-8');
+  assert.ok(content.includes('301'), '_redirects must contain 301 rules');
+});
+
+test('ELITE: Blog posts emit BlogPosting schema with author and dates', () => {
+  const blogFiles = [
+    'blog/how-to-make-discord-stickers/index.html',
+    'blog/discord-banner-ideas-templates/index.html',
+    'blog/discord-pfp-ideas-anime-avatars/index.html',
+    'blog/how-to-put-spoiler-on-discord-image/index.html',
+    'blog/how-to-change-discord-server-banner/index.html'
+  ];
+  for (const file of blogFiles) {
+    const html = fs.readFileSync(path.join(distDir, file), 'utf-8');
+    assert.ok(html.includes('"@type":"BlogPosting"'), `${file} must include BlogPosting schema`);
+    assert.ok(html.includes('"datePublished"'), `${file} BlogPosting must include datePublished`);
+    assert.ok(html.includes('"dateModified"'), `${file} BlogPosting must include dateModified`);
+    assert.ok(html.includes('"mainEntityOfPage"'), `${file} BlogPosting must include mainEntityOfPage`);
+  }
+});
+
+test('ELITE: Homepage emits ItemList schema and GIF guide emits HowTo schema', () => {
+  const indexHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
+  assert.ok(indexHtml.includes('"@type":"ItemList"'), 'index.html must include ItemList schema');
+
+  const gifHtml = fs.readFileSync(path.join(distDir, 'guides/discord-gif-guide/index.html'), 'utf-8');
+  assert.ok(gifHtml.includes('"@type":"HowTo"'), 'gif-guide must include HowTo schema');
+  assert.ok(gifHtml.includes('HowToStep'), 'HowTo must include HowToStep entries');
+});
+
+test('ELITE: theme-color, web manifest, and sitemap link present in head', () => {
+  const indexHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
+  assert.ok(indexHtml.includes('name="theme-color"'), 'index.html must include theme-color meta');
+  assert.ok(indexHtml.includes('rel="manifest"'), 'index.html must link site.webmanifest');
+  assert.ok(indexHtml.includes('rel="sitemap"'), 'index.html must link sitemap in head');
+
+  const manifestPath = path.join(distDir, 'site.webmanifest');
+  assert.ok(fs.existsSync(manifestPath), 'dist/site.webmanifest must exist');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+  assert.ok(manifest.name && manifest.theme_color, 'web manifest must have name + theme_color');
+});
+
+test('ELITE: robots.txt adopts explicit AI-crawler split policy', () => {
+  const robots = fs.readFileSync(path.join(distDir, 'robots.txt'), 'utf-8');
+  // Retrieval/answer engines welcomed
+  assert.ok(robots.includes('User-agent: ChatGPT-User'), 'robots must include ChatGPT-User');
+  assert.ok(robots.includes('User-agent: Claude-User'), 'robots must include Claude-User');
+  // Training crawlers blocked
+  assert.ok(robots.includes('User-agent: Bytespider'), 'robots must block Bytespider');
+  assert.ok(robots.includes('User-agent: Amazonbot'), 'robots must block Amazonbot');
 });

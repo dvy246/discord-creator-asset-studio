@@ -17,13 +17,20 @@ interface Props {
 
 const { 
   title = "Discord Asset Studio | Creator Rules & Registry", 
-  description = "The ultimate validation registry and toolkit for Discord creator assets. Verify sizes, formats, and rules for banners, icons, emojis, and stickers.",
+  description = "Free creator tools to crop, resize, and preview Discord assets. Format banners, emojis, stickers, avatars, and role icons with exact Discord sizes.",
   lang = "en",
   noindex = false,
   canonicalUrl,
   hasSpanishAlternate,
   ogImage,
 } = Astro.props;
+
+const currentPath = Astro.url.pathname;
+const isBlog = currentPath.startsWith('/blog');
+const isSizesGuide = currentPath.startsWith('/guides/discord-sizes');
+const isPfps = currentPath.startsWith('/assets/pfps') || currentPath.startsWith('/pfps');
+const isAssets = currentPath.startsWith('/assets') && !isPfps;
+const isTools = (currentPath.startsWith('/tools') || currentPath === '/') && !isBlog && !isSizesGuide && !isAssets && !isPfps;
 ---
 <!doctype html>
 <html lang={lang}>
@@ -46,8 +53,12 @@ const {
         }
 
         const storedPalette = localStorage.getItem('site-palette');
-        if (storedPalette && storedPalette !== 'default') {
+        if (storedPalette === 'default') {
+          document.documentElement.removeAttribute('data-palette');
+        } else if (storedPalette) {
           document.documentElement.setAttribute('data-palette', storedPalette);
+        } else {
+          document.documentElement.setAttribute('data-palette', 'electric');
         }
       })();
     </script>
@@ -70,12 +81,12 @@ const {
           <!-- Tools Dropdown Menu -->
           <details class="relative group" id="tools-dropdown">
             <summary
-              class="header-nav-btn list-none px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 cursor-pointer select-none flex items-center gap-1.5"
+              class={`header-nav-btn list-none px-3 py-1.5 rounded-lg border bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 cursor-pointer select-none flex items-center gap-1.5 ${isTools ? 'border-[#3368A0]/60 dark:border-[#66A3BF]/60 text-[#3368A0] dark:text-[#66A3BF]' : 'border-[#E0DBD0] dark:border-[#263346]'}`}
               aria-label="All Tools & Utilities"
               aria-haspopup="true"
             >
               <span>All Tools</span>
-              <span class="text-[10px] font-mono font-bold bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] px-1.5 py-0.5 rounded">7</span>
+              <span class="text-[10px] font-mono font-bold bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] px-1.5 py-0.5 rounded">8</span>
               <svg class="w-3 h-3 opacity-60 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
@@ -88,6 +99,13 @@ const {
               <div class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7]">
                 Visual & Profile
               </div>
+              <a href="/" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
+                <span class="text-sm">📐</span>
+                <div>
+                  <div class="font-bold">Image Resizer</div>
+                  <div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Format, crop & compress Discord images</div>
+                </div>
+              </a>
               <a href="/tools/banner/" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
                 <span class="text-sm">🖼️</span>
                 <div>
@@ -131,8 +149,8 @@ const {
               <a href="/tools/sticker/" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
                 <span class="text-sm">🏷️</span>
                 <div>
-                  <div class="font-bold">Sticker Compressor</div>
-                  <div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">320×320 APNG/PNG under 512 KiB</div>
+                  <div class="font-bold">Sticker Studio</div>
+                  <div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Photo to sticker & 320×320 sizing</div>
                 </div>
               </a>
               <a href="/tools/role-icon/" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
@@ -145,22 +163,77 @@ const {
             </div>
           </details>
 
-          <!-- Top-Tier Direct Quick Links -->
-          <a href="/tools/banner/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
-            Banner
+          <!-- Asset Library Quick Link -->
+          <a href="/assets/" class={`header-nav-btn px-3 py-1.5 rounded-lg border bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#FF84BA] dark:hover:border-[#FF84BA] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 flex items-center gap-1.5 ${isAssets ? 'border-[#FF84BA]/80 text-[#FF84BA] dark:border-[#FF84BA]/80 dark:text-[#FF84BA] font-bold' : 'border-[#E0DBD0] dark:border-[#263346]'}`}>
+            <span>✨ Assets</span>
+            <span class="text-[10px] font-mono font-bold bg-[#FF84BA]/15 text-[#FF84BA] px-1.5 py-0.2 rounded-full">110+</span>
           </a>
-          <a href="/tools/gif-maker/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
-            GIF Maker
+
+          <!-- Discord PFPs Quick Link -->
+          <a href="/assets/pfps/" class={`header-nav-btn px-3 py-1.5 rounded-lg border bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#FFDF82] dark:hover:border-[#FFDF82] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 flex items-center gap-1.5 ${isPfps ? 'border-[#FFDF82]/80 text-[#FFDF82] dark:border-[#FFDF82]/80 dark:text-[#FFDF82] font-bold' : 'border-[#E0DBD0] dark:border-[#263346]'}`}>
+            <span>👤 PFPs</span>
+            <span class="text-[10px] font-mono font-bold bg-[#FFDF82]/20 text-[#FFDF82] px-1.5 py-0.2 rounded-full">50+</span>
           </a>
-          <a href="/tools/profile-viewer/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
-            Profile Viewer
-          </a>
-          <a href="/guides/discord-sizes/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+
+          <!-- Guides Direct Quick Link -->
+          <a href="/guides/discord-sizes/" class={`header-nav-btn px-3 py-1.5 rounded-lg border bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 ${isSizesGuide ? 'border-[#3368A0]/60 dark:border-[#66A3BF]/60 text-[#3368A0] dark:text-[#66A3BF]' : 'border-[#E0DBD0] dark:border-[#263346]'}`}>
             Size Guide
           </a>
-          <a href="/blog/" class="header-nav-btn px-3 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
-            Blog
-          </a>
+
+          <!-- Blog Dropdown Menu Navbar -->
+          <details class="relative group" id="blog-dropdown">
+            <summary
+              class={`header-nav-btn list-none px-3 py-1.5 rounded-lg border bg-white/70 dark:bg-[#161F2E]/70 backdrop-blur-xs text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white hover:border-[#3368A0] dark:hover:border-[#66A3BF] shadow-[0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200 cursor-pointer select-none flex items-center gap-1.5 ${isBlog ? 'border-[#3368A0]/60 dark:border-[#66A3BF]/60 text-[#3368A0] dark:text-[#66A3BF]' : 'border-[#E0DBD0] dark:border-[#263346]'}`}
+              aria-label="Blog & Guides Navigation"
+              aria-haspopup="true"
+            >
+              <span>Blog</span>
+              <svg class="w-3 h-3 opacity-60 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </summary>
+            
+            <div
+              class="absolute left-0 top-[calc(100%+6px)] z-50 w-72 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white/95 dark:bg-[#141A24]/95 backdrop-blur-xl shadow-xl shadow-[rgba(0,0,0,0.08)] dark:shadow-[rgba(0,0,0,0.4)] p-2 space-y-1"
+              role="menu"
+            >
+              <div class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7]">
+                Blog Hub
+              </div>
+              <a href="/blog/" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
+                <span class="text-sm">📖</span>
+                <div>
+                  <div class="font-bold">All Articles & Guides</div>
+                  <div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Tutorials, specs, and design ideas</div>
+                </div>
+              </a>
+
+              <div class="border-t border-[#E0DBD0]/60 dark:border-[#263346]/60 my-1 pt-1"></div>
+              <div class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7]">
+                Tutorials & Specs
+              </div>
+              <a href="/blog/how-to-make-discord-stickers/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
+                <span>🏷️</span>
+                <span class="truncate">How to Make Stickers</span>
+              </a>
+              <a href="/blog/discord-banner-ideas-templates/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
+                <span>🖼️</span>
+                <span class="truncate">Banner Ideas & Templates</span>
+              </a>
+              <a href="/blog/discord-pfp-ideas-anime-avatars/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
+                <span>👤</span>
+                <span class="truncate">Anime PFP & Avatars</span>
+              </a>
+              <a href="/blog/how-to-put-spoiler-on-discord-image/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
+                <span>👁️</span>
+                <span class="truncate">How to Put Spoilers</span>
+              </a>
+              <a href="/blog/how-to-change-discord-server-banner/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
+                <span>⚡</span>
+                <span class="truncate">How to Change Server Banner</span>
+              </a>
+            </div>
+          </details>
           <LanguagePicker lang={lang} variant="desktop" />
         </nav>
 
@@ -198,6 +271,21 @@ const {
             Tools & Generators
           </span>
           <div class="grid grid-cols-2 gap-1.5">
+            <a href="/assets/" class="p-2.5 rounded-lg text-xs font-bold bg-[#FF84BA]/10 hover:bg-[#FF84BA]/20 border border-[#FF84BA]/40 text-[#FF84BA] flex items-center justify-between transition-colors col-span-2">
+              <div class="flex items-center gap-1.5">
+                <span>✨</span> <span>Asset Library & Customizer</span>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FF84BA] text-black font-extrabold">110+ Free</span>
+            </a>
+            <a href="/assets/pfps/" class="p-2.5 rounded-lg text-xs font-bold bg-[#FFDF82]/10 hover:bg-[#FFDF82]/20 border border-[#FFDF82]/40 text-[#FFDF82] flex items-center justify-between transition-colors col-span-2">
+              <div class="flex items-center gap-1.5">
+                <span>👤</span> <span>Discord PFPs & Avatars</span>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FFDF82] text-black font-extrabold">50+ Free</span>
+            </a>
+            <a href="/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
+              <span>📐</span> Discord Image Resizer
+            </a>
             <a href="/tools/banner/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>🖼️</span> Banner Studio
             </a>
@@ -323,13 +411,13 @@ const {
 
         // Close header dropdowns on outside click or Escape
         document.addEventListener('click', function(e) {
-          document.querySelectorAll('details#tools-dropdown[open]').forEach(function(d) {
+          document.querySelectorAll('details#tools-dropdown[open], details#blog-dropdown[open]').forEach(function(d) {
             if (!d.contains(e.target)) d.removeAttribute('open');
           });
         });
         document.addEventListener('keydown', function(e) {
           if (e.key === 'Escape') {
-            document.querySelectorAll('details#tools-dropdown[open]').forEach(function(d) {
+            document.querySelectorAll('details#tools-dropdown[open], details#blog-dropdown[open]').forEach(function(d) {
               d.removeAttribute('open');
             });
           }
@@ -345,7 +433,7 @@ const {
     <!-- Footer: Authoritative, crawlable, AdSense compliant -->
     <footer class="border-t border-[#E0DBD0] bg-[#FAF8F5] text-[#475569] text-sm py-12 transition-colors duration-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           <div>
             <div class="flex items-center gap-2 text-[#192538] font-bold mb-3">
               <div class="w-6 h-6 rounded-[6px] bg-[#3368A0] flex items-center justify-center text-white text-xs">
@@ -354,13 +442,14 @@ const {
               <span>Discord Asset Studio</span>
             </div>
             <p class="text-xs text-[#6B7A90] leading-relaxed">
-              Autonomous, browser-only validation and formatting engine for Discord creator assets. All processing executes locally inside Web Workers.
+              Free, browser-only tools to crop, resize, and format your Discord assets. Everything runs right on your computer without uploading images to any server.
             </p>
           </div>
 
           <div>
             <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Core Utilities</h4>
             <ul class="space-y-2 text-xs">
+              <li><a href="/" class="hover:text-[#3368A0] transition-colors">Discord Image Resizer</a></li>
               <li><a href="/tools/emoji/" class="hover:text-[#3368A0] transition-colors">Emoji Maker & Validator</a></li>
               <li><a href="/tools/sticker/" class="hover:text-[#3368A0] transition-colors">Sticker Compressor (512 KiB)</a></li>
               <li><a href="/tools/banner/" class="hover:text-[#3368A0] transition-colors">Profile & Server Banners</a></li>
@@ -368,6 +457,23 @@ const {
               <li><a href="/tools/role-icon/" class="hover:text-[#3368A0] transition-colors">Role Icon Resizer (64x64)</a></li>
               <li><a href="/tools/gif-maker/" class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>
               <li><a href="/tools/profile-viewer/" class="hover:text-[#3368A0] transition-colors">Profile Viewer & Grabber</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <span>✨ Asset Library</span>
+              <span class="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#FF84BA]/15 text-[#FF84BA] font-bold">110+</span>
+            </h4>
+            <ul class="space-y-2 text-xs">
+              <li><a href="/assets/" class="hover:text-[#3368A0] transition-colors font-semibold text-[#192538]">All Presets Hub (110+)</a></li>
+              <li><a href="/assets/pfps/" class="hover:text-[#FFDF82] transition-colors font-bold text-[#FFDF82]">👤 Discord PFPs & Avatars (50+)</a></li>
+              <li><a href="/assets/anime/" class="hover:text-[#3368A0] transition-colors">Anime Banners & PFPs</a></li>
+              <li><a href="/assets/gaming/" class="hover:text-[#3368A0] transition-colors">Gaming & Esports Sets</a></li>
+              <li><a href="/assets/cyberpunk/" class="hover:text-[#3368A0] transition-colors">Cyberpunk & Neon Tech</a></li>
+              <li><a href="/assets/dark/" class="hover:text-[#3368A0] transition-colors">Dark & Gothic Banners</a></li>
+              <li><a href="/assets/aesthetic/" class="hover:text-[#3368A0] transition-colors">Aesthetic & Pastel Vibes</a></li>
+              <li><a href="/assets/icons-2d/" class="hover:text-[#3368A0] transition-colors font-semibold text-[#FF84BA]">🎨 2D Server Role Icons</a></li>
             </ul>
           </div>
 

@@ -1,0 +1,19 @@
+# Legacy / common-mistype redirects (301)
+/tools/emojis/        /tools/emoji/    301
+/tools/emote/         /tools/emoji/    301
+/tools/emotes/        /tools/emoji/    301
+/tools/stickers/      /tools/sticker/  301
+/tools/banners/       /tools/banner/   301
+/tools/avatars/       /tools/avatar/   301
+/tools/pfp/           /tools/avatar/   301
+/tools/role-icons/    /tools/role-icon/ 301
+/tools/roleicon/      /tools/role-icon/ 301
+/guides/sizes/        /guides/discord-sizes/  301
+/guides/gif/          /guides/discord-gif-guide/ 301
+/guide/discord-sizes/ /guides/discord-sizes/  301
+
+# Dedicated PFP / Avatar Hub Aliases
+/pfps/                /assets/pfps/    301
+/pfps                 /assets/pfps/    301
+/assets/pfp/          /assets/pfps/    301
+/assets/pfp           /assets/pfps/    301

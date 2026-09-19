@@ -118,9 +118,22 @@ const FONT_5X7 = {
   ']': [0x00, 0x41, 0x41, 0x7f, 0x00]
 };
 
-function generateOG() {
-  const width = 1200;
-  const height = 630;
+function renderOG(width, height, config) {
+  const {
+    title = "DISCORD CREATOR",
+    titleLine2 = "ASSET STUDIO",
+    subtitle = "VERIFIED CREATOR REGISTRY & IN-BROWSER RESIZING ENGINE",
+    tagline1 = "BINARY 256 KIB BOUNDARIES • 48PX BANNER SAFE ZONES • APNG STICKERS",
+    tagline2 = "100% PRIVATE CLIENT-SIDE PROCESSING VIA WEB WORKERS",
+    cards = [
+      { label: "EMOJIS", desc: "128PX • 256 KIB" },
+      { label: "STICKERS", desc: "320PX • 512 KIB" },
+      { label: "BANNERS", desc: "16:9 • SAFE ZONE" },
+      { label: "AVATARS", desc: "512PX • 1:1 CIRCLE" },
+      { label: "ROLE ICONS", desc: "64PX • BOOST L2" }
+    ],
+    badge = "100% CLIENT-SIDE • ZERO SERVER UPLOADS"
+  } = config;
 
   // Create pixel buffer
   const buffer = new Uint8ClampedArray(width * height * 4);
@@ -199,7 +212,7 @@ function generateOG() {
   fillRect(75, 100, 430, 2, 102, 163, 191, 100);
   // Emerald Status Dot
   fillRect(95, 75, 12, 12, 13, 148, 136, 255);
-  drawText("100% CLIENT-SIDE • ZERO SERVER UPLOADS", 120, 74, 2, 88, 225, 255, 255);
+  drawText(badge, 120, 74, 2, 88, 225, 255, 255);
 
   // 4. Clyde Logo Box
   const clydeX = 75, clydeY = 135, clydeSize = 130;
@@ -221,23 +234,15 @@ function generateOG() {
   fillRect(cMidX + 10, cMidY - 10, 16, 20, 88, 101, 242, 255);
 
   // 5. Title
-  drawText("DISCORD CREATOR", 235, 140, 8, 255, 255, 255, 255);
-  drawText("ASSET STUDIO", 235, 210, 8, 88, 225, 255, 255);
+  drawText(title, 235, 140, 8, 255, 255, 255, 255);
+  drawText(titleLine2, 235, 210, 8, 88, 225, 255, 255);
 
   // 6. Subtitle
-  drawText("VERIFIED CREATOR REGISTRY & IN-BROWSER RESIZING ENGINE", 75, 305, 4, 242, 239, 231, 255);
-  drawText("BINARY 256 KIB BOUNDARIES • 48PX BANNER SAFE ZONES • APNG STICKERS", 75, 355, 3, 200, 223, 219, 220);
-  drawText("100% PRIVATE CLIENT-SIDE PROCESSING VIA WEB WORKERS", 75, 395, 3, 200, 223, 219, 220);
+  drawText(subtitle, 75, 305, 4, 242, 239, 231, 255);
+  drawText(tagline1, 75, 355, 3, 200, 223, 219, 220);
+  drawText(tagline2, 75, 395, 3, 200, 223, 219, 220);
 
   // 7. Bottom Feature Cards
-  const cards = [
-    { label: "EMOJIS", desc: "128PX • 256 KIB" },
-    { label: "STICKERS", desc: "320PX • 512 KIB" },
-    { label: "BANNERS", desc: "16:9 • SAFE ZONE" },
-    { label: "AVATARS", desc: "512PX • 1:1 CIRCLE" },
-    { label: "ROLE ICONS", desc: "64PX • BOOST L2" }
-  ];
-
   const cardW = 195;
   const gap = 20;
   const startCardX = 75;
@@ -255,15 +260,144 @@ function generateOG() {
     drawText(cards[i].desc, cx + 18, cardY + 52, 2, 88, 225, 255, 240);
   }
 
-  // Encode to PNG
-  const pngData = encodePNG(width, height, (x, y) => {
+  // Encode to PNG and return the buffer
+  return encodePNG(width, height, (x, y) => {
     const idx = (y * width + x) * 4;
     return [buffer[idx], buffer[idx + 1], buffer[idx + 2], buffer[idx + 3]];
   });
-
-  fs.writeFileSync('public/og-image.png', pngData);
-  fs.writeFileSync('public/og-image.jpg', pngData); // also write jpg so both URLs resolve
-  console.log(`Successfully generated public/og-image.png and public/og-image.jpg (${pngData.length} bytes)`);
 }
 
-generateOG();
+const OG_WIDTH = 1200;
+const OG_HEIGHT = 630;
+
+// Per-page OG image configurations (filename → branding).
+const PAGES = [
+  { file: 'public/og-image.png', config: {} },
+  {
+    file: 'public/og/emoji.png',
+    config: {
+      title: 'DISCORD EMOJI', titleLine2: 'MAKER',
+      subtitle: 'RESIZE & COMPRESS CUSTOM EMOJIS TO 128X128 UNDER 256 KIB',
+      tagline1: 'REAL-TIME 32X32 CHAT PREVIEW • PNG GIF WEBP SUPPORT',
+      tagline2: '100% PRIVATE IN-BROWSER PROCESSING',
+      cards: [
+        { label: 'SIZE', desc: '128X128 PX' }, { label: 'LIMIT', desc: '256 KIB' },
+        { label: 'PREVIEW', desc: '32X32 CHAT' }, { label: 'FORMATS', desc: 'PNG GIF WEBP' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/sticker.png',
+    config: {
+      title: 'DISCORD STICKER', titleLine2: 'MAKER',
+      subtitle: 'EXACT 320X320 RESIZE UNDER 512 KIB • APNG ANIMATION',
+      tagline1: 'STATIC PNG & ANIMATED APNG • MAX 5S / 60 FPS',
+      tagline2: 'AVOID INVALID ASSET ERRORS • 100% PRIVATE',
+      cards: [
+        { label: 'SIZE', desc: '320X320 PX' }, { label: 'LIMIT', desc: '512 KIB' },
+        { label: 'ANIMATED', desc: 'APNG 5S' }, { label: 'FPS', desc: '60 MAX' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/banner.png',
+    config: {
+      title: 'DISCORD BANNER', titleLine2: 'MAKER',
+      subtitle: 'SERVER 960X540 & PROFILE 680X240 • 48PX SAFE ZONE',
+      tagline1: '16:9 & 5:2 PRESETS • NITRO & BOOST TIER RULES',
+      tagline2: 'LIVE SAFE-ZONE OVERLAY • 100% PRIVATE',
+      cards: [
+        { label: 'SERVER', desc: '960X540' }, { label: 'PROFILE', desc: '680X240' },
+        { label: 'RATIO', desc: '16:9 / 5:2' }, { label: 'SAFE ZONE', desc: '48PX TOP' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/avatar.png',
+    config: {
+      title: 'DISCORD AVATAR', titleLine2: 'CROPPER',
+      subtitle: 'CIRCULAR CROP 512X512 PROFILE PICTURES & SERVER ICONS',
+      tagline1: 'LIVE CIRCLE-MASK PREVIEW • NITRO ANIMATED FLAGS',
+      tagline2: 'UNDER 8 MB • 100% PRIVATE IN-BROWSER',
+      cards: [
+        { label: 'SIZE', desc: '512X512 PX' }, { label: 'MASK', desc: 'CIRCULAR' },
+        { label: 'LIMIT', desc: '8 MB' }, { label: 'FORMATS', desc: 'PNG GIF WEBP' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/role-icon.png',
+    config: {
+      title: 'DISCORD ROLE', titleLine2: 'ICON MAKER',
+      subtitle: 'EXACT 64X64 ROLE ICONS UNDER 256 KB FOR BOOST LEVEL 2',
+      tagline1: '64X64 CANVAS • MANAGE ROLES PERMISSION RULES',
+      tagline2: '100% PRIVATE IN-BROWSER PROCESSING',
+      cards: [
+        { label: 'SIZE', desc: '64X64 PX' }, { label: 'LIMIT', desc: '256 KB' },
+        { label: 'TIER', desc: 'BOOST L2' }, { label: 'PERMS', desc: 'MANAGE ROLES' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/guide-sizes.png',
+    config: {
+      title: 'DISCORD SIZE', titleLine2: 'CHEAT SHEET',
+      subtitle: 'EVERY OFFICIAL DISCORD DIMENSION & FILE LIMIT FOR 2026',
+      tagline1: 'EMOJIS STICKERS BANNERS AVATARS ROLE ICONS',
+      tagline2: 'NITRO & BOOST TIER REQUIREMENTS VERIFIED',
+      badge: 'UPDATED FOR 2026 • ALL ASSET TYPES',
+      cards: [
+        { label: 'EMOJI', desc: '128PX' }, { label: 'STICKER', desc: '320PX' },
+        { label: 'BANNER', desc: '960X540' }, { label: 'AVATAR', desc: '512PX' },
+        { label: 'ROLE', desc: '64PX' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/guide-gif.png',
+    config: {
+      title: 'DISCORD GIF', titleLine2: 'MAKER GUIDE',
+      subtitle: 'MASTER ANIMATED GIFS UNDER THE 256 KIB LIMIT',
+      tagline1: 'FRAME RATE & PALETTE OPTIMIZATION • APNG',
+      tagline2: 'BANNERS EMOJIS AVATARS • 100% PRIVATE',
+      badge: 'ANIMATION ENGINEERING • 2026',
+      cards: [
+        { label: 'EMOJI', desc: '256 KIB' }, { label: 'FPS', desc: '20-30' },
+        { label: 'PALETTE', desc: '64-128' }, { label: 'BANNER', desc: '10 MB' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  }
+];
+
+const BLOG = [
+  { file: 'public/og/blog-stickers.png', title: 'MAKE A DISCORD', titleLine2: 'STICKER', subtitle: 'AVOID INVALID ASSET ERRORS • EXACT 320X320 & 512 KIB' },
+  { file: 'public/og/blog-banners.png', title: 'DISCORD BANNER', titleLine2: 'IDEAS', subtitle: 'SERVER & PROFILE BANNER TEMPLATES BY AESTHETIC' },
+  { file: 'public/og/blog-pfp.png', title: 'DISCORD PFP', titleLine2: 'IDEAS', subtitle: 'ANIME AVATARS & PROFILE PICTURE INSPIRATION' },
+  { file: 'public/og/blog-spoiler.png', title: 'DISCORD IMAGE', titleLine2: 'SPOILER', subtitle: 'HIDE SENSITIVE MEDIA ON DESKTOP & MOBILE' },
+  { file: 'public/og/blog-server-banner.png', title: 'CHANGE SERVER', titleLine2: 'BANNER', subtitle: 'BOOST TIER REQUIREMENTS & STEP-BY-STEP GUIDE' }
+];
+
+for (const b of BLOG) {
+  PAGES.push({
+    file: b.file,
+    config: { title: b.title, titleLine2: b.titleLine2, subtitle: b.subtitle, badge: 'CREATOR GUIDE • DISCORD ASSET STUDIO' }
+  });
+}
+
+fs.mkdirSync('public/og', { recursive: true });
+
+let count = 0;
+for (const page of PAGES) {
+  const png = renderOG(OG_WIDTH, OG_HEIGHT, page.config);
+  fs.writeFileSync(page.file, png);
+  console.log(`✓ ${page.file} (${png.length} bytes)`);
+  count++;
+}
+
+console.log(`\nSuccessfully generated ${count} OG images.`);

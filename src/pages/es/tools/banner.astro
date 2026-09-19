@@ -1,0 +1,116 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Creador de Banners Discord | Zona Segura 48px";
+const pageDescription = "Creador de banners Discord: 960×540 servidor y 680×240 perfil con zona segura de 48px marcada. Reglas de Nitro y Boost. 100% en tu navegador.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/banner/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/banner/";
+
+const appSchema = generateSoftwareApplicationSchema("Creador de Banners para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Estudio de Banners", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cuál es el tamaño del banner de servidor de Discord?", a: "Discord recomienda un mínimo de 960×540 píxeles con relación 16:9 (o 1920×1080 para mayor nitidez). Requiere Boost Nivel 2 para banners estáticos." },
+  { q: "¿Cuántos boosts necesito para un banner de servidor?", a: "Necesitas Boost Nivel 2 (7 boosts) para banners estáticos y Nivel 3 (14 boosts) para banners animados GIF." },
+  { q: "¿Qué tamaño tiene el banner de perfil de Discord?", a: "El banner de perfil global es de 680×240 píxeles (relación 17:6) y requiere una suscripción Nitro." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/banner.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Estudio de Banners</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Creador de Banners Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Diseña banners de servidor (<strong>960×540</strong>, 16:9) y de perfil (<strong>680×240</strong>) con la zona segura superior de 48 píxeles claramente marcada. Todo el procesamiento ocurre localmente en tu navegador.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Servidor</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">960×540</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Perfil</p>
+        <p class="text-sm font-bold text-[#0D9488]">680×240</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Relación</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">16:9 / 5:2</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Zona segura</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">48px sup.</p>
+      </div>
+    </div>
+
+    <div class="rounded-[16px] border-2 border-[#3368A0]/30 dark:border-[#66A3BF]/30 bg-gradient-to-br from-[#FAF8F5] to-[#C8DFDB]/20 dark:from-[#141A24] dark:to-[#202E42]/50 p-6 sm:p-8 text-center mb-8">
+      <span class="inline-block px-3 py-1 rounded-full bg-[#0D9488]/15 text-[#0D9488] font-bold text-xs font-mono mb-3">HERRAMIENTA INTERACTIVA</span>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-[#192538] dark:text-white mb-2">Abrir el Estudio de Banners</h2>
+      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-lg mx-auto mb-5">
+        La herramienta interactiva completa (recorte 16:9 y 5:2 con la zona segura marcada) está disponible en el estudio principal.
+      </p>
+      <a href={enUrl} class="btn-primary inline-block text-xs px-6 py-3 rounded-[10px] font-semibold shadow-sm">
+        Abrir Herramienta de Banners →
+      </a>
+      <p class="text-[11px] text-[#6B7A90] mt-3">La herramienta funciona igual en todos los idiomas — tus archivos nunca salen de tu dispositivo.</p>
+    </div>
+
+    
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">La Zona Segura Superior de 48px</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Los clientes de Discord superponen el título del servidor y los controles de navegación sobre los 48 píxeles superiores del banner en escritorio. Coloca siempre los elementos focales y el texto por debajo de esa zona para evitar que queden tapados.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Banners de Servidor vs. de Perfil</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Los banners de servidor usan relación 16:9 (960×540 o 1920×1080) y requieren Boost Nivel 2 (estático) o Nivel 3 (animado). Los banners de perfil usan un formato panorámico 680×240 y requieren Nitro.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>
+

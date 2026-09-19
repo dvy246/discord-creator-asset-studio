@@ -1,0 +1,22 @@
+{
+  "name": "Discord Creator Asset Studio",
+  "short_name": "Asset Studio",
+  "description": "Free browser-based Discord asset resizer & validator. Emojis, stickers, banners, avatars, role icons — zero uploads.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F2EFE7",
+  "theme_color": "#F2EFE7",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

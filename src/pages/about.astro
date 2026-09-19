@@ -11,32 +11,63 @@ import SketchUnderline from '../components/SketchUnderline.astro';
         About Discord <span class="relative inline-block sketch-trigger"><span class="relative z-10">Asset Studio</span><SketchUnderline color="#66A3BF" /></span>
       </h1>
       <p class="text-[#475569] text-base leading-relaxed">
-        Building the standard for honest, zero-compromise, browser-local digital asset validation.
+        Simple, fast, and private Discord asset tools that run entirely in your browser.
       </p>
     </div>
 
     <div class="space-y-8 text-[#475569] text-sm leading-relaxed border-t border-[#E0DBD0] pt-8">
       <section class="card-panel p-6 sm:p-8 rounded-[14px]">
-        <h2 class="text-lg font-bold text-[#192538] mb-3">Our Engineering Philosophy</h2>
+        <h2 class="text-lg font-bold text-[#192538] mb-3">Our Philosophy</h2>
         <p class="mb-3">
-          Most online image converters and Discord resizers operate as ad-saturated data funnels. They require users to upload their personal artwork, emojis, or brand icons to remote servers, compress them with lossy default presets, and charge subscriptions to remove watermarks.
+          Many online image converters make you upload your private graphics to remote servers, cover the screen with ads, or charge subscriptions just to remove watermarks.
         </p>
         <p>
-          We built Discord Asset Studio to solve this specific problem with technical rigor:
+          We built Discord Asset Studio to keep things simple, private, and free:
         </p>
         <ul class="list-disc pl-5 space-y-2 mt-3 text-[#192538] font-medium">
-          <li><strong>100% In-Browser Execution:</strong> Using Web Workers, HTML5 Canvas, and modern WebAssembly codecs, your files never leave your machine.</li>
-          <li><strong>Deterministic Validation:</strong> Every validation result cites the exact official rule ID, detected dimension/byte count, official limit, source URL, and last verification date.</li>
-          <li><strong>Transparent Gating:</strong> We clearly distinguish between file validity (e.g. dimensions, byte caps) and platform permissions (e.g. Nitro subscription, Boost Level 2, or Manage Roles permission).</li>
-          <li><strong>No Dark Patterns:</strong> No forced signups, no watermarks, no artificial delays, and no paywalls for basic file resizing.</li>
+          <li><strong>100% In-Browser:</strong> Your images and GIFs are processed directly on your device using your browser. Nothing is ever uploaded to a server.</li>
+          <li><strong>Accurate Limits:</strong> We check exact pixel dimensions and byte counts before you download so Discord never rejects your files.</li>
+          <li><strong>Clear Requirements:</strong> We make it obvious which features are completely free and which ones require Discord Nitro or Server Boost tiers.</li>
+          <li><strong>No Annoyances:</strong> No account signups, no watermarks, no artificial countdowns, and no paywalls.</li>
         </ul>
       </section>
 
       <section class="card-panel p-6 sm:p-8 rounded-[14px]">
-        <h2 class="text-lg font-bold text-[#192538] mb-3">Rule Provenance & Maintenance</h2>
-        <p>
-          Our rule registry is maintained in open configuration files. Each rule includes an automated freshness review due date (`reviewDueAt`), triggering continuous CI checks to ensure our parameters stay synchronized with Discord's active support documentation and developer guidelines.
+        <h2 class="text-lg font-bold text-[#192538] mb-3">Always Up to Date</h2>
+        <p class="mb-3">
+          We maintain our asset dimensions by constantly verifying against Discord's official developer documentation and Help Center guides:
         </p>
+        <ul class="list-disc pl-5 space-y-1 text-xs font-mono text-[#3368A0] dark:text-[#66A3BF] mb-4">
+          <li>
+            <a href="https://discord.com/developers/docs" target="_blank" rel="noopener noreferrer" class="hover:underline">
+              Discord Developer Portal &rarr;
+            </a>
+          </li>
+          <li>
+            <a href="https://support.discord.com/hc/en-us" target="_blank" rel="noopener noreferrer" class="hover:underline">
+              Discord Help Center & Knowledge Base &rarr;
+            </a>
+          </li>
+        </ul>
+        <p class="text-xs text-[#6B7A90]">
+          Discord Asset Studio is an independent project. We are not affiliated with, endorsed by, or sponsored by Discord Inc. Discord is a registered trademark of Discord Inc.
+        </p>
+      </section>
+
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] mb-3">Privacy & Maintainers</h2>
+        <p class="mb-3">
+          Discord Asset Studio is built and maintained by independent web developers who care about clean, fast, and privacy-respecting software. We run zero trackers, store no personal cookies, and process all image pixels right inside your web browser.
+        </p>
+        <div class="flex flex-wrap items-center gap-4 pt-2 text-xs font-semibold">
+          <a href="/contact/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">
+            Submit a Specification Update &rarr;
+          </a>
+          <span class="text-[#CBD5E1]">•</span>
+          <a href="mailto:support@discordassets.studio" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">
+            support@discordassets.studio
+          </a>
+        </div>
       </section>
     </div>
   </div>

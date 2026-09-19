@@ -4,8 +4,8 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
 import SketchCircle from '../../components/SketchCircle.astro';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
 
-const pageTitle = "Discord Avatar Maker & PFP Cropper | 512x512";
-const pageDescription = "Crop, resize, and preview Discord avatars with a live circular mask. 512x512 square authoring with 100% private in-browser processing.";
+const pageTitle = "Discord Avatar | Live Circle Mask Preview | Asset Studio";
+const pageDescription = "Crop and preview your Discord avatar with a live circular mask. Format square 512x512 profile pictures and server icons. 100% private in-browser tool.";
 const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/avatar/";
 
 const appSchema = generateSoftwareApplicationSchema(
@@ -15,7 +15,7 @@ const appSchema = generateSoftwareApplicationSchema(
 );
 
 const breadcrumbSchema = generateBreadcrumbSchema([
-  { name: "Home", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
   { name: "Avatar Studio", url: pageUrl }
 ]);
 
@@ -25,10 +25,10 @@ const faqSchema = {
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "What are the recommended dimensions for a Discord profile picture (PFP)?",
+      "name": "What is the recommended Discord avatar size and Discord profile picture size?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Discord recommends authoring avatars at 512x512 pixels with a 1:1 square aspect ratio. While Discord renders avatars at 128x128 in profile modals, 80x80 in user lists, and 40x40 in chat streams, a 512x512 master image ensures crisp detail on 2x and 3x Retina mobile devices and 4K desktop screens."
+        "text": "The best Discord avatar size and Discord profile picture size is 512x512 pixels (a 1:1 square). Making your image 512x512 keeps your Discord profile pictures sharp when people open your full profile, browse member lists, or view chat on high-resolution screens."
       }
     },
     {
@@ -36,7 +36,7 @@ const faqSchema = {
       "name": "How much of the image is lost when Discord crops square avatars into circles?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "When a 1:1 square image is clipped into a circular mask (border-radius: 50%), exactly 21.46% of the total pixel area is cut off from the four corners. Any branding, logos, or peripheral subject details positioned outside the central inscribed circle will be hidden from view."
+        "text": "When Discord turns your square picture into a circle, it cuts off just over 21% of the image from the four corners. Any details or logos near the outer edges get trimmed away, so it helps to keep important artwork centered."
       }
     },
     {
@@ -44,22 +44,22 @@ const faqSchema = {
       "name": "What is the maximum file size for Discord avatars?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Discord allows avatar uploads up to 8.0 MB (8,388,608 bytes). Supported image formats include PNG, JPEG, WebP, and animated GIF."
+        "text": "Discord allows avatar files up to 8.0 MB (8,388,608 bytes). You can upload PNG, JPEG, WebP, or animated GIF formats."
       }
     },
     {
       "@type": "Question",
-      "name": "Do animated avatars require a Discord Nitro subscription?",
+      "name": "Does an animated Discord animated avatar require Nitro?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. While static avatars are free for every Discord user, animated avatars (using the GIF format) require an active Discord Nitro or Nitro Basic subscription to display animation in chat and profile popouts."
+        "text": "Yes. Static avatars are completely free for everyone, but an animated Discord animated avatar (GIF) requires Discord Nitro or Nitro Basic to move in chat and profile popouts."
       }
     }
   ]
 };
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/avatar.png">
   <!-- Inject Schemas -->
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
@@ -67,15 +67,15 @@ const faqSchema = {
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
-      <div class="flex items-center gap-2 text-xs text-[#6B7A90] mb-2 font-mono">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
         <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
-        <span class="text-[#192538] font-semibold">Avatar Studio</span>
-      </div>
+        <span class="text-[#192538] dark:text-white font-semibold">Avatar Studio</span>
+      </nav>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
-            Discord Avatar & PFP <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Studio</span><SketchUnderline color="#66A3BF" /></span>
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Avatar</mark> & PFP <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Cropper</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
           <p class="text-xs sm:text-sm text-[#475569] mt-1">512 × 512 px authoring standard • Circular mask preview • 8 MB maximum size</p>
         </div>
@@ -84,6 +84,26 @@ const faqSchema = {
           In-Browser Processing
         </div>
       </div>
+    </div>
+
+    <!-- Asset Library Quick Callout -->
+    <div class="mb-8 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-[#FF84BA]/10 via-[#FFDF82]/10 to-[#99C2FF]/10 dark:from-[#FF84BA]/15 dark:via-[#FFDF82]/15 dark:to-[#99C2FF]/15 border border-[#FF84BA]/30 dark:border-[#FF84BA]/40 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">✨</span>
+        <div>
+          <div class="text-xs sm:text-sm font-bold text-[#192538] dark:text-[#FFEFE3] flex items-center gap-2">
+            <span>Need an Avatar & Matching Banner Set?</span>
+            <span class="text-[10px] font-mono font-extrabold px-1.5 py-0.2 rounded-full bg-[#FF84BA] text-black">110+ Free</span>
+          </div>
+          <p class="text-xs text-[#6B7A90] dark:text-[#99C2FF]">
+            Browse 110+ curated avatar sets with smart circular focal zooming, anime, gaming, and cyberpunk aesthetics.
+          </p>
+        </div>
+      </div>
+      <a href="/assets/" class="shrink-0 btn-primary text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-xs hover:shadow-md transition-all font-bold">
+        <span>Browse Presets</span>
+        <span>→</span>
+      </a>
     </div>
 
     <!-- Main Workspace Layout -->
@@ -152,6 +172,14 @@ const faqSchema = {
             <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans">
               <strong>Requirement:</strong> Static avatars are free. Animated avatars (.gif) require an active Discord Nitro subscription.
             </div>
+            <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-sans font-medium">
+              <a href="/guides/discord-sizes/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+                <span>📖</span> Discord Avatar Dimensions & Size Cheat Sheet
+              </a>
+              <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+                <span>✨</span> Animated Discord GIF Avatar Guide
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -169,11 +197,11 @@ const faqSchema = {
           </div>
 
           <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Engineering <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">iconic</span><SketchUnderline color="#66A3BF" /></span> Discord avatars.
+            Designing a <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Discord avatar</span><SketchUnderline color="#66A3BF" /></span> that stands out.
           </h2>
 
           <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
-            From circular geometry clipping to status indicator badge collision, creating a standout Discord avatar requires understanding how Discord's client layers UI elements directly over your artwork.
+            Discord crops your square image into a circle and places an online status dot right over the bottom-right corner. Here is how to position your art so nothing gets cut off.
           </p>
 
           <!-- Step Timeline -->
@@ -183,22 +211,22 @@ const faqSchema = {
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
-              <span class="text-xs sm:text-sm">01 / The 512×512 Master Standard</span>
+              <span class="text-xs sm:text-sm">01 / The 512×512 Standard</span>
             </div>
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
-              <span class="text-xs sm:text-sm">02 / Circle Mask Mathematics</span>
+              <span class="text-xs sm:text-sm">02 / The Circular Crop</span>
             </div>
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
-              <span class="text-xs sm:text-sm">03 / Status Indicator Occlusion</span>
+              <span class="text-xs sm:text-sm">03 / The Status Indicator Dot</span>
             </div>
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
-              <span class="text-xs sm:text-sm">04 / Nitro Animated GIFs & Framing</span>
+              <span class="text-xs sm:text-sm">04 / Animated GIFs & Nitro</span>
             </div>
           </div>
         </div>
@@ -214,13 +242,13 @@ const faqSchema = {
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">512 × 512 MASTER</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                The 512x512 Master: Multi-Resolution Clarity
+                The 512x512 Master: Crisp on Every Screen
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Discord displays your avatar at vastly different dimensions depending on context. In message streams, avatars appear at 40x40 pixels; in member sidebars, they shrink to 32x32 pixels; in user profile modals, they scale up to 128x128 pixels; and on high-density 3x mobile screens, they require up to 384 physical device pixels.
+                Discord shows your profile picture at different sizes depending on where someone is looking. In messages, it is 40×40 pixels; in the member sidebar, it shrinks to 32×32; and in profile popouts, it scales up to 128×128 or larger on mobile Retina displays.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Authoring your profile picture at an exact 512x512 pixel square canvas guarantees optimal sampling data across all client viewports. Downscaling from a clean 512px raster avoids the jagged aliasing and moiré artifacts that occur when low-resolution 128px images are stretched onto modern Retina displays.
+                Creating your Discord avatar at 512×512 pixels guarantees it looks sharp everywhere. Scaling down from 512px keeps clean lines and rich detail without the blurry pixelation of smaller images.
               </p>
               <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
                 <div>
@@ -240,13 +268,13 @@ const faqSchema = {
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">21.46% CORNER LOSS</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Circle Mask Mathematics: The Inscribed Diameter
+                Circle Mask: Why Corners Get Cut Off
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Every avatar uploaded to Discord is subjected to an instantaneous client-side circular crop: `border-radius: 50%`. Geometrically, the area of a circle inscribed within a square of side length s is (π / 4) × s² ≈ 0.7854 × s². This means exactly 21.46% of the original square image is permanently clipped off in the four outer corners.
+                Discord always clips your square upload into a circle. Mathematically, cutting a square into a circle trims away 21.46% of the total image area from the four corners.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Artists who place logos, signature marks, or character hair ornaments in the extreme corners will find their details brutally truncated in Discord's interface. Discord Asset Studio projects an active circular overlay over your 512px canvas so you can visually verify that all focal elements remain safely centered within the 440px safe diameter.
+                If you put text, initials, or character details right near the edges, Discord will slice them off. Our live circle preview shows you exactly how your picture will look in the app before you export, helping you keep the main subject centered.
               </p>
               <div class="grid grid-cols-2 gap-3 text-xs font-mono">
                 <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
@@ -269,13 +297,13 @@ const faqSchema = {
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">BOTTOM-RIGHT BADGE</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Status Indicator Occlusion: Protecting the 4th Quadrant
+                Status Badge: Keeping the Bottom-Right Free
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                In Discord chat streams, user lists, and profile summaries, Discord positions a permanent circular status indicator badge directly in the bottom-right quadrant of your avatar. This badge conveys online status (green dot), idle (crescent moon), do not disturb (red dash), offline (gray ring), or active live streaming (purple camera icon).
+                Everywhere your avatar appears in Discord, a colored status dot sits directly over the bottom-right corner (showing online, idle, do not disturb, or streaming).
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                This status pill occupies approximately 28% of the bottom-right circular quadrant and features a thick 2-pixel background cutout border. If your character's mouth, accessory, or primary logo is oriented toward this bottom-right corner, the status indicator will obscure it entirely. We recommend composing avatars with a slight leftward or central focal orientation.
+                This dot covers about a quarter of that bottom-right area. If an artist places a signature, character chin, or small prop in that corner, the status dot covers it up. Keeping your focal point dead center or slightly toward the left makes sure the status badge never hides anything important.
               </p>
               <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
                 <span class="text-[#0D9488] font-bold">✓ Status Zone Clear:</span>
@@ -292,13 +320,13 @@ const faqSchema = {
                 <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">ANIMATED GIF & DECORATION</span>
               </div>
               <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Animated Nitro Avatars & Avatar Decoration Layering
+                Animated Nitro Avatars & Avatar Decorations
               </h3>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Subscribers to Discord Nitro can upload animated GIF avatars. Discord plays these animations automatically upon hover or continuously inside direct message panels and profile modals. Animated avatars must remain under Discord's 8.0 MB file size limit and loop cleanly without jarring frame hitches.
+                With Discord Nitro, you can upload an animated Discord avatar in GIF format up to 8.0 MB. Discord plays the animation in your profile popout and loops it when someone hovers over your message.
               </p>
               <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Furthermore, Discord's introduction of "Avatar Decorations" adds an animated 3D bezel around user PFPs. These decorations overlap the outer 10% to 15% of your avatar perimeter. Keeping character faces and high-detail elements safely recessed from the outer edge ensures total compatibility with whatever decoration your community members equip.
+                If you or your members also use Discord's Avatar Decorations, keep in mind those decorative frames sit over the outer 10% of the circle. Keeping faces and text centered ensures any equipped frame won't cover up your art.
               </p>
               <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

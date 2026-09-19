@@ -3007,3 +3007,9 @@ html.dark[data-palette="coastal"] .sketch-path,
 html.dark[data-palette="coastal"] .sketch-circle-path {
   stroke: #F48F68 !important;
 }
+
+/* Language picker: hide native details/summary disclosure markers */
+summary.header-nav-btn::-webkit-details-marker,
+#language-picker summary::-webkit-details-marker {
+  display: none;
+}

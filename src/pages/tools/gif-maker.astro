@@ -27,7 +27,7 @@ const faqSchema = {
       "name": "What is the maximum file size for Discord animated GIFs?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Discord enforces a strict 10.0 MB limit for animated profile banners and user avatars (with Discord Nitro). Animated emojis are limited to 256 KiB, and animated stickers must be under 512 KiB in APNG format."
+        "text": "Discord sets a 10.0 MB limit for animated profile banners and user avatars (with Discord Nitro). Animated emojis must stay under 256 KiB, and animated stickers must stay under 512 KiB using the APNG format."
       }
     },
     {
@@ -35,7 +35,7 @@ const faqSchema = {
       "name": "How long can a Discord animated banner or avatar be?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "While Discord technically allows GIFs of any duration under 10MB, Discord client UI pauses banner animations after roughly 5 seconds until hovered. We recommend authoring 2 to 5-second seamless loops."
+        "text": "While Discord lets you upload any length under 10MB, the desktop and mobile apps pause banner animations after about 5 seconds unless someone hovers over them. Making a clean 2 to 4-second loop looks best."
       }
     },
     {
@@ -43,7 +43,7 @@ const faqSchema = {
       "name": "Why does my Discord GIF look pixelated or slow?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Large resolution GIFs exceed Discord's 10MB limit quickly unless compressed. Reducing frame rate from 30 FPS to 15 FPS cuts file size in half without sacrificing perceived smoothness on Discord profile cards."
+        "text": "High-resolution animations get huge fast. If your GIF goes over 10MB, you either have to compress it heavily or shorten it. Dropping the frame rate from 30 FPS down to 15 or 20 FPS cuts the file size in half while keeping the animation smooth."
       }
     },
     {
@@ -51,7 +51,7 @@ const faqSchema = {
       "name": "Do I need Discord Nitro to use animated GIFs?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Animated avatars, animated profile banners, and custom external GIF emojis require an active Discord Nitro or Nitro Basic subscription."
+        "text": "Yes. Animated profile pictures, animated banners, and using animated custom emojis across different servers all require an active Discord Nitro or Nitro Basic subscription."
       }
     }
   ]
@@ -202,9 +202,9 @@ const faqSchema = {
         </div>
 
         <div class="card-panel rounded-[14px] p-6">
-          <h3 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider mb-2">Optimizing Tips</h3>
+          <h3 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider mb-2">Quick Tips</h3>
           <p class="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
-            Discord loops animated GIFs continuously on profiles. Keeping your animation between <strong>2 and 5 seconds</strong> guarantees high frame fidelity without hitting the 10MB ceiling.
+            Discord loops profile GIFs automatically. Aim for a seamless <strong>2 to 4 second</strong> loop to keep the animation smooth without hitting the 10MB file limit.
           </p>
           <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346]">
             <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline text-xs font-medium flex items-center gap-1">

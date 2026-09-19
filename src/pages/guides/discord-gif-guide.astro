@@ -1,0 +1,268 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import { generateBreadcrumbSchema, generateHowToSchema } from '../../utils/seo';
+
+const pageTitle = "Discord GIF Maker | Animation Limits Guide | Asset Studio";
+const pageDescription = "Step-by-step Discord GIF maker guide. Master official 256 KiB file limits, frame rates, and palette compression for animated banners, emojis, and avatars.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/guides/discord-gif-guide/";
+
+const techArticleSchema = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": pageTitle,
+  "description": pageDescription,
+  "image": "https://discord-creator-asset-studio.pages.dev/og-image.png",
+  "inLanguage": "en",
+  "url": pageUrl,
+  "datePublished": "2026-01-01T00:00:00+00:00",
+  "dateModified": "2026-03-01T00:00:00+00:00",
+  "author": {
+    "@type": "Organization",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/",
+    "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+  }
+};
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Size Guide", url: "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/" },
+  { name: "GIF Guide", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the official discord gif size limit for emojis and banners?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The maximum discord gif size depends on what you are uploading: animated emojis have a strict limit of 256 KiB (262,144 bytes), while animated server banners and profile banners allow up to 10.0 MB. If an emoji GIF is even one byte over 256 KiB, Discord will reject it. Lowering your frame rate to 20-24 FPS and cutting colors to 64 or 128 in a discord gif compressor keeps files comfortably under the cap."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the dimensions and requirements for an animated discord gif banner?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An animated discord gif banner for a server uses a 16:9 ratio (960x540 or 1920x1080) and requires Server Boost Level 3 (14 boosts). Profile banners use 680x240 pixels and require Discord Nitro. Both support files up to 10.0 MB."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How to make a discord gif from a video clip or existing animation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If you want to know how to make a discord gif from a video clip: trim the clip to a 2 to 4-second loop, resize it using a discord gif resizer to the right dimensions (128x128 for emojis, 680x240 for profile banners, or 960x540 for server banners), set the frame rate to 20-24 FPS, and compress the colors so it stays well under the file size limit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my animated discord gif pfp or avatar blurry?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When you upload a discord gif pfp (profile picture), Discord cuts the square image into a circle. If you make it smaller than 512x512 pixels, high-resolution phone and computer screens stretch it out, making it look blurry. Always export your animated discord gif pfp at 512x512 pixels with your subject centered."
+      }
+    }
+  ]
+};
+
+const howToSchema = JSON.parse(generateHowToSchema({
+  name: "How to make a Discord GIF",
+  description: "Trim, resize, and compress a video clip or animation into a Discord-ready GIF under the file size limit.",
+  url: pageUrl,
+  totalTime: "PT5M",
+  steps: [
+    { name: "Trim the clip", text: "Cut your source video or animation to 2–4 seconds to keep frame count low." },
+    { name: "Resize to target dimensions", text: "Scale to 128x128 for emojis, 680x240 for profile banners, or 960x540 for server banners." },
+    { name: "Set frame rate", text: "Adjust to 24–30 FPS for banners or 20–25 FPS for emojis to reduce file weight." },
+    { name: "Quantize the palette", text: "Limit colors to 64 or 128 to compress the GIF under Discord's 256 KiB or 10 MB limit." },
+    { name: "Verify and export", text: "Confirm the final byte size is under the limit, then upload to Discord." }
+  ]
+}));
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/guide-gif.png">
+  <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-4 font-mono">
+      <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+      <span>/</span>
+      <a href="/guides/discord-sizes/" class="hover:text-[#3368A0] transition-colors">Size Guide</a>
+      <span>/</span>
+      <span class="text-[#192538] dark:text-white font-semibold">GIF Guide</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="mb-12">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4 shadow-xs">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        Updated for 2026 GIF Architecture
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-4">
+        <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord GIF Maker</mark> & <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Animation Guide</span><SketchUnderline color="#66A3BF" /></span>
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-lg leading-relaxed max-w-3xl">
+        A complete guide for creators and server managers to master animated Discord GIFs. Learn precise file size limits, aspect ratios, palette quantization, and frame rate optimization for banners, emojis, and avatars.
+      </p>
+    </div>
+
+    <!-- Quick Reference Table -->
+    <div class="overflow-x-auto rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24] shadow-sm mb-16">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-[#FAF8F5] dark:bg-[#1B2330] text-xs uppercase font-bold text-[#192538] dark:text-[#CBD5E1] border-b border-[#E0DBD0] dark:border-[#263346]">
+          <tr>
+            <th class="py-4 px-5">Animated Asset</th>
+            <th class="py-4 px-5">Target Dimensions</th>
+            <th class="py-4 px-5">Max File Size</th>
+            <th class="py-4 px-5">Frame Rate Target</th>
+            <th class="py-4 px-5">Required Tier</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#E0DBD0] dark:divide-[#263346] text-[#192538] dark:text-[#F0F4F8]">
+          <tr class="hover:bg-[#FAF8F5]/80 dark:hover:bg-[#1E2738] transition-colors">
+            <td class="py-4 px-5 font-bold">Animated Custom Emoji</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold">128 × 128 px</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#DC2626] font-bold">256 KiB max</td>
+            <td class="py-4 px-5 text-xs text-[#475569] dark:text-[#CBD5E1]">20–30 FPS</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2.5 py-1 rounded-md bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-semibold">Discord Nitro</span></td>
+          </tr>
+          <tr class="hover:bg-[#FAF8F5]/80 dark:hover:bg-[#1E2738] transition-colors">
+            <td class="py-4 px-5 font-bold">Animated Server Banner</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold">960 × 540 (16:9)</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#0D9488] font-bold">10.0 MB max</td>
+            <td class="py-4 px-5 text-xs text-[#475569] dark:text-[#CBD5E1]">30–60 FPS</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2.5 py-1 rounded-md bg-[#D97706]/10 text-[#D97706] font-semibold">Boost Level 3</span></td>
+          </tr>
+          <tr class="hover:bg-[#FAF8F5]/80 dark:hover:bg-[#1E2738] transition-colors">
+            <td class="py-4 px-5 font-bold">Animated Profile Banner</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold">680 × 240 px</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#0D9488] font-bold">10.0 MB max</td>
+            <td class="py-4 px-5 text-xs text-[#475569] dark:text-[#CBD5E1]">30–60 FPS</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2.5 py-1 rounded-md bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-semibold">Discord Nitro</span></td>
+          </tr>
+          <tr class="hover:bg-[#FAF8F5]/80 dark:hover:bg-[#1E2738] transition-colors">
+            <td class="py-4 px-5 font-bold">Animated Avatar (GIF PFP)</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold">512 × 512 px</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#0D9488] font-bold">10.0 MB max</td>
+            <td class="py-4 px-5 text-xs text-[#475569] dark:text-[#CBD5E1]">30–60 FPS</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2.5 py-1 rounded-md bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-semibold">Discord Nitro</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Editorial Core Guides -->
+    <div class="space-y-12 mb-16">
+      <!-- Section 1: The 256 KiB Emoji Boundary -->
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white mb-4">
+          1. The 256 KiB Boundary: Optimizing Animated Discord Emojis
+        </h2>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          The trickiest part of using any Discord GIF maker is keeping files under the official <strong>discord gif size</strong> limits, especially the strict 256 KiB cap on custom emojis. Unlike banners or avatars that allow up to 10 MB, animated emojis load right inside fast chat channels, so Discord keeps them lightweight.
+        </p>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          To fit an animation inside 256 KiB (262,144 bytes), you can use our built-in <strong>discord gif compressor</strong> with three simple adjustments:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+          <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+            <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold block mb-1">Lower Frame Rate</span>
+            <p class="text-[#6B7A90] dark:text-[#8494A7]">Drop from 60 FPS down to 20 or 24 FPS. This cuts the frame count in half while keeping the animation looking smooth at chat size.</p>
+          </div>
+          <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+            <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold block mb-1">Reduce Colors</span>
+            <p class="text-[#6B7A90] dark:text-[#8494A7]">Limit colors to 64 or 128 colors instead of 256. For small icons, your eyes will barely notice the difference, but the file size drops dramatically.</p>
+          </div>
+          <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+            <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold block mb-1">Exact Canvas Size</span>
+            <p class="text-[#6B7A90] dark:text-[#8494A7]">Design at exactly 128×128 pixels. Don't upload giant HD videos expecting Discord to scale them down cleanly without getting blurry.</p>
+          </div>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <a href="/tools/emoji/" class="btn-primary text-xs px-4 py-2 rounded-[8px]">Open Discord Emoji Maker &rarr;</a>
+          <a href="/guides/discord-sizes/" class="btn-secondary text-xs px-4 py-2 rounded-[8px]">View Discord Sizes Guide</a>
+        </div>
+      </section>
+
+      <!-- Section 2: Animated Server & Profile Banners -->
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white mb-4">
+          2. Engineering Animated Server & Profile Banners
+        </h2>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          An animated <strong>discord gif banner</strong> makes your profile or server instantly stand out. Still, it is easy to crop them wrong or forget about Discord's buttons.
+        </p>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          <strong>Server Banners (16:9 Widescreen):</strong> Need Server Boost Level 3. The minimum size is 960×540 pixels, though 1920×1080 looks crisper on modern displays. Keep text, logos, and faces below the top 48px strip so the server title and menus don't cover them up.
+        </p>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          <strong>Profile Banners (680×240 Wide):</strong> Need Discord Nitro. A common mistake is uploading a 16:9 video onto a profile banner, which cuts off 40% of the top and bottom. Use our <strong>discord gif resizer</strong> in the banner studio to frame your GIF to exact 680×240 dimensions before uploading.
+        </p>
+        <div class="mt-6">
+          <a href="/tools/banner/" class="btn-primary text-xs px-4 py-2 rounded-[8px]">Format Banners in Banner Studio &rarr;</a>
+        </div>
+      </section>
+
+      <!-- Section 3: Animated Avatars (GIF PFP) -->
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white mb-4">
+          3. Animated Avatars: Circular Masking & Centered Composition
+        </h2>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          Discord always displays user avatars inside a circular mask. When making an animated <strong>discord gif pfp</strong> (profile picture), keep your subject centered so the corners don't get cut off.
+        </p>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          Export your animated avatar at 512×512 pixels with a clean loop so it plays smoothly every time someone views your profile.
+        </p>
+        <div class="mt-4">
+          <a href="/tools/avatar/" class="btn-primary text-xs px-4 py-2 rounded-[8px]">Crop PFP in Avatar Studio &rarr;</a>
+        </div>
+      </section>
+    </div>
+
+    <!-- FAQ Accordion Section -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">
+        Frequently Asked Questions
+      </h2>
+      <div class="space-y-4">
+        {faqSchema.mainEntity.map((item) => (
+          <div class="card-panel p-6 rounded-[14px]">
+            <h3 class="text-base font-bold text-[#192538] dark:text-white mb-2">{item.name}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.acceptedAnswer.text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Contextual Cross-Tool Hub -->
+    <section class="card-panel p-8 rounded-[16px] border border-[#E0DBD0] dark:border-[#263346] text-center">
+      <h2 class="text-xl sm:text-2xl font-extrabold text-[#192538] dark:text-white mb-3">
+        Ready to optimize your Discord creator assets?
+      </h2>
+      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-xl mx-auto mb-6">
+        All tools run 100% locally in your web browser with zero server uploads, deterministic validation, and instant downloads.
+      </p>
+      <div class="flex flex-wrap justify-center items-center gap-3">
+        <a href="/tools/banner/" class="btn-primary text-xs px-4 py-2.5 rounded-[8px]">Banner Studio (960×540)</a>
+        <a href="/tools/emoji/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Emoji Studio (128×128)</a>
+        <a href="/tools/avatar/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Avatar Studio (512×512)</a>
+        <a href="/tools/sticker/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Sticker Studio (320×320)</a>
+      </div>
+    </section>
+  </div>
+</Layout>

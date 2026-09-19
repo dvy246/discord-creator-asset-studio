@@ -1,0 +1,941 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import AssetCard from '../../../components/AssetCard.astro';
+import AssetCustomizerModal from '../../../components/AssetCustomizerModal.astro';
+import SketchUnderline from '../../../components/SketchUnderline.astro';
+import { 
+  ASSET_CATEGORIES, 
+  getPresetsByCategory, 
+  type AssetCategory, 
+  type CategoryInfo, 
+  type DiscordAssetPreset 
+} from '../../../data/assets';
+import { 
+  generateBreadcrumbSchema, 
+  generateSoftwareApplicationSchema 
+} from '../../../utils/seo';
+
+export async function getStaticPaths() {
+  const categories: AssetCategory[] = ['anime', 'gaming', 'cyberpunk', 'dark', 'aesthetic', 'icons-2d'];
+  return categories.map((cat) => ({
+    params: { category: cat },
+    props: {
+      categoryInfo: ASSET_CATEGORIES[cat],
+      presets: getPresetsByCategory(cat),
+    }
+  }));
+}
+
+interface Props {
+  categoryInfo: CategoryInfo;
+  presets: DiscordAssetPreset[];
+}
+
+const { categoryInfo, presets } = Astro.props;
+const category = categoryInfo.id;
+const canonicalUrl = `https://discord-creator-asset-studio.pages.dev/assets/${categoryInfo.slug}/`;
+
+// 1. Structured Data: Breadcrumbs
+const breadcrumbSchema = JSON.parse(generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Asset Library", url: "https://discord-creator-asset-studio.pages.dev/assets/" },
+  { name: categoryInfo.shortName, url: canonicalUrl }
+]));
+
+// 2. Structured Data: CollectionPage & ItemList
+const collectionPageSchema = {
+  "@context": "https://schema.org",
+  "@type": ["CollectionPage", "ImageGallery"],
+  "name": categoryInfo.seoTitle,
+  "headline": categoryInfo.h1Title,
+  "description": categoryInfo.metaDescription,
+  "url": canonicalUrl,
+  "inLanguage": "en",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/"
+  },
+  "about": [
+    { "@type": "Thing", "name": `${categoryInfo.name} Discord Banners` },
+    { "@type": "Thing", "name": `${categoryInfo.name} Discord Profile Pictures` },
+    { "@type": "Thing", "name": "Discord Safe Zones" },
+    { "@type": "Thing", "name": "Discord Profile Theme Matching" }
+  ],
+  "numberOfItems": presets.length,
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": presets.length,
+    "itemListElement": presets.map((preset, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": preset.title,
+      "description": preset.description,
+      "url": `${canonicalUrl}#preset-${preset.slug}`
+    }))
+  }
+};
+
+// 3. Structured Data: Software Application for In-Browser Customizer
+const appSchema = JSON.parse(generateSoftwareApplicationSchema(
+  `${categoryInfo.name} Discord Asset Studio`,
+  `Interactive browser-based studio to preview, customize, and export ${categoryInfo.name.toLowerCase()} Discord banners and matching profile pictures with safe zones.`,
+  canonicalUrl
+));
+
+// 4. Category-Specific Creator Technical Guide Content
+interface TechnicalGuide {
+  tagline: string;
+  safeZoneRule: string;
+  safeZoneAdvice: string;
+  hexAdvice: string;
+  motionAdvice: string;
+  avatarAdvice: string;
+  proTip: string;
+  suggestedHexes: { name: string; hex: string }[];
+}
+
+const CATEGORY_GUIDES: Record<string, TechnicalGuide> = {
+  anime: {
+    tagline: "Precision Safe Zones, Cinematic Lighting & Seamless Profile Blending",
+    safeZoneRule: "960x540 Banner (16:9) with 48px Top Safe Margin & Left Avatar Offset",
+    safeZoneAdvice: "Discord profile banners are rendered in a 16:9 ratio, but the Discord client overlays top interface elements and places the circular avatar directly over the bottom-left 120x120px region. For anime art, position character faces, swords, and central focal points in the center or right half of the canvas (X: 45%-85%, Y: 20%-75%) so no essential details are clipped by profile badges.",
+    hexAdvice: "Anime profiles frequently utilize deep twilight violet, cherry blossom magenta, or midnight navy backgrounds. Discord Nitro allows custom Primary and Accent theme colors. Match your Discord profile hex to the background color of your chosen anime preset (such as #120D1C or #1E1229) to eliminate the visible border between your banner and profile card.",
+    motionAdvice: "Discord Nitro supports animated GIF banners up to 10MB. To keep motion fluid without hitching, our anime presets use 2-4 second seamless looping cycles with atmospheric particles (falling sakura petals, digital sparks, rain ripples). This provides smooth 45-60 FPS playback while staying well under Nitro file size thresholds.",
+    avatarAdvice: "Discord renders profile pictures in a circular mask with an overlapping status badge in the bottom-right corner. When pairing an anime PFP with your banner, use a 512x512 square canvas with 15-20% margin around the character's face. Our anime presets automatically recompose the artwork with centered focal points.",
+    proTip: "Set your Discord profile theme Accent color to the vibrant eye or sword glow color (#FF84BA or #99C2FF) from the anime preset for maximum visual pop.",
+    suggestedHexes: [
+      { name: "Twilight Violet", hex: "#120D1C" },
+      { name: "Sakura Ink", hex: "#1F142B" },
+      { name: "Night Ronin", hex: "#0E131F" },
+      { name: "Cherry Accent", hex: "#FF84BA" }
+    ]
+  },
+  gaming: {
+    tagline: "Tactical HUD Composition, High-Contrast Gradients & Esports Alignment",
+    safeZoneRule: "960x540 Profile Banners & 512x512 Avatars with Tactical Margin Buffers",
+    safeZoneAdvice: "Esports banners and gaming clan graphics must preserve team logos, gamertags, and sponsor crests. Keep all typography and critical logos between 20% and 80% horizontal canvas width, well above the 48px top status overlay and clear of the bottom-left avatar bubble.",
+    hexAdvice: "Tactical gaming profiles demand high visual contrast. Set your Discord profile primary theme to stealth carbon (#0B0F19 or #111827) and your accent color to matrix emerald (#10B981) or cyber cyan (#06B6D4). This makes your Discord badges, roles, and status message stand out sharply.",
+    motionAdvice: "Gaming animations (HUD pulses, neon grid scans, and laser sweeps) look best when looped at high frame rates. Our presets utilize 60 FPS motion timings with optimized color palettes that stay well under Discord's 10MB Nitro upload ceiling.",
+    avatarAdvice: "Circular gaming avatars must keep clan logos and emblem silhouettes dead center. Avoid thin line borders near the edges that can become distorted when Discord anti-aliases circular avatar crops on mobile.",
+    proTip: "If you manage an esports server, use 1920x1080 for your Discord Server Banner to guarantee ultra-sharp rendering on 4K monitors, while keeping user profile banners at 960x540.",
+    suggestedHexes: [
+      { name: "Stealth Carbon", hex: "#0B0F19" },
+      { name: "Abyssal Navy", hex: "#111827" },
+      { name: "Matrix Glow", hex: "#10B981" },
+      { name: "Cyber Cyan", hex: "#06B6D4" }
+    ]
+  },
+  cyberpunk: {
+    tagline: "Dark Mode Immersion, Neon Holograms & High-Frequency Motion Loops",
+    safeZoneRule: "16:9 Neon Grid Composition with Discord Dark Mode Edge Alignment",
+    safeZoneAdvice: "Cyberpunk banners feature terminal readouts, Japanese kanji glyphs, and holographic wireframes along the perimeters. Ensure all critical UI elements are offset at least 48px from the top and 140px from the bottom-left to avoid avatar collision.",
+    hexAdvice: "Because Discord defaults to dark mode (#313338), cyberpunk presets utilize deep obsidian blacks (#090C16) and deep synthwave blues. Matching your Discord profile primary hex to #090C16 creates an infinite borderless illusion where neon holograms appear to float directly on the Discord client.",
+    motionAdvice: "Glitch sweeps and holographic scans should loop seamlessly every 2 to 3 seconds. By utilizing rhythmic easing and high-contrast glow vectors, our motion presets achieve maximum visual intensity with file sizes under 6MB.",
+    avatarAdvice: "For cyberpunk PFPs, high-contrast silhouettes (cybernetic visors, neon helmets, robotic skulls) create the strongest impression in Discord member lists. Maintain a 20% outer padding so the circular mask does not cut off visor corners.",
+    proTip: "Pair your cyberpunk banner with a glowing custom status emoji and set your profile accent to hot magenta (#FF0055) or cyan (#00F0FF) to match the preset's glow layer.",
+    suggestedHexes: [
+      { name: "Obsidian Core", hex: "#090C16" },
+      { name: "Neon Cyberpunk", hex: "#00F0FF" },
+      { name: "Glitch Magenta", hex: "#FF0055" },
+      { name: "Synthwave Dusk", hex: "#1E1B4B" }
+    ]
+  },
+  dark: {
+    tagline: "Obsidian Negative Space, Gothic Silhouettes & Atmospheric Mist",
+    safeZoneRule: "Subtle Obsidian Contrast & Center-Right Gothic Focal Points",
+    safeZoneAdvice: "Dark aesthetic compositions rely on negative space and chiaroscuro lighting. Position focal subjects (gothic spires, crescent moons, solitary silhouettes) along the center-right rule-of-thirds axis. Keep the bottom-left region dark to seamlessly cradle your Discord avatar.",
+    hexAdvice: "Avoid pure #000000 pitch black, which can cause harsh OLED banding and contrast crushing. Instead, use rich midnight tones like obsidian violet (#0A0A0F) or muted slate (#13111C). Setting your Discord profile theme to this exact hex creates a smooth, immersive dark mode aesthetic.",
+    motionAdvice: "Atmospheric dark effects (gothic rain, falling ash, drifting cemetery mist) are subtle and hypnotic. Our looping parameters are calibrated with gentle linear and sine drifts that loop imperceptibly and compress efficiently down to 2MB-4MB.",
+    avatarAdvice: "Dark gothic avatars need clear silhouette separation. Use circular avatars with subtle rim lighting or an ethereal back-glow so the character outline remains distinct against Discord's dark chat backgrounds.",
+    proTip: "Use the Asset Customizer's Contrast and Brightness sliders to fine-tune your banner's shadows to match your monitor's gamma curve before exporting.",
+    suggestedHexes: [
+      { name: "Midnight Obsidian", hex: "#0A0A0F" },
+      { name: "Blood Moon Plum", hex: "#1A0B14" },
+      { name: "Cathedral Violet", hex: "#13111C" },
+      { name: "Crimson Spark", hex: "#EF4444" }
+    ]
+  },
+  aesthetic: {
+    tagline: "Pastel Color Harmony, Soft Cloudscapes & Calming Cohesive Sets",
+    safeZoneRule: "Pastel Symmetry & Balanced Perimeter Framing",
+    safeZoneAdvice: "Aesthetic and pastel banners frequently incorporate soft cloudscapes, floral borders, and starry twilight horizons. Maintain a 60px perimeter inset so fluffy cloud borders and floral motifs aren't cut off by the top navigation bar or bottom avatar overlap.",
+    hexAdvice: "Pastel aesthetics work by creating visual softness. Sample the primary pastel tone (such as blush pink #FCE7F3, lavender #EDE9FE, or mint #D1FAE5) into your Discord profile theme settings to unify your bio, roles, and banner into a cohesive dreamy palette.",
+    motionAdvice: "Gentle floating stars, shimmering clouds, and drifting petals should move with soft, low-velocity easing. Our aesthetic motion configs use low particle counts and gentle sine wave floating that loop seamlessly without visual stutter.",
+    avatarAdvice: "Aesthetic profile pictures shine with soft, centered subjects like pastel bunnies, cup-of-tea icons, or dreamy celestial moons. The 1:1 circular crop naturally enhances symmetrical circular subjects.",
+    proTip: "Aesthetic presets look gorgeous in both Discord Dark and Light themes. If switching between themes, choose one of our dual-luminance pastel presets that retain readability across both backdrops.",
+    suggestedHexes: [
+      { name: "Blush Pastel", hex: "#FCE7F3" },
+      { name: "Lavender Mist", hex: "#EDE9FE" },
+      { name: "Twilight Peach", hex: "#FED7AA" },
+      { name: "Rose Quartz", hex: "#FF84BA" }
+    ]
+  },
+  'icons-2d': {
+    tagline: "Crisp 2D Vector Server Assets, Role Badges & Custom Emojis",
+    safeZoneRule: "64x64 Role Icons & 128x128 Emoji Stickers with Transparent / Badge Backgrounds",
+    safeZoneAdvice: "Discord server role icons are displayed at 64x64 pixels next to user names in chat and server member lists. Custom emojis are uploaded at 128x128 pixels. Keep line weights bold and glyphs centered so they remain legible at micro sizes.",
+    hexAdvice: "Role icons and server badges look cleanest when matched with Discord role colors. Use the pre-sampled profile and role hex values to create harmonized role hierarchies in your server settings.",
+    motionAdvice: "Animated role icons and server emojis are supported on Nitro servers. Keep frame counts tight and loops seamless for lightweight chat rendering without client lag.",
+    avatarAdvice: "2D server badges can also double as avatar profile accents or community membership tokens with circular badge framing.",
+    proTip: "Export role icons with circular gradient badges for member rank badges, or with transparent backgrounds for custom chat emojis.",
+    suggestedHexes: [
+      { name: "Admin Ruby", hex: "#E63946" },
+      { name: "Mod Cyan", hex: "#00F0FF" },
+      { name: "VIP Gold", hex: "#FFDF82" },
+      { name: "Member Violet", hex: "#A855F7" }
+    ]
+  }
+};
+
+const guide = CATEGORY_GUIDES[category] || CATEGORY_GUIDES.anime;
+
+// 5. Category-Specific FAQ Items
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+const CATEGORY_FAQS: Record<string, FAQItem[]> = {
+  anime: [
+    {
+      question: "What are the recommended dimensions for anime Discord banners and matching PFPs?",
+      answer: "For Discord user profile banners, the optimal resolution is 960x540 pixels (16:9 aspect ratio). For server headers, 960x540 or 1920x1080 is standard. For matching profile pictures (PFPs), use a minimum of 512x512 pixels (1:1 square) to guarantee sharp rendering on 4K screens and mobile devices. Always keep essential character art inside the central-right safe zone to avoid clipping by the avatar cutout."
+    },
+    {
+      question: "How do I match my Discord profile theme colors to my anime banner?",
+      answer: "Discord Nitro allows creators to pick custom Primary and Accent theme colors. Every anime preset in our studio includes a pre-sampled 'Profile Hex' (such as #120D1C or #1F142B). Click the 'Copy Hex' button on any preset card, open Discord > User Settings > Profiles > Theme Colors, choose 'Custom', and paste the hex code into the primary field. This creates a seamless, bezel-less transition between your banner and profile card."
+    },
+    {
+      question: "Can I use animated anime banners on Discord without Nitro?",
+      answer: "Animated GIF banners require an active Discord Nitro subscription for user profiles, or Server Boost Level 2 for server banners. However, if you do not have Nitro, all anime presets in our studio can be downloaded as crisp, high-resolution static PNG banners (960x540) and static avatars (512x512), which work on 100% free standard Discord accounts."
+    },
+    {
+      question: "How do I prevent the Discord avatar circle from blocking my anime banner artwork?",
+      answer: "Discord places your avatar in the bottom-left corner of your profile banner, overlapping roughly 80 to 120 pixels of canvas. When choosing an anime banner, ensure primary characters, faces, and swords are positioned in the center or right half of the banner. All anime presets in this collection follow this strict safe-zone guideline out of the box."
+    },
+    {
+      question: "Are these anime Discord banners safe to use and original?",
+      answer: "Yes. Every anime preset in our studio is an original, stylized thematic concept crafted specifically for Discord creators without trademarked or copyrighted characters. You are completely free to use, customize, and export them for personal Discord profiles, community servers, or streaming channels."
+    }
+  ],
+  gaming: [
+    {
+      question: "What resolution and file format work best for Discord gaming banners?",
+      answer: "The official Discord profile banner dimension is 960x540 pixels (16:9 aspect ratio). For animated gaming banners, export as an optimized GIF under 10MB. For static banners, use PNG or WebP for lossless sharpness. For gaming team logos or clan avatars, export at 512x512 pixels in PNG format with a transparent or thematic background."
+    },
+    {
+      question: "How can esports teams make banners that don't block server titles or channels?",
+      answer: "On server headers and profile banners, leave at least 48 pixels of vertical breathing room at the top edge. Discord overlays channel information, server badges, and notification indicators over this upper band. Keep esports team logos, tournament sponsor badges, and roster graphics in the horizontal sweet-spot between 15% and 85% width."
+    },
+    {
+      question: "How do I keep my animated gaming banner under Discord's 10MB limit?",
+      answer: "Discord strictly rejects files over 10MB for Nitro profile banners. To stay safely under the limit: keep animation length to 2–4 seconds of seamless looping, set framerates between 30fps and 50fps, and limit the color palette to 128 or 256 colors. All motion presets in our studio are pre-calculated to export between 3MB and 7MB."
+    },
+    {
+      question: "What hex color codes look best with competitive gaming Discord profiles?",
+      answer: "Gaming aesthetics thrive on high contrast. Pair dark stealth background hexes like #0B0F19 (Obsidian Navy) or #111827 (Carbon) with vibrant neon accents like #10B981 (Matrix Green), #06B6D4 (Cyber Cyan), or #F59E0B (Apex Amber). Each gaming preset in our studio has its optimal palette mapped directly to Discord profile settings."
+    },
+    {
+      question: "Can I customize gaming clan banners with our team name or clan tag?",
+      answer: "Yes! Click the 'Customize' button on any preset card to launch the built-in Asset Customizer Studio. You can type your clan tag or server name into the Custom Text Overlay tool, choose neon drop-glow styling, tweak hue and contrast, and download the finished asset instantly."
+    }
+  ],
+  cyberpunk: [
+    {
+      question: "Why is Discord Dark Mode the best backdrop for cyberpunk banners?",
+      answer: "Discord's default client interface is dark mode (#313338), which means neon cyan (#00F0FF), hot magenta (#FF0055), and electric violet (#8B5CF6) pop with maximum luminance. By configuring your Discord profile hex to an obsidian black (such as #090C16), the perimeter of your banner merges seamlessly into the dark UI."
+    },
+    {
+      question: "How do holographic scanlines and cyber grid animations render on mobile Discord?",
+      answer: "Mobile Discord scales profile banners down while retaining the 16:9 aspect ratio. Fine scanlines can sometimes moiré if drawn too thin. Our cyberpunk motion presets use bold 2px–3px grid lines and rhythmic glow sweeps that stay crisp and artifact-free across iPhone, Android, and 4K desktop displays."
+    },
+    {
+      question: "What are the safe-zone rules for cyberpunk HUD and terminal banners?",
+      answer: "Cyberpunk HUD elements often run along the borders of the graphic. Keep critical interface readouts at least 48px below the top border (away from status badges) and at least 140px away from the bottom-left corner to accommodate the circular profile picture cutout."
+    },
+    {
+      question: "How do I make my cyberpunk avatar look holographic in circular crop?",
+      answer: "Discord avatars are cropped into circles. Place your primary cybernetic visor, kanji glyph, or neon skull strictly in the center with a 20% outer margin. In our customizer, you can switch to the 'Avatar (1:1 PFP)' tab and use the Zoom and Focal sliders to verify the circular cut."
+    },
+    {
+      question: "What file size should I aim for when exporting an animated cyberpunk banner?",
+      answer: "Aim for 4MB to 8MB. While Discord Nitro allows up to 10MB, staying below 8MB ensures instantaneous loading for friends who view your profile on mobile data or slower connections."
+    }
+  ],
+  dark: [
+    {
+      question: "How do gothic and dark aesthetic banners blend into Discord profiles?",
+      answer: "Dark aesthetic banners rely on low-key lighting, deep vignetting, and muted palettes. By setting your Discord profile theme to the matching dark hex code provided with each preset (e.g., #0A0A0F or #13111C), your profile card loses its visible box boundaries, giving your Discord presence an expansive, bespoke appearance."
+    },
+    {
+      question: "How do I prevent dark banners from looking muddy or washed out on mobile screens?",
+      answer: "Pure blacks (#000000) can cause harsh clipping, while mid-greys look washed out. Our dark gothic presets use rich obsidian blues, midnight violets, and deep crimson bases combined with targeted specular highlights (blood moon glows, cathedral stained glass tints) that maintain depth and contrast across all OLED and LCD screens."
+    },
+    {
+      question: "What are the safe zones for dark and gothic Discord banners?",
+      answer: "Ensure your main subject (gothic arch, crescent moon, lone silhouette, crow) is placed in the center-right safe zone. Never place dark focal elements in the bottom-left 120x120px area where the user avatar sits, as the avatar border will cut directly across the artwork."
+    },
+    {
+      question: "Can I add atmospheric rain or falling embers to my dark banner?",
+      answer: "Yes! All dark presets come with built-in atmospheric motion metadata (such as gothic rain, mist pulse, or floating embers). In the Asset Customizer Modal, you can adjust the animation speed, intensity, or toggle static export depending on whether you have Nitro."
+    },
+    {
+      question: "What matching profile picture styles work best with dark Discord banners?",
+      answer: "High-contrast minimalist avatars work best: glowing lunar crescents, raven silhouettes, runic sigils, or veiled portraits with subtle rim lighting. Every dark preset in our library includes a perfectly color-matched circular avatar ready to export."
+    }
+  ],
+  aesthetic: [
+    {
+      question: "What defines an aesthetic Discord banner and matching PFP set?",
+      answer: "Aesthetic sets feature harmonious pastel color palettes (baby pink, soft lavender, mint green, peach twilight), gentle gradient transitions, and cozy motifs like cloudscapes, floral blossoms, and lo-fi stars. They emphasize calm visual symmetry and balanced contrast that feels soothing."
+    },
+    {
+      question: "How do aesthetic banners look in both Discord Light and Dark modes?",
+      answer: "While most Discord users use Dark mode, aesthetic banners are uniquely versatile. Our pastel presets maintain soft contrast ratios that look gorgeous against dark Discord cards while remaining readable and elegant if someone views them in Discord Light mode."
+    },
+    {
+      question: "How do I match my Discord profile bio and card colors to an aesthetic banner?",
+      answer: "Every aesthetic preset includes a sampled Profile Theme Hex (such as #FCE7F3 or #EDE9FE). In Discord, navigate to User Settings > Profiles, select 'Theme Colors', click 'Custom', and paste the hex into the Primary color field. This harmonizes your status bubble, bio background, and banner into a single pastel aesthetic."
+    },
+    {
+      question: "What safe-zone precautions should I take with aesthetic floral or cloud borders?",
+      answer: "Ensure decorative floral wreaths or fluffy clouds frame the edges without crowding the top 48px margin or colliding with the bottom-left avatar bubble. Our aesthetic templates position border decorations with a generous 60px inset to avoid any overlap."
+    },
+    {
+      question: "Can I customize the color tint of these aesthetic presets?",
+      answer: "Yes! In the customizer modal, use the Hue Shift and Saturation sliders to adjust soft pink tones into soothing lavender, baby blue, or matcha green with instant real-time canvas preview."
+    }
+  ],
+  'icons-2d': [
+    {
+      question: "What are the official dimensions for Discord server role icons?",
+      answer: "Discord server role icons must be uploaded at 64x64 pixels (1:1 square) in PNG, JPG, or WEBP format, under 256KB. Our studio exports role icons at exactly 64x64 pixels with optimized file sizes under 20KB."
+    },
+    {
+      question: "What size should Discord custom emojis and stickers be?",
+      answer: "Custom Discord emojis are uploaded at 128x128 pixels (PNG/GIF under 256KB). Discord stickers can be up to 320x320 pixels (under 512KB). All 2D assets in this category export at high-resolution 128x128 pixels with crisp anti-aliasing."
+    },
+    {
+      question: "Can I download 2D assets with transparent backgrounds?",
+      answer: "Yes. Every 2D asset can be downloaded as either a circular-badged role icon or a transparent PNG sticker for direct upload to Discord server settings."
+    },
+    {
+      question: "Can I use these 2D assets for commercial community servers?",
+      answer: "Yes. All 2D assets and icons are 100% original and free for personal, community, and commercial Discord server roles and emojis."
+    }
+  ]
+};
+
+const categoryFaqs = CATEGORY_FAQS[category] || CATEGORY_FAQS.anime;
+
+// 6. Structured Data: FAQPage
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": categoryFaqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+};
+
+// 7. Navigation Tabs for the 5 SEO Categories
+const seoCategories = [
+  { id: 'anime', name: 'Anime', icon: '⚔️', href: '/assets/anime/' },
+  { id: 'gaming', name: 'Gaming', icon: '🎮', href: '/assets/gaming/' },
+  { id: 'cyberpunk', name: 'Cyberpunk', icon: '⚡', href: '/assets/cyberpunk/' },
+  { id: 'dark', name: 'Dark', icon: '🌑', href: '/assets/dark/' },
+  { id: 'aesthetic', name: 'Aesthetic', icon: '🌸', href: '/assets/aesthetic/' },
+];
+
+// Extract distinct moods present in this category for quick filtering
+const availableMoods = Array.from(new Set(presets.map(p => p.mood))).sort();
+---
+
+<Layout 
+  title={categoryInfo.seoTitle} 
+  description={categoryInfo.metaDescription} 
+  canonicalUrl={canonicalUrl}
+>
+  <!-- Inject SEO Schemas -->
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(collectionPageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+
+  <!-- Ambient Cosmic Sunset Background Orbs (Harmonized Theme) -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10 aria-hidden">
+    <div class="absolute -top-40 left-1/4 w-96 h-96 rounded-full bg-[#FF84BA]/10 dark:bg-[#FF84BA]/15 blur-3xl transform -translate-x-1/2"></div>
+    <div class="absolute top-80 right-10 w-[30rem] h-[30rem] rounded-full bg-[#99C2FF]/10 dark:bg-[#99C2FF]/15 blur-3xl"></div>
+    <div class="absolute top-[48rem] left-10 w-80 h-80 rounded-full bg-[#FFDF82]/10 dark:bg-[#FFDF82]/10 blur-3xl"></div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-24">
+    
+    <!-- BREADCRUMB NAVIGATION -->
+    <nav class="flex items-center gap-2 text-xs font-mono text-[#6B7A90] dark:text-[#8494A7] mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-[#3368A0] dark:hover:text-[#99C2FF] transition-colors">Studio</a>
+      <span>/</span>
+      <a href="/assets/" class="hover:text-[#3368A0] dark:hover:text-[#99C2FF] transition-colors">Asset Library</a>
+      <span>/</span>
+      <span class="text-[#192538] dark:text-[#FFEFE3] font-bold" aria-current="page">{categoryInfo.shortName}</span>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="text-center max-w-4xl mx-auto mb-12 sm:mb-16">
+      <!-- Category Badge -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#FF84BA]/15 via-[#FFDF82]/15 to-[#99C2FF]/15 dark:from-[#FF84BA]/20 dark:via-[#FFDF82]/20 dark:to-[#99C2FF]/20 border border-[#FF84BA]/30 dark:border-[#FF84BA]/40 text-xs font-semibold text-[#192538] dark:text-[#FFEFE3] mb-6 shadow-xs backdrop-blur-xs">
+        <span class="text-sm">{categoryInfo.icon}</span>
+        <span class="font-bold">{categoryInfo.name} Collection</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-[#FF84BA] animate-pulse"></span>
+        <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-black/10 dark:bg-white/10">{presets.length} Presets</span>
+      </div>
+
+      <!-- H1 Heading with Sketch Accent -->
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#192538] dark:text-[#FFEFE3] tracking-tight leading-[1.15] mb-5">
+        <span>{categoryInfo.h1Title.split(' ').slice(0, -2).join(' ')} </span>
+        <span class="relative inline-block sketch-trigger">
+          <span class="relative z-10 text-[#3368A0] dark:text-[#FF84BA]">
+            {categoryInfo.h1Title.split(' ').slice(-2).join(' ')}
+          </span>
+          <SketchUnderline color="#FF84BA" />
+        </span>
+      </h1>
+
+      <!-- Category Overview Description -->
+      <p class="text-[#475569] dark:text-[#99C2FF] text-base sm:text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+        {categoryInfo.description} Handcrafted 960x540 banners and 512x512 matching avatars engineered with strict 48px Discord safe zones, 1-click profile hex matching, and loop-perfect animations under 10MB.
+      </p>
+
+      <!-- Quick Category Stats Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] shadow-xs text-center transition-transform hover:-translate-y-0.5">
+          <div class="text-xl sm:text-2xl font-black text-[#192538] dark:text-[#FFEFE3] tracking-tight mb-0.5">{presets.length}</div>
+          <div class="text-[11px] sm:text-xs font-medium text-[#6B7A90] dark:text-[#99C2FF]">Curated Presets</div>
+        </div>
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] shadow-xs text-center transition-transform hover:-translate-y-0.5">
+          <div class="text-xl sm:text-2xl font-black text-[#0D9488] tracking-tight mb-0.5">100%</div>
+          <div class="text-[11px] sm:text-xs font-medium text-[#6B7A90] dark:text-[#99C2FF]">Free & Client-Side</div>
+        </div>
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] shadow-xs text-center transition-transform hover:-translate-y-0.5">
+          <div class="text-xl sm:text-2xl font-black text-[#FF84BA] tracking-tight mb-0.5">&lt;10MB</div>
+          <div class="text-[11px] sm:text-xs font-medium text-[#6B7A90] dark:text-[#99C2FF]">Nitro-Safe Loops</div>
+        </div>
+        <div class="p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] shadow-xs text-center transition-transform hover:-translate-y-0.5">
+          <div class="text-xl sm:text-2xl font-black text-[#FFDF82] tracking-tight mb-0.5">1:1 + 16:9</div>
+          <div class="text-[11px] sm:text-xs font-medium text-[#6B7A90] dark:text-[#99C2FF]">Matching PFP Pairs</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CATEGORY SUB-NAV & SWITCHER BAR -->
+    <section class="rounded-3xl border border-[#E0DBD0] dark:border-[#263454] bg-white/90 dark:bg-[#101626]/90 backdrop-blur-xl p-4 sm:p-5 shadow-lg mb-10" aria-label="Category Navigation">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        
+        <!-- Left: Category Switcher Pills -->
+        <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 md:pb-0 scrollbar-thin scrollbar-thumb-[#E0DBD0] dark:scrollbar-thumb-[#263454]">
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mr-1 hidden lg:inline">
+            Pillars:
+          </span>
+
+          <!-- All Assets Link -->
+          <a
+            href="/assets/"
+            class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#99C2FF] hover:border-[#FF84BA]/60 hover:text-[#192538] dark:hover:text-white transition-all flex items-center gap-1.5"
+          >
+            <span>🌟 All Assets</span>
+          </a>
+
+          <!-- 5 SEO Pillar Categories -->
+          {seoCategories.map(cat => {
+            const isActive = cat.id === category;
+            return (
+              <a
+                href={cat.href}
+                class={`shrink-0 px-3.5 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 ${
+                  isActive 
+                    ? 'bg-[#FF84BA] text-black font-bold shadow-xs' 
+                    : 'font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#99C2FF] hover:border-[#FF84BA]/60 hover:text-[#192538] dark:hover:text-white'
+                }`}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <span>{cat.icon} {cat.name}</span>
+                {isActive && (
+                  <span class="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/15 font-bold">
+                    {presets.length}
+                  </span>
+                )}
+              </a>
+            );
+          })}
+        </div>
+
+        <!-- Right: View Full Library Link -->
+        <div class="flex items-center justify-between md:justify-end gap-3 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-[#E0DBD0]/60 dark:border-[#263454]/60">
+          <a
+            href="/assets/"
+            class="text-xs font-bold text-[#3368A0] dark:text-[#FF84BA] hover:underline flex items-center gap-1.5 transition-colors"
+          >
+            <span>← View All 110+ Assets</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- IN-PAGE FILTER & SEARCH TOOLBAR (FOR THIS CATEGORY) -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3.5 mb-6">
+      <div class="w-full sm:w-auto flex items-center gap-2">
+        <span class="text-xs font-bold text-[#192538] dark:text-[#FFEFE3]">Filter {categoryInfo.shortName} by Mood:</span>
+        <div class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-none" id="category-mood-filters">
+          <button
+            type="button"
+            class="mood-filter-btn active px-2.5 py-1 rounded-lg text-xs font-bold bg-[#3368A0] dark:bg-[#99C2FF] text-white dark:text-black transition-colors cursor-pointer"
+            data-mood="all"
+          >
+            All
+          </button>
+          {availableMoods.map(mood => (
+            <button
+              type="button"
+              class="mood-filter-btn px-2.5 py-1 rounded-lg text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-white dark:bg-[#161F2E] text-[#6B7A90] dark:text-[#99C2FF] hover:border-[#FF84BA]/60 capitalize transition-colors cursor-pointer"
+              data-mood={mood}
+            >
+              {mood}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Quick Search input within category -->
+      <div class="relative w-full sm:w-64">
+        <input
+          type="search"
+          id="category-search-input"
+          placeholder={`Search ${categoryInfo.shortName} presets...`}
+          class="w-full pl-8 pr-3 py-1.5 rounded-xl border border-[#E0DBD0] dark:border-[#263454] bg-white dark:bg-[#161F2E] text-xs text-[#192538] dark:text-[#FFEFE3] placeholder-[#6B7A90] dark:placeholder-[#8494A7] focus:outline-none focus:border-[#FF84BA] transition-all"
+        />
+        <svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[#6B7A90] pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- PRESETS SHOWCASE GRID -->
+    <section aria-label={`${categoryInfo.name} Discord Presets`} class="mb-20">
+      <div 
+        id="category-presets-grid" 
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
+      >
+        {presets.map((preset, index) => (
+          <div class="category-card-wrapper" data-mood={preset.mood} data-title={preset.title.toLowerCase()} data-tags={preset.tags.join(' ').toLowerCase()}>
+            <AssetCard preset={preset} index={index} />
+          </div>
+        ))}
+      </div>
+
+      <!-- Empty Filter State -->
+      <div 
+        id="category-empty-state" 
+        class="hidden py-12 px-6 text-center border border-dashed border-[#E0DBD0] dark:border-[#263454] rounded-3xl bg-white/40 dark:bg-[#101626]/40 max-w-md mx-auto my-8"
+      >
+        <p class="text-sm font-bold text-[#192538] dark:text-[#FFEFE3] mb-1">No matching {categoryInfo.shortName} presets</p>
+        <p class="text-xs text-[#6B7A90] dark:text-[#99C2FF] mb-4">Try clearing your search term or mood filter.</p>
+        <button 
+          type="button" 
+          id="category-reset-filters-btn"
+          class="btn-primary px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer"
+        >
+          Reset Filters
+        </button>
+      </div>
+    </section>
+
+    <!-- AUTHORITATIVE TECHNICAL CREATOR GUIDE -->
+    <section class="mb-20" aria-labelledby="technical-guide-title">
+      <div class="rounded-3xl border border-[#E0DBD0] dark:border-[#263454] bg-white dark:bg-[#101626] p-6 sm:p-10 shadow-xl">
+        
+        <!-- Section Header -->
+        <div class="max-w-3xl mb-10">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3368A0]/10 dark:bg-[#3368A0]/20 text-[#3368A0] dark:text-[#99C2FF] text-xs font-mono font-bold uppercase tracking-wider mb-3">
+            <span>📐 Creator Technical Reference</span>
+          </div>
+          <h2 id="technical-guide-title" class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-[#FFEFE3] tracking-tight mb-3">
+            Discord Creator Guide: {categoryInfo.name} Specifications
+          </h2>
+          <p class="text-sm sm:text-base text-[#475569] dark:text-[#99C2FF] leading-relaxed">
+            {guide.tagline}. Learn the precise safe-zone dimensions, Discord Nitro animation limits, and profile theme hex integration required to render pristine Discord profiles.
+          </p>
+        </div>
+
+        <!-- 4 Key Technical Modules -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          
+          <!-- Card 1: Safe Zones -->
+          <div class="p-5 sm:p-6 rounded-2xl bg-[#FAF8F5] dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center text-lg font-bold">
+                  🛡️
+                </div>
+                <h3 class="text-base font-bold text-[#192538] dark:text-[#FFEFE3]">
+                  Safe Zones & Banner Geometry
+                </h3>
+              </div>
+              <p class="text-xs font-mono text-amber-600 dark:text-amber-300 font-semibold mb-2">
+                {guide.safeZoneRule}
+              </p>
+              <p class="text-xs text-[#475569] dark:text-[#99C2FF] leading-relaxed">
+                {guide.safeZoneAdvice}
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[#E0DBD0] dark:border-[#263454] flex items-center justify-between text-[11px] font-mono text-[#6B7A90] dark:text-[#8494A7]">
+              <span>Header Safe Zone: 48px</span>
+              <span>Avatar Cutout: ~120px</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Profile Hex Matching -->
+          <div class="p-5 sm:p-6 rounded-2xl bg-[#FAF8F5] dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-xl bg-[#FF84BA]/15 text-[#FF84BA] flex items-center justify-center text-lg font-bold">
+                  🎨
+                </div>
+                <h3 class="text-base font-bold text-[#192538] dark:text-[#FFEFE3]">
+                  Seamless Profile Hex Blending
+                </h3>
+              </div>
+              <p class="text-xs font-mono text-[#FF84BA] font-semibold mb-2">
+                1-Click Discord Nitro Profile Integration
+              </p>
+              <p class="text-xs text-[#475569] dark:text-[#99C2FF] leading-relaxed mb-3">
+                {guide.hexAdvice}
+              </p>
+            </div>
+            <div class="pt-3 border-t border-[#E0DBD0] dark:border-[#263454]">
+              <div class="text-[11px] font-mono font-bold text-[#6B7A90] dark:text-[#8494A7] mb-2">
+                Sampled {categoryInfo.shortName} Hex Swatches:
+              </div>
+              <div class="flex flex-wrap gap-2">
+                {guide.suggestedHexes.map(swatch => (
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] text-[10px] font-mono font-bold text-[#192538] dark:text-[#FFEFE3]">
+                    <span class="w-2 h-2 rounded-full border border-black/20" style={`background-color: ${swatch.hex};`}></span>
+                    <span>{swatch.hex}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Looping & Nitro Rules -->
+          <div class="p-5 sm:p-6 rounded-2xl bg-[#FAF8F5] dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-xl bg-[#0D9488]/15 text-[#0D9488] flex items-center justify-center text-lg font-bold">
+                  ⚡
+                </div>
+                <h3 class="text-base font-bold text-[#192538] dark:text-[#FFEFE3]">
+                  Motion Loops & 10MB Nitro Limit
+                </h3>
+              </div>
+              <p class="text-xs font-mono text-[#0D9488] font-semibold mb-2">
+                Seamless Looping at 30-60 FPS
+              </p>
+              <p class="text-xs text-[#475569] dark:text-[#99C2FF] leading-relaxed">
+                {guide.motionAdvice}
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[#E0DBD0] dark:border-[#263454] flex items-center justify-between text-[11px] font-mono text-[#6B7A90] dark:text-[#8494A7]">
+              <span>Nitro Limit: 10MB Max</span>
+              <span>Ideal Size: 3MB-7MB</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Avatar Recomposition -->
+          <div class="p-5 sm:p-6 rounded-2xl bg-[#FAF8F5] dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-xl bg-[#99C2FF]/15 text-[#3368A0] dark:text-[#99C2FF] flex items-center justify-center text-lg font-bold">
+                  🔄
+                </div>
+                <h3 class="text-base font-bold text-[#192538] dark:text-[#FFEFE3]">
+                  Circular Avatar Recomposition
+                </h3>
+              </div>
+              <p class="text-xs font-mono text-[#3368A0] dark:text-[#99C2FF] font-semibold mb-2">
+                512x512 with 15% Perimeter Padding
+              </p>
+              <p class="text-xs text-[#475569] dark:text-[#99C2FF] leading-relaxed">
+                {guide.avatarAdvice}
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[#E0DBD0] dark:border-[#263454] flex items-center justify-between text-[11px] font-mono text-[#6B7A90] dark:text-[#8494A7]">
+              <span>Avatar Aspect: 1:1 Square</span>
+              <span>Render Crop: Circle</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Interactive Visual Safe-Zone Diagram Box -->
+        <div class="p-6 rounded-2xl bg-[#FAF8F5] dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454]">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+            <div>
+              <h4 class="text-sm font-bold text-[#192538] dark:text-[#FFEFE3]">
+                Visual Safe-Zone Architecture (960 x 540)
+              </h4>
+              <p class="text-xs text-[#6B7A90] dark:text-[#8494A7]">
+                How Discord renders user profile banners on desktop & mobile clients.
+              </p>
+            </div>
+            <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-md bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] text-[#192538] dark:text-[#FFEFE3]">
+              16:9 Aspect Ratio
+            </span>
+          </div>
+
+          <!-- The Safe Zone Simulator Canvas -->
+          <div class="relative w-full aspect-[16/9] rounded-xl overflow-hidden border-2 border-[#3368A0]/40 bg-slate-900 select-none shadow-inner max-w-2xl mx-auto">
+            <!-- Simulated Banner Background -->
+            <div class="absolute inset-0 bg-gradient-to-br from-[#101626] via-[#1E293B] to-[#090C16] opacity-90"></div>
+
+            <!-- Top 48px Header Margin -->
+            <div class="absolute top-0 left-0 right-0 h-[14%] bg-amber-500/25 border-b border-amber-400/50 flex items-center justify-between px-3 text-[10px] font-mono font-bold text-amber-200">
+              <span>⚠️ Top 48px Safe Margin (Avoid text & logos)</span>
+              <span class="hidden sm:inline">Discord Header Controls</span>
+            </div>
+
+            <!-- Center-Right Sweet Spot -->
+            <div class="absolute top-[18%] bottom-[12%] right-[5%] left-[36%] border-2 border-dashed border-[#0D9488]/80 bg-[#0D9488]/10 rounded-lg flex items-center justify-center text-center p-2">
+              <span class="text-xs font-mono font-bold text-[#0D9488]">
+                ✓ Focal Point Sweet Spot (Position {categoryInfo.shortName} art here)
+              </span>
+            </div>
+
+            <!-- Bottom-Left Avatar Cutout Overlay -->
+            <div class="absolute -bottom-6 left-6 w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-[#FF84BA] bg-black/80 flex flex-col items-center justify-center text-center shadow-2xl z-10">
+              <span class="text-xs font-mono font-bold text-[#FF84BA]">PFP Cutout</span>
+              <span class="text-[9px] font-mono text-[#99C2FF]">120px Overlap</span>
+            </div>
+
+            <!-- Pro Tip Note -->
+            <div class="absolute bottom-2 right-3 text-[10px] font-mono text-[#99C2FF] opacity-80 hidden sm:block">
+              {categoryInfo.shortName} Preset Safe Alignment
+            </div>
+          </div>
+
+          <!-- Callout Pro Tip Footer -->
+          <div class="mt-4 p-3 rounded-xl bg-white dark:bg-[#101626] border border-[#E0DBD0] dark:border-[#263454] flex items-start gap-2.5">
+            <span class="text-base leading-none">💡</span>
+            <p class="text-xs text-[#475569] dark:text-[#99C2FF] leading-relaxed">
+              <strong class="text-[#192538] dark:text-[#FFEFE3]">Pro Tip:</strong> {guide.proTip}
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FREQUENTLY ASKED QUESTIONS (ACCORDION) -->
+    <section class="mb-20" aria-labelledby="faq-title">
+      <div class="max-w-3xl mx-auto">
+        
+        <!-- Header -->
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFDF82]/20 text-[#B45309] dark:text-[#FFDF82] text-xs font-mono font-bold uppercase tracking-wider mb-3">
+            <span>❓ Frequently Asked Questions</span>
+          </div>
+          <h2 id="faq-title" class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-[#FFEFE3] tracking-tight mb-3">
+            {categoryInfo.name} Discord Asset FAQs
+          </h2>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#99C2FF]">
+            Common questions from creators about sizing, Nitro requirements, theme matching, and copyright compliance.
+          </p>
+        </div>
+
+        <!-- FAQ Items Container -->
+        <div class="space-y-3.5">
+          {categoryFaqs.map((faq, index) => (
+            <details class="faq-item group rounded-2xl border border-[#E0DBD0] dark:border-[#263454] bg-white dark:bg-[#101626] shadow-xs overflow-hidden transition-all duration-200">
+              <summary class="p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer select-none text-left">
+                <span class="font-bold text-sm sm:text-base text-[#192538] dark:text-[#FFEFE3] group-hover:text-[#FF84BA] transition-colors">
+                  {faq.question}
+                </span>
+                <span class="w-6 h-6 rounded-full bg-[#FAF8F5] dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] flex items-center justify-center shrink-0 text-[#6B7A90] dark:text-[#8494A7] group-open:rotate-180 transition-transform duration-200">
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="m6 9 6 6 6-6"></path>
+                  </svg>
+                </span>
+              </summary>
+              <div class="px-4 sm:px-5 pb-5 text-xs sm:text-sm text-[#475569] dark:text-[#99C2FF] leading-relaxed border-t border-[#E0DBD0]/60 dark:border-[#263454]/60 pt-3">
+                {faq.answer}
+              </div>
+            </details>
+          ))}
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CROSS-LINKING CALLOUT BANNERS & TOOLS INTEGRATION -->
+    <section class="rounded-3xl border border-[#E0DBD0] dark:border-[#263454] bg-white/60 dark:bg-[#101626]/60 backdrop-blur-xl p-6 sm:p-10 shadow-lg mb-16">
+      <div class="text-center max-w-2xl mx-auto mb-8">
+        <h3 class="text-xl sm:text-2xl font-extrabold text-[#192538] dark:text-[#FFEFE3] tracking-tight mb-2">
+          Explore Free Discord Creator Tools
+        </h3>
+        <p class="text-xs sm:text-sm text-[#6B7A90] dark:text-[#99C2FF]">
+          Need custom dimensions or want to test your own artwork? Use our specialized browser utilities.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Banner Tool Card -->
+        <a 
+          href="/tools/banner/" 
+          class="group p-5 rounded-2xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] hover:border-[#FF84BA] dark:hover:border-[#FF84BA] shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all"
+        >
+          <div class="w-10 h-10 rounded-xl bg-[#FF84BA]/15 text-[#FF84BA] flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+            🖼️
+          </div>
+          <h4 class="font-bold text-sm text-[#192538] dark:text-[#FFEFE3] group-hover:text-[#FF84BA] transition-colors mb-1">
+            Discord Banner Studio
+          </h4>
+          <p class="text-xs text-[#6B7A90] dark:text-[#99C2FF] leading-relaxed mb-3">
+            Crop, resize, and inspect 960x540 banners with live Discord safe-zone grid guides.
+          </p>
+          <span class="text-xs font-bold text-[#3368A0] dark:text-[#FF84BA] flex items-center gap-1 group-hover:underline">
+            Launch Tool →
+          </span>
+        </a>
+
+        <!-- Avatar Tool Card -->
+        <a 
+          href="/tools/avatar/" 
+          class="group p-5 rounded-2xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] hover:border-[#99C2FF] dark:hover:border-[#99C2FF] shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all"
+        >
+          <div class="w-10 h-10 rounded-xl bg-[#99C2FF]/15 text-[#3368A0] dark:text-[#99C2FF] flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+            👤
+          </div>
+          <h4 class="font-bold text-sm text-[#192538] dark:text-[#FFEFE3] group-hover:text-[#99C2FF] transition-colors mb-1">
+            Avatar & PFP Optimizer
+          </h4>
+          <p class="text-xs text-[#6B7A90] dark:text-[#99C2FF] leading-relaxed mb-3">
+            Preview 1:1 circular cropping, decoration borders, and status badge alignment.
+          </p>
+          <span class="text-xs font-bold text-[#3368A0] dark:text-[#99C2FF] flex items-center gap-1 group-hover:underline">
+            Launch Tool →
+          </span>
+        </a>
+
+        <!-- Sizes Guide Card -->
+        <a 
+          href="/guides/discord-sizes/" 
+          class="group p-5 rounded-2xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] hover:border-[#FFDF82] dark:hover:border-[#FFDF82] shadow-xs hover:shadow-lg hover:-translate-y-1 transition-all"
+        >
+          <div class="w-10 h-10 rounded-xl bg-[#FFDF82]/20 text-[#B45309] dark:text-[#FFDF82] flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+            📏
+          </div>
+          <h4 class="font-bold text-sm text-[#192538] dark:text-[#FFEFE3] group-hover:text-[#FFDF82] transition-colors mb-1">
+            Discord Size Cheat Sheet
+          </h4>
+          <p class="text-xs text-[#6B7A90] dark:text-[#99C2FF] leading-relaxed mb-3">
+            Every verified 2026 dimension for banners, avatars, emojis, stickers, and role icons.
+          </p>
+          <span class="text-xs font-bold text-[#3368A0] dark:text-[#FFDF82] flex items-center gap-1 group-hover:underline">
+            Read Specs Guide →
+          </span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ASSET CUSTOMIZER MODAL INTEGRATION -->
+  <AssetCustomizerModal />
+</Layout>
+
+<script>
+  // Client-Side In-Page Filtering for Category Presets
+  function initCategoryFilter() {
+    const searchInput = document.getElementById('category-search-input') as HTMLInputElement | null;
+    const moodButtons = document.querySelectorAll<HTMLButtonElement>('.mood-filter-btn');
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.category-card-wrapper'));
+    const emptyState = document.getElementById('category-empty-state');
+    const resetBtn = document.getElementById('category-reset-filters-btn');
+
+    if (!cards.length) return;
+
+    let currentMood = 'all';
+    let searchQuery = '';
+
+    function filterCards() {
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const mood = card.getAttribute('data-mood') || '';
+        const title = card.getAttribute('data-title') || '';
+        const tags = card.getAttribute('data-tags') || '';
+
+        const matchesMood = currentMood === 'all' || mood.toLowerCase() === currentMood.toLowerCase();
+        const matchesSearch = !searchQuery || title.includes(searchQuery) || tags.includes(searchQuery);
+
+        if (matchesMood && matchesSearch) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      if (emptyState) {
+        emptyState.classList.toggle('hidden', visibleCount > 0);
+      }
+    }
+
+    moodButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        moodButtons.forEach(b => {
+          b.classList.remove('active', 'bg-[#3368A0]', 'dark:bg-[#99C2FF]', 'text-white', 'dark:text-black', 'font-bold');
+          b.classList.add('font-medium', 'border', 'border-[#E0DBD0]', 'dark:border-[#263454]', 'bg-white', 'dark:bg-[#161F2E]', 'text-[#6B7A90]', 'dark:text-[#99C2FF]');
+        });
+
+        btn.classList.add('active', 'bg-[#3368A0]', 'dark:bg-[#99C2FF]', 'text-white', 'dark:text-black', 'font-bold');
+        btn.classList.remove('font-medium', 'border', 'border-[#E0DBD0]', 'dark:border-[#263454]', 'bg-white', 'dark:bg-[#161F2E]', 'text-[#6B7A90]', 'dark:text-[#99C2FF]');
+
+        currentMood = btn.getAttribute('data-mood') || 'all';
+        filterCards();
+      });
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+      searchQuery = (e.target as HTMLInputElement).value.trim().toLowerCase();
+      filterCards();
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      searchQuery = '';
+      currentMood = 'all';
+
+      moodButtons.forEach(b => {
+        const isAll = b.getAttribute('data-mood') === 'all';
+        if (isAll) {
+          b.classList.add('active', 'bg-[#3368A0]', 'dark:bg-[#99C2FF]', 'text-white', 'dark:text-black', 'font-bold');
+          b.classList.remove('font-medium', 'border', 'border-[#E0DBD0]', 'dark:border-[#263454]', 'bg-white', 'dark:bg-[#161F2E]', 'text-[#6B7A90]', 'dark:text-[#99C2FF]');
+        } else {
+          b.classList.remove('active', 'bg-[#3368A0]', 'dark:bg-[#99C2FF]', 'text-white', 'dark:text-black', 'font-bold');
+          b.classList.add('font-medium', 'border', 'border-[#E0DBD0]', 'dark:border-[#263454]', 'bg-white', 'dark:bg-[#161F2E]', 'text-[#6B7A90]', 'dark:text-[#99C2FF]');
+        }
+      });
+
+      filterCards();
+    });
+  }
+
+  initCategoryFilter();
+  document.addEventListener('astro:page-load', initCategoryFilter);
+</script>

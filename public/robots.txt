@@ -1,10 +1,17 @@
 User-agent: *
 Allow: /
 
+# AI retrieval & answer engines: explicitly welcome
 User-agent: GPTBot
 Allow: /
 
+User-agent: ChatGPT-User
+Allow: /
+
 User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
 Allow: /
 
 User-agent: PerplexityBot
@@ -13,7 +20,14 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
+# Training crawlers: opted out
 User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
 Disallow: /
 
 Sitemap: https://discord-creator-asset-studio.pages.dev/sitemap-index.xml

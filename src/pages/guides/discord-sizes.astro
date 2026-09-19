@@ -3,14 +3,15 @@ import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import { generateBreadcrumbSchema } from '../../utils/seo';
 
-const pageTitle = "Discord Asset Sizes (2026): Official Dimensions Guide";
-const pageDescription = "Verified Discord asset size guide for 2026. Exact pixel dimensions, file size limits, formats, and Nitro/Boost requirements for all creator assets.";
+const pageTitle = "Discord Banner Size | Full Dimensions Guide | Asset Studio";
+const pageDescription = "Verified guide to Discord banner size, avatar dimensions, emoji limits, and sticker specs for 2026. Safe zones, Nitro limits, and boost tier requirements.";
 
 const techArticleSchema = {
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": pageTitle,
   "description": pageDescription,
+  "image": "https://discord-creator-asset-studio.pages.dev/og-image.png",
   "inLanguage": "en",
   "url": "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/",
   "datePublished": "2026-01-01T00:00:00+00:00",
@@ -32,7 +33,7 @@ const techArticleSchema = {
 };
 
 const breadcrumbJson = generateBreadcrumbSchema([
-  { name: "Home", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
   { name: "Size Guide", url: "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/" }
 ]);
 ---
@@ -40,11 +41,24 @@ const breadcrumbJson = generateBreadcrumbSchema([
 <Layout 
   title={pageTitle} 
   description={pageDescription}
+  ogImage="https://discord-creator-asset-studio.pages.dev/og/guide-sizes.png"
 >
   <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
   <script type="application/ld+json" set:html={breadcrumbJson} />
 
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+    <!-- Breadcrumb & Alternate Language -->
+    <div class="flex items-center justify-between gap-4 mb-6 text-xs font-mono">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-[#6B7A90] dark:text-[#8494A7]">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Size Guide</span>
+      </nav>
+      <a href="/es/guides/discord-sizes/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold flex items-center gap-1">
+        🌐 Leer en Español
+      </a>
+    </div>
+
     <!-- Header -->
     <div class="mb-12">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4 shadow-xs">
@@ -52,10 +66,10 @@ const breadcrumbJson = generateBreadcrumbSchema([
         Updated for 2026 Platform Releases
       </div>
       <h1 class="text-3xl sm:text-5xl font-extrabold text-[#192538] tracking-tight mb-4">
-        Discord Asset Sizes & <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Cheat Sheet</span><SketchUnderline color="#66A3BF" /></span>
+        <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Banner Size</mark> & <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Asset Guide</span><SketchUnderline color="#66A3BF" /></span>
       </h1>
       <p class="text-[#475569] text-lg leading-relaxed max-w-3xl">
-        Every official dimension, byte boundary, supported format, and permission requirement for Discord creator assets—verified directly against Discord Help Center and Developer documentation.
+        Every official dimension, file size limit, supported format, and permission requirement for Discord creator assets, verified against Discord's Help Center and developer docs.
       </p>
     </div>
 
@@ -135,9 +149,12 @@ const breadcrumbJson = generateBreadcrumbSchema([
     <!-- Detailed Section Guides -->
     <div class="space-y-8">
       <div class="card-panel p-8 rounded-[14px]">
-        <h2 class="text-xl font-bold text-[#192538] mb-3">1. Server Banner Safe Zone & Readability Guidance</h2>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xl font-bold text-[#192538]">1. Server Banner Safe Zone & Readability Guidance</h2>
+          <a href="https://support.discord.com/hc/en-us/articles/115001580171-Channel-Banners" target="_blank" rel="noopener noreferrer" class="text-xs text-[#3368A0] dark:text-[#66A3BF] hover:underline font-mono">Official Support Spec &rarr;</a>
+        </div>
         <p class="text-[#475569] text-sm leading-relaxed mb-4">
-          Discord officially specifies that the <strong>top 48 pixels</strong> of a server banner are partially overlaid by the server title and navigation UI on desktop clients. Keep critical artwork, logos, and typography below this 48px boundary to avoid awkward visual obstruction.
+          Discord places your server title, boost badge, and dropdown menu right over the <strong>top 48 pixels</strong> of your server banner on desktop apps. When designing to official Discord banner dimensions (1920×1080 or 960×540) using the widescreen 16:9 Discord banner aspect ratio, keep important text, logos, and faces below this top 48px line so the buttons don't cover them up.
         </p>
         <a href="/tools/banner/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
           Open Banner Studio with live safe zone overlay →
@@ -145,9 +162,12 @@ const breadcrumbJson = generateBreadcrumbSchema([
       </div>
 
       <div class="card-panel p-8 rounded-[14px]">
-        <h2 class="text-xl font-bold text-[#192538] mb-3">2. The 256 KiB vs 256 KB Boundary on Custom Emojis</h2>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xl font-bold text-[#192538]">2. The 256 KiB vs 256 KB Boundary on Custom Emojis</h2>
+          <a href="https://support.discord.com/hc/en-us/articles/360036479811-Custom-Emojis" target="_blank" rel="noopener noreferrer" class="text-xs text-[#3368A0] dark:text-[#66A3BF] hover:underline font-mono">Official Support Spec &rarr;</a>
+        </div>
         <p class="text-[#475569] text-sm leading-relaxed mb-4">
-          Discord's backend enforces a strict binary kilobyte limit: <strong>256 KiB (262,144 bytes)</strong>. Files that are 257,000 bytes will fail upload even though some operating systems report them as "256 KB" using decimal prefixes. Discord Asset Studio measures the exact encoded Blob byte length in memory before allowing download.
+          The official Discord emoji size standard is 128×128 pixels (which renders at 32×32 pixels inside chat messages). Discord enforces a strict file limit of <strong>256 KiB (262,144 bytes)</strong>. A file that is 257,000 bytes will fail to upload even if your computer labels it as "256 KB". Our studio calculates the exact byte length in memory to guarantee your emoji uploads smoothly.
         </p>
         <a href="/tools/emoji/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
           Format & compress emojis to 256 KiB now →
@@ -155,12 +175,52 @@ const breadcrumbJson = generateBreadcrumbSchema([
       </div>
 
       <div class="card-panel p-8 rounded-[14px]">
-        <h2 class="text-xl font-bold text-[#192538] mb-3">3. Custom Stickers: APNG vs GIF</h2>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xl font-bold text-[#192538]">3. Custom Stickers: APNG vs GIF</h2>
+          <a href="https://support.discord.com/hc/en-us/articles/4405269739799-Custom-Stickers-FAQ" target="_blank" rel="noopener noreferrer" class="text-xs text-[#3368A0] dark:text-[#66A3BF] hover:underline font-mono">Official Support Spec &rarr;</a>
+        </div>
         <p class="text-[#475569] text-sm leading-relaxed mb-4">
-          Discord custom stickers must be <strong>exactly 320x320 pixels</strong> and under <strong>512 KiB (524,288 bytes)</strong>. For animated stickers, Discord recommends Animated PNG (APNG) with a maximum duration of 5 seconds and up to 60 frames per second. While developer documentation mentions Lottie files, standard user and server uploads rely on APNG.
+          Custom stickers must be <strong>exactly 320×320 pixels</strong> and under <strong>512 KiB (524,288 bytes)</strong>. For animations, Discord requires APNG (Animated PNG) rather than regular GIFs, with a maximum length of 5 seconds and a frame rate of 60 FPS or lower.
         </p>
         <a href="/tools/sticker/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
           Format stickers to exact 320x320 specifications →
+        </a>
+      </div>
+
+      <div class="card-panel p-8 rounded-[14px]">
+        <h2 class="text-xl font-bold text-[#192538] mb-3">4. Discord Avatar & PFP Standards</h2>
+        <p class="text-[#475569] text-sm leading-relaxed mb-4">
+          The recommended Discord avatar size and Discord profile picture size is <strong>512×512 pixels</strong>. Because Discord crops your square image into a circle, about 21% of the corner area gets cut off. Keep faces, logos, and important details centered so they stay in full view.
+        </p>
+        <a href="/tools/avatar/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
+          Crop & preview profile picture in Avatar Studio →
+        </a>
+      </div>
+
+      <div class="card-panel p-8 rounded-[14px]">
+        <h2 class="text-xl font-bold text-[#192538] mb-3">5. Custom Role Icons for Boost Level 2 Servers</h2>
+        <p class="text-[#475569] text-sm leading-relaxed mb-4">
+          The official Discord role icon size is <strong>64×64 pixels</strong> under 256 KB. In chat and member lists, Discord shrinks them down to 16×16 or 20×20 pixels next to usernames. Uploading them requires Server Boost Level 2 and the 'Manage Roles' permission.
+        </p>
+        <a href="/tools/role-icon/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
+          Format custom role icons in Role Icon Studio →
+        </a>
+      </div>
+
+      <div class="card-panel p-8 rounded-[14px]">
+        <h2 class="text-xl font-bold text-[#192538] mb-3">6. Discord UI Colors & Background Themes</h2>
+        <p class="text-[#475569] text-sm leading-relaxed mb-4">
+          Discord's interface uses a default Dark theme with a Discord background color of <strong>#313338</strong> and an optional Light theme (#FFFFFF). Giving custom emojis, stickers, and role badges a subtle white or light outline ensures they stay clear and readable on every Discord background color.
+        </p>
+      </div>
+
+      <div class="card-panel p-8 rounded-[14px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#66A3BF]/30">
+        <h2 class="text-xl font-bold text-[#192538] dark:text-white mb-3">7. Creating Animated Discord GIFs</h2>
+        <p class="text-[#475569] dark:text-[#CBD5E1] text-sm leading-relaxed mb-4">
+          Want to create animated emojis, animated banners, or Nitro profile pictures? Check out our complete guide for Discord GIF limits, frame rates, and compression tips.
+        </p>
+        <a href="/guides/discord-gif-guide/" class="btn-primary inline-flex items-center text-xs px-4 py-2 rounded-[8px] font-bold">
+          Read the Discord GIF Guide &rarr;
         </a>
       </div>
     </div>

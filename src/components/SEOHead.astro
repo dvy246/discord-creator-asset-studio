@@ -19,6 +19,9 @@ const {
   hasSpanishAlternate,
 } = Astro.props;
 
+// OG image alt text + dimensions improve social scraper rendering
+const ogImageAlt = `${title} — Discord Creator Asset Studio`;
+
 const site = Astro.site ? new URL(Astro.site).origin : 'https://discord-creator-asset-studio.pages.dev';
 const pathname = Astro.url.pathname;
 const normalizedPath = pathname.replace(/\/$/, '') || '/';
@@ -36,20 +39,37 @@ const esUrl = new URL(basePathWithSlash === '/' ? '/es/' : `/es${basePathWithSla
 const xDefaultUrl = enUrl;
 
 // Determine if this route has a matching Spanish translation
+const SPANISH_ROUTES = new Set([
+  '/',
+  '/es',
+  '/guides/discord-sizes',
+  '/es/guides/discord-sizes',
+  '/tools/emoji',
+  '/es/tools/emoji',
+  '/tools/sticker',
+  '/es/tools/sticker',
+  '/tools/banner',
+  '/es/tools/banner',
+  '/tools/avatar',
+  '/es/tools/avatar',
+  '/tools/role-icon',
+  '/es/tools/role-icon'
+]);
+
 const routeHasSpanish = hasSpanishAlternate !== undefined
   ? hasSpanishAlternate
-  : (
-    normalizedPath === '/' || 
-    normalizedPath === '/es' || 
-    normalizedPath === '/guides/discord-sizes' || 
-    normalizedPath === '/es/guides/discord-sizes'
-  );
+  : SPANISH_ROUTES.has(normalizedPath);
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#F2EFE7" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#141A24" media="(prefers-color-scheme: dark)" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="application/rss+xml" title="Discord Asset Studio Blog" href="/rss.xml" />
 <meta name="generator" content={Astro.generator} />
 
 <title>{title}</title>
@@ -62,16 +82,11 @@ const routeHasSpanish = hasSpanishAlternate !== undefined
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href={canonical} />
 
-    {routeHasSpanish ? (
+    {routeHasSpanish && (
       <>
         <link rel="alternate" hreflang="en" href={enUrl} />
         <link rel="alternate" hreflang="es" href={esUrl} />
         <link rel="alternate" hreflang="x-default" href={xDefaultUrl} />
-      </>
-    ) : (
-      <>
-        <link rel="alternate" hreflang="en" href={canonical} />
-        <link rel="alternate" hreflang="x-default" href={canonical} />
       </>
     )}
   </>
@@ -82,9 +97,14 @@ const routeHasSpanish = hasSpanishAlternate !== undefined
 <meta property="og:type" content={ogType} />
 {!noindex && <meta property="og:url" content={canonical} />}
 <meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={ogImageAlt} />
 <meta property="og:site_name" content="Discord Asset Studio" />
+<meta property="og:locale" content={isEs ? 'es_ES' : 'en_US'} />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={ogImageAlt} />

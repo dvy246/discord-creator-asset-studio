@@ -15,8 +15,38 @@ import SketchUnderline from '../components/SketchUnderline.astro';
       </p>
     </div>
 
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="card-panel rounded-[12px] p-5 text-sm">
+        <div class="text-xs font-bold uppercase tracking-wider text-[#3368A0] dark:text-[#66A3BF] mb-1">Direct Support</div>
+        <a href="mailto:support@discordassets.studio" class="font-semibold text-[#192538] dark:text-white hover:underline break-all">
+          support@discordassets.studio
+        </a>
+        <p class="text-xs text-[#6B7A90] mt-1">Average response time: &lt; 24 hours</p>
+      </div>
+
+      <div class="card-panel rounded-[12px] p-5 text-sm">
+        <div class="text-xs font-bold uppercase tracking-wider text-[#3368A0] dark:text-[#66A3BF] mb-1">Official Reference</div>
+        <a href="https://support.discord.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-[#192538] dark:text-white hover:underline">
+          Discord Help Center &rarr;
+        </a>
+        <p class="text-xs text-[#6B7A90] mt-1">Direct official documentation</p>
+      </div>
+
+      <div class="card-panel rounded-[12px] p-5 text-sm">
+        <div class="text-xs font-bold uppercase tracking-wider text-[#3368A0] dark:text-[#66A3BF] mb-1">Specification Hub</div>
+        <a href="/guides/discord-sizes/" class="font-semibold text-[#192538] dark:text-white hover:underline">
+          Dimension Cheat Sheet &rarr;
+        </a>
+        <p class="text-xs text-[#6B7A90] mt-1">2026 Verified rule parameters</p>
+      </div>
+    </div>
+
     <div class="card-panel rounded-[14px] p-6 sm:p-8">
-      <form onsubmit="event.preventDefault(); alert('Thank you for your feedback! Our team will review the rule update.');" class="space-y-6">
+      <form onsubmit="event.preventDefault(); document.getElementById('contact-status').classList.remove('hidden'); this.reset();" class="space-y-6">
+        <div id="contact-status" class="hidden p-4 rounded-[8px] bg-[#C8DFDB]/40 border border-[#0D9488]/30 text-xs text-[#192538] dark:text-white">
+          Thank you for your report! Our engineering team reviews Discord specification updates and bug tickets within 24 hours. You may also email us directly at <a href="mailto:support@discordassets.studio" class="underline font-bold">support@discordassets.studio</a>.
+        </div>
+
         <div>
           <label for="topic" class="block text-xs font-bold uppercase tracking-wider text-[#475569] mb-2">Inquiry Category</label>
           <select id="topic" class="w-full bg-[#FAF8F5] border border-[#E0DBD0] rounded-[8px] px-3.5 py-2.5 text-sm text-[#192538] focus:outline-none focus:border-[#3368A0]">
