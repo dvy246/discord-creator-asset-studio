@@ -62,6 +62,46 @@ const faqSchema = {
         "@type": "Answer",
         "text": "Discord custom stickers must be exactly 320x320 pixels and under 512 KiB (524,288 bytes). Animated stickers must use APNG (Animated PNG), have a maximum duration of 5 seconds, and run at 60 frames per second or lower."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the correct Discord avatar size, and can I add avatar decorations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord avatars display best at 512x512 pixels and are cropped to a circle in the client. Our avatar cropper previews the exact circular mask before you export. Avatar decorations are separate transparent PNG overlays that frame your profile picture — the customizer lets you preview popular decoration styles live on your avatar so you can see the framing before you commit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I make an animated Discord banner GIF that stays under 10MB?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord profile and server banners use a 960x540 (16:9) canvas, and animated banner GIFs must stay under Discord's 10MB Nitro limit. The studio renders a live-size indicator while you compose, then auto-downsamples the export so every animated Discord banner is guaranteed to land under the 10.0MB ceiling without freezing your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert a video into a Discord GIF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The Discord GIF maker converts short video clips into looping GIFs sized and compressed for Discord. Because everything runs client-side in a Web Worker, your video is never uploaded — the conversion, trimming, and compression to fit the Discord GIF size limit all happen locally on your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find and copy my Discord profile theme color hex code?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord profile theme colors are stored as hex codes. When you drop artwork into the customizer, it samples the dominant background and accent colors directly from the image on the canvas and gives you a one-click Copy Discord Nitro Theme Hex button, so your custom Discord background and banner match perfectly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What size should a Discord role icon be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord role icons render at 64x64 pixels and should stay under 256 KB. The role icon maker formats a crisp circular badge at the exact 64x64 size, and the exporter reports the encoded file size so you know it will be accepted before you upload it to your server settings."
+      }
     }
   ]
 };
@@ -610,33 +650,95 @@ const itemListSchema = JSON.parse(generateItemListSchema([
     </div>
 
     <div class="space-y-4">
-      <div class="card-panel p-6 rounded-[14px]">
-        <h3 class="text-base font-bold text-[#192538] mb-2">Why did Discord reject my custom emoji under 256 KB?</h3>
-        <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
+      <details class="card-panel p-6 rounded-[14px] group" open>
+        <summary class="text-base font-bold text-[#192538] dark:text-[#F0F4F8] cursor-pointer list-none flex items-center justify-between gap-3">
+          <span>Why did Discord reject my custom emoji under 256 KB?</span>
+          <svg class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </summary>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mt-3">
           Discord enforces a strict binary limit of 256 KiB (262,144 bytes). Operating systems frequently display file sizes in decimal kilobytes (1 KB = 1,000 bytes). An emoji showing as 256 KB on your computer might actually be 262,500 bytes, causing Discord to reject it. Discord Asset Studio measures the exact encoded Blob byte count.
         </p>
-      </div>
+      </details>
 
-      <div class="card-panel p-6 rounded-[14px]">
-        <h3 class="text-base font-bold text-[#192538] mb-2">What are the exact dimensions for Discord server banners?</h3>
-        <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
+      <details class="card-panel p-6 rounded-[14px] group">
+        <summary class="text-base font-bold text-[#192538] dark:text-[#F0F4F8] cursor-pointer list-none flex items-center justify-between gap-3">
+          <span>What are the exact dimensions for Discord server banners?</span>
+          <svg class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </summary>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mt-3">
           Discord recommends a minimum size of 960x540 pixels with a 16:9 aspect ratio, though 1920x1080 is commonly used. Remember that Discord overlays channel headers and navigation across the top 48 pixels of the banner on desktop, so important content should remain below that zone.
         </p>
-      </div>
+      </details>
 
-      <div class="card-panel p-6 rounded-[14px]">
-        <h3 class="text-base font-bold text-[#192538] mb-2">Are my images uploaded to any server when I use this tool?</h3>
-        <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
+      <details class="card-panel p-6 rounded-[14px] group">
+        <summary class="text-base font-bold text-[#192538] dark:text-[#F0F4F8] cursor-pointer list-none flex items-center justify-between gap-3">
+          <span>Are my images uploaded to any server when I use this tool?</span>
+          <svg class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </summary>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mt-3">
           No. Discord Asset Studio runs 100% client-side in your browser. All resizing, cropping, and compression happens locally inside your device memory using Web Workers and the HTML5 Canvas API. No media or filenames are ever sent to an external server.
         </p>
-      </div>
+      </details>
 
-      <div class="card-panel p-6 rounded-[14px]">
-        <h3 class="text-base font-bold text-[#192538] mb-2">What are the rules for animated Discord stickers?</h3>
-        <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">
+      <details class="card-panel p-6 rounded-[14px] group">
+        <summary class="text-base font-bold text-[#192538] dark:text-[#F0F4F8] cursor-pointer list-none flex items-center justify-between gap-3">
+          <span>What are the rules for animated Discord stickers?</span>
+          <svg class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </summary>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mt-3">
           Discord custom stickers must be exactly 320x320 pixels and under 512 KiB (524,288 bytes). Animated stickers must use APNG (Animated PNG), have a maximum duration of 5 seconds, and run at 60 frames per second or lower.
         </p>
-      </div>
+      </details>
+
+      <details class="card-panel p-6 rounded-[14px] group">
+        <summary class="text-base font-bold text-[#192538] dark:text-[#F0F4F8] cursor-pointer list-none flex items-center justify-between gap-3">
+          <span>What is the correct Discord avatar size, and can I add avatar decorations?</span>
+          <svg class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </summary>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mt-3">
+          Discord avatars display best at 512x512 pixels and are cropped to a circle in the client. Our avatar cropper previews the exact circular mask before you export. Avatar decorations are separate transparent PNG overlays that frame your profile picture — the customizer lets you preview popular decoration styles live on your avatar so you can see the framing before you commit.
+        </p>
+      </details>
+
+      <details class="card-panel p-6 rounded-[14px] group">
+        <summary class="text-base font-bold text-[#192538] dark:text-[#F0F4F8] cursor-pointer list-none flex items-center justify-between gap-3">
+          <span>How do I make an animated Discord banner GIF that stays under 10MB?</span>
+          <svg class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </summary>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mt-3">
+          Discord profile and server banners use a 960x540 (16:9) canvas, and animated banner GIFs must stay under Discord's 10MB Nitro limit. The studio renders a live file-size indicator while you compose, then auto-downsamples the export so every animated Discord banner is guaranteed to land under the 10.0MB ceiling without freezing your browser.
+        </p>
+      </details>
+
+      <details class="card-panel p-6 rounded-[14px] group">
+        <summary class="text-base font-bold text-[#192538] dark:text-[#F0F4F8] cursor-pointer list-none flex items-center justify-between gap-3">
+          <span>Can I convert a video into a Discord GIF?</span>
+          <svg class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </summary>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mt-3">
+          Yes. The Discord GIF maker converts short video clips into looping GIFs sized and compressed for Discord. Because everything runs client-side in a Web Worker, your video is never uploaded — the conversion, trimming, and compression to fit the Discord GIF size limit all happen locally on your device.
+        </p>
+      </details>
+
+      <details class="card-panel p-6 rounded-[14px] group">
+        <summary class="text-base font-bold text-[#192538] dark:text-[#F0F4F8] cursor-pointer list-none flex items-center justify-between gap-3">
+          <span>How do I find and copy my Discord profile theme color hex code?</span>
+          <svg class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </summary>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mt-3">
+          Discord profile theme colors are stored as hex codes. When you drop artwork into the customizer, it samples the dominant background and accent colors directly from the image on the canvas and gives you a one-click Copy Discord Nitro Theme Hex button, so your custom Discord background and banner match perfectly.
+        </p>
+      </details>
+
+      <details class="card-panel p-6 rounded-[14px] group">
+        <summary class="text-base font-bold text-[#192538] dark:text-[#F0F4F8] cursor-pointer list-none flex items-center justify-between gap-3">
+          <span>What size should a Discord role icon be?</span>
+          <svg class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </summary>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mt-3">
+          Discord role icons render at 64x64 pixels and should stay under 256 KB. The role icon maker formats a crisp circular badge at the exact 64x64 size, and the exporter reports the encoded file size so you know it will be accepted before you upload it to your server settings.
+        </p>
+      </details>
     </div>
   </section>
 

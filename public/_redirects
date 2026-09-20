@@ -17,3 +17,6 @@
 /pfps                 /assets/pfps/    301
 /assets/pfp/          /assets/pfps/    301
 /assets/pfp           /assets/pfps/    301
+
+# Canonical sitemap alias — @astrojs/sitemap emits sitemap-index.xml
+/sitemap.xml          /sitemap-index.xml  301
