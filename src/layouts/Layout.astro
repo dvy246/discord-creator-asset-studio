@@ -49,6 +49,33 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
 <!doctype html>
 <html lang={lang}>
   <head>
+    <!-- Google tag (gtag.js) with Consent Mode v2 — analytics denied until user consents (GDPR / PECR) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6N2NB5MZQ8"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      // Default: deny all storage before any tag fires. Must run before gtag('config').
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        wait_for_update: 500
+      });
+      // Restore a previously granted choice so consenting users are tracked immediately.
+      try {
+        if (localStorage.getItem('cookie-consent') === 'granted') {
+          gtag('consent', 'update', {
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted',
+            analytics_storage: 'granted'
+          });
+        }
+      } catch (e) {}
+      gtag('js', new Date());
+      gtag('config', 'G-6N2NB5MZQ8');
+    </script>
     <SEOHead 
       title={title} 
       description={description} 
@@ -444,15 +471,15 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
           });
         }
 
-        // Close header dropdowns on outside click or Escape
+        // Close header dropdowns on outside click or Escape (all 4: tools/assets/resources/company)
         document.addEventListener('click', function(e) {
-          document.querySelectorAll('details#tools-dropdown[open], details#blog-dropdown[open]').forEach(function(d) {
+          document.querySelectorAll('.header-primary-nav details[open]').forEach(function(d) {
             if (!d.contains(e.target)) d.removeAttribute('open');
           });
         });
         document.addEventListener('keydown', function(e) {
           if (e.key === 'Escape') {
-            document.querySelectorAll('details#tools-dropdown[open], details#blog-dropdown[open]').forEach(function(d) {
+            document.querySelectorAll('.header-primary-nav details[open]').forEach(function(d) {
               d.removeAttribute('open');
             });
           }
@@ -464,6 +491,70 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
     <main class="flex-1">
       <slot />
     </main>
+
+    <!-- Cookie Consent Banner (GDPR / PECR) — flips Consent Mode analytics_storage -->
+    <div
+      id="cookie-consent-banner"
+      role="dialog"
+      aria-live="polite"
+      aria-label="Cookie consent"
+      class="hidden fixed bottom-0 inset-x-0 z-[60] p-3 sm:p-4"
+    >
+      <div class="max-w-3xl mx-auto rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#161F2E] shadow-lg backdrop-blur-md p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed flex-1">
+          We use privacy-friendly analytics cookies to understand how creators use these tools. Your images never leave your device.
+          See our <a href="/privacy/" class="underline hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold">Privacy Policy</a>.
+        </p>
+        <div class="flex items-center gap-2 shrink-0">
+          <button
+            id="cookie-consent-decline"
+            type="button"
+            class="px-4 py-2 rounded-[8px] text-xs font-semibold border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:bg-white dark:hover:bg-[#1E2738] transition-colors focus:outline-none focus:ring-2 focus:ring-[#3368A0]"
+          >
+            Decline
+          </button>
+          <button
+            id="cookie-consent-accept"
+            type="button"
+            class="btn-primary px-5 py-2 rounded-[8px] text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#3368A0]"
+          >
+            Accept
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (function() {
+        var banner = document.getElementById('cookie-consent-banner');
+        if (!banner) return;
+        var accept = document.getElementById('cookie-consent-accept');
+        var decline = document.getElementById('cookie-consent-decline');
+        function gtag(){ (window.dataLayer = window.dataLayer || []).push(arguments); }
+
+        var stored;
+        try { stored = localStorage.getItem('cookie-consent'); } catch (e) {}
+
+        // Show banner only if no prior decision recorded.
+        if (stored !== 'granted' && stored !== 'denied') {
+          banner.classList.remove('hidden');
+        }
+
+        function decide(granted) {
+          try { localStorage.setItem('cookie-consent', granted ? 'granted' : 'denied'); } catch (e) {}
+          gtag('consent', 'update', {
+            ad_storage: granted ? 'granted' : 'denied',
+            ad_user_data: granted ? 'granted' : 'denied',
+            ad_personalization: granted ? 'granted' : 'denied',
+            analytics_storage: granted ? 'granted' : 'denied'
+          });
+          banner.classList.add('hidden');
+        }
+
+        if (accept) accept.addEventListener('click', function() { decide(true); });
+        if (decline) decline.addEventListener('click', function() { decide(false); });
+      })();
+    </script>
 
     <!-- Footer: Authoritative, crawlable, AdSense compliant -->
     <footer class="border-t border-[#E0DBD0] bg-[#FAF8F5] text-[#475569] text-sm py-12 transition-colors duration-200">
