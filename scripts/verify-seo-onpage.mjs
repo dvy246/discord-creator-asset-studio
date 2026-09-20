@@ -9,7 +9,7 @@ const indexablePages = [
   {
     path: 'index.html',
     url: '/',
-    primaryKeyword: 'discord image resizer',
+    primaryKeyword: 'discord banner maker',
   },
   {
     path: 'tools/banner/index.html',

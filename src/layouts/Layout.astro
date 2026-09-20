@@ -69,16 +69,16 @@ const isTools = (currentPath.startsWith('/tools') || currentPath === '/') && !is
     <header class="border-b border-[#E0DBD0] bg-[#FAF8F5]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
       <div class="max-w-7xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between">
         <!-- Logo -->
-        <a href="/" class="flex items-center gap-3 text-lg font-bold tracking-tight text-[#192538] hover:opacity-90 transition-opacity">
+        <a href="/" class="flex items-center gap-2.5 text-lg font-bold tracking-tight text-[#192538] hover:opacity-90 transition-opacity shrink-0">
           <img src="/favicon.svg" alt="Discord Creator Asset Studio" class="w-8 h-8 rounded-[8px] shadow-xs hover:scale-105 transition-transform" width="32" height="32" />
-          <span>Asset Studio</span>
-          <span class="text-xs px-2 py-0.5 rounded-full bg-[#C8DFDB]/60 text-[#3368A0] border border-[#66A3BF]/30 font-semibold hidden sm:inline-block">
+          <span class="whitespace-nowrap">Asset Studio</span>
+          <span class="text-[10px] leading-none px-2 py-1 rounded-full bg-[#C8DFDB]/60 text-[#3368A0] border border-[#66A3BF]/30 font-semibold hidden xl:inline-block whitespace-nowrap">
             Client-Side
           </span>
         </a>
 
         <!-- Desktop Navigation Links: Organized, Accessible, Zero-Clutter -->
-        <nav class="hidden md:flex items-center gap-2 text-xs font-semibold">
+        <nav class="header-primary-nav hidden lg:flex items-center gap-1.5 text-xs font-semibold">
           <!-- Tools Dropdown Menu -->
           <details class="relative group" id="tools-dropdown">
             <summary
@@ -286,18 +286,18 @@ const isTools = (currentPath.startsWith('/tools') || currentPath === '/') && !is
         <div class="flex items-center gap-2 sm:gap-3">
           <PaletteSelector />
           <ThemeToggle />
-          <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-[#3368A0] bg-[#FFFFFF] px-3 py-1.5 rounded-[8px] border border-[#C8DFDB] shadow-xs">
+          <span class="hidden xl:inline-flex items-center gap-1.5 text-xs font-medium text-[#3368A0] bg-[#FFFFFF] px-3 py-1.5 rounded-[8px] border border-[#C8DFDB] shadow-xs whitespace-nowrap shrink-0">
             <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
             Zero Server Uploads
           </span>
 
           <!-- Mobile Hamburger Button -->
-          <button 
-            id="mobile-nav-toggle" 
-            type="button" 
-            aria-label="Toggle navigation menu" 
-            aria-expanded="false" 
-            class="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-[#475569] hover:text-[#192538] hover:bg-[#E0DBD0]/50 transition-colors focus:outline-none focus:ring-2 focus:ring-[#3368A0]"
+          <button
+            id="mobile-nav-toggle"
+            type="button"
+            aria-label="Toggle navigation menu"
+            aria-expanded="false"
+            class="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-[#475569] hover:text-[#192538] hover:bg-[#E0DBD0]/50 transition-colors focus:outline-none focus:ring-2 focus:ring-[#3368A0]"
           >
             <svg id="hamburger-icon" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -310,7 +310,7 @@ const isTools = (currentPath.startsWith('/tools') || currentPath === '/') && !is
       </div>
 
       <!-- Mobile Navigation Drawer: Categorized & Space-Efficient -->
-      <nav id="mobile-nav-menu" class="hidden md:hidden border-t border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#141A24] px-4 py-4 space-y-3 transition-all duration-200">
+      <nav id="mobile-nav-menu" class="hidden lg:hidden border-t border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#141A24] px-4 py-4 space-y-3 transition-all duration-200">
         <div>
           <span class="block px-1 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] font-mono">
             Tools & Generators
@@ -454,6 +454,20 @@ const isTools = (currentPath.startsWith('/tools') || currentPath === '/') && !is
           </div>
         </div>
       </nav>
+
+      <style is:global>
+        /* Keep the primary nav on one clean line: no wrapping, no shrinking */
+        .header-primary-nav > * { flex-shrink: 0; }
+        .header-primary-nav :where(a, summary) > span { white-space: nowrap; }
+        .header-primary-nav .header-nav-btn {
+          height: 34px;
+          display: inline-flex;
+          align-items: center;
+        }
+        @media (min-width: 1280px) {
+          .header-primary-nav { gap: 0.5rem; }
+        }
+      </style>
     </header>
 
     <script is:inline>
