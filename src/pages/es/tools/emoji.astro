@@ -1,5 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
+import EmojiWorkspace from '../../../components/tools/EmojiWorkspace.astro';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
 
 const pageTitle = "Creador de Emojis Discord | Comprimir a 256 KiB";
@@ -92,19 +93,10 @@ const faqSchema = {
       </div>
     </div>
 
-    <div class="rounded-[16px] border-2 border-[#3368A0]/30 dark:border-[#66A3BF]/30 bg-gradient-to-br from-[#FAF8F5] to-[#C8DFDB]/20 dark:from-[#141A24] dark:to-[#202E42]/50 p-6 sm:p-8 text-center mb-8">
-      <span class="inline-block px-3 py-1 rounded-full bg-[#0D9488]/15 text-[#0D9488] font-bold text-xs font-mono mb-3">HERRAMIENTA INTERACTIVA</span>
-      <h2 class="text-xl sm:text-2xl font-extrabold text-[#192538] dark:text-white mb-2">Abrir el Estudio de Emojis</h2>
-      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-lg mx-auto mb-5">
-        La herramienta interactiva completa (recorte, compresión y vista previa de chat en vivo) está disponible en el estudio principal.
-      </p>
-      <a href={enUrl} class="btn-primary inline-block text-xs px-6 py-3 rounded-[10px] font-semibold shadow-sm">
-        Abrir Herramienta de Emojis →
-      </a>
-      <p class="text-[11px] text-[#6B7A90] mt-3">La herramienta funciona igual en todos los idiomas — tus archivos nunca salen de tu dispositivo.</p>
-    </div>
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <EmojiWorkspace lang="es" />
 
-    
+
     <div class="space-y-6 mb-12 mt-8">
       <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
         <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">El Límite Binario de 256 KiB</h2>

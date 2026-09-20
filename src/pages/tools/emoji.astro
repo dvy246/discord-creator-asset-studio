@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import SketchCircle from '../../components/SketchCircle.astro';
+import EmojiWorkspace from '../../components/tools/EmojiWorkspace.astro';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Emoji Maker | Compress to 256KB | Asset Studio";
@@ -103,121 +104,13 @@ const faqSchema = {
       </div>
     </div>
 
-    <!-- Main Workspace Layout -->
+    <!-- Main Workspace Layout (shared component) -->
+    <EmojiWorkspace lang="en" />
+
+    <!-- Cross-link guide box (kept in-page: links differ per locale) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
-      <!-- Left Column: Upload & Canvas Controls (7 cols) -->
-      <div class="lg:col-span-7 space-y-6">
-        <!-- File Input Dropzone -->
-        <div 
-          id="dropzone" 
-          class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs"
-        >
-          <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
-          <div class="space-y-3 pointer-events-none">
-            <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 text-[#3368A0] flex items-center justify-center mx-auto text-xl font-bold">
-              📁
-            </div>
-            <div>
-              <p class="text-sm font-bold text-[#192538]">Click to browse or drop emoji artwork</p>
-              <p class="text-xs text-[#6B7A90] mt-1">PNG, JPG, WebP, or GIF (Processed in local memory)</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Canvas & Editor Controls -->
-        <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden">
-          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">Canvas Transformation (128 × 128)</h2>
-            <button id="resetBtn" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">
-              Reset
-            </button>
-          </div>
-
-          <!-- Live Canvas Surface -->
-          <div class="flex items-center justify-center p-6 bg-[#FAF8F5] rounded-[10px] border border-[#E0DBD0] overflow-hidden mb-6">
-            <canvas id="mainCanvas" width="128" height="128" class="max-w-[128px] max-h-[128px] shadow-sm rounded-[6px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] [background-size:16px_16px]"></canvas>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex flex-col sm:flex-row items-center gap-3">
-            <button id="exportBtn" class="btn-primary w-full sm:flex-1 py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2">
-              <span>Export Verified Emoji</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column: Validation Receipt & Live Discord Preview (5 cols) -->
-      <div class="lg:col-span-5 space-y-6">
-        <!-- Live Chat Size Previews -->
-        <div class="card-panel rounded-[14px] p-6">
-          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">Discord Chat Preview</h2>
-            <!-- Light/Dark Preview Surface Toggle -->
-            <div class="flex items-center gap-1 bg-[#FAF8F5] p-1 rounded-[6px] border border-[#E0DBD0]">
-              <button id="themeDarkBtn" class="text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium">Dark</button>
-              <button id="themeLightBtn" class="text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium">Light</button>
-            </div>
-          </div>
-
-          <div id="previewSurface" class="p-4 rounded-[10px] bg-[#313338] text-white transition-colors">
-            <div class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-full bg-[#5865f2] flex items-center justify-center font-bold text-xs flex-shrink-0">
-                User
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-baseline gap-2 mb-1">
-                  <span class="text-xs font-semibold">Server Member</span>
-                  <span class="text-[10px] text-[#949ba4]">Today at 4:20 PM</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="text-xs">Check out this custom emoji:</span>
-                  <!-- 32x32 Container for Chat Simulation -->
-                  <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-black/10 rounded overflow-hidden">
-                    <img id="chatPreviewImg" class="max-w-full max-h-full object-contain hidden" alt="Emoji Preview" />
-                    <span id="chatPreviewPlaceholder" class="text-[10px] text-[#949ba4]">--</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Real-time Verification Receipt -->
-        <div class="card-panel rounded-[14px] p-6">
-          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">Compliance Audit</h2>
-            <span id="receiptBadge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
-              Awaiting Media
-            </span>
-          </div>
-
-          <div class="space-y-3 font-mono text-xs">
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Target Dimensions:</span>
-              <span class="font-bold text-[#192538]">128 × 128 px</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Original Dimensions:</span>
-              <span id="statDimensions" class="text-[#192538]">-- × --</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Binary Limit:</span>
-              <span class="text-[#0D9488] font-bold">256 KiB (262,144 bytes)</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Measured Byte Size:</span>
-              <span id="statBytes" class="text-[#192538]">-- KiB</span>
-            </div>
-            <div class="flex justify-between py-1.5">
-              <span class="text-[#6B7A90]">Export Encoding:</span>
-              <span id="statFormat" class="text-[#192538]">PNG / WebP</span>
-            </div>
-          </div>
-
-          <div id="receiptAlert" class="mt-4 hidden p-3 rounded-[8px] text-xs"></div>
-        </div>
-
+      <div class="lg:col-span-7"></div>
+      <div class="lg:col-span-5">
         <div class="card-panel rounded-[14px] p-6">
           <h3 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-2">Technical Guides</h3>
           <p class="text-xs text-[#475569] leading-relaxed mb-3">
@@ -229,6 +122,9 @@ const faqSchema = {
             </a>
             <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
               <span>✨</span> Animated Emoji 256 KiB GIF Guide
+            </a>
+            <a href="/blog/how-to-make-discord-stickers/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+              <span>🏷️</span> How to Make Custom Discord Stickers
             </a>
           </div>
         </div>
@@ -391,6 +287,48 @@ const faqSchema = {
       </div>
     </section>
 
+    <!-- How-To Steps: capture "how to make discord emoji" intent -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] dark:text-white tracking-tight mb-3 text-center">
+          How to Make a Discord Emoji
+        </h2>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed text-center max-w-2xl mx-auto mb-8">
+          Turn any image into a server-ready custom emoji in under a minute. Formatting happens here in your browser; the final upload happens inside Discord's Server Settings.
+        </p>
+        <ol class="space-y-4">
+          <li class="card-panel p-5 rounded-[14px] flex gap-4 items-start">
+            <span class="shrink-0 w-8 h-8 rounded-full bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-sm">1</span>
+            <div>
+              <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-1">Upload your image</h3>
+              <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">Drop a PNG, JPG, WebP, or GIF into the canvas above. Bold, high-contrast art with a clear silhouette reads best once it shrinks to 32×32 in chat.</p>
+            </div>
+          </li>
+          <li class="card-panel p-5 rounded-[14px] flex gap-4 items-start">
+            <span class="shrink-0 w-8 h-8 rounded-full bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-sm">2</span>
+            <div>
+              <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-1">Resize to 128×128 and check the byte count</h3>
+              <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">The studio scales to the recommended 128×128 canvas and shows the exact encoded size. Keep it under the 256 KiB (262,144-byte) ceiling — for animated GIF emojis, drop to 20–25 FPS and fewer colors to fit.</p>
+            </div>
+          </li>
+          <li class="card-panel p-5 rounded-[14px] flex gap-4 items-start">
+            <span class="shrink-0 w-8 h-8 rounded-full bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-sm">3</span>
+            <div>
+              <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-1">Preview on dark and light, then export</h3>
+              <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">Confirm the transparent edges look clean on both themes so there is no white halo, then download the final PNG or GIF.</p>
+            </div>
+          </li>
+          <li class="card-panel p-5 rounded-[14px] flex gap-4 items-start">
+            <span class="shrink-0 w-8 h-8 rounded-full bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-sm">4</span>
+            <div>
+              <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-1">Add it in Discord Server Settings</h3>
+              <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">In Discord, open <strong>Server Settings &gt; Emoji &gt; Upload Emoji</strong>, pick your exported file, and give it a <code>:shortcode:</code>. You need the <strong>Manage Emojis and Stickers</strong> permission. Once saved, everyone in the server can use it.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
     <!-- Comprehensive FAQ Accordion Section -->
     <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
       <div class="max-w-3xl mx-auto">
@@ -411,173 +349,8 @@ const faqSchema = {
 
   </div>
 
-  <!-- Interactive Logic & Sticky Scroll Tracking Script -->
+  <!-- Sticky Scroll Tracking Script (tool logic lives in EmojiWorkspace.astro) -->
   <script>
-    const MAX_EMOJI_BYTES = 256 * 1024; // 262,144 bytes
-
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    const dropzone = document.getElementById('dropzone');
-    const editorPanel = document.getElementById('editorPanel');
-    const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
-    const resetBtn = document.getElementById('resetBtn');
-    const exportBtn = document.getElementById('exportBtn');
-    const chatPreviewImg = document.getElementById('chatPreviewImg') as HTMLImageElement;
-    const chatPreviewPlaceholder = document.getElementById('chatPreviewPlaceholder');
-    const previewSurface = document.getElementById('previewSurface');
-    const themeDarkBtn = document.getElementById('themeDarkBtn');
-    const themeLightBtn = document.getElementById('themeLightBtn');
-
-    const statDimensions = document.getElementById('statDimensions');
-    const statBytes = document.getElementById('statBytes');
-    const statFormat = document.getElementById('statFormat');
-    const receiptBadge = document.getElementById('receiptBadge');
-    const receiptAlert = document.getElementById('receiptAlert');
-
-    let currentBlob: Blob | null = null;
-    let currentObjectUrl: string | null = null;
-    let sourceImage: HTMLImageElement | null = null;
-
-    function cleanup() {
-      if (currentObjectUrl) {
-        URL.revokeObjectURL(currentObjectUrl);
-        currentObjectUrl = null;
-      }
-    }
-
-    fileInput?.addEventListener('change', (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      handleFile(file);
-    });
-
-    dropzone?.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
-    });
-
-    dropzone?.addEventListener('dragleave', () => {
-      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
-    });
-
-    dropzone?.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
-      const file = e.dataTransfer?.files?.[0];
-      if (!file) return;
-      handleFile(file);
-    });
-
-    function handleFile(file: File) {
-      if (!file.type.startsWith('image/')) {
-        alert('Please upload a valid image file (PNG, JPG, WebP, or GIF).');
-        return;
-      }
-
-      cleanup();
-      currentObjectUrl = URL.createObjectURL(file);
-      const img = new Image();
-      img.onload = () => {
-        sourceImage = img;
-        processEmoji(img, file);
-      };
-      img.src = currentObjectUrl;
-    }
-
-    function processEmoji(img: HTMLImageElement, originalFile: File) {
-      const ctx = mainCanvas.getContext('2d');
-      if (!ctx) return;
-
-      const targetSize = 128;
-      mainCanvas.width = targetSize;
-      mainCanvas.height = targetSize;
-      ctx.clearRect(0, 0, targetSize, targetSize);
-
-      const scale = Math.min(targetSize / img.width, targetSize / img.height);
-      const w = img.width * scale;
-      const h = img.height * scale;
-      const x = (targetSize - w) / 2;
-      const y = (targetSize - h) / 2;
-
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(img, x, y, w, h);
-
-      mainCanvas.toBlob((blob) => {
-        if (!blob) return;
-        currentBlob = blob;
-        cleanup();
-        currentObjectUrl = URL.createObjectURL(blob);
-
-        chatPreviewImg.src = currentObjectUrl;
-        chatPreviewImg.classList.remove('hidden');
-        chatPreviewPlaceholder?.classList.add('hidden');
-
-        editorPanel?.classList.remove('hidden');
-
-        const bytes = blob.size;
-        const kib = (bytes / 1024).toFixed(1);
-        statDimensions!.innerText = `${img.width}×${img.height} → 128×128`;
-        statBytes!.innerText = `${kib} KiB (${bytes.toLocaleString()} bytes)`;
-        statFormat!.innerText = blob.type.replace('image/', '').toUpperCase();
-
-        if (bytes <= MAX_EMOJI_BYTES) {
-          receiptBadge!.innerText = 'Compliant';
-          receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
-          receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#C8DFDB]/40 text-[#0D9488] border border-[#0D9488]/30 block font-medium';
-          receiptAlert!.innerText = '✓ Pass: Exactly within the 256 KiB upload limit and 128x128 dimensions.';
-        } else {
-          receiptBadge!.innerText = 'Exceeds Cap';
-          receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 px-2.5 py-0.5 rounded font-bold';
-          receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 block font-medium';
-          receiptAlert!.innerText = `⚠ Warning: File size (${kib} KiB) exceeds Discord's 256 KiB cap by ${(bytes - MAX_EMOJI_BYTES).toLocaleString()} bytes.`;
-        }
-      }, 'image/png');
-    }
-
-    resetBtn?.addEventListener('click', () => {
-      cleanup();
-      currentBlob = null;
-      sourceImage = null;
-      editorPanel?.classList.add('hidden');
-      chatPreviewImg?.classList.add('hidden');
-      chatPreviewPlaceholder?.classList.remove('hidden');
-      statDimensions!.innerText = '-- × --';
-      statBytes!.innerText = '-- KiB';
-      statFormat!.innerText = 'PNG / WebP';
-      receiptBadge!.innerText = 'Awaiting Media';
-      receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
-      receiptAlert?.classList.add('hidden');
-      fileInput.value = '';
-    });
-
-    exportBtn?.addEventListener('click', () => {
-      if (!currentBlob || !currentObjectUrl) return;
-
-      if (currentBlob.size > MAX_EMOJI_BYTES) {
-        alert(`Cannot export: Final encoded Blob (${(currentBlob.size / 1024).toFixed(1)} KiB) exceeds the 256 KiB Discord limit.`);
-        return;
-      }
-
-      const a = document.createElement('a');
-      a.href = currentObjectUrl;
-      a.download = 'discord-emoji-128x128.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    });
-
-    themeDarkBtn?.addEventListener('click', () => {
-      previewSurface!.className = 'p-4 rounded-[10px] bg-[#313338] text-white transition-colors';
-      themeDarkBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
-      themeLightBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
-    });
-
-    themeLightBtn?.addEventListener('click', () => {
-      previewSurface!.className = 'p-4 rounded-[10px] bg-[#ffffff] text-[#313338] transition-colors border border-[#e3e5e8]';
-      themeLightBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
-      themeDarkBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
-    });
-
     // Sticky Scroll Stacking & Observer Script
     function setupScrollLocking() {
       const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
