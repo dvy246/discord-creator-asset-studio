@@ -54,11 +54,20 @@
         <div>
           <!-- View Mode Switcher Tabs -->
           <div class="flex items-center justify-between gap-2 mb-4">
-            <div class="inline-flex p-1 rounded-xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] text-xs font-semibold shadow-2xs">
+            <div class="inline-flex flex-wrap p-1 rounded-xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] text-xs font-semibold shadow-2xs gap-0.5">
+              <button
+                type="button"
+                id="view-tab-dual"
+                class="view-mode-tab active px-3 py-1.5 rounded-lg bg-[#FF84BA] text-black font-bold shadow-xs cursor-pointer transition-all flex items-center gap-1.5"
+                data-mode="dual"
+              >
+                <span>⚡</span>
+                <span>Dual View: Banner + Profile</span>
+              </button>
               <button
                 type="button"
                 id="view-tab-banner"
-                class="view-mode-tab active px-3 py-1.5 rounded-lg bg-[#FF84BA] text-black font-bold shadow-xs cursor-pointer transition-all"
+                class="view-mode-tab px-3 py-1.5 rounded-lg text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white cursor-pointer transition-all"
                 data-mode="banner"
               >
                 Banner (16:9)
@@ -77,7 +86,7 @@
                 class="view-mode-tab px-3 py-1.5 rounded-lg text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white cursor-pointer transition-all"
                 data-mode="icon"
               >
-                2D Icon / Role
+                2D Icon
               </button>
               <button
                 type="button"
@@ -85,12 +94,12 @@
                 class="view-mode-tab px-3 py-1.5 rounded-lg text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white cursor-pointer transition-all"
                 data-mode="profile"
               >
-                Profile Card
+                Profile Card Full
               </button>
             </div>
 
             <!-- Safe Zone Toggle -->
-            <label class="flex items-center gap-1.5 text-xs text-[#6B7A90] dark:text-[#99C2FF] cursor-pointer select-none font-medium">
+            <label class="flex items-center gap-1.5 text-xs text-[#6B7A90] dark:text-[#99C2FF] cursor-pointer select-none font-medium shrink-0">
               <input type="checkbox" id="toggle-safe-zones" checked class="rounded accent-[#FF84BA] cursor-pointer" />
               <span>Safe Zones</span>
             </label>
@@ -150,32 +159,57 @@
               </div>
             </div>
 
-            <!-- Profile Card Mockup Container (Shown in Profile Card Mode) -->
+            <!-- Profile Card Mockup Container (Shown in Profile Card Full Mode) -->
             <div id="profile-card-mockup" class="hidden absolute inset-0 p-4 bg-[#090C16]/95 backdrop-blur-xl flex items-center justify-center z-30">
               <div class="w-full max-w-sm rounded-2xl border border-white/10 overflow-hidden shadow-2xl transition-colors duration-300" id="discord-mockup-outer" style="background-color: #0D0814;">
                 <!-- Profile Banner in Mockup -->
-                <div class="w-full h-24 relative overflow-hidden" id="mockup-banner-bg" style="background: linear-gradient(135deg, #0D0814 0%, #FF84BA 100%);">
+                <div class="w-full h-24 relative overflow-hidden transition-all duration-300" id="mockup-banner-bg" style="background: linear-gradient(135deg, #0D0814 0%, #FF84BA 100%);">
+                  <img
+                    id="mockup-banner-img"
+                    class="absolute inset-0 w-full h-full object-cover hidden pointer-events-none"
+                    alt="Mockup Banner Backdrop"
+                  />
                   <div class="absolute inset-0 flex items-center justify-center opacity-70">
                     <span id="mockup-banner-icon" class="text-3xl">✨</span>
+                  </div>
+                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none p-2 text-center">
+                    <span
+                      id="mockup-banner-custom-text"
+                      class="font-black tracking-widest uppercase text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] opacity-0 transition-opacity text-sm"
+                      style="text-shadow: 0 0 15px #FF84BA;"
+                    ></span>
                   </div>
                 </div>
 
                 <!-- Avatar & Profile Details -->
-                <div class="p-4 pt-0 relative">
-                  <!-- Overlapping Avatar -->
-                  <div class="relative -mt-10 mb-3 w-16 h-16 rounded-full border-4 border-[#0D0814] shadow-xl overflow-hidden flex items-center justify-center text-2xl" id="mockup-avatar-circle" style="background: linear-gradient(135deg, #0D0814 0%, #FF84BA 100%);">
-                    <span id="mockup-avatar-icon">✨</span>
-                    <!-- Online Status Dot -->
-                    <span class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#22C55E] border-2 border-[#0D0814]"></span>
+                <div class="p-4 pt-0 relative bg-[#232428]/95 dark:bg-[#111214]/95">
+                  <!-- Overlapping Avatar & Badges -->
+                  <div class="flex items-end justify-between mb-2">
+                    <div class="relative -mt-10 mb-1 w-16 h-16 rounded-full border-4 border-[#232428] dark:border-[#111214] shadow-xl overflow-hidden flex items-center justify-center text-2xl transition-all duration-300" id="mockup-avatar-circle" style="background: linear-gradient(135deg, #0D0814 0%, #FF84BA 100%);">
+                      <img id="mockup-avatar-img" class="w-full h-full object-cover hidden" alt="Mockup Avatar" />
+                      <span id="mockup-avatar-icon">✨</span>
+                      <!-- Online Status Dot -->
+                      <div id="mockup-status-dot" class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#22C55E] border-2 border-[#232428] dark:border-[#111214] flex items-center justify-center transition-colors"></div>
+                    </div>
+
+                    <!-- Badges Row -->
+                    <div class="flex items-center gap-1.5 p-1 rounded-lg bg-black/40 border border-white/10" id="mockup-badges-container">
+                    </div>
                   </div>
 
-                  <!-- Username -->
+                  <!-- Username & Badges -->
                   <div class="mb-2">
                     <div class="font-extrabold text-sm text-white flex items-center gap-1.5">
                       <span id="mockup-username-text">DiscordCreator</span>
-                      <span class="text-[10px] px-1.5 py-0.2 rounded bg-[#5865F2] text-white font-bold">BOT</span>
+                      <span id="mockup-bot-badge" class="hidden text-[10px] px-1.5 py-0.2 rounded bg-[#5865F2] text-white font-bold">BOT</span>
                     </div>
-                    <div class="text-[11px] text-[#99C2FF] font-mono">@creator_studio</div>
+                    <div class="text-[11px] text-[#99C2FF] font-mono" id="mockup-handle-text">@creator_studio</div>
+                  </div>
+
+                  <!-- Custom Status -->
+                  <div class="mb-2.5 px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-[11px]">
+                    <span>💬</span>
+                    <span id="mockup-status-text" class="text-white/90 font-medium truncate">crafting Discord visuals</span>
                   </div>
 
                   <!-- Seamless Theme Color Matching Box -->
@@ -196,6 +230,94 @@
               </div>
             </div>
 
+          </div>
+
+          <!-- Live Synchronized Discord Profile Popout Card (Simultaneous Live Preview in Dual View) -->
+          <div id="docked-profile-preview" class="mt-4 transition-all duration-300">
+            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-2">
+              <div class="flex items-center gap-2">
+                <span>⚡ Live Discord Profile Popout Preview</span>
+                <span class="text-[10px] font-mono text-[#0D9488] bg-[#0D9488]/10 px-2 py-0.5 rounded-full border border-[#0D9488]/20 font-bold">● Live Synced</span>
+              </div>
+              <span class="text-[10px] font-mono text-[#6B7A90] dark:text-[#8494A7]">Authentic Profile Popout</span>
+            </div>
+
+            <div class="rounded-2xl border border-white/15 dark:border-[#263454] overflow-hidden shadow-2xl transition-colors duration-300 bg-[#111214] text-white" id="docked-discord-card" style="background-color: #0D0814;">
+              <!-- Profile Banner in Docked Popout -->
+              <div class="w-full h-24 sm:h-28 relative overflow-hidden transition-all duration-300" id="docked-banner-bg" style="background: linear-gradient(135deg, #0D0814 0%, #FF84BA 100%);">
+                <img
+                  id="docked-banner-img"
+                  class="absolute inset-0 w-full h-full object-cover hidden pointer-events-none transition-transform duration-300"
+                  alt="Profile Banner Artwork"
+                />
+                <!-- Synced Motion Canvas -->
+                <canvas id="docked-motion-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+                <div id="docked-banner-center" class="absolute inset-0 flex items-center justify-center opacity-70">
+                  <span id="docked-banner-icon" class="text-3xl filter drop-shadow">✨</span>
+                </div>
+                <!-- Custom Text Overlay in Docked Banner -->
+                <div id="docked-banner-text-overlay" class="absolute inset-0 flex items-center justify-center pointer-events-none p-2 text-center">
+                  <span
+                    id="docked-banner-custom-text"
+                    class="font-black tracking-widest uppercase text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] opacity-0 transition-opacity text-sm"
+                    style="text-shadow: 0 0 15px #FF84BA;"
+                  ></span>
+                </div>
+              </div>
+
+              <!-- Avatar & Profile Details Body -->
+              <div class="p-3.5 pt-0 relative bg-[#232428]/95 dark:bg-[#111214]/95">
+                <!-- Overlapping Avatar & Badges Header Row -->
+                <div class="flex items-end justify-between mb-2">
+                  <div class="relative -mt-9 w-18 h-18 rounded-full border-4 border-[#232428] dark:border-[#111214] shadow-2xl overflow-hidden flex items-center justify-center text-3xl transition-all duration-300" id="docked-avatar-circle" style="background: linear-gradient(135deg, #0D0814 0%, #FF84BA 100%);">
+                    <img id="docked-avatar-img" class="w-full h-full object-cover hidden" alt="Avatar" />
+                    <span id="docked-avatar-icon">✨</span>
+                    <!-- Status Indicator Dot -->
+                    <div
+                      id="docked-status-indicator"
+                      class="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-[#23A55A] border-[3px] border-[#232428] dark:border-[#111214] flex items-center justify-center transition-colors"
+                      title="Online"
+                    ></div>
+                  </div>
+
+                  <!-- Badges Container -->
+                  <div class="flex items-center gap-1.5 p-1 rounded-lg bg-black/40 border border-white/10" id="docked-badges-container">
+                    <!-- Badges rendered via JS -->
+                  </div>
+                </div>
+
+                <!-- Identity: Name, Tag & Bot Badge -->
+                <div class="mb-2">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span id="docked-username-text" class="font-extrabold text-sm text-white tracking-tight">DiscordCreator</span>
+                    <span id="docked-bot-badge" class="hidden text-[9px] px-1.5 py-0.2 rounded bg-[#5865F2] text-white font-black tracking-wider uppercase">BOT</span>
+                  </div>
+                  <div class="text-[11px] text-[#99C2FF] font-mono" id="docked-handle-text">@creator_studio</div>
+                </div>
+
+                <!-- Custom Status Pill -->
+                <div class="mb-2 px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-[11px]">
+                  <span>💬</span>
+                  <span id="docked-status-text" class="text-white/90 font-medium truncate">crafting Discord visuals</span>
+                </div>
+
+                <!-- Matching Theme Hex Pill -->
+                <div class="p-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-3.5 h-3.5 rounded-full border border-white/40 shadow-xs" id="docked-theme-color-dot" style="background-color: #0D0814;"></span>
+                    <span class="text-[11px] text-white/80 font-sans">Profile Theme:</span>
+                    <code id="docked-hex-text" class="text-[11px] text-[#FF84BA] font-bold">#0D0814</code>
+                  </div>
+                  <button
+                    type="button"
+                    id="docked-copy-hex"
+                    class="px-2 py-0.5 rounded bg-white/10 hover:bg-[#FF84BA] hover:text-black text-[11px] font-bold text-[#FF84BA] transition-all cursor-pointer"
+                  >
+                    Copy Hex
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -366,6 +488,16 @@
                   <option value="alpine-wind-drift">🦅 Alpine Mountain Wind & Soaring Hawk</option>
                   <option value="cumulus-sunburst">☀️ Golden Cumulus Cloud Sunburst</option>
                   <option value="ambient-shimmer">⭐ Ambient Starlight Shimmer</option>
+                  <option value="cyber-rain-neon">🌧️ Cyber Neon Rain & Splash Ripples</option>
+                  <option value="sakura-blossom-drift">🌸 Floating Sakura Petals & Spring Breeze</option>
+                  <option value="electric-lightning-arcs">⚡ Electric Lightning Arcs & Kinetic Sparks</option>
+                  <option value="aurora-borealis-waves">🌌 Aurora Borealis Waves & Cosmic Shimmer</option>
+                  <option value="hyperspace-warp-speed">🚀 Hyperspace Starfield Warp Drive</option>
+                  <option value="crt-scanlines-glitch">📺 Retro CRT Scanlines & Glitch Pulse</option>
+                  <option value="prismatic-gem-flares">💎 Prismatic Gem Glint & Flare Shimmer</option>
+                  <option value="bioluminescent-orbs">🌊 Deep Sea Bioluminescent Floating Orbs</option>
+                  <option value="volumetric-fog-mist">🌫️ Low-Hanging Volumetric Fog & Mist Drift</option>
+                  <option value="golden-firework-bursts">🎆 Festival Golden Fireworks & Star Bursts</option>
                 </select>
               </div>
 
@@ -404,6 +536,146 @@
               <div class="flex items-center justify-between text-[11px] text-[#6B7A90] dark:text-[#8494A7]">
                 <span>Rendered with neon drop-glow</span>
                 <button type="button" id="clear-text-btn" class="text-[#FF84BA] hover:underline cursor-pointer">Clear</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dedicated Discord Profile Identity Customization -->
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-2">
+              <span>Discord Profile Identity</span>
+              <span class="text-[10px] font-mono text-[#0D9488] bg-[#0D9488]/10 px-2 py-0.5 rounded-full border border-[#0D9488]/20 font-bold">Live Synced</span>
+            </div>
+
+            <div class="space-y-3 p-3 rounded-xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454]">
+              <!-- Display Name & Handle -->
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label for="input-profile-display-name" class="block text-[11px] font-semibold text-[#6B7A90] dark:text-[#99C2FF] mb-1">
+                    Display Name
+                  </label>
+                  <input
+                    type="text"
+                    id="input-profile-display-name"
+                    value="DiscordCreator"
+                    maxlength="32"
+                    placeholder="Display Name"
+                    class="w-full px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-xs font-semibold text-[#192538] dark:text-[#FFEFE3] focus:outline-none focus:border-[#FF84BA]"
+                  />
+                </div>
+                <div>
+                  <label for="input-profile-handle" class="block text-[11px] font-semibold text-[#6B7A90] dark:text-[#99C2FF] mb-1">
+                    Username / Handle
+                  </label>
+                  <input
+                    type="text"
+                    id="input-profile-handle"
+                    value="@creator_studio"
+                    maxlength="32"
+                    placeholder="@handle"
+                    class="w-full px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-xs font-mono text-[#192538] dark:text-[#FFEFE3] focus:outline-none focus:border-[#FF84BA]"
+                  />
+                </div>
+              </div>
+
+              <!-- Custom Status -->
+              <div>
+                <label for="input-profile-status" class="block text-[11px] font-semibold text-[#6B7A90] dark:text-[#99C2FF] mb-1">
+                  Custom Status Message
+                </label>
+                <div class="relative">
+                  <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs">💬</span>
+                  <input
+                    type="text"
+                    id="input-profile-status"
+                    value="crafting Discord visuals"
+                    maxlength="60"
+                    placeholder="Set custom status..."
+                    class="w-full pl-7 pr-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-xs font-medium text-[#192538] dark:text-[#FFEFE3] focus:outline-none focus:border-[#FF84BA]"
+                  />
+                </div>
+              </div>
+
+              <!-- Discord Presence Status Selector -->
+              <div>
+                <label class="block text-[11px] font-semibold text-[#6B7A90] dark:text-[#99C2FF] mb-1.5">
+                  Presence Status
+                </label>
+                <div class="grid grid-cols-4 gap-1 p-1 bg-[#FAF8F5] dark:bg-[#101626] rounded-xl border border-[#E0DBD0] dark:border-[#263454] text-[11px] font-semibold" id="presence-status-selector">
+                  <button
+                    type="button"
+                    class="status-presence-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all bg-white dark:bg-[#1E293B] text-[#FF84BA] font-bold shadow-xs border border-[#E0DBD0] dark:border-[#263454]"
+                    data-status="online"
+                  >
+                    🟢 Online
+                  </button>
+                  <button
+                    type="button"
+                    class="status-presence-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white"
+                    data-status="idle"
+                  >
+                    🌙 Idle
+                  </button>
+                  <button
+                    type="button"
+                    class="status-presence-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white"
+                    data-status="dnd"
+                  >
+                    ⛔ DND
+                  </button>
+                  <button
+                    type="button"
+                    class="status-presence-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white"
+                    data-status="invisible"
+                  >
+                    ⚪ Invis
+                  </button>
+                </div>
+              </div>
+
+              <!-- Badges Selector -->
+              <div>
+                <label class="block text-[11px] font-semibold text-[#6B7A90] dark:text-[#99C2FF] mb-1.5">
+                  Profile Badges
+                </label>
+                <div class="grid grid-cols-4 gap-1.5">
+                  <button
+                    type="button"
+                    id="badge-btn-creator"
+                    class="profile-badge-pill active py-1 px-1.5 rounded-lg border border-[#FF84BA] bg-[#FF84BA]/15 text-[#FF84BA] text-[11px] font-bold cursor-pointer transition-all flex items-center justify-center gap-1"
+                    data-badge="creator"
+                  >
+                    <span>🎨</span>
+                    <span>Creator</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="badge-btn-nitro"
+                    class="profile-badge-pill active py-1 px-1.5 rounded-lg border border-[#FF84BA] bg-[#FF84BA]/15 text-[#FF84BA] text-[11px] font-bold cursor-pointer transition-all flex items-center justify-center gap-1"
+                    data-badge="nitro"
+                  >
+                    <span>💎</span>
+                    <span>Nitro</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="badge-btn-booster"
+                    class="profile-badge-pill active py-1 px-1.5 rounded-lg border border-[#FF84BA] bg-[#FF84BA]/15 text-[#FF84BA] text-[11px] font-bold cursor-pointer transition-all flex items-center justify-center gap-1"
+                    data-badge="booster"
+                  >
+                    <span>🚀</span>
+                    <span>Booster</span>
+                  </button>
+                  <button
+                    type="button"
+                    id="badge-btn-bot"
+                    class="profile-badge-pill py-1 px-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-[#6B7A90] dark:text-[#99C2FF] text-[11px] font-bold cursor-pointer transition-all flex items-center justify-center gap-1"
+                    data-badge="bot"
+                  >
+                    <span>🤖</span>
+                    <span>Bot</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -564,15 +836,53 @@
     const copyHexBtn = document.getElementById('copy-profile-hex-btn');
     const copyHexLabel = document.getElementById('copy-hex-label');
 
-    // Profile Mockup elements
+    // Profile Mockup elements (Full Mockup)
     const profileMockup = document.getElementById('profile-card-mockup');
     const mockupOuter = document.getElementById('discord-mockup-outer');
     const mockupBannerBg = document.getElementById('mockup-banner-bg');
+    const mockupBannerImg = document.getElementById('mockup-banner-img') as HTMLImageElement | null;
     const mockupBannerIcon = document.getElementById('mockup-banner-icon');
+    const mockupBannerCustomText = document.getElementById('mockup-banner-custom-text');
     const mockupAvatarCircle = document.getElementById('mockup-avatar-circle');
+    const mockupAvatarImg = document.getElementById('mockup-avatar-img') as HTMLImageElement | null;
     const mockupAvatarIcon = document.getElementById('mockup-avatar-icon');
     const mockupThemeDot = document.getElementById('mockup-theme-color-dot');
     const mockupHexText = document.getElementById('mockup-hex-text');
+    const mockupUsernameText = document.getElementById('mockup-username-text');
+    const mockupHandleText = document.getElementById('mockup-handle-text');
+    const mockupStatusText = document.getElementById('mockup-status-text');
+    const mockupStatusDot = document.getElementById('mockup-status-dot');
+    const mockupBotBadge = document.getElementById('mockup-bot-badge');
+    const mockupBadgesContainer = document.getElementById('mockup-badges-container');
+    const mockupCopyHex = document.getElementById('mockup-copy-hex');
+
+    // Live Synchronized Docked Profile Popout Elements
+    const dockedProfilePreview = document.getElementById('docked-profile-preview');
+    const dockedDiscordCard = document.getElementById('docked-discord-card');
+    const dockedBannerBg = document.getElementById('docked-banner-bg');
+    const dockedBannerImg = document.getElementById('docked-banner-img') as HTMLImageElement | null;
+    const dockedBannerIcon = document.getElementById('docked-banner-icon');
+    const dockedBannerCustomText = document.getElementById('docked-banner-custom-text');
+    const dockedAvatarCircle = document.getElementById('docked-avatar-circle');
+    const dockedAvatarImg = document.getElementById('docked-avatar-img') as HTMLImageElement | null;
+    const dockedAvatarIcon = document.getElementById('docked-avatar-icon');
+    const dockedStatusIndicator = document.getElementById('docked-status-indicator');
+    const dockedBadgesContainer = document.getElementById('docked-badges-container');
+    const dockedUsernameText = document.getElementById('docked-username-text');
+    const dockedBotBadge = document.getElementById('docked-bot-badge');
+    const dockedHandleText = document.getElementById('docked-handle-text');
+    const dockedStatusText = document.getElementById('docked-status-text');
+    const dockedThemeDot = document.getElementById('docked-theme-color-dot');
+    const dockedHexText = document.getElementById('docked-hex-text');
+    const dockedCopyHex = document.getElementById('docked-copy-hex');
+    const dockedCanvas = document.getElementById('docked-motion-canvas') as HTMLCanvasElement | null;
+
+    // Discord Profile Identity Controls
+    const inputProfileDisplayName = document.getElementById('input-profile-display-name') as HTMLInputElement | null;
+    const inputProfileHandle = document.getElementById('input-profile-handle') as HTMLInputElement | null;
+    const inputProfileStatus = document.getElementById('input-profile-status') as HTMLInputElement | null;
+    const statusPresencePills = document.querySelectorAll('.status-presence-pill');
+    const profileBadgePills = document.querySelectorAll('.profile-badge-pill');
 
     // Export Buttons & Format Controls
     const exportBannerBtn = document.getElementById('export-banner-btn');
@@ -589,7 +899,9 @@
 
     let selectedFormat: 'webp' | 'gif' | 'mp4' | 'pfp' | 'png' = 'webp';
     let currentPresetData: any = null;
-    let currentMode: 'banner' | 'pfp' | 'profile' | 'icon' = 'banner';
+    let currentMode: 'dual' | 'banner' | 'pfp' | 'profile' | 'icon' = 'dual';
+    let currentPresence: 'online' | 'idle' | 'dnd' | 'invisible' = 'online';
+    let activeBadges: Set<string> = new Set(['creator', 'nitro', 'booster']);
     let animationFrameId: number | null = null;
     let particleOffset = 0;
 
@@ -606,12 +918,35 @@
     interface DustMote { x: number; y: number; r: number; vy: number; vx: number; alpha: number; seed: number }
     interface SpaceStar { x: number; y: number; r: number; alpha: number; blinkSpeed: number; hasSpike: boolean }
 
+    // 10+ New Animation Style Particle Interfaces
+    interface CyberRainDrop { x: number; y: number; len: number; vy: number; vx: number; alpha: number; color: string }
+    interface CyberSplash { x: number; y: number; r: number; maxR: number; alpha: number; color: string }
+    interface SakuraPetal { x: number; y: number; size: number; rot: number; rotSpeed: number; flip: number; flipSpeed: number; vx: number; vy: number; alpha: number; color: string }
+    interface WarpStar { x: number; y: number; z: number; prevZ: number; color: string }
+    interface BioOrb { x: number; y: number; r: number; vy: number; vxSeed: number; pulseSeed: number; color: string; alpha: number }
+    interface FogPuff { x: number; y: number; r: number; vx: number; pulseSeed: number }
+    interface GemFlare { x: number; y: number; size: number; rot: number; rotSpeed: number; pulseSpeed: number; seed: number }
+    interface FireworkSpark { x: number; y: number; vx: number; vy: number; alpha: number; color: string; decay: number; size: number }
+    interface FireworkBurst { x: number; y: number; timer: number; delay: number; sparks: FireworkSpark[] }
+    interface LightningArc { points: { x: number; y: number }[]; timer: number; sparks: { x: number; y: number; vx: number; vy: number; alpha: number; color: string }[] }
+
     let blizzardFlakes: Snowflake[] = [];
     let fireEmbers: Ember[] = [];
     let rainDrops: RainDrop[] = [];
     let splashRings: Splash[] = [];
     let dustMotes: DustMote[] = [];
     let spaceStars: SpaceStar[] = [];
+
+    // Expanded Particle Pools
+    let cyberRainDrops: CyberRainDrop[] = [];
+    let cyberSplashes: CyberSplash[] = [];
+    let sakuraPetals: SakuraPetal[] = [];
+    let warpStars: WarpStar[] = [];
+    let bioOrbs: BioOrb[] = [];
+    let fogPuffs: FogPuff[] = [];
+    let gemFlares: GemFlare[] = [];
+    let fireworkBursts: FireworkBurst[] = [];
+    let lightningState: LightningArc = { points: [], timer: 0, sparks: [] };
 
     function initParticlePools() {
       if (!canvas) return;
@@ -620,7 +955,7 @@
 
       // Blizzard flakes: 3 depth layers
       blizzardFlakes = Array.from({ length: 75 }, (_, i) => {
-        const layer = i < 10 ? 0 : i < 35 ? 1 : 2; // 0=foreground, 1=midground, 2=distant
+        const layer = i < 10 ? 0 : i < 35 ? 1 : 2;
         return {
           x: Math.random() * W,
           y: Math.random() * H,
@@ -674,6 +1009,94 @@
         blinkSpeed: 0.02 + Math.random() * 0.04,
         hasSpike: i % 8 === 0
       }));
+
+      // 1. Cyber Neon Rain Drops & Splashes
+      cyberRainDrops = Array.from({ length: 75 }, (_, i) => ({
+        x: Math.random() * (W + 100),
+        y: Math.random() * H,
+        len: 16 + Math.random() * 14,
+        vy: 12 + Math.random() * 8,
+        vx: -3.5,
+        alpha: 0.5 + Math.random() * 0.5,
+        color: i % 2 === 0 ? '#00F0FF' : '#FF007F'
+      }));
+      cyberSplashes = [];
+
+      // 2. Sakura Blossom Petals
+      const sakuraColors = ['rgba(255, 183, 197, 0.85)', 'rgba(255, 192, 203, 0.8)', 'rgba(255, 214, 224, 0.85)', 'rgba(255, 166, 201, 0.9)'];
+      sakuraPetals = Array.from({ length: 50 }, () => ({
+        x: Math.random() * (W + 60) - 30,
+        y: Math.random() * H,
+        size: 6 + Math.random() * 5,
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: 0.01 + Math.random() * 0.02,
+        flip: Math.random() * Math.PI,
+        flipSpeed: 0.02 + Math.random() * 0.04,
+        vx: 0.8 + Math.random() * 1.2,
+        vy: 0.9 + Math.random() * 0.9,
+        alpha: 0.65 + Math.random() * 0.3,
+        color: sakuraColors[Math.floor(Math.random() * sakuraColors.length)]
+      }));
+
+      // 3. Hyperspace Warp Stars
+      warpStars = Array.from({ length: 130 }, (_, i) => {
+        const z = Math.random() * 1000 + 1;
+        return {
+          x: (Math.random() - 0.5) * W * 2.2,
+          y: (Math.random() - 0.5) * H * 2.2,
+          z,
+          prevZ: z,
+          color: i % 3 === 0 ? '#67E8F9' : i % 5 === 0 ? '#C084FC' : '#FFFFFF'
+        };
+      });
+
+      // 4. Bioluminescent Deep Sea Orbs
+      const bioColors = ['#06B6D4', '#10B981', '#8B5CF6'];
+      bioOrbs = Array.from({ length: 32 }, (_, i) => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: 3.5 + Math.random() * 6.5,
+        vy: 0.4 + Math.random() * 0.6,
+        vxSeed: Math.random() * 20,
+        pulseSeed: Math.random() * 20,
+        color: bioColors[i % 3],
+        alpha: 0.5 + Math.random() * 0.4
+      }));
+
+      // 5. Volumetric Fog Puffs
+      fogPuffs = Array.from({ length: 22 }, () => ({
+        x: Math.random() * (W + 200) - 100,
+        y: H * 0.6 + Math.random() * (H * 0.35),
+        r: 110 + Math.random() * 90,
+        vx: 0.2 + Math.random() * 0.35,
+        pulseSeed: Math.random() * 10
+      }));
+
+      // 6. Prismatic Gem Flares
+      const flareLocs = [
+        { x: 0.18, y: 0.25 }, { x: 0.35, y: 0.18 }, { x: 0.52, y: 0.3 }, { x: 0.68, y: 0.2 },
+        { x: 0.82, y: 0.28 }, { x: 0.25, y: 0.65 }, { x: 0.74, y: 0.68 }, { x: 0.12, y: 0.48 },
+        { x: 0.88, y: 0.45 }, { x: 0.42, y: 0.72 }, { x: 0.6, y: 0.6 }, { x: 0.3, y: 0.4 }
+      ];
+      gemFlares = flareLocs.map((loc, i) => ({
+        x: loc.x * W,
+        y: loc.y * H,
+        size: 18 + (i % 3) * 8,
+        rot: (i * Math.PI) / 6,
+        rotSpeed: 0.008 + (i % 2) * 0.008,
+        pulseSpeed: 0.04 + (i % 4) * 0.02,
+        seed: i * 1.8
+      }));
+
+      // 7. Golden Firework Bursts
+      fireworkBursts = [
+        { x: W * 0.28, y: H * 0.32, timer: 0, delay: 0, sparks: [] },
+        { x: W * 0.68, y: H * 0.26, timer: 0, delay: 40, sparks: [] },
+        { x: W * 0.48, y: H * 0.38, timer: 0, delay: 80, sparks: [] }
+      ];
+
+      // 8. Lightning State
+      lightningState = { points: [], timer: 15, sparks: [] };
     }
 
     function resizeCanvas() {
@@ -1227,7 +1650,449 @@
         }
       }
 
-      // 15. DEFAULT AMBIENT SHIMMER
+      // 16. CYBER NEON RAIN & SPLASH RIPPLES
+      else if (motionType === 'cyber-rain-neon') {
+        ctx.lineWidth = 1.4;
+        cyberRainDrops.forEach(d => {
+          d.y += d.vy * speed;
+          d.x += d.vx * speed;
+          if (d.y > H) {
+            d.y = -15;
+            d.x = Math.random() * (W + 60);
+            if (cyberSplashes.length < 25 && Math.random() > 0.35) {
+              cyberSplashes.push({
+                x: d.x,
+                y: H - 4 - Math.random() * 16,
+                r: 1,
+                maxR: 8 + Math.random() * 8,
+                alpha: 0.9,
+                color: d.color
+              });
+            }
+          }
+          ctx.beginPath();
+          ctx.moveTo(d.x, d.y);
+          ctx.lineTo(d.x + d.vx * 1.6, d.y + d.len);
+          ctx.strokeStyle = d.color;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = d.color;
+          ctx.stroke();
+        });
+
+        // Expanding splash ripples on wet neon pavement
+        for (let i = cyberSplashes.length - 1; i >= 0; i--) {
+          const sp = cyberSplashes[i];
+          sp.r += 0.8 * speed;
+          sp.alpha -= 0.045 * speed;
+          if (sp.alpha <= 0) {
+            cyberSplashes.splice(i, 1);
+            continue;
+          }
+          ctx.beginPath();
+          ctx.ellipse(sp.x, sp.y, sp.r * 2.2, sp.r * 0.7, 0, 0, Math.PI * 2);
+          ctx.strokeStyle = sp.color;
+          ctx.globalAlpha = Math.max(0, sp.alpha);
+          ctx.lineWidth = 1.2;
+          ctx.shadowBlur = 4;
+          ctx.shadowColor = sp.color;
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+
+        // Wet pavement horizon reflective gradient
+        const wetGrad = ctx.createLinearGradient(0, H * 0.82, 0, H);
+        wetGrad.addColorStop(0, 'rgba(0, 240, 255, 0)');
+        wetGrad.addColorStop(1, 'rgba(0, 240, 255, 0.12)');
+        ctx.fillStyle = wetGrad;
+        ctx.fillRect(0, H * 0.82, W, H * 0.18);
+      }
+
+      // 17. FLOATING SAKURA PETALS & SPRING BREEZE
+      else if (motionType === 'sakura-blossom-drift') {
+        const windGust = Math.sin(particleOffset * 0.03) * 1.2 + 1.2;
+        sakuraPetals.forEach(p => {
+          p.x += (p.vx + windGust) * speed;
+          p.y += (p.vy + Math.cos(particleOffset * 0.04 + p.x * 0.01) * 0.4) * speed;
+          p.rot += p.rotSpeed * speed;
+          p.flip += p.flipSpeed * speed;
+
+          if (p.x > W + 20) { p.x = -20; p.y = Math.random() * H; }
+          if (p.y > H + 20) { p.y = -20; p.x = Math.random() * W; }
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.scale(1, Math.cos(p.flip));
+
+          ctx.beginPath();
+          ctx.moveTo(0, -p.size);
+          ctx.bezierCurveTo(-p.size * 0.75, -p.size * 0.85, -p.size * 0.8, p.size * 0.6, 0, p.size);
+          ctx.bezierCurveTo(p.size * 0.8, p.size * 0.6, p.size * 0.75, -p.size * 0.85, 0, -p.size);
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 5;
+          ctx.shadowColor = 'rgba(255, 150, 180, 0.5)';
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // Spring breeze ambient aura
+        const breezePulse = Math.sin(particleOffset * 0.02) * 0.06 + 0.08;
+        const breezeGrad = ctx.createLinearGradient(0, 0, W, H);
+        breezeGrad.addColorStop(0, `rgba(255, 214, 224, ${breezePulse})`);
+        breezeGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = breezeGrad;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      // 18. ELECTRIC LIGHTNING ARCS & KINETIC SPARKS
+      else if (motionType === 'electric-lightning-arcs') {
+        lightningState.timer -= 1 * speed;
+
+        if (lightningState.timer <= 0) {
+          lightningState.timer = 18 + Math.random() * 25;
+          const startX = W * (0.15 + Math.random() * 0.7);
+          const startY = 0;
+          const endX = startX + (Math.random() - 0.5) * (W * 0.4);
+          const endY = H * (0.65 + Math.random() * 0.35);
+
+          const segments = 7;
+          const pts: { x: number; y: number }[] = [{ x: startX, y: startY }];
+          for (let i = 1; i < segments; i++) {
+            const t = i / segments;
+            const px = startX + (endX - startX) * t + (Math.random() - 0.5) * 45;
+            const py = startY + (endY - startY) * t + (Math.random() - 0.5) * 20;
+            pts.push({ x: px, y: py });
+
+            if (Math.random() > 0.4) {
+              lightningState.sparks.push({
+                x: px,
+                y: py,
+                vx: (Math.random() - 0.5) * 8,
+                vy: (Math.random() - 0.5) * 8,
+                alpha: 1.0,
+                color: Math.random() > 0.5 ? '#67E8F9' : '#FFFFFF'
+              });
+            }
+          }
+          pts.push({ x: endX, y: endY });
+          lightningState.points = pts;
+        }
+
+        if (lightningState.points.length > 1) {
+          ctx.fillStyle = 'rgba(103, 232, 249, 0.08)';
+          ctx.fillRect(0, 0, W, H);
+
+          ctx.beginPath();
+          ctx.moveTo(lightningState.points[0].x, lightningState.points[0].y);
+          for (let i = 1; i < lightningState.points.length; i++) {
+            ctx.lineTo(lightningState.points[i].x, lightningState.points[i].y);
+          }
+          ctx.strokeStyle = '#67E8F9';
+          ctx.lineWidth = 3.5;
+          ctx.shadowBlur = 16;
+          ctx.shadowColor = '#00F0FF';
+          ctx.stroke();
+
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.lineWidth = 1.4;
+          ctx.shadowBlur = 4;
+          ctx.stroke();
+
+          if (lightningState.timer < 14) {
+            lightningState.points = [];
+          }
+        }
+
+        for (let i = lightningState.sparks.length - 1; i >= 0; i--) {
+          const sp = lightningState.sparks[i];
+          sp.x += sp.vx * speed;
+          sp.y += sp.vy * speed;
+          sp.vy += 0.15 * speed;
+          sp.alpha -= 0.04 * speed;
+          if (sp.alpha <= 0) {
+            lightningState.sparks.splice(i, 1);
+            continue;
+          }
+          ctx.beginPath();
+          ctx.arc(sp.x, sp.y, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = sp.color;
+          ctx.globalAlpha = Math.max(0, sp.alpha);
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = sp.color;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      }
+
+      // 19. AURORA BOREALIS WAVES & COSMIC SHIMMER
+      else if (motionType === 'aurora-borealis-waves') {
+        const layers = [
+          { baseY: H * 0.22, color1: 'rgba(52, 211, 153, 0.35)', color2: 'rgba(16, 185, 129, 0)', speedM: 0.02 },
+          { baseY: H * 0.35, color1: 'rgba(56, 189, 248, 0.3)', color2: 'rgba(14, 165, 233, 0)', speedM: 0.028 },
+          { baseY: H * 0.46, color1: 'rgba(168, 85, 247, 0.28)', color2: 'rgba(147, 51, 234, 0)', speedM: 0.018 }
+        ];
+
+        layers.forEach((layer, idx) => {
+          const step = 20;
+          for (let x = 0; x <= W; x += step) {
+            const waveY = layer.baseY + Math.sin(x * 0.006 + particleOffset * layer.speedM + idx) * 32
+              + Math.cos(x * 0.012 - particleOffset * 0.015) * 14;
+            const curtainHeight = 110 + Math.sin(x * 0.008 + particleOffset * 0.03) * 30;
+
+            const cGrad = ctx.createLinearGradient(x, waveY, x, waveY + curtainHeight);
+            cGrad.addColorStop(0, layer.color1);
+            cGrad.addColorStop(0.7, layer.color1.replace('0.3', '0.1').replace('0.28', '0.08'));
+            cGrad.addColorStop(1, layer.color2);
+
+            ctx.fillStyle = cGrad;
+            ctx.fillRect(x, waveY, step + 2, curtainHeight);
+          }
+        });
+
+        spaceStars.forEach(s => {
+          const shimmer = Math.sin(particleOffset * s.blinkSpeed * 2) * 0.4 + 0.6;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y * 0.6, s.r * 0.9, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(220, 245, 255, ${shimmer * s.alpha})`;
+          ctx.shadowBlur = 4;
+          ctx.shadowColor = '#67E8F9';
+          ctx.fill();
+        });
+      }
+
+      // 20. HYPERSPACE STARFIELD WARP DRIVE
+      else if (motionType === 'hyperspace-warp-speed') {
+        const cx = W * 0.5;
+        const cy = H * 0.5;
+
+        const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 140);
+        coreGrad.addColorStop(0, 'rgba(103, 232, 249, 0.28)');
+        coreGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.08)');
+        coreGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = coreGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        warpStars.forEach(star => {
+          star.prevZ = star.z;
+          star.z -= 20 * speed;
+          if (star.z <= 15) {
+            star.z = 1000;
+            star.prevZ = 1000;
+            star.x = (Math.random() - 0.5) * W * 2.2;
+            star.y = (Math.random() - 0.5) * H * 2.2;
+          }
+
+          const k = 340;
+          const sx = cx + (star.x / star.z) * k;
+          const sy = cy + (star.y / star.z) * k;
+          const px = cx + (star.x / star.prevZ) * k;
+          const py = cy + (star.y / star.prevZ) * k;
+
+          const progress = 1 - star.z / 1000;
+          const lineW = Math.max(0.6, progress * 3.2);
+
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(sx, sy);
+          ctx.strokeStyle = star.color;
+          ctx.lineWidth = lineW;
+          ctx.shadowBlur = progress > 0.5 ? 8 : 0;
+          ctx.shadowColor = star.color;
+          ctx.stroke();
+        });
+      }
+
+      // 21. RETRO CRT SCANLINES & GLITCH PULSE
+      else if (motionType === 'crt-scanlines-glitch') {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+        for (let y = 0; y < H; y += 4) {
+          ctx.fillRect(0, y, W, 1.8);
+        }
+
+        const beamY = (particleOffset * 2.2) % (H + 60) - 30;
+        const beamGrad = ctx.createLinearGradient(0, beamY - 40, 0, beamY + 40);
+        beamGrad.addColorStop(0, 'rgba(0, 255, 180, 0)');
+        beamGrad.addColorStop(0.5, 'rgba(0, 255, 180, 0.12)');
+        beamGrad.addColorStop(1, 'rgba(0, 255, 180, 0)');
+        ctx.fillStyle = beamGrad;
+        ctx.fillRect(0, beamY - 40, W, 80);
+
+        const glitchCycle = Math.sin(particleOffset * 0.14);
+        if (glitchCycle > 0.82) {
+          const sliceY = ((particleOffset * 3.7) % (H * 0.8)) + H * 0.1;
+          const sliceH = 12 + Math.abs(Math.sin(particleOffset * 0.2)) * 26;
+
+          ctx.fillStyle = 'rgba(255, 0, 80, 0.18)';
+          ctx.fillRect(0, sliceY, W, sliceH);
+
+          ctx.fillStyle = 'rgba(0, 240, 255, 0.18)';
+          ctx.fillRect(6, sliceY - 3, W, sliceH);
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+          ctx.fillRect(0, sliceY + sliceH * 0.5, W, 1.2);
+        }
+
+        const vigGrad = ctx.createRadialGradient(W * 0.5, H * 0.5, W * 0.35, W * 0.5, H * 0.5, W * 0.65);
+        vigGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+        vigGrad.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
+        ctx.fillStyle = vigGrad;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      // 22. PRISMATIC GEM GLINT & FLARE SHIMMER
+      else if (motionType === 'prismatic-gem-flares') {
+        gemFlares.forEach((f, idx) => {
+          f.rot += f.rotSpeed * speed;
+          const pulse = Math.sin(particleOffset * f.pulseSpeed + f.seed) * 0.35 + 0.85;
+          const flareLen = f.size * pulse;
+          const flareW = f.size * 0.16 * pulse;
+
+          ctx.save();
+          ctx.translate(f.x, f.y);
+          ctx.rotate(f.rot);
+
+          for (let r = 0; r < 2; r++) {
+            ctx.rotate(Math.PI * 0.5);
+            const rGrad = ctx.createLinearGradient(-flareLen, 0, flareLen, 0);
+            rGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+            rGrad.addColorStop(0.5, idx % 2 === 0 ? 'rgba(255, 130, 210, 0.85)' : 'rgba(100, 230, 255, 0.85)');
+            rGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+            ctx.fillStyle = rGrad;
+            ctx.beginPath();
+            ctx.moveTo(-flareLen, 0);
+            ctx.lineTo(0, flareW);
+            ctx.lineTo(flareLen, 0);
+            ctx.lineTo(0, -flareW);
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          ctx.beginPath();
+          ctx.arc(0, 0, 2.5 * pulse, 0, Math.PI * 2);
+          ctx.fillStyle = '#FFFFFF';
+          ctx.shadowBlur = 14;
+          ctx.shadowColor = idx % 2 === 0 ? '#FF84BA' : '#67E8F9';
+          ctx.fill();
+
+          ctx.restore();
+        });
+      }
+
+      // 23. DEEP SEA BIOLUMINESCENT FLOATING ORBS
+      else if (motionType === 'bioluminescent-orbs') {
+        bioOrbs.forEach(orb => {
+          orb.y -= orb.vy * speed;
+          orb.x += Math.sin(particleOffset * 0.035 + orb.vxSeed) * 0.8;
+          if (orb.y < -30) {
+            orb.y = H + 25;
+            orb.x = Math.random() * W;
+          }
+
+          const pulse = Math.sin(particleOffset * 0.05 + orb.pulseSeed) * 0.25 + 0.85;
+          const outerR = orb.r * 2.4 * pulse;
+
+          const orbGrad = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, outerR);
+          orbGrad.addColorStop(0, `rgba(255, 255, 255, ${0.9 * orb.alpha})`);
+          orbGrad.addColorStop(0.35, orb.color);
+          orbGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+          ctx.fillStyle = orbGrad;
+          ctx.beginPath();
+          ctx.arc(orb.x, orb.y, outerR, 0, Math.PI * 2);
+          ctx.fill();
+
+          const sporeY = orb.y + 12 + Math.sin(particleOffset * 0.06 + orb.vxSeed) * 4;
+          ctx.beginPath();
+          ctx.arc(orb.x, sporeY, 1.2, 0, Math.PI * 2);
+          ctx.fillStyle = orb.color;
+          ctx.shadowBlur = 4;
+          ctx.shadowColor = orb.color;
+          ctx.fill();
+        });
+      }
+
+      // 24. LOW-HANGING VOLUMETRIC FOG & MIST DRIFT
+      else if (motionType === 'volumetric-fog-mist') {
+        const mistGrad = ctx.createLinearGradient(0, H * 0.6, 0, H);
+        mistGrad.addColorStop(0, 'rgba(210, 230, 250, 0)');
+        mistGrad.addColorStop(1, 'rgba(210, 230, 250, 0.25)');
+        ctx.fillStyle = mistGrad;
+        ctx.fillRect(0, H * 0.6, W, H * 0.4);
+
+        fogPuffs.forEach(p => {
+          p.x += p.vx * speed;
+          if (p.x - p.r > W) p.x = -p.r;
+
+          const bob = Math.sin(particleOffset * 0.02 + p.pulseSeed) * 8;
+          const puffGrad = ctx.createRadialGradient(p.x, p.y + bob, 0, p.x, p.y + bob, p.r);
+          puffGrad.addColorStop(0, 'rgba(225, 240, 255, 0.16)');
+          puffGrad.addColorStop(0.65, 'rgba(210, 230, 250, 0.06)');
+          puffGrad.addColorStop(1, 'rgba(200, 220, 245, 0)');
+
+          ctx.fillStyle = puffGrad;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y + bob, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      // 25. FESTIVAL GOLDEN FIREWORKS & STAR BURSTS
+      else if (motionType === 'golden-firework-bursts') {
+        const fireworkColors = ['#FFD700', '#FFA500', '#FFF5C0', '#FFE066'];
+        fireworkBursts.forEach(burst => {
+          burst.timer += 1 * speed;
+
+          if (burst.timer >= burst.delay && burst.sparks.length === 0) {
+            burst.x = W * (0.2 + Math.random() * 0.6);
+            burst.y = H * (0.18 + Math.random() * 0.35);
+            burst.delay = 60 + Math.random() * 50;
+            burst.timer = 0;
+
+            const sparkCount = 36;
+            for (let i = 0; i < sparkCount; i++) {
+              const angle = (i / sparkCount) * Math.PI * 2;
+              const spd = 1.8 + Math.random() * 3.5;
+              burst.sparks.push({
+                x: burst.x,
+                y: burst.y,
+                vx: Math.cos(angle) * spd,
+                vy: Math.sin(angle) * spd,
+                alpha: 1.0,
+                color: fireworkColors[Math.floor(Math.random() * fireworkColors.length)],
+                decay: 0.016 + Math.random() * 0.012,
+                size: 1.4 + Math.random() * 1.6
+              });
+            }
+          }
+
+          for (let i = burst.sparks.length - 1; i >= 0; i--) {
+            const s = burst.sparks[i];
+            s.x += s.vx * speed;
+            s.y += s.vy * speed;
+            s.vy += 0.06 * speed;
+            s.vx *= 0.985;
+            s.vy *= 0.985;
+            s.alpha -= s.decay * speed;
+
+            if (s.alpha <= 0) {
+              burst.sparks.splice(i, 1);
+              continue;
+            }
+
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+            ctx.fillStyle = s.color;
+            ctx.globalAlpha = Math.max(0, s.alpha);
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = s.color;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+          }
+        });
+      }
+
+      // 26. DEFAULT AMBIENT SHIMMER
       else {
         ctx.fillStyle = glowColor;
         ctx.shadowBlur = 10;
@@ -1245,6 +2110,21 @@
       }
 
       ctx.restore();
+
+      // Live Synchronize to Docked Discord Profile Popout Canvas
+      if (dockedCanvas && (currentMode === 'dual' || currentMode === 'banner')) {
+        const dParent = dockedCanvas.parentElement;
+        if (dParent && (dockedCanvas.width !== dParent.clientWidth || dockedCanvas.height !== dParent.clientHeight)) {
+          dockedCanvas.width = dParent.clientWidth;
+          dockedCanvas.height = dParent.clientHeight;
+        }
+        const dCtx = dockedCanvas.getContext('2d');
+        if (dCtx && canvas && dockedCanvas.width > 0 && dockedCanvas.height > 0) {
+          dCtx.clearRect(0, 0, dockedCanvas.width, dockedCanvas.height);
+          dCtx.drawImage(canvas, 0, 0, dockedCanvas.width, dockedCanvas.height);
+        }
+      }
+
       animationFrameId = requestAnimationFrame(renderParticles);
     }
 
@@ -1255,7 +2135,10 @@
       const b = sliderBrightness?.value || '100';
       const c = sliderContrast?.value || '100';
 
-      stage.style.filter = `hue-rotate(${h}deg) saturate(${s}%) brightness(${b}%) contrast(${c}%)`;
+      const filterStr = `hue-rotate(${h}deg) saturate(${s}%) brightness(${b}%) contrast(${c}%)`;
+      stage.style.filter = filterStr;
+      if (dockedBannerBg) dockedBannerBg.style.filter = filterStr;
+      if (mockupBannerBg) mockupBannerBg.style.filter = filterStr;
 
       // Update text values
       const hueText = document.getElementById('hue-val-text');
@@ -1283,6 +2166,11 @@
         stageBgImage.style.objectPosition = `${x}% ${y}%`;
       }
 
+      if (dockedBannerImg && currentPresetData?.imageUrl) {
+        dockedBannerImg.style.transform = `scale(${zoom})`;
+        dockedBannerImg.style.objectPosition = `${x}% ${y}%`;
+      }
+
       const zoomText = document.getElementById('zoom-val-text');
       if (zoomText) zoomText.textContent = `${zoom}x`;
       const xText = document.getElementById('focal-x-val');
@@ -1291,7 +2179,7 @@
       if (yText) yText.textContent = `${y}%`;
     }
 
-    function setViewMode(mode: 'banner' | 'pfp' | 'profile' | 'icon') {
+    function setViewMode(mode: 'dual' | 'banner' | 'pfp' | 'profile' | 'icon') {
       currentMode = mode;
       const tabs = document.querySelectorAll('.view-mode-tab');
       tabs.forEach(tab => {
@@ -1308,20 +2196,35 @@
       const stageBgImage = document.getElementById('stage-bg-image') as HTMLImageElement | null;
       const stageIcon = document.getElementById('stage-icon');
 
-      if (mode === 'banner') {
+      if (mode === 'dual') {
         profileMockup?.classList.add('hidden');
+        if (dockedProfilePreview) dockedProfilePreview.classList.remove('hidden');
         if (viewport) {
           viewport.classList.remove('aspect-square', 'max-w-xs', 'max-w-[240px]');
           viewport.classList.add('aspect-[16/9]');
         }
         if (safeZoneOverlay) safeZoneOverlay.style.display = toggleSafeZones?.checked ? 'block' : 'none';
         if (sliderZoom && currentPresetData) sliderZoom.value = '1.0';
-        if (currentPresetData?.imageUrl) {
+        if (currentPresetData?.imageUrl || currentPresetData?.animatedUrl) {
+          stageBgImage?.classList.remove('opacity-20');
+          stageIcon?.classList.add('opacity-0');
+        }
+      } else if (mode === 'banner') {
+        profileMockup?.classList.add('hidden');
+        if (dockedProfilePreview) dockedProfilePreview.classList.add('hidden');
+        if (viewport) {
+          viewport.classList.remove('aspect-square', 'max-w-xs', 'max-w-[240px]');
+          viewport.classList.add('aspect-[16/9]');
+        }
+        if (safeZoneOverlay) safeZoneOverlay.style.display = toggleSafeZones?.checked ? 'block' : 'none';
+        if (sliderZoom && currentPresetData) sliderZoom.value = '1.0';
+        if (currentPresetData?.imageUrl || currentPresetData?.animatedUrl) {
           stageBgImage?.classList.remove('opacity-20');
           stageIcon?.classList.add('opacity-0');
         }
       } else if (mode === 'pfp') {
         profileMockup?.classList.add('hidden');
+        if (dockedProfilePreview) dockedProfilePreview.classList.add('hidden');
         if (viewport) {
           viewport.classList.remove('aspect-[16/9]', 'max-w-[240px]');
           viewport.classList.add('aspect-square', 'max-w-xs');
@@ -1330,12 +2233,13 @@
         if (sliderZoom && currentPresetData) sliderZoom.value = currentPresetData.focalPfpZoom || '1.6';
         if (sliderFocalX && currentPresetData) sliderFocalX.value = currentPresetData.focalPfpX || '50';
         if (sliderFocalY && currentPresetData) sliderFocalY.value = currentPresetData.focalPfpY || '50';
-        if (currentPresetData?.imageUrl) {
+        if (currentPresetData?.imageUrl || currentPresetData?.animatedUrl) {
           stageBgImage?.classList.remove('opacity-20');
           stageIcon?.classList.add('opacity-0');
         }
       } else if (mode === 'profile') {
         profileMockup?.classList.remove('hidden');
+        if (dockedProfilePreview) dockedProfilePreview.classList.add('hidden');
         if (viewport) {
           viewport.classList.remove('aspect-square', 'max-w-xs', 'max-w-[240px]');
           viewport.classList.add('aspect-[16/9]');
@@ -1343,6 +2247,7 @@
         if (safeZoneOverlay) safeZoneOverlay.style.display = 'none';
       } else if (mode === 'icon') {
         profileMockup?.classList.add('hidden');
+        if (dockedProfilePreview) dockedProfilePreview.classList.add('hidden');
         if (viewport) {
           viewport.classList.remove('aspect-[16/9]', 'max-w-xs');
           viewport.classList.add('aspect-square', 'max-w-[240px]');
@@ -1469,14 +2374,79 @@
       if (hexDot) hexDot.style.backgroundColor = currentPresetData.themeHex;
       if (hexCode) hexCode.textContent = currentPresetData.themeHex;
 
-      // Profile Mockup elements
+      // Profile Mockup elements & Docked Popout Card
       if (mockupOuter) mockupOuter.style.backgroundColor = currentPresetData.themeHex;
+      if (dockedDiscordCard) dockedDiscordCard.style.backgroundColor = currentPresetData.themeHex;
+
+      if (displayMedia) {
+        if (dockedBannerImg) {
+          dockedBannerImg.src = displayMedia;
+          dockedBannerImg.classList.remove('hidden');
+        }
+        if (dockedBannerBg) {
+          dockedBannerBg.style.backgroundImage = `url(${displayMedia})`;
+          dockedBannerBg.style.backgroundSize = 'cover';
+        }
+        if (dockedBannerIcon) dockedBannerIcon.classList.add('opacity-0');
+
+        const pfpMedia = currentPresetData.pfpUrl || displayMedia;
+        if (dockedAvatarImg) {
+          dockedAvatarImg.src = pfpMedia;
+          dockedAvatarImg.classList.remove('hidden');
+        }
+        if (dockedAvatarCircle) {
+          dockedAvatarCircle.style.backgroundImage = `url(${pfpMedia})`;
+          dockedAvatarCircle.style.backgroundSize = 'cover';
+        }
+        if (dockedAvatarIcon) dockedAvatarIcon.classList.add('opacity-0');
+      } else {
+        if (dockedBannerImg) {
+          dockedBannerImg.src = '';
+          dockedBannerImg.classList.add('hidden');
+        }
+        if (dockedBannerBg) {
+          dockedBannerBg.style.backgroundImage = '';
+          dockedBannerBg.style.background = currentPresetData.gradient;
+        }
+        if (dockedBannerIcon) {
+          dockedBannerIcon.textContent = currentPresetData.icon;
+          dockedBannerIcon.classList.remove('opacity-0');
+        }
+
+        if (dockedAvatarImg) {
+          dockedAvatarImg.src = '';
+          dockedAvatarImg.classList.add('hidden');
+        }
+        if (dockedAvatarCircle) {
+          dockedAvatarCircle.style.backgroundImage = '';
+          dockedAvatarCircle.style.background = currentPresetData.gradient;
+        }
+        if (dockedAvatarIcon) {
+          dockedAvatarIcon.textContent = currentPresetData.icon;
+          dockedAvatarIcon.classList.remove('opacity-0');
+        }
+      }
+
       if (mockupBannerBg && !displayMedia) mockupBannerBg.style.background = currentPresetData.gradient;
       if (mockupBannerIcon) mockupBannerIcon.textContent = currentPresetData.icon;
       if (mockupAvatarCircle && !currentPresetData.pfpUrl && !displayMedia) mockupAvatarCircle.style.background = currentPresetData.gradient;
       if (mockupAvatarIcon) mockupAvatarIcon.textContent = currentPresetData.icon;
       if (mockupThemeDot) mockupThemeDot.style.backgroundColor = currentPresetData.themeHex;
       if (mockupHexText) mockupHexText.textContent = currentPresetData.themeHex;
+      if (dockedThemeDot) dockedThemeDot.style.backgroundColor = currentPresetData.themeHex;
+      if (dockedHexText) dockedHexText.textContent = currentPresetData.themeHex;
+
+      // Sync identity texts
+      const curDisplayName = inputProfileDisplayName?.value.trim() || 'DiscordCreator';
+      const curHandle = inputProfileHandle?.value.trim() || '@creator_studio';
+      const curStatus = inputProfileStatus?.value.trim() || 'crafting Discord visuals';
+      if (mockupUsernameText) mockupUsernameText.textContent = curDisplayName;
+      if (dockedUsernameText) dockedUsernameText.textContent = curDisplayName;
+      if (mockupHandleText) mockupHandleText.textContent = curHandle;
+      if (dockedHandleText) dockedHandleText.textContent = curHandle;
+      if (mockupStatusText) mockupStatusText.textContent = curStatus;
+      if (dockedStatusText) dockedStatusText.textContent = curStatus;
+      renderBadges();
 
       // Reset controls
       if (selectMotionStyle) selectMotionStyle.value = currentPresetData.motionType || 'auto';
@@ -1492,10 +2462,18 @@
         stageCustomText.textContent = '';
         stageCustomText.classList.add('opacity-0');
       }
+      if (dockedBannerCustomText) {
+        dockedBannerCustomText.textContent = '';
+        dockedBannerCustomText.classList.add('opacity-0');
+      }
+      if (mockupBannerCustomText) {
+        mockupBannerCustomText.textContent = '';
+        mockupBannerCustomText.classList.add('opacity-0');
+      }
 
       applyFilters();
       applyFocalZoom();
-      setViewMode('banner');
+      setViewMode('dual');
 
       modal.classList.remove('hidden');
       modal.classList.add('flex');
@@ -1598,13 +2576,21 @@
 
     // Text Overlay Input
     inputOverlayText?.addEventListener('input', () => {
-      if (!stageCustomText) return;
       const txt = inputOverlayText.value.trim();
-      if (txt) {
-        stageCustomText.textContent = txt;
-        stageCustomText.classList.remove('opacity-0');
-      } else {
-        stageCustomText.classList.add('opacity-0');
+      if (stageCustomText) {
+        stageCustomText.textContent = txt || 'STUDIO';
+        if (txt) stageCustomText.classList.remove('opacity-0');
+        else stageCustomText.classList.add('opacity-0');
+      }
+      if (dockedBannerCustomText) {
+        dockedBannerCustomText.textContent = txt;
+        if (txt) dockedBannerCustomText.classList.remove('opacity-0');
+        else dockedBannerCustomText.classList.add('opacity-0');
+      }
+      if (mockupBannerCustomText) {
+        mockupBannerCustomText.textContent = txt;
+        if (txt) mockupBannerCustomText.classList.remove('opacity-0');
+        else mockupBannerCustomText.classList.add('opacity-0');
       }
     });
 
@@ -1613,6 +2599,14 @@
       if (stageCustomText) {
         stageCustomText.textContent = '';
         stageCustomText.classList.add('opacity-0');
+      }
+      if (dockedBannerCustomText) {
+        dockedBannerCustomText.textContent = '';
+        dockedBannerCustomText.classList.add('opacity-0');
+      }
+      if (mockupBannerCustomText) {
+        mockupBannerCustomText.textContent = '';
+        mockupBannerCustomText.classList.add('opacity-0');
       }
     });
 
@@ -1641,6 +2635,112 @@
           setTimeout(() => { copyHexLabel.textContent = 'Copy Hex Code'; }, 1500);
         }
       }
+    });
+
+    dockedCopyHex?.addEventListener('click', () => {
+      if (currentPresetData?.themeHex) {
+        navigator.clipboard.writeText(currentPresetData.themeHex);
+        const orig = dockedCopyHex.textContent;
+        dockedCopyHex.textContent = 'Copied!';
+        setTimeout(() => { dockedCopyHex.textContent = orig; }, 1500);
+      }
+    });
+
+    mockupCopyHex?.addEventListener('click', () => {
+      if (currentPresetData?.themeHex) {
+        navigator.clipboard.writeText(currentPresetData.themeHex);
+        const orig = mockupCopyHex.textContent;
+        mockupCopyHex.textContent = 'Copied!';
+        setTimeout(() => { mockupCopyHex.textContent = orig; }, 1500);
+      }
+    });
+
+    // Badges Helper & Renderer
+    const badgeIcons: Record<string, { icon: string; title: string }> = {
+      creator: { icon: '🎨', title: 'HypeSquad / Creator' },
+      nitro: { icon: '💎', title: 'Discord Nitro' },
+      booster: { icon: '🚀', title: 'Server Booster' }
+    };
+
+    function renderBadges() {
+      const badgeHtml = Array.from(activeBadges)
+        .filter(b => b !== 'bot')
+        .map(b => `<span title="${badgeIcons[b]?.title || b}" class="text-xs select-none">${badgeIcons[b]?.icon || '✨'}</span>`)
+        .join('');
+
+      if (mockupBadgesContainer) mockupBadgesContainer.innerHTML = badgeHtml;
+      if (dockedBadgesContainer) dockedBadgesContainer.innerHTML = badgeHtml;
+
+      const isBot = activeBadges.has('bot');
+      if (mockupBotBadge) {
+        if (isBot) mockupBotBadge.classList.remove('hidden');
+        else mockupBotBadge.classList.add('hidden');
+      }
+      if (dockedBotBadge) {
+        if (isBot) dockedBotBadge.classList.remove('hidden');
+        else dockedBotBadge.classList.add('hidden');
+      }
+    }
+
+    // Live Synchronized Discord Profile Identity Listeners
+    inputProfileDisplayName?.addEventListener('input', () => {
+      const name = inputProfileDisplayName.value.trim() || 'DiscordCreator';
+      if (dockedUsernameText) dockedUsernameText.textContent = name;
+      if (mockupUsernameText) mockupUsernameText.textContent = name;
+    });
+
+    inputProfileHandle?.addEventListener('input', () => {
+      let handle = inputProfileHandle.value.trim();
+      if (handle && !handle.startsWith('@')) handle = '@' + handle;
+      if (!handle) handle = '@creator_studio';
+      if (dockedHandleText) dockedHandleText.textContent = handle;
+      if (mockupHandleText) mockupHandleText.textContent = handle;
+    });
+
+    inputProfileStatus?.addEventListener('input', () => {
+      const status = inputProfileStatus.value.trim() || 'crafting Discord visuals';
+      if (dockedStatusText) dockedStatusText.textContent = status;
+      if (mockupStatusText) mockupStatusText.textContent = status;
+    });
+
+    const presenceColors: Record<string, string> = {
+      online: '#23A55A',
+      idle: '#F0B232',
+      dnd: '#F23F43',
+      invisible: '#80848E'
+    };
+
+    statusPresencePills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const status = pill.getAttribute('data-status') as any;
+        if (!status) return;
+        currentPresence = status;
+        statusPresencePills.forEach(p => {
+          if (p.getAttribute('data-status') === status) {
+            p.className = 'status-presence-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all bg-white dark:bg-[#1E293B] text-[#FF84BA] font-bold shadow-xs border border-[#E0DBD0] dark:border-[#263454]';
+          } else {
+            p.className = 'status-presence-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white';
+          }
+        });
+        const color = presenceColors[status] || '#23A55A';
+        if (dockedStatusIndicator) dockedStatusIndicator.style.backgroundColor = color;
+        if (mockupStatusDot) mockupStatusDot.style.backgroundColor = color;
+      });
+    });
+
+    profileBadgePills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const badge = pill.getAttribute('data-badge');
+        if (!badge) return;
+        if (activeBadges.has(badge)) {
+          activeBadges.delete(badge);
+          pill.className = 'profile-badge-pill py-1 px-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-[#6B7A90] dark:text-[#99C2FF] text-[11px] font-bold cursor-pointer transition-all flex items-center justify-center gap-1';
+        } else {
+          activeBadges.add(badge);
+          pill.className = 'profile-badge-pill active py-1 px-1.5 rounded-lg border border-[#FF84BA] bg-[#FF84BA]/15 text-[#FF84BA] text-[11px] font-bold cursor-pointer transition-all flex items-center justify-center gap-1';
+        }
+        renderBadges();
+      });
     });
 
     // Download helpers
