@@ -1,0 +1,243 @@
+---
+/**
+ * AvatarWorkspace.astro — shared interactive Discord avatar cropper (512×512, circular mask preview).
+ *
+ * Language-agnostic logic keyed off fixed element IDs. The avatar tool emits no
+ * user-facing alert strings, so only visible labels and the guide cross-links
+ * vary by locale. Imported by both the EN (/tools/avatar/) and ES
+ * (/es/tools/avatar/) pages so Spanish users get the real tool, not a redirect.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    dropTitle: 'Select profile picture artwork',
+    dropHint: 'PNG, JPG, WebP, or GIF (Centered on 512x512 canvas)',
+    canvasTitle: '512 × 512 Canvas',
+    reset: 'Reset',
+    exportBtn: 'Export Verified Avatar (512x512)',
+    maskTitle: 'Discord Circular Mask Preview',
+    circlePlaceholder: 'Circle',
+    liveViewport: 'Live Profile Viewport',
+    maskCaption: 'Circular mask with bottom-right status indicator clearance',
+    specTitle: 'Specification Receipt',
+    outputRes: 'Output Resolution:',
+    originalRes: 'Original Resolution:',
+    maxFileSize: 'Max File Size:',
+    requirementLabel: 'Requirement:',
+    requirement: 'Static avatars are free. Animated avatars (.gif) require an active Discord Nitro subscription.',
+    links: [
+      { icon: '📖', href: '/guides/discord-sizes/', label: 'Discord Avatar Dimensions & Size Cheat Sheet' },
+      { icon: '✨', href: '/guides/discord-gif-guide/', label: 'Animated Discord GIF Avatar Guide' },
+      { icon: '👤', href: '/blog/discord-pfp-ideas-anime-avatars/', label: 'Discord PFP Ideas & Anime Avatars' }
+    ]
+  },
+  es: {
+    dropTitle: 'Selecciona el arte de tu foto de perfil',
+    dropHint: 'PNG, JPG, WebP o GIF (centrado en lienzo de 512x512)',
+    canvasTitle: 'Lienzo 512 × 512',
+    reset: 'Reiniciar',
+    exportBtn: 'Exportar Avatar Verificado (512x512)',
+    maskTitle: 'Vista Previa de Máscara Circular de Discord',
+    circlePlaceholder: 'Círculo',
+    liveViewport: 'Viewport de Perfil en Vivo',
+    maskCaption: 'Máscara circular con espacio para el indicador de estado en la esquina inferior derecha',
+    specTitle: 'Recibo de Especificaciones',
+    outputRes: 'Resolución de Salida:',
+    originalRes: 'Resolución Original:',
+    maxFileSize: 'Tamaño Máximo:',
+    requirementLabel: 'Requisito:',
+    requirement: 'Los avatares estáticos son gratuitos. Los avatares animados (.gif) requieren una suscripción activa a Discord Nitro.',
+    links: [
+      { icon: '📖', href: '/es/guides/discord-sizes/', label: 'Dimensiones de Avatar de Discord y Hoja de Tamaños' }
+    ]
+  }
+}[lang];
+---
+
+<!-- Main Workspace Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16" id="avatar-workspace">
+  <div class="lg:col-span-7 space-y-6">
+    <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs">
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+      <div class="space-y-2 pointer-events-none">
+        <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 text-[#3368A0] flex items-center justify-center mx-auto text-xl font-bold">
+          👤
+        </div>
+        <p class="text-sm font-bold text-[#192538]">{t.dropTitle}</p>
+        <p class="text-xs text-[#6B7A90]">{t.dropHint}</p>
+      </div>
+    </div>
+
+    <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.canvasTitle}</h2>
+        <button id="resetBtn" class="btn-secondary text-xs px-2.5 py-1 rounded-[6px]">
+          {t.reset}
+        </button>
+      </div>
+
+      <div class="flex items-center justify-center p-6 bg-[#FAF8F5] rounded-[10px] border border-[#E0DBD0] overflow-hidden mb-6">
+        <canvas id="mainCanvas" width="512" height="512" class="max-w-[256px] max-h-[256px] shadow-sm rounded-[10px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] [background-size:16px_16px]"></canvas>
+      </div>
+
+      <button id="exportBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold shadow-sm">
+        {t.exportBtn}
+      </button>
+    </div>
+  </div>
+
+  <div class="lg:col-span-5 space-y-6">
+    <!-- Live Circular Mask Preview -->
+    <div class="card-panel rounded-[14px] p-6">
+      <h2 class="text-sm font-bold text-[#192538] pb-3 border-b border-[#E0DBD0] mb-4">{t.maskTitle}</h2>
+      <div class="p-6 rounded-[10px] bg-[#313338] flex flex-col items-center justify-center">
+        <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-[#5865f2] bg-[#1e1f22] flex items-center justify-center relative shadow-lg">
+          <img id="circlePreviewImg" class="w-full h-full object-cover hidden" alt="Avatar Circle Mask Preview" />
+          <span id="circlePlaceholder" class="text-xs text-[#949ba4] font-mono">{t.circlePlaceholder}</span>
+          <!-- Online status ring -->
+          <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#23A55A] border-2 border-[#313338]"></div>
+        </div>
+        <span class="text-xs font-semibold text-white mt-3">{t.liveViewport}</span>
+        <span class="text-[10px] text-[#949ba4]">{t.maskCaption}</span>
+      </div>
+    </div>
+
+    <div class="card-panel rounded-[14px] p-6">
+      <h2 class="text-sm font-bold text-[#192538] pb-3 border-b border-[#E0DBD0] mb-4">{t.specTitle}</h2>
+      <div class="space-y-3 text-xs font-mono">
+        <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+          <span class="text-[#6B7A90]">{t.outputRes}</span>
+          <span class="text-[#192538] font-bold">512 × 512 px</span>
+        </div>
+        <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+          <span class="text-[#6B7A90]">{t.originalRes}</span>
+          <span id="statDimensions" class="text-[#192538] font-bold">-- × --</span>
+        </div>
+        <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+          <span class="text-[#6B7A90]">{t.maxFileSize}</span>
+          <span class="text-[#0D9488] font-bold">8.0 MB</span>
+        </div>
+        <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans">
+          <strong>{t.requirementLabel}</strong> {t.requirement}
+        </div>
+        <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-sans font-medium">
+          {t.links.map((link) => (
+            <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+              <span>{link.icon}</span> {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+  const editorPanel = document.getElementById('editorPanel');
+  const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
+  const resetBtn = document.getElementById('resetBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const circlePreviewImg = document.getElementById('circlePreviewImg') as HTMLImageElement;
+  const circlePlaceholder = document.getElementById('circlePlaceholder');
+  const dropzone = document.getElementById('dropzone');
+  const statDimensions = document.getElementById('statDimensions');
+
+  let currentBlob: Blob | null = null;
+  let currentObjectUrl: string | null = null;
+
+  function cleanup() {
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+  }
+
+  fileInput?.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    handleFile(file);
+  });
+
+  dropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+
+  dropzone?.addEventListener('dragleave', () => {
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    const file = e.dataTransfer?.files?.[0];
+    if (!file) return;
+    handleFile(file);
+  });
+
+  function handleFile(file: File) {
+    cleanup();
+    currentObjectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      if (statDimensions) statDimensions.innerText = `${img.width} × ${img.height} px`;
+      renderCanvas(img);
+      editorPanel?.classList.remove('hidden');
+    };
+    img.src = currentObjectUrl;
+  }
+
+  function renderCanvas(img: HTMLImageElement) {
+    const ctx = mainCanvas.getContext('2d');
+    if (!ctx) return;
+
+    const size = 512;
+    mainCanvas.width = size;
+    mainCanvas.height = size;
+    ctx.clearRect(0, 0, size, size);
+
+    const minDim = Math.min(img.width, img.height);
+    const sx = (img.width - minDim) / 2;
+    const sy = (img.height - minDim) / 2;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+
+    mainCanvas.toBlob((blob) => {
+      if (!blob) return;
+      currentBlob = blob;
+      const url = URL.createObjectURL(blob);
+      if (circlePreviewImg) {
+        circlePreviewImg.src = url;
+        circlePreviewImg.classList.remove('hidden');
+      }
+      circlePlaceholder?.classList.add('hidden');
+    }, 'image/png');
+  }
+
+  resetBtn?.addEventListener('click', () => {
+    cleanup();
+    currentBlob = null;
+    editorPanel?.classList.add('hidden');
+    if (circlePreviewImg) circlePreviewImg.classList.add('hidden');
+    circlePlaceholder?.classList.remove('hidden');
+    if (statDimensions) statDimensions.innerText = '-- × --';
+    fileInput.value = '';
+  });
+
+  exportBtn?.addEventListener('click', () => {
+    if (!currentBlob) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(currentBlob);
+    a.download = 'discord-avatar-512x512.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+</script>

@@ -1,0 +1,258 @@
+---
+/**
+ * RoleIconWorkspace.astro — shared interactive Discord role icon tool (exact 64×64, 256 KB).
+ *
+ * Language-agnostic logic keyed off fixed element IDs; only visible labels and the
+ * cross-link guide hrefs vary by locale. Imported by both the EN (/tools/role-icon/)
+ * and ES (/es/tools/role-icon/) pages so Spanish users get the real tool, not a redirect.
+ *
+ * Note: unlike EmojiWorkspace, this tool's client script has no locale-varying
+ * user-facing strings (no alerts; the only script-set text is the numeric
+ * "W × H px" dimension readout and the "-- × --" reset placeholder), so there is
+ * no `js` dict / data-* wiring — the script is preserved byte-for-byte.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    dropTitle: 'Select badge or role icon artwork',
+    dropHint: 'PNG, JPG, or WebP (Rescaled to exact 64x64)',
+    canvasTitle: '64 × 64 Icon Surface',
+    reset: 'Reset',
+    exportBtn: 'Export Role Icon (64x64)',
+    chatPreview: 'Chat Nameplate Preview',
+    roleName: 'Guild Master',
+    adminTag: 'ADMIN',
+    exampleMsg: 'Example message demonstrating the role icon beside username.',
+    specReceipt: 'Specification Receipt',
+    dimensions: 'Dimensions:',
+    maxSize: 'Max Size:',
+    platformGate: 'Platform Gate:',
+    gateValue: 'Boost L2 + Manage Roles',
+    reqLabel: 'Requirement:',
+    reqText: 'Server must reach Server Boost Level 2 to unlock custom role icons. Requires Manage Roles permission.',
+    link1: 'Discord Role Icon Dimensions & Rules Guide',
+    link1Href: '/guides/discord-sizes/',
+    link2: 'Animated Server Assets Guide',
+    link2Href: '/guides/discord-gif-guide/',
+    link3: 'Free 2D Role & Server Icon Presets',
+    link3Href: '/assets/icons-2d/'
+  },
+  es: {
+    dropTitle: 'Selecciona el arte de tu insignia o icono de rol',
+    dropHint: 'PNG, JPG o WebP (reescalado a exactamente 64x64)',
+    canvasTitle: 'Lienzo de Icono 64 × 64',
+    reset: 'Reiniciar',
+    exportBtn: 'Exportar Icono de Rol (64x64)',
+    chatPreview: 'Vista Previa del Nombre en Chat',
+    roleName: 'Maestro del Gremio',
+    adminTag: 'ADMIN',
+    exampleMsg: 'Mensaje de ejemplo que muestra el icono de rol junto al nombre de usuario.',
+    specReceipt: 'Recibo de Especificaciones',
+    dimensions: 'Dimensiones:',
+    maxSize: 'Tamaño Máximo:',
+    platformGate: 'Requisito de Plataforma:',
+    gateValue: 'Boost N2 + Gestionar Roles',
+    reqLabel: 'Requisito:',
+    reqText: 'El servidor debe alcanzar el Boost Nivel 2 para desbloquear los iconos de rol personalizados. Requiere el permiso de Gestionar Roles.',
+    link1: 'Guía de Dimensiones y Reglas de Iconos de Rol de Discord',
+    link1Href: '/es/guides/discord-sizes/',
+    link2: 'Guía de Recursos Animados para Servidores',
+    link2Href: '/guides/discord-gif-guide/',
+    link3: 'Presets Gratuitos de Iconos de Rol y Servidor 2D',
+    link3Href: '/assets/icons-2d/'
+  }
+}[lang];
+---
+
+<!-- Main Workspace Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16" id="role-icon-workspace">
+  <div class="lg:col-span-7 space-y-6">
+    <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs">
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+      <div class="space-y-2 pointer-events-none">
+        <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 text-[#3368A0] flex items-center justify-center mx-auto text-xl font-bold">
+          🛡️
+        </div>
+        <p class="text-sm font-bold text-[#192538]">{t.dropTitle}</p>
+        <p class="text-xs text-[#6B7A90]">{t.dropHint}</p>
+      </div>
+    </div>
+
+    <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.canvasTitle}</h2>
+        <button id="resetBtn" class="btn-secondary text-xs px-2.5 py-1 rounded-[6px]">
+          {t.reset}
+        </button>
+      </div>
+
+      <div class="flex items-center justify-center p-6 bg-[#FAF8F5] rounded-[10px] border border-[#E0DBD0] overflow-hidden mb-6">
+        <canvas id="mainCanvas" width="64" height="64" class="w-16 h-16 shadow-sm rounded-[4px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] [background-size:8px_8px]"></canvas>
+      </div>
+
+      <button id="exportBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold shadow-sm">
+        {t.exportBtn}
+      </button>
+    </div>
+  </div>
+
+  <div class="lg:col-span-5 space-y-6">
+    <!-- Live Role Badge Chat Preview -->
+    <div class="card-panel rounded-[14px] p-6">
+      <h2 class="text-sm font-bold text-[#192538] pb-3 border-b border-[#E0DBD0] mb-4">{t.chatPreview}</h2>
+      <div class="p-4 rounded-[10px] bg-[#313338] text-white">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-semibold text-[#f59e0b]">{t.roleName}</span>
+          <div class="w-4 h-4 flex items-center justify-center">
+            <img id="roleBadgeImg" class="w-4 h-4 object-contain hidden" alt="Role Icon Badge Preview" />
+            <span id="badgePlaceholder" class="w-3 h-3 rounded-full bg-[#f59e0b]/40"></span>
+          </div>
+          <span class="text-[10px] bg-[#2b2d31] text-[#949ba4] px-1.5 py-0.5 rounded font-mono">{t.adminTag}</span>
+        </div>
+        <p class="text-xs text-[#dbdee1] mt-2">{t.exampleMsg}</p>
+      </div>
+    </div>
+
+    <div class="card-panel rounded-[14px] p-6">
+      <h2 class="text-sm font-bold text-[#192538] pb-3 border-b border-[#E0DBD0] mb-4">{t.specReceipt}</h2>
+      <div class="space-y-3 text-xs font-mono">
+        <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+          <span class="text-[#6B7A90]">{t.dimensions}</span>
+          <span id="statDimensions" class="text-[#192538] font-bold">64 × 64 px</span>
+        </div>
+        <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+          <span class="text-[#6B7A90]">{t.maxSize}</span>
+          <span class="text-[#0D9488] font-bold">256 KB</span>
+        </div>
+        <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
+          <span class="text-[#6B7A90]">{t.platformGate}</span>
+          <span class="text-[#D97706] font-bold">{t.gateValue}</span>
+        </div>
+        <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans leading-relaxed">
+          <strong>{t.reqLabel}</strong> {t.reqText}
+        </div>
+        <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-sans font-medium">
+          <a href={t.link1Href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+            <span>📖</span> {t.link1}
+          </a>
+          <a href={t.link2Href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+            <span>✨</span> {t.link2}
+          </a>
+          <a href={t.link3Href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+            <span>🎨</span> {t.link3}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+  const editorPanel = document.getElementById('editorPanel');
+  const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
+  const resetBtn = document.getElementById('resetBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const roleBadgeImg = document.getElementById('roleBadgeImg') as HTMLImageElement;
+  const badgePlaceholder = document.getElementById('badgePlaceholder');
+  const dropzone = document.getElementById('dropzone');
+  const statDimensions = document.getElementById('statDimensions');
+
+  let currentBlob: Blob | null = null;
+  let currentObjectUrl: string | null = null;
+
+  function cleanup() {
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+  }
+
+  fileInput?.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    handleFile(file);
+  });
+
+  dropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+
+  dropzone?.addEventListener('dragleave', () => {
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    const file = e.dataTransfer?.files?.[0];
+    if (!file) return;
+    handleFile(file);
+  });
+
+  function handleFile(file: File) {
+    cleanup();
+    currentObjectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      if (statDimensions) statDimensions.innerText = `${img.width} × ${img.height} px`;
+      renderCanvas(img);
+      editorPanel?.classList.remove('hidden');
+    };
+    img.src = currentObjectUrl;
+  }
+
+  function renderCanvas(img: HTMLImageElement) {
+    const ctx = mainCanvas.getContext('2d');
+    if (!ctx) return;
+
+    const size = 64;
+    mainCanvas.width = size;
+    mainCanvas.height = size;
+    ctx.clearRect(0, 0, size, size);
+
+    const minDim = Math.min(img.width, img.height);
+    const sx = (img.width - minDim) / 2;
+    const sy = (img.height - minDim) / 2;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+
+    mainCanvas.toBlob((blob) => {
+      if (!blob) return;
+      currentBlob = blob;
+      const url = URL.createObjectURL(blob);
+      if (roleBadgeImg) {
+        roleBadgeImg.src = url;
+        roleBadgeImg.classList.remove('hidden');
+      }
+      badgePlaceholder?.classList.add('hidden');
+    }, 'image/png');
+  }
+
+  resetBtn?.addEventListener('click', () => {
+    cleanup();
+    currentBlob = null;
+    editorPanel?.classList.add('hidden');
+    if (roleBadgeImg) roleBadgeImg.classList.add('hidden');
+    badgePlaceholder?.classList.remove('hidden');
+    if (statDimensions) statDimensions.innerText = '-- × --';
+    fileInput.value = '';
+  });
+
+  exportBtn?.addEventListener('click', () => {
+    if (!currentBlob) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(currentBlob);
+    a.download = 'discord-role-icon-64x64.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+</script>

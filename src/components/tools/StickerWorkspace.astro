@@ -1,0 +1,818 @@
+---
+/**
+ * StickerWorkspace.astro — shared interactive Discord sticker studio (exact 320×320, 512 KiB).
+ *
+ * Language-agnostic logic keyed off fixed element IDs. Visible labels vary by
+ * locale via the `t` dict; the client script's user-facing strings (alert /
+ * receipt / badge text) are passed through data-* attributes on the root
+ * element via the `js` dict, read into `L` in the script — same pattern as
+ * EmojiWorkspace. Imported by both the EN (/tools/sticker/) and ES
+ * (/es/tools/sticker/) pages so Spanish users get the real tool, not a redirect.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    dropTitle: 'Upload photo or artwork for Discord Sticker',
+    dropHint: 'PNG, JPG, WebP, or APNG • Interactive photo pan, zoom & die-cut vinyl borders',
+    demoBtn: 'Try with Demo Photo',
+    editorTitle: 'Photo-to-Sticker Studio (320 × 320)',
+    editorSub: 'Drag to reposition • Scroll or use slider to zoom',
+    reset: 'Reset',
+    dragHint: 'Click & drag inside canvas to position photo',
+    zoomLabel: 'Photo Zoom',
+    fit: 'Fit',
+    fill: 'Fill',
+    center: 'Center',
+    cutoutLabel: 'Cutout Shape',
+    shapeSquare: 'Square (Full)',
+    shapeRounded: 'Rounded',
+    shapeCircle: 'Circle Cutout',
+    borderLabel: 'Die-Cut Vinyl Sticker Border',
+    dossierSpec: 'Dossier Spec 04',
+    borderNone: 'None',
+    borderThin: 'Thin (6px)',
+    borderStd: 'Classic (10px)',
+    borderThick: 'Chunky (16px)',
+    exportBtn: 'Download Discord Sticker (320×320 PNG)',
+    chatPreviewTitle: 'Desktop Chat Preview (160px)',
+    dark: 'Dark',
+    light: 'Light',
+    senderName: 'Sticker Sender',
+    timestamp: 'Today at 5:00 PM',
+    previewBox: '160 × 160 px',
+    receiptTitle: 'Validation Receipt',
+    awaiting: 'Awaiting Media',
+    targetDims: 'Target Dimensions:',
+    targetDimsVal: 'Exact 320 × 320 px',
+    originalDims: 'Original Dimensions:',
+    binaryLimit: 'Binary Limit:',
+    measured: 'Measured Byte Size:',
+    formatCompliance: 'Format Compliance:',
+    links: [
+      { icon: '📖', href: '/guides/discord-sizes/', label: 'Official Discord Sticker Sizes & Rules Guide' },
+      { icon: '✨', href: '/guides/discord-gif-guide/', label: 'Animated APNG & GIF Sticker Guide' },
+      { icon: '🏷️', href: '/blog/how-to-make-discord-stickers/', label: 'How to Make a Discord Sticker (Step by Step)' }
+    ]
+  },
+  es: {
+    dropTitle: 'Sube una foto o arte para tu Sticker de Discord',
+    dropHint: 'PNG, JPG, WebP o APNG • Encuadre interactivo con paneo, zoom y bordes de vinilo troquelado',
+    demoBtn: 'Probar con Foto de Demostración',
+    editorTitle: 'Estudio Foto-a-Sticker (320 × 320)',
+    editorSub: 'Arrastra para reposicionar • Usa la rueda o el control para hacer zoom',
+    reset: 'Reiniciar',
+    dragHint: 'Haz clic y arrastra dentro del lienzo para colocar la foto',
+    zoomLabel: 'Zoom de Foto',
+    fit: 'Ajustar',
+    fill: 'Rellenar',
+    center: 'Centrar',
+    cutoutLabel: 'Forma del Recorte',
+    shapeSquare: 'Cuadrado (Total)',
+    shapeRounded: 'Redondeado',
+    shapeCircle: 'Recorte Circular',
+    borderLabel: 'Borde de Vinilo Troquelado',
+    dossierSpec: 'Especificación 04',
+    borderNone: 'Ninguno',
+    borderThin: 'Fino (6px)',
+    borderStd: 'Clásico (10px)',
+    borderThick: 'Grueso (16px)',
+    exportBtn: 'Descargar Sticker de Discord (320×320 PNG)',
+    chatPreviewTitle: 'Vista Previa de Chat de Escritorio (160px)',
+    dark: 'Oscuro',
+    light: 'Claro',
+    senderName: 'Remitente del Sticker',
+    timestamp: 'Hoy a las 17:00',
+    previewBox: '160 × 160 px',
+    receiptTitle: 'Recibo de Validación',
+    awaiting: 'Esperando Archivo',
+    targetDims: 'Dimensiones Objetivo:',
+    targetDimsVal: 'Exacto 320 × 320 px',
+    originalDims: 'Dimensiones Originales:',
+    binaryLimit: 'Límite Binario:',
+    measured: 'Tamaño Medido en Bytes:',
+    formatCompliance: 'Cumplimiento de Formato:',
+    links: [
+      { icon: '📖', href: '/es/guides/discord-sizes/', label: 'Guía Oficial de Tamaños y Reglas de Stickers' },
+      { icon: '✨', href: '/guides/discord-gif-guide/', label: 'Guía de Stickers Animados APNG y GIF' },
+      { icon: '🏷️', href: '/blog/how-to-make-discord-stickers/', label: 'Cómo Crear un Sticker de Discord (Paso a Paso)' }
+    ]
+  }
+}[lang];
+
+// Alert / receipt strings consumed by the client script via data-* attributes.
+const js = {
+  en: {
+    invalidFile: 'Please upload a valid image file (PNG, JPG, WebP, or APNG).',
+    compliant: 'Compliant',
+    pass: '✓ Pass: Exactly 320x320 px and under 512 KiB limit.',
+    exceeds: 'Exceeds Cap',
+    warnPrefix: '⚠ Warning: File size (',
+    warnSuffix: ") exceeds Discord's 512 KiB cap.",
+    exportBlocked: 'Cannot export: Final encoded Blob (',
+    exportBlockedSuffix: ') exceeds the 512 KiB Discord limit.'
+  },
+  es: {
+    invalidFile: 'Sube un archivo de imagen válido (PNG, JPG, WebP o APNG).',
+    compliant: 'Conforme',
+    pass: '✓ Correcto: Exactamente 320x320 px y por debajo del límite de 512 KiB.',
+    exceeds: 'Supera el Límite',
+    warnPrefix: '⚠ Advertencia: El tamaño (',
+    warnSuffix: ') supera el límite de 512 KiB de Discord.',
+    exportBlocked: 'No se puede exportar: el Blob final (',
+    exportBlockedSuffix: ') supera el límite de 512 KiB de Discord.'
+  }
+}[lang];
+---
+
+<!-- Main Workspace Layout -->
+<div
+  class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16"
+  id="sticker-workspace"
+  data-invalid-file={js.invalidFile}
+  data-compliant={js.compliant}
+  data-pass={js.pass}
+  data-exceeds={js.exceeds}
+  data-warn-prefix={js.warnPrefix}
+  data-warn-suffix={js.warnSuffix}
+  data-export-blocked={js.exportBlocked}
+  data-export-blocked-suffix={js.exportBlockedSuffix}
+  data-awaiting={t.awaiting}
+>
+  <!-- Left Column: Upload & Canvas Controls (7 cols) -->
+  <div class="lg:col-span-7 space-y-6">
+    <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] dark:bg-[#141A24] p-8 text-center transition-all cursor-pointer relative shadow-xs">
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/apng" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+      <div class="space-y-3 pointer-events-none">
+        <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center mx-auto text-xl font-bold">
+          🏷️
+        </div>
+        <div>
+          <p class="text-sm font-bold text-[#192538] dark:text-white">{t.dropTitle}</p>
+          <p class="text-xs text-[#6B7A90] dark:text-[#8494A7] mt-1">{t.dropHint}</p>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-[#E0DBD0]/60 dark:border-[#263346]/60 flex items-center justify-center gap-2">
+        <button type="button" id="demoPhotoBtn" class="text-xs px-3.5 py-1.5 rounded-lg bg-[#FAF8F5] dark:bg-[#1E2738] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:border-[#3368A0] transition-colors flex items-center gap-1.5 pointer-events-auto">
+          <span>✨</span> {t.demoBtn}
+        </button>
+      </div>
+    </div>
+
+    <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+        <div>
+          <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.editorTitle}</h2>
+          <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.editorSub}</p>
+        </div>
+        <button id="resetBtn" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">
+          {t.reset}
+        </button>
+      </div>
+
+      <!-- Live Canvas Surface with Grab Cursor -->
+      <div class="relative flex flex-col items-center justify-center p-6 bg-[#FAF8F5] dark:bg-[#101622] rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] overflow-hidden">
+        <canvas id="mainCanvas" width="320" height="320" class="max-w-[260px] max-h-[260px] sm:max-w-[300px] sm:max-h-[300px] shadow-md rounded-[10px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] dark:bg-[repeating-conic-gradient(#1A2230_0%_25%,#121824_0%_50%)] [background-size:16px_16px] cursor-grab active:cursor-grabbing transition-shadow select-none touch-none"></canvas>
+
+        <div class="mt-3 flex items-center gap-2 text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-mono">
+          <svg class="w-3.5 h-3.5 text-[#3368A0] dark:text-[#66A3BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+          </svg>
+          <span>{t.dragHint}</span>
+        </div>
+      </div>
+
+      <!-- Photo-to-Sticker Control Toolkit -->
+      <div class="space-y-4 pt-1">
+        <!-- Zoom & Pan Quick Tools -->
+        <div>
+          <div class="flex items-center justify-between text-xs font-semibold text-[#192538] dark:text-white mb-2">
+            <span class="flex items-center gap-1.5">
+              <span>🔍</span> {t.zoomLabel}
+            </span>
+            <span id="zoomValue" class="font-mono text-[11px] text-[#3368A0] dark:text-[#66A3BF]">100%</span>
+          </div>
+          <div class="flex items-center gap-2 sm:gap-3">
+            <button type="button" id="zoomOutBtn" class="btn-secondary text-xs px-2.5 py-1 rounded" aria-label="Zoom out">-</button>
+            <input type="range" id="zoomSlider" min="0.3" max="3.0" step="0.05" value="1.0" class="flex-1 accent-[#3368A0] h-1.5 bg-[#E0DBD0] dark:bg-[#263346] rounded-lg cursor-pointer" />
+            <button type="button" id="zoomInBtn" class="btn-secondary text-xs px-2.5 py-1 rounded" aria-label="Zoom in">+</button>
+            <button type="button" id="fitBtn" class="text-[11px] px-2 py-1 rounded border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] text-[#475569] dark:text-[#CBD5E1] font-mono">{t.fit}</button>
+            <button type="button" id="fillBtn" class="text-[11px] px-2 py-1 rounded border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] text-[#475569] dark:text-[#CBD5E1] font-mono">{t.fill}</button>
+            <button type="button" id="centerBtn" class="text-[11px] px-2 py-1 rounded border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] text-[#475569] dark:text-[#CBD5E1] font-mono">{t.center}</button>
+          </div>
+        </div>
+
+        <!-- Shape Mask Presets -->
+        <div>
+          <div class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5">
+            <span>✂️</span> {t.cutoutLabel}
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" id="shapeSquareBtn" class="shape-btn px-3 py-2 rounded-lg border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center gap-1.5 transition-all">
+              <span class="w-3.5 h-3.5 border-2 border-current"></span>
+              <span>{t.shapeSquare}</span>
+            </button>
+            <button type="button" id="shapeRoundedBtn" class="shape-btn px-3 py-2 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] flex items-center justify-center gap-1.5 transition-all">
+              <span class="w-3.5 h-3.5 border-2 border-current rounded-md"></span>
+              <span>{t.shapeRounded}</span>
+            </button>
+            <button type="button" id="shapeCircleBtn" class="shape-btn px-3 py-2 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] flex items-center justify-center gap-1.5 transition-all">
+              <span class="w-3.5 h-3.5 border-2 border-current rounded-full"></span>
+              <span>{t.shapeCircle}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Die-Cut Vinyl White Border (Dossier Section 04 signature feature) -->
+        <div>
+          <div class="flex items-center justify-between text-xs font-semibold text-[#192538] dark:text-white mb-2">
+            <span class="flex items-center gap-1.5">
+              <span>🏷️</span> {t.borderLabel}
+            </span>
+            <span class="text-[10px] text-[#0D9488] font-mono font-semibold">{t.dossierSpec}</span>
+          </div>
+          <div class="grid grid-cols-4 gap-2 text-xs">
+            <button type="button" id="borderNoneBtn" class="border-opt-btn px-2.5 py-1.5 rounded-lg border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] font-bold text-[#3368A0] dark:text-[#66A3BF] transition-all">
+              {t.borderNone}
+            </button>
+            <button type="button" id="borderThinBtn" class="border-opt-btn px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all">
+              {t.borderThin}
+            </button>
+            <button type="button" id="borderStdBtn" class="border-opt-btn px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all">
+              {t.borderStd}
+            </button>
+            <button type="button" id="borderThickBtn" class="border-opt-btn px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all">
+              {t.borderThick}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button id="exportBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2 shadow-sm">
+        <span>{t.exportBtn}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Right Column: Previews & Receipt (5 cols) -->
+  <div class="lg:col-span-5 space-y-6">
+    <!-- 160x160 Desktop Chat Preview -->
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.chatPreviewTitle}</h2>
+        <div class="flex items-center gap-1 bg-[#FAF8F5] p-1 rounded-[6px] border border-[#E0DBD0]">
+          <button id="themeDarkBtn" class="text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium">{t.dark}</button>
+          <button id="themeLightBtn" class="text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium">{t.light}</button>
+        </div>
+      </div>
+
+      <div id="previewSurface" class="p-4 rounded-[10px] bg-[#313338] text-white transition-colors">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-full bg-[#5865f2] flex items-center justify-center font-bold text-xs flex-shrink-0">
+            User
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline gap-2 mb-2">
+              <span class="text-xs font-semibold">{t.senderName}</span>
+              <span class="text-[10px] text-[#949ba4]">{t.timestamp}</span>
+            </div>
+            <!-- 160x160 preview box -->
+            <div class="w-[160px] h-[160px] flex items-center justify-center bg-transparent rounded border border-dashed border-[#4e5058]/40">
+              <img id="chatPreviewImg" class="w-[160px] h-[160px] object-contain hidden" alt="Sticker Chat Preview" />
+              <span id="chatPreviewPlaceholder" class="text-xs text-[#949ba4] font-mono">{t.previewBox}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Receipt -->
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.receiptTitle}</h2>
+        <span id="receiptBadge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
+          {t.awaiting}
+        </span>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.targetDims}</span>
+          <span class="font-bold text-[#192538]">{t.targetDimsVal}</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.originalDims}</span>
+          <span id="statDimensions" class="text-[#192538]">-- × --</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.binaryLimit}</span>
+          <span class="text-[#0D9488] font-bold">512 KiB (524,288 bytes)</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.measured}</span>
+          <span id="statBytes" class="text-[#192538]">-- KiB</span>
+        </div>
+        <div class="flex justify-between py-1.5">
+          <span class="text-[#6B7A90]">{t.formatCompliance}</span>
+          <span id="statFormat" class="text-[#192538]">PNG / APNG</span>
+        </div>
+      </div>
+
+      <div id="receiptAlert" class="mt-4 hidden p-3 rounded-[8px] text-xs"></div>
+
+      <div class="mt-4 pt-3 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-medium">
+        {t.links.map((link) => (
+          <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+            <span>{link.icon}</span> {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const MAX_STICKER_BYTES = 512 * 1024; // 524,288 bytes
+
+  const ws = document.getElementById('sticker-workspace');
+  const L = {
+    invalidFile: ws?.dataset.invalidFile || 'Please upload a valid image file (PNG, JPG, WebP, or APNG).',
+    compliant: ws?.dataset.compliant || 'Compliant',
+    pass: ws?.dataset.pass || '',
+    exceeds: ws?.dataset.exceeds || 'Exceeds Cap',
+    warnPrefix: ws?.dataset.warnPrefix || '',
+    warnSuffix: ws?.dataset.warnSuffix || '',
+    exportBlocked: ws?.dataset.exportBlocked || '',
+    exportBlockedSuffix: ws?.dataset.exportBlockedSuffix || '',
+    awaiting: ws?.dataset.awaiting || 'Awaiting Media'
+  };
+
+  const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+  const dropzone = document.getElementById('dropzone');
+  const demoPhotoBtn = document.getElementById('demoPhotoBtn');
+  const editorPanel = document.getElementById('editorPanel');
+  const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
+  const resetBtn = document.getElementById('resetBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const chatPreviewImg = document.getElementById('chatPreviewImg') as HTMLImageElement;
+  const chatPreviewPlaceholder = document.getElementById('chatPreviewPlaceholder');
+  const previewSurface = document.getElementById('previewSurface');
+  const themeDarkBtn = document.getElementById('themeDarkBtn');
+  const themeLightBtn = document.getElementById('themeLightBtn');
+
+  // Controls
+  const zoomSlider = document.getElementById('zoomSlider') as HTMLInputElement;
+  const zoomValue = document.getElementById('zoomValue');
+  const zoomInBtn = document.getElementById('zoomInBtn');
+  const zoomOutBtn = document.getElementById('zoomOutBtn');
+  const fitBtn = document.getElementById('fitBtn');
+  const fillBtn = document.getElementById('fillBtn');
+  const centerBtn = document.getElementById('centerBtn');
+
+  // Shapes & Borders
+  const shapeSquareBtn = document.getElementById('shapeSquareBtn');
+  const shapeRoundedBtn = document.getElementById('shapeRoundedBtn');
+  const shapeCircleBtn = document.getElementById('shapeCircleBtn');
+  const borderNoneBtn = document.getElementById('borderNoneBtn');
+  const borderThinBtn = document.getElementById('borderThinBtn');
+  const borderStdBtn = document.getElementById('borderStdBtn');
+  const borderThickBtn = document.getElementById('borderThickBtn');
+
+  const statDimensions = document.getElementById('statDimensions');
+  const statBytes = document.getElementById('statBytes');
+  const statFormat = document.getElementById('statFormat');
+  const receiptBadge = document.getElementById('receiptBadge');
+  const receiptAlert = document.getElementById('receiptAlert');
+
+  // State
+  let currentBlob: Blob | null = null;
+  let currentObjectUrl: string | null = null;
+  let sourceImage: HTMLImageElement | null = null;
+  let originalFileName = 'discord-sticker';
+
+  let panX = 0;
+  let panY = 0;
+  let zoom = 1.0;
+  let shape: 'square' | 'rounded' | 'circle' = 'square';
+  let borderWidth = 0;
+
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let startPanX = 0;
+  let startPanY = 0;
+  let blobUpdateTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const DEMO_STICKER_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%233B82F6"/><stop offset="100%" stop-color="%238B5CF6"/></linearGradient><linearGradient id="fur" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%23FCD34D"/><stop offset="100%" stop-color="%23F59E0B"/></linearGradient><linearGradient id="shades" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="%23EC4899"/><stop offset="100%" stop-color="%2306B6D4"/></linearGradient></defs><rect width="600" height="600" fill="url(%23bg)"/><polygon points="170,220 220,110 270,200" fill="%23D97706"/><polygon points="190,210 220,135 255,195" fill="%23F472B6"/><polygon points="430,220 380,110 330,200" fill="%23D97706"/><polygon points="410,210 380,135 345,195" fill="%23F472B6"/><ellipse cx="300" cy="310" rx="140" ry="120" fill="url(%23fur)"/><ellipse cx="210" cy="330" rx="20" ry="12" fill="%23FB7185" opacity="0.6"/><ellipse cx="390" cy="330" rx="20" ry="12" fill="%23FB7185" opacity="0.6"/><path d="M 180,270 Q 230,260 280,270 L 280,310 Q 230,325 180,305 Z" fill="url(%23shades)"/><path d="M 320,270 Q 370,260 420,270 L 420,305 Q 370,325 320,310 Z" fill="url(%23shades)"/><rect x="278" y="278" width="44" height="8" rx="4" fill="%231E293B"/><polygon points="300,335 292,345 308,345" fill="%231E293B"/><path d="M 292,345 Q 280,360 270,352" stroke="%231E293B" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M 308,345 Q 320,360 330,352" stroke="%231E293B" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M 155,300 A 150 150 0 0 1 445,300" stroke="%2310B981" stroke-width="20" fill="none" stroke-linecap="round"/><rect x="140" y="270" width="28" height="65" rx="12" fill="%23059669"/><rect x="432" y="270" width="28" height="65" rx="12" fill="%23059669"/><circle cx="154" cy="302" r="6" fill="%23A7F3D0"/><circle cx="446" cy="302" r="6" fill="%23A7F3D0"/><circle cx="120" cy="140" r="8" fill="%23FDE047"/><circle cx="470" cy="160" r="12" fill="%23FDE047"/><circle cx="490" cy="460" r="10" fill="%2338BDF8"/><circle cx="110" cy="440" r="10" fill="%23F472B6"/></svg>`;
+
+  function cleanup() {
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+  }
+
+  fileInput?.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    handleFile(file);
+  });
+
+  dropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+
+  dropzone?.addEventListener('dragleave', () => {
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    const file = e.dataTransfer?.files?.[0];
+    if (!file) return;
+    handleFile(file);
+  });
+
+  demoPhotoBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    loadDemoPhoto();
+  });
+
+  function loadDemoPhoto() {
+    cleanup();
+    const img = new Image();
+    img.onload = () => {
+      sourceImage = img;
+      originalFileName = 'cyber-mascot-sticker';
+      panX = 0;
+      panY = 0;
+      zoom = 1.0;
+      shape = 'circle';
+      borderWidth = 10;
+      syncControlsUI();
+      renderStickerCanvas();
+      scheduleBlobUpdate();
+    };
+    img.src = DEMO_STICKER_SVG;
+  }
+
+  function handleFile(file: File) {
+    if (!file.type.startsWith('image/')) {
+      alert(L.invalidFile);
+      return;
+    }
+
+    cleanup();
+    originalFileName = file.name.replace(/\.[^/.]+$/, '');
+    currentObjectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      sourceImage = img;
+      panX = 0;
+      panY = 0;
+      zoom = 1.0;
+      shape = 'square';
+      borderWidth = 0;
+      syncControlsUI();
+      renderStickerCanvas();
+      scheduleBlobUpdate();
+    };
+    img.src = currentObjectUrl;
+  }
+
+  function renderStickerCanvas() {
+    const ctx = mainCanvas.getContext('2d');
+    if (!ctx || !sourceImage) return;
+
+    const targetSize = 320;
+    mainCanvas.width = targetSize;
+    mainCanvas.height = targetSize;
+    ctx.clearRect(0, 0, targetSize, targetSize);
+
+    ctx.save();
+
+    const pad = borderWidth > 0 ? borderWidth : 0;
+    const size = targetSize - pad * 2;
+
+    // 1. Clip shape & paint white backing for die-cut stickers
+    if (shape === 'circle') {
+      ctx.beginPath();
+      ctx.arc(160, 160, 160 - pad, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fill();
+      ctx.clip();
+    } else if (shape === 'rounded') {
+      ctx.beginPath();
+      ctx.roundRect(pad, pad, size, size, 36);
+      ctx.closePath();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fill();
+      ctx.clip();
+    } else if (borderWidth > 0) {
+      ctx.beginPath();
+      ctx.roundRect(pad, pad, size, size, 10);
+      ctx.closePath();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fill();
+      ctx.clip();
+    }
+
+    // 2. Draw scaled & panned photo
+    const baseScale = Math.min(targetSize / sourceImage.width, targetSize / sourceImage.height);
+    const currentScale = baseScale * zoom;
+    const w = sourceImage.width * currentScale;
+    const h = sourceImage.height * currentScale;
+    const x = (targetSize - w) / 2 + panX;
+    const y = (targetSize - h) / 2 + panY;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(sourceImage, x, y, w, h);
+    ctx.restore();
+
+    // 3. Draw Vinyl White Die-Cut Border if active
+    if (borderWidth > 0) {
+      ctx.save();
+      ctx.lineWidth = borderWidth;
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.28)';
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 2;
+
+      if (shape === 'circle') {
+        ctx.beginPath();
+        ctx.arc(160, 160, 160 - borderWidth / 2, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (shape === 'rounded') {
+        ctx.beginPath();
+        ctx.roundRect(borderWidth / 2, borderWidth / 2, targetSize - borderWidth, targetSize - borderWidth, 36);
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.roundRect(borderWidth / 2, borderWidth / 2, targetSize - borderWidth, targetSize - borderWidth, 12);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  function scheduleBlobUpdate() {
+    if (blobUpdateTimer) clearTimeout(blobUpdateTimer);
+    blobUpdateTimer = setTimeout(() => {
+      updateExportBlob();
+    }, 60);
+  }
+
+  function updateExportBlob() {
+    if (!sourceImage) return;
+
+    mainCanvas.toBlob((blob) => {
+      if (!blob) return;
+      currentBlob = blob;
+      cleanup();
+      currentObjectUrl = URL.createObjectURL(blob);
+
+      chatPreviewImg.src = currentObjectUrl;
+      chatPreviewImg.classList.remove('hidden');
+      chatPreviewPlaceholder?.classList.add('hidden');
+
+      editorPanel?.classList.remove('hidden');
+
+      const bytes = blob.size;
+      const kib = (bytes / 1024).toFixed(1);
+      statDimensions!.innerText = `${sourceImage!.width}×${sourceImage!.height} → 320×320`;
+      statBytes!.innerText = `${kib} KiB (${bytes.toLocaleString()} bytes)`;
+      statFormat!.innerText = blob.type.replace('image/', '').toUpperCase();
+
+      if (bytes <= MAX_STICKER_BYTES) {
+        receiptBadge!.innerText = L.compliant;
+        receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
+        receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#C8DFDB]/40 text-[#0D9488] border border-[#0D9488]/30 block font-medium';
+        receiptAlert!.innerText = L.pass;
+      } else {
+        receiptBadge!.innerText = L.exceeds;
+        receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 px-2.5 py-0.5 rounded font-bold';
+        receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 block font-medium';
+        receiptAlert!.innerText = `${L.warnPrefix}${kib} KiB${L.warnSuffix}`;
+      }
+    }, 'image/png');
+  }
+
+  // Pointer Dragging for Pan
+  mainCanvas.addEventListener('mousedown', (e) => {
+    if (!sourceImage) return;
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    startPanX = panX;
+    startPanY = panY;
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging || !sourceImage) return;
+    const rect = mainCanvas.getBoundingClientRect();
+    const scale = 320 / rect.width;
+    panX = startPanX + (e.clientX - startX) * scale;
+    panY = startPanY + (e.clientY - startY) * scale;
+    renderStickerCanvas();
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      scheduleBlobUpdate();
+    }
+  });
+
+  // Touch Support for Mobile
+  mainCanvas.addEventListener('touchstart', (e) => {
+    if (!sourceImage || !e.touches.length) return;
+    isDragging = true;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    startPanX = panX;
+    startPanY = panY;
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging || !sourceImage || !e.touches.length) return;
+    const rect = mainCanvas.getBoundingClientRect();
+    const scale = 320 / rect.width;
+    panX = startPanX + (e.touches[0].clientX - startX) * scale;
+    panY = startPanY + (e.touches[0].clientY - startY) * scale;
+    renderStickerCanvas();
+  }, { passive: true });
+
+  window.addEventListener('touchend', () => {
+    if (isDragging) {
+      isDragging = false;
+      scheduleBlobUpdate();
+    }
+  });
+
+  // Mouse Wheel Zoom
+  mainCanvas.addEventListener('wheel', (e) => {
+    if (!sourceImage) return;
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 0.08 : -0.08;
+    applyZoom(Math.min(3.0, Math.max(0.3, zoom + delta)));
+  }, { passive: false });
+
+  function applyZoom(newZoom: number) {
+    zoom = Math.round(newZoom * 100) / 100;
+    zoomSlider.value = zoom.toString();
+    zoomValue!.innerText = `${Math.round(zoom * 100)}%`;
+    renderStickerCanvas();
+    scheduleBlobUpdate();
+  }
+
+  zoomSlider?.addEventListener('input', () => {
+    applyZoom(parseFloat(zoomSlider.value));
+  });
+
+  zoomInBtn?.addEventListener('click', () => {
+    applyZoom(Math.min(3.0, zoom + 0.15));
+  });
+
+  zoomOutBtn?.addEventListener('click', () => {
+    applyZoom(Math.max(0.3, zoom - 0.15));
+  });
+
+  fitBtn?.addEventListener('click', () => {
+    panX = 0;
+    panY = 0;
+    applyZoom(1.0);
+  });
+
+  fillBtn?.addEventListener('click', () => {
+    if (!sourceImage) return;
+    panX = 0;
+    panY = 0;
+    const minScale = Math.min(320 / sourceImage.width, 320 / sourceImage.height);
+    const maxScale = Math.max(320 / sourceImage.width, 320 / sourceImage.height);
+    const fillFactor = maxScale / minScale;
+    applyZoom(Math.min(3.0, fillFactor));
+  });
+
+  centerBtn?.addEventListener('click', () => {
+    panX = 0;
+    panY = 0;
+    renderStickerCanvas();
+    scheduleBlobUpdate();
+  });
+
+  function setShape(newShape: 'square' | 'rounded' | 'circle') {
+    shape = newShape;
+    syncControlsUI();
+    renderStickerCanvas();
+    scheduleBlobUpdate();
+  }
+
+  shapeSquareBtn?.addEventListener('click', () => setShape('square'));
+  shapeRoundedBtn?.addEventListener('click', () => setShape('rounded'));
+  shapeCircleBtn?.addEventListener('click', () => setShape('circle'));
+
+  function setBorder(width: number) {
+    borderWidth = width;
+    syncControlsUI();
+    renderStickerCanvas();
+    scheduleBlobUpdate();
+  }
+
+  borderNoneBtn?.addEventListener('click', () => setBorder(0));
+  borderThinBtn?.addEventListener('click', () => setBorder(6));
+  borderStdBtn?.addEventListener('click', () => setBorder(10));
+  borderThickBtn?.addEventListener('click', () => setBorder(16));
+
+  function syncControlsUI() {
+    zoomSlider.value = zoom.toString();
+    zoomValue!.innerText = `${Math.round(zoom * 100)}%`;
+
+    // Shapes
+    const shapeBtns = [
+      { el: shapeSquareBtn, key: 'square' },
+      { el: shapeRoundedBtn, key: 'rounded' },
+      { el: shapeCircleBtn, key: 'circle' }
+    ];
+    shapeBtns.forEach(({ el, key }) => {
+      if (!el) return;
+      if (shape === key) {
+        el.className = 'shape-btn px-3 py-2 rounded-lg border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center gap-1.5 transition-all';
+      } else {
+        el.className = 'shape-btn px-3 py-2 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] flex items-center justify-center gap-1.5 transition-all';
+      }
+    });
+
+    // Borders
+    const borderBtns = [
+      { el: borderNoneBtn, w: 0 },
+      { el: borderThinBtn, w: 6 },
+      { el: borderStdBtn, w: 10 },
+      { el: borderThickBtn, w: 16 }
+    ];
+    borderBtns.forEach(({ el, w }) => {
+      if (!el) return;
+      if (borderWidth === w) {
+        el.className = 'border-opt-btn px-2.5 py-1.5 rounded-lg border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] font-bold text-[#3368A0] dark:text-[#66A3BF] transition-all';
+      } else {
+        el.className = 'border-opt-btn px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all';
+      }
+    });
+  }
+
+  resetBtn?.addEventListener('click', () => {
+    cleanup();
+    currentBlob = null;
+    sourceImage = null;
+    panX = 0;
+    panY = 0;
+    zoom = 1.0;
+    shape = 'square';
+    borderWidth = 0;
+    editorPanel?.classList.add('hidden');
+    chatPreviewImg?.classList.add('hidden');
+    chatPreviewPlaceholder?.classList.remove('hidden');
+    statDimensions!.innerText = '-- × --';
+    statBytes!.innerText = '-- KiB';
+    statFormat!.innerText = 'PNG / APNG';
+    receiptBadge!.innerText = L.awaiting;
+    receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
+    receiptAlert?.classList.add('hidden');
+    fileInput.value = '';
+  });
+
+  exportBtn?.addEventListener('click', () => {
+    if (!currentBlob || !currentObjectUrl) return;
+
+    if (currentBlob.size > MAX_STICKER_BYTES) {
+      alert(`${L.exportBlocked}${(currentBlob.size / 1024).toFixed(1)} KiB${L.exportBlockedSuffix}`);
+      return;
+    }
+
+    const a = document.createElement('a');
+    a.href = currentObjectUrl;
+    a.download = `${originalFileName}-discord-sticker-320x320.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  themeDarkBtn?.addEventListener('click', () => {
+    previewSurface!.className = 'p-4 rounded-[10px] bg-[#313338] text-white transition-colors';
+    themeDarkBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
+    themeLightBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
+  });
+
+  themeLightBtn?.addEventListener('click', () => {
+    previewSurface!.className = 'p-4 rounded-[10px] bg-[#ffffff] text-[#313338] transition-colors border border-[#e3e5e8]';
+    themeLightBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
+    themeDarkBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
+  });
+</script>
