@@ -61,6 +61,22 @@ const faqSchema = {
         "@type": "Answer",
         "text": "Discord serves avatars up to 4096×4096 pixels and profile banners up to 2048×820 pixels on their CDN. Standard display dimensions are 512×512 for avatars and 600×240 for profile banners."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this a Discord avatar viewer and banner viewer in one?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Enter a User ID and the tool acts as both a Discord avatar viewer and a Discord banner viewer, rendering the full profile card so you can inspect the profile picture, animated banner, and account creation date side by side before you save anything."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the Discord avatar downloader save full-resolution images?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Discord avatar downloader and banner grabber point directly at Discord's CDN with a size parameter of 1024px (and up to 4096px for avatars). Right-click the Download button and choose 'Save link as' if your browser opens the CDN image in a new tab instead of saving it, since some browsers ignore the download attribute on cross-origin links."
+      }
     }
   ]
 };
@@ -286,6 +302,44 @@ const faqSchema = {
         </div>
       </div>
     </div>
+
+    <!-- Technical Dossier: Viewer & Downloader Guidance -->
+    <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12 mb-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="card-panel rounded-[16px] p-6 sm:p-8">
+          <span class="text-[11px] font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Lookup // 01</span>
+          <h2 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mt-2 mb-3">
+            A Discord Avatar Viewer and Banner Viewer in One
+          </h2>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
+            Every public asset on Discord is filed under a numeric Snowflake ID rather than a username. This
+            Discord avatar viewer resolves that ID against the CDN and rebuilds the full profile card, so a single
+            lookup doubles as a Discord banner viewer and a badge inspector. The account creation date is decoded
+            from the Snowflake itself, which is why it still appears even when the live profile API is rate-limited.
+          </p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
+            Nothing is stored and no login is required. The tool reads only public CDN data, the same images
+            anyone sees when they open a Discord profile picture in the app.
+          </p>
+        </div>
+        <div class="card-panel rounded-[16px] p-6 sm:p-8">
+          <span class="text-[11px] font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Assets // 02</span>
+          <h2 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mt-2 mb-3">
+            Grabbing Full-Resolution Avatars and Banners
+          </h2>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
+            The Download buttons work as a Discord avatar downloader and banner grabber by requesting the largest
+            size Discord serves — up to 4096px for avatars and 1024px for banners. Animated Nitro assets come back
+            as the original GIF, so you keep the motion instead of a flattened still.
+          </p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
+            Once you have a reference image, you can re-crop it to your own profile in the
+            <a href="/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Avatar Cropper</a>
+            or build a matching header in the <a href="/tools/banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Banner Studio</a>.
+          </p>
+        </div>
+      </div>
+    </section>
 
     <!-- Comprehensive Technical FAQ & Guide -->
     <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12">

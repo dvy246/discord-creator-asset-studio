@@ -54,6 +54,22 @@ const faqSchema = {
         "@type": "Answer",
         "text": "Animated APNG stickers must be 5 seconds or shorter and run at 60 frames per second or lower. If an animation is longer than 5 seconds or exceeds 60 FPS, Discord will not play it in chat."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the exact Discord sticker size limit and dimensions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Discord sticker size limit is 512 KiB, and every sticker must be exactly 320x320 pixels. If your file is larger or a different dimension, Discord shows an 'invalid asset' error. This sticker converter resizes and previews your image so it clears both the dimension and file-size checks before you upload."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I turn a GIF into a Discord sticker?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not directly as a GIF. Discord requires animated stickers in APNG format, so a GIF-to-sticker workflow means converting the animation to APNG at 320x320 first. For a static sticker, any single frame of the GIF can be cropped and exported here as a compliant 320x320 PNG."
+      }
     }
   ]
 };

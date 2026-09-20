@@ -53,6 +53,22 @@ const faqSchema = {
         "@type": "Answer",
         "text": "Yes. Animated profile pictures, animated banners, and using animated custom emojis across different servers all require an active Discord Nitro or Nitro Basic subscription."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I make a Discord GIF from a video?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Drop an MP4 or WebM clip into the tool, pick the target size (profile banner, server banner, avatar, or emoji), and choose a frame rate. Trimming a video to Discord GIF format works best when you keep the clip to a 2 to 4 second loop and drop to 15 FPS so the exported file lands under the 10MB limit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I turn a Twitter or Tenor GIF into a Discord GIF?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Save the source GIF, then load it here as a Discord GIF converter to re-frame it to the exact avatar, emoji, or banner dimensions. A Twitter GIF to Discord GIF conversion usually just needs a size crop and a light compression pass to fit under Discord's caps."
+      }
     }
   ]
 };
@@ -214,6 +230,47 @@ const faqSchema = {
         </div>
       </div>
     </div>
+
+    <!-- Technical Dossier: Compression & Format Guidance -->
+    <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12 mb-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="card-panel rounded-[16px] p-6 sm:p-8">
+          <span class="text-[11px] font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Compression // 01</span>
+          <h2 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mt-2 mb-3">
+            How a Discord GIF Compressor Fits the 10MB Limit
+          </h2>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
+            A raw screen recording is almost never small enough to upload. The trick a Discord GIF compressor
+            uses is trimming three things at once: the clip length, the frame rate, and the pixel dimensions.
+            Cutting from 30 FPS to 15 FPS alone roughly halves the Discord GIF size, and cropping to the exact
+            target (a 512×512 avatar or a 600×240 banner) removes wasted pixels that eat into your budget.
+          </p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
+            Discord Nitro raises the ceiling to 10.0 MB, but a clean 2 to 4-second loop usually lands far under
+            that. If you are targeting an animated emoji instead, the same clip has to squeeze under 256 KiB, so
+            drop the dimensions to 128×128 and keep the loop short.
+          </p>
+        </div>
+        <div class="card-panel rounded-[16px] p-6 sm:p-8">
+          <span class="text-[11px] font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Formats // 02</span>
+          <h2 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mt-2 mb-3">
+            Discord GIF Banners, PFPs, and Emoji Sizes
+          </h2>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
+            Each Discord surface expects a different shape. An animated Discord GIF banner for a profile uses a
+            wide 600×240 (5:2) frame, while a server banner is a 960×540 (16:9) widescreen. A Discord GIF PFP is
+            a 1:1 square exported at 512×512 and masked into a circle, so keep faces and logos centered away from
+            the corners that get clipped.
+          </p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
+            Whether you are converting a video to a Discord GIF or re-sizing one you already have, matching these
+            dimensions before upload stops Discord from stretching or cropping your animation in unexpected ways.
+            When you need a still frame instead, the <a href="/tools/banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Banner Studio</a>
+            and <a href="/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Avatar Cropper</a> cover the static formats.
+          </p>
+        </div>
+      </div>
+    </section>
 
     <!-- Comprehensive Technical FAQ -->
     <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12">

@@ -54,6 +54,22 @@ const faqSchema = {
         "@type": "Answer",
         "text": "Static custom emojis can be PNG, JPG, or WebP. For an animated Discord animated emoji, you must use GIF format under the same 256 KiB limit. When creating Discord gif emojis, keeping your animation to 20–25 FPS and reducing colors helps the file stay under 256 KiB."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the Discord emoji size limit and animated emoji size?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The emoji size limit is 256 KiB for both static and animated emojis, and the recommended dimensions are 128x128 pixels. The animated emoji size is the tightest constraint most people hit, since a GIF at full frame rate blows past 256 KiB quickly. Trimming frames and colors is usually enough to fit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I add a custom emoji so others can copy and paste it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Upload your finished 128x128 image under Server Settings > Emoji. Once it is added, anyone in that server can use it with its :shortcode:, and members with Nitro can copy and paste it across other servers too. This maker only formats the image; the upload happens inside Discord."
+      }
     }
   ]
 };
