@@ -68,6 +68,11 @@ const categoriesList: { id: AssetCategory; shortName: string; icon: string; coun
   icon: ASSET_CATEGORIES[key].icon,
   count: categoryCounts[key] || 0
 }));
+
+// Categories with a statically-generated /assets/[category]/ page (mirrors getStaticPaths in [category]/index.astro).
+// Crawlable category links must only point to these so no <a> resolves to a 404.
+const BUILT_CATEGORY_PAGES: AssetCategory[] = ['anime', 'gaming', 'cyberpunk', 'dark', 'aesthetic', 'icons-2d'];
+const crawlableCategories = categoriesList.filter((cat) => BUILT_CATEGORY_PAGES.includes(cat.id));
 ---
 
 <Layout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl}>
@@ -398,6 +403,29 @@ const categoriesList: { id: AssetCategory; shortName: string; icon: string; coun
           <span>Reset all filters</span>
         </button>
       </div>
+
+      <!-- Crawlable category links (SEO): real anchors so category pages receive link equity the JS filter pills cannot pass -->
+      <nav aria-label="Browse Discord assets by category" class="mt-12 pt-8 border-t border-[#E0DBD0]/60 dark:border-[#263454]/60">
+        <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-4">
+          Browse by Category
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {crawlableCategories.map((cat) => (
+            <a
+              href={`/assets/${cat.id}/`}
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#161F2E] text-[#475569] dark:text-[#99C2FF] hover:border-[#FF84BA]/60 hover:text-[#192538] dark:hover:text-white transition-all"
+            >
+              <span>{cat.icon} {ASSET_CATEGORIES[cat.id].name} Discord Banners</span>
+            </a>
+          ))}
+          <a
+            href="/assets/pfps/"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-[#FFDF82]/50 bg-[#FFDF82]/10 text-[#B8860B] dark:text-[#FFDF82] hover:border-[#FFDF82] transition-all"
+          >
+            <span>👤 Discord PFPs &amp; Avatars</span>
+          </a>
+        </div>
+      </nav>
     </section>
   </main>
 

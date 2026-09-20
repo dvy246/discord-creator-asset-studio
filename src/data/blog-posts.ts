@@ -586,8 +586,27 @@ There are two levels of server banner perks:
 8. Click **Save Changes** in the bottom green bar. Your new banner is now visible to everyone on your server!`
       },
       {
+        id: 'how-to-add-server-banner-on-mobile',
+        heading: '3. How to Add a Server Banner on Discord Mobile',
+        content: `The steps to add a banner to your Discord server on the mobile app (iOS and Android) mirror the desktop flow, but the menus live in a different place:
+
+1. Open the Discord app and tap into the server you manage.
+2. Tap the **server name** at the top of the channel list to open the server menu.
+3. Tap the **Settings** gear icon, then choose **Overview**.
+4. Scroll to **Server Banner Background** and tap it.
+5. Grant photo access if prompted, then pick your 960×540 (16:9) image from your camera roll.
+6. Drag to reposition inside the preview frame, then tap **Save** in the top corner.
+
+You still need **Manage Server** permission and at least **Boost Level 2** for the banner option to appear on mobile. If you only see the server icon field and no banner slot, your server has not reached 7 boosts yet.`,
+        callout: {
+          type: 'info',
+          title: 'Mobile Upload Tip',
+          text: 'Phones often shoot photos in wide-gamut Display P3. Export or resize to a standard sRGB 960×540 image first so the banner colors match what desktop members see.'
+        }
+      },
+      {
         id: 'designing-safe-zones-for-server-headers',
-        heading: '3. Keeping Important Artwork Below the Top 48px Header',
+        heading: '4. Keeping Important Artwork Below the Top 48px Header',
         content: `A common mistake is putting text or a logo right at the top of the canvas.
 
 When members view your server:
@@ -612,6 +631,14 @@ When members view your server:
       {
         question: 'Can you upload an animated GIF banner without Boost Level 3?',
         answer: 'No. At Boost Level 2, uploading a GIF will only show the first static frame. You need Boost Level 3 to play the full animation.'
+      },
+      {
+        question: 'How do you add a banner to a Discord server?',
+        answer: 'Open Server Settings > Overview, scroll to Server Banner Background, click Upload Image, pick a 960×540 (16:9) file, then click Save Changes. The banner slot only appears once your server reaches Boost Level 2 (7 boosts) and you have Manage Server permission.'
+      },
+      {
+        question: 'How do you add a banner to your Discord server on mobile?',
+        answer: 'In the Discord mobile app, tap the server name > Settings > Overview, tap Server Banner Background, choose a 960×540 image from your photos, reposition it in the preview, and tap Save. You still need Boost Level 2 and Manage Server permission for the option to show.'
       }
     ]
   }

@@ -742,6 +742,67 @@ const itemListSchema = JSON.parse(generateItemListSchema([
     </div>
   </section>
 
+  <!-- Guides, Blog & Asset Library (crawlable hub links) -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-[#E0DBD0]">
+    <div class="mb-10 text-center">
+      <span class="text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Guides & Resources</span>
+      <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mt-1">Discord Design Guides, Tutorials & Free Assets</h2>
+      <p class="text-sm text-[#475569] dark:text-[#94A3B8] mt-3 max-w-2xl mx-auto">
+        Step-by-step tutorials, curated PFP and banner libraries, and reference specs to help you build a standout Discord profile or server.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Asset Library -->
+      <a href="/assets/" class="card-panel p-6 rounded-[14px] block group">
+        <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg mb-4 group-hover:scale-110 transition-transform">🎨</div>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Free Discord Asset Library</h3>
+        <p class="text-xs text-[#475569] mt-2 leading-relaxed">Browse 270+ themed banner and icon presets across anime, gaming, cyberpunk, aesthetic, and more categories.</p>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Browse Assets →</span>
+      </a>
+
+      <!-- PFP Gallery -->
+      <a href="/assets/pfps/" class="card-panel p-6 rounded-[14px] block group">
+        <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg mb-4 group-hover:scale-110 transition-transform">👤</div>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Discord PFP Gallery</h3>
+        <p class="text-xs text-[#475569] mt-2 leading-relaxed">60+ free aesthetic, anime, and animated profile pictures ready to download at a crisp 512×512.</p>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">View PFPs →</span>
+      </a>
+
+      <!-- GIF Guide -->
+      <a href="/guides/discord-gif-guide/" class="card-panel p-6 rounded-[14px] block group">
+        <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg mb-4 group-hover:scale-110 transition-transform">⚡</div>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Discord GIF & Animation Guide</h3>
+        <p class="text-xs text-[#475569] mt-2 leading-relaxed">Master 256 KiB emoji limits, 10MB banner caps, frame rates, and palette compression for animated assets.</p>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Read Guide →</span>
+      </a>
+
+      <!-- Banner Ideas Blog -->
+      <a href="/blog/discord-banner-ideas-templates/" class="card-panel p-6 rounded-[14px] block group">
+        <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg mb-4 group-hover:scale-110 transition-transform">🖼️</div>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Discord Banner Ideas & Templates</h3>
+        <p class="text-xs text-[#475569] mt-2 leading-relaxed">Aesthetic banner inspiration, layout templates, and sizing tips for standout server and profile banners.</p>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Read Article →</span>
+      </a>
+
+      <!-- PFP Ideas Blog -->
+      <a href="/blog/discord-pfp-ideas-anime-avatars/" class="card-panel p-6 rounded-[14px] block group">
+        <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg mb-4 group-hover:scale-110 transition-transform">💡</div>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">Discord PFP Ideas & Anime Avatars</h3>
+        <p class="text-xs text-[#475569] mt-2 leading-relaxed">Curated profile picture ideas, matching couple PFPs, and anime avatar inspiration with download links.</p>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Read Article →</span>
+      </a>
+
+      <!-- Sticker Tutorial Blog -->
+      <a href="/blog/how-to-make-discord-stickers/" class="card-panel p-6 rounded-[14px] block group">
+        <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg mb-4 group-hover:scale-110 transition-transform">🏷️</div>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">How to Make Discord Stickers</h3>
+        <p class="text-xs text-[#475569] mt-2 leading-relaxed">Full walkthrough on creating 320×320 custom and animated APNG stickers that pass Discord validation.</p>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">Read Tutorial →</span>
+      </a>
+    </div>
+  </section>
+
   <!-- Sticky Scroll Stacking & Observer Script -->
   <script>
     function setupScrollStackSection(wrapperClass: string, indicatorClass: string, progressLineId: string) {
