@@ -344,6 +344,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/colors.png',
+    config: {
+      title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',
+      subtitle: 'BACKGROUND, BLURPLE & STATUS HEX CODES YOU CAN COPY',
+      tagline1: 'DARK 313338 • BLURPLE 5865F2 • ONLINE 23A55A',
+      tagline2: 'HEX RGB HSL PICKER • 100% CLIENT-SIDE',
+      badge: 'REFERENCE COLOR VALUES • CLICK TO COPY',
+      cards: [
+        { label: 'DARK BG', desc: '313338' }, { label: 'BLURPLE', desc: '5865F2' },
+        { label: 'ONLINE', desc: '23A55A' }, { label: 'PICKER', desc: 'HEX RGB HSL' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
     file: 'public/og/spoiler.png',
     config: {
       title: 'DISCORD IMAGE', titleLine2: 'SPOILER MAKER',

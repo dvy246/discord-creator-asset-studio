@@ -28,6 +28,7 @@ const ES_ROUTES = new Set([
   '/tools/image-compressor/',
   '/tools/image-resizer/',
   '/tools/spoiler/',
+  '/tools/colors/',
   '/guides/discord-sizes/',
 ]);
 const p = (path: string) => (lang === 'es' && ES_ROUTES.has(path) ? `/es${path}` : path);
@@ -68,6 +69,7 @@ const t = {
         { icon: '🗜️', href: '/tools/image-compressor/', title: 'Image Compressor & Optimizer', desc: 'Shrink PNG, JPG, and WebP under Discord\'s 10MB free upload limit with an iterative quality step-down. Keeps original dimensions.', cta: 'Compress Image →' },
         { icon: '📐', href: '/tools/image-resizer/', title: 'Image Resizer with Presets', desc: 'Scale any image to exact Discord sizes—512x512 avatar, 320x320 sticker, 128x128 emoji, 960x540 banner—with fit, fill, or stretch modes.', cta: 'Resize Image →' },
         { icon: '🙈', href: '/tools/spoiler/', title: 'Spoiler Maker for Text & Images', desc: 'Wrap messages in || || spoiler markup or add the SPOILER_ filename prefix to blur an image attachment until a reader clicks it.', cta: 'Make a Spoiler →' },
+        { icon: '🎨', href: '/tools/colors/', title: 'Color Palette & Hex Codes', desc: 'Copy Discord\'s background, blurple, and status hex codes, or sample any color to get exact HEX, RGB, and HSL values.', cta: 'Browse Colors →' },
         { icon: '📋', href: '/guides/discord-sizes/', title: 'Official Size Cheat Sheet', desc: 'Comprehensive specification table covering dimensions, aspect ratios, file extensions, and server level requirements.', cta: 'Browse Specs →' },
         { icon: '🎞️', href: '/tools/gif-maker/', title: 'Discord GIF Maker', desc: 'Convert MP4 and WebM clips to animated Discord GIFs with auto-compression under the strict 10MB Nitro limit.', cta: 'Make GIF →' },
         { icon: '🔍', href: '/tools/profile-viewer/', title: 'Profile Viewer & Grabber', desc: 'Inspect full-resolution Discord avatars and animated banners by User ID. Instant snowflake account age calculator.', cta: 'Lookup User →' },
@@ -169,6 +171,7 @@ const t = {
         { icon: '🗜️', href: '/tools/image-compressor/', title: 'Compresor y Optimizador de Imágenes', desc: 'Reduce PNG, JPG y WebP por debajo del límite gratuito de subida de 10MB de Discord con reducción de calidad iterativa. Mantiene las dimensiones originales.', cta: 'Comprimir Imagen →' },
         { icon: '📐', href: '/tools/image-resizer/', title: 'Redimensionador con Ajustes', desc: 'Escala cualquier imagen a tamaños exactos de Discord—avatar 512x512, sticker 320x320, emoji 128x128, banner 960x540—con modos ajustar, rellenar o estirar.', cta: 'Redimensionar Imagen →' },
         { icon: '🙈', href: '/tools/spoiler/', title: 'Creador de Spoilers de Texto e Imagen', desc: 'Envuelve mensajes en marcado || || o añade el prefijo SPOILER_ para difuminar una imagen adjunta hasta que el lector haga clic.', cta: 'Crear Spoiler →' },
+        { icon: '🎨', href: '/tools/colors/', title: 'Paleta de Colores y Códigos Hex', desc: 'Copia los códigos hex de fondo, blurple y estados de Discord, o muestrea cualquier color para obtener valores exactos HEX, RGB y HSL.', cta: 'Ver Colores →' },
         { icon: '📋', href: '/guides/discord-sizes/', title: 'Hoja Oficial de Tamaños', desc: 'Tabla de especificaciones completa que cubre dimensiones, relaciones de aspecto, extensiones de archivo y requisitos de nivel de servidor.', cta: 'Ver Especificaciones →' },
         { icon: '🎞️', href: '/tools/gif-maker/', title: 'Creador de GIF de Discord', desc: 'Convierte clips MP4 y WebM en GIF animados de Discord con compresión automática bajo el estricto límite de 10MB de Nitro.', cta: 'Crear GIF →' },
         { icon: '🔍', href: '/tools/profile-viewer/', title: 'Visor y Extractor de Perfiles', desc: 'Inspecciona avatares y banners animados de Discord a resolución completa por ID de usuario. Calculadora instantánea de antigüedad de cuenta por snowflake.', cta: 'Buscar Usuario →' },

@@ -1,0 +1,126 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import ColorWorkspace from '../../components/tools/ColorWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Background Color Hex Codes and Palette";
+const pageDescription = "Discord background color hex codes: dark theme #313338, blurple #5865F2, status colors and more. Click to copy HEX, RGB, HSL, plus a custom color picker.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/colors/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Color Palette & Hex Picker",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Color & Hex Tool", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What color is the Discord background?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In the current dark theme, Discord's primary chat background is #313338, with a slightly darker sidebar at #2B2D31 and the darkest channel rail at #1E1F22. The light theme uses #FFFFFF for the main area and #F2F3F5 for side panels. You can copy any of these hex codes from the palette above."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the Discord blurple hex code?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord's brand blurple is #5865F2. The older, lighter blurple used before the 2021 rebrand is #7289DA. A darker shade often used for pressed button states is #4752C4."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the Discord status colors?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Online is green #23A55A, Idle is amber #F0B232, Do Not Disturb is red #F23F43, Streaming is purple #593695, and Offline/Invisible is grey #80848E. These appear on the small presence dot over a user's avatar."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I match a color to Discord's theme?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the custom picker above to sample any color and read its exact HEX, RGB, and HSL values. Copy the value into your design tool so banners, emojis, and role icons sit cleanly on Discord's #313338 dark background or #FFFFFF light background."
+      }
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/colors.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Color & Hex Tool</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Background Color</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">& Hex Palette</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Copy dark-theme, light-theme, blurple & status hex codes • Custom HEX / RGB / HSL picker</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Reference Values
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <ColorWorkspace lang="en" />
+
+    <!-- Prose reference -->
+    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto space-y-6">
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">What Color Is the Discord Background?</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          The most-searched Discord color question has a precise answer. In the dark theme most people use, the main chat area is <strong>#313338</strong>. The channel and member sidebars sit one shade darker at <strong>#2B2D31</strong>, and the far-left server rail is darkest at <strong>#1E1F22</strong>. If you design a transparent PNG emoji, sticker, or role icon, previewing it against #313338 tells you exactly how it will look in most servers.
+        </p>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          The light theme flips this: the main area becomes <strong>#FFFFFF</strong> with side panels at <strong>#F2F3F5</strong>. Because a single asset is shown on both themes, it pays to check that fine details and edges hold up on white as well as on the dark #313338 background — a white die-cut border or a subtle outline keeps art readable everywhere.
+        </p>
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">Brand Blurple and Status Colors</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord's signature brand color is blurple <strong>#5865F2</strong>, adopted in the 2021 rebrand; the earlier, lighter blurple was <strong>#7289DA</strong>. Presence dots use a fixed set: online green <strong>#23A55A</strong>, idle amber <strong>#F0B232</strong>, do-not-disturb red <strong>#F23F43</strong>, and offline grey <strong>#80848E</strong>. Matching these values keeps custom graphics, embed accents, and role colors consistent with the native UI. Every swatch above copies its hex code with one click, and the custom picker converts any color to HEX, RGB, and HSL for your design tool.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>

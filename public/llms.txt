@@ -13,6 +13,7 @@ All image processing executes locally in the browser via Web Workers and the HTM
 - [Discord Image Compressor](https://discord-creator-asset-studio.pages.dev/tools/image-compressor/): Shrink PNG, JPG, and WebP under the 10 MB free upload limit (50 MB / 500 MB Nitro tiers) via iterative quality step-down, keeping original pixel dimensions.
 - [Discord Image Resizer](https://discord-creator-asset-studio.pages.dev/tools/image-resizer/): Scale any image to exact Discord dimensions (avatar 512×512, sticker 320×320, emoji 128×128, role icon 64×64, server banner 960×540, profile banner 680×240) with fit, fill, or stretch modes.
 - [Discord Spoiler Maker](https://discord-creator-asset-studio.pages.dev/tools/spoiler/): Wrap text in Discord's ||spoiler|| markup or rename an image with the SPOILER_ filename prefix to blur an attachment until clicked. Text and image modes, fully in-browser.
+- [Discord Color Palette & Hex Codes](https://discord-creator-asset-studio.pages.dev/tools/colors/): Reference hex values for Discord's dark backgrounds (#313338, #2B2D31, #1E1F22), light theme, brand blurple (#5865F2), and status colors, with a click-to-copy HEX/RGB/HSL picker.
 
 ## Documentation & Reference Guides
 - [Discord Asset Sizes Guide (2026)](https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/): Complete verified reference of all official Discord image dimensions, file byte limits, formats, and Nitro gating tiers.

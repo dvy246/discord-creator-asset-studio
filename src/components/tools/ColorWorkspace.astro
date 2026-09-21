@@ -1,0 +1,281 @@
+---
+/**
+ * ColorWorkspace.astro — Discord color palette + hex picker.
+ *
+ * Shows the commonly-referenced Discord UI color values (dark/light background
+ * shades, brand blurple, status colors) as click-to-copy swatches, plus a
+ * custom picker that reports HEX / RGB / HSL. These are color *values* (facts),
+ * not brand assets. Language-agnostic logic on fixed element IDs; visible labels
+ * via `t`, runtime strings via data-* (`js` → `L`). Imported by the EN
+ * (/tools/colors/) and ES (/es/tools/colors/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+// Reference color values (public, widely documented UI colors — not logos).
+const GROUPS = [
+  {
+    key: 'darkBg',
+    swatches: [
+      { name: 'Primary', hex: '#313338' },
+      { name: 'Secondary', hex: '#2B2D31' },
+      { name: 'Secondary Alt', hex: '#232428' },
+      { name: 'Tertiary', hex: '#1E1F22' },
+      { name: 'Deep Black', hex: '#111214' }
+    ]
+  },
+  {
+    key: 'lightBg',
+    swatches: [
+      { name: 'White', hex: '#FFFFFF' },
+      { name: 'Light Grey', hex: '#F2F3F5' },
+      { name: 'Light Alt', hex: '#EBEDEF' },
+      { name: 'Divider', hex: '#E3E5E8' }
+    ]
+  },
+  {
+    key: 'brand',
+    swatches: [
+      { name: 'Blurple', hex: '#5865F2' },
+      { name: 'Legacy Blurple', hex: '#7289DA' },
+      { name: 'Blurple Dark', hex: '#4752C4' }
+    ]
+  },
+  {
+    key: 'status',
+    swatches: [
+      { name: 'Online', hex: '#23A55A' },
+      { name: 'Idle', hex: '#F0B232' },
+      { name: 'Do Not Disturb', hex: '#F23F43' },
+      { name: 'Streaming', hex: '#593695' },
+      { name: 'Offline', hex: '#80848E' }
+    ]
+  }
+];
+
+const t = {
+  en: {
+    groupLabels: {
+      darkBg: 'Dark Theme Backgrounds',
+      lightBg: 'Light Theme Backgrounds',
+      brand: 'Brand Blurple',
+      status: 'Status & Presence'
+    },
+    clickToCopy: 'Click any swatch to copy its hex code',
+    pickerTitle: 'Custom Color Picker',
+    pickerSub: 'Pick or paste a color to get HEX, RGB, and HSL',
+    hexLabel: 'HEX',
+    rgbLabel: 'RGB',
+    hslLabel: 'HSL',
+    copy: 'Copy',
+    links: [
+      { icon: '🖼️', href: '/tools/banner/', label: 'Discord Banner Maker (Safe Zones)' },
+      { icon: '📐', href: '/tools/image-resizer/', label: 'Discord Image Resizer (Exact Sizes)' },
+      { icon: '📖', href: '/guides/discord-sizes/', label: 'Official Discord Size & Limit Guide' }
+    ]
+  },
+  es: {
+    groupLabels: {
+      darkBg: 'Fondos del Tema Oscuro',
+      lightBg: 'Fondos del Tema Claro',
+      brand: 'Blurple de Marca',
+      status: 'Estado y Presencia'
+    },
+    clickToCopy: 'Haz clic en cualquier muestra para copiar su código hex',
+    pickerTitle: 'Selector de Color Personalizado',
+    pickerSub: 'Elige o pega un color para obtener HEX, RGB y HSL',
+    hexLabel: 'HEX',
+    rgbLabel: 'RGB',
+    hslLabel: 'HSL',
+    copy: 'Copiar',
+    links: [
+      { icon: '🖼️', href: '/es/tools/banner/', label: 'Creador de Banners de Discord (Zonas Seguras)' },
+      { icon: '📐', href: '/es/tools/image-resizer/', label: 'Redimensionador de Imágenes de Discord' },
+      { icon: '📖', href: '/es/guides/discord-sizes/', label: 'Guía Oficial de Tamaños y Límites' }
+    ]
+  }
+}[lang];
+
+const js = {
+  en: { copied: 'Copied', copy: 'Copy' },
+  es: { copied: 'Copiado', copy: 'Copiar' }
+}[lang];
+---
+
+<div
+  id="col-workspace"
+  class="space-y-8 mb-16"
+  data-copied={js.copied}
+  data-copy={js.copy}
+>
+  <!-- Palette groups -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {GROUPS.map((group) => (
+      <div class="card-panel rounded-[14px] p-6">
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white mb-1">{t.groupLabels[group.key as keyof typeof t.groupLabels]}</h2>
+        <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mb-4">{t.clickToCopy}</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          {group.swatches.map((sw) => (
+            <button
+              type="button"
+              class="col-swatch group flex items-center gap-3 p-2 rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] transition-colors text-left"
+              data-hex={sw.hex}
+            >
+              <span class="w-9 h-9 rounded-[8px] border border-black/10 shadow-inner flex-shrink-0" style={`background:${sw.hex}`}></span>
+              <span class="min-w-0">
+                <span class="block text-xs font-semibold text-[#192538] dark:text-white truncate">{sw.name}</span>
+                <span class="block text-[11px] font-mono text-[#6B7A90] dark:text-[#8494A7] uppercase">{sw.hex}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Custom picker -->
+  <div class="card-panel rounded-[14px] p-6">
+    <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+      <div>
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.pickerTitle}</h2>
+        <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.pickerSub}</p>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row items-start gap-6">
+      <div class="flex flex-col items-center gap-3">
+        <input type="color" id="col-picker" value="#5865F2" class="w-24 h-24 rounded-[12px] border border-[#E0DBD0] dark:border-[#263346] cursor-pointer bg-transparent" aria-label="Color picker" />
+        <div id="col-preview" class="w-24 h-8 rounded-[8px] border border-[#E0DBD0] dark:border-[#263346]" style="background:#5865F2"></div>
+      </div>
+      <div class="flex-1 w-full space-y-3">
+        <div class="flex items-center gap-2">
+          <span class="w-12 text-[11px] font-mono font-bold text-[#6B7A90] dark:text-[#8494A7]">{t.hexLabel}</span>
+          <input type="text" id="col-hex" value="#5865F2" class="flex-1 text-sm font-mono rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none uppercase" />
+          <button type="button" class="col-copy btn-secondary text-xs px-3 py-2 rounded-[6px]" data-target="col-hex">{t.copy}</button>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-12 text-[11px] font-mono font-bold text-[#6B7A90] dark:text-[#8494A7]">{t.rgbLabel}</span>
+          <input type="text" id="col-rgb" readonly class="flex-1 text-sm font-mono rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2" />
+          <button type="button" class="col-copy btn-secondary text-xs px-3 py-2 rounded-[6px]" data-target="col-rgb">{t.copy}</button>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-12 text-[11px] font-mono font-bold text-[#6B7A90] dark:text-[#8494A7]">{t.hslLabel}</span>
+          <input type="text" id="col-hsl" readonly class="flex-1 text-sm font-mono rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2" />
+          <button type="button" class="col-copy btn-secondary text-xs px-3 py-2 rounded-[6px]" data-target="col-hsl">{t.copy}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium">
+    {t.links.map((link) => (
+      <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+        <span>{link.icon}</span> {link.label}
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  const ws = document.getElementById('col-workspace');
+  const L = {
+    copied: ws?.dataset.copied || 'Copied',
+    copy: ws?.dataset.copy || 'Copy'
+  };
+
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  }
+
+  function flash(btn: HTMLElement, original: string) {
+    btn.textContent = L.copied;
+    setTimeout(() => { btn.textContent = original; }, 1200);
+  }
+
+  // Swatch copy
+  document.querySelectorAll<HTMLButtonElement>('.col-swatch').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const hex = btn.dataset.hex || '';
+      if (!hex) return;
+      copyText(hex);
+      const label = btn.querySelector('.font-mono');
+      if (label) {
+        const prev = label.textContent || hex;
+        label.textContent = L.copied;
+        setTimeout(() => { label.textContent = prev; }, 1000);
+      }
+    });
+  });
+
+  // Picker + fields
+  const picker = document.getElementById('col-picker') as HTMLInputElement;
+  const preview = document.getElementById('col-preview');
+  const hexIn = document.getElementById('col-hex') as HTMLInputElement;
+  const rgbIn = document.getElementById('col-rgb') as HTMLInputElement;
+  const hslIn = document.getElementById('col-hsl') as HTMLInputElement;
+
+  function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+    let h = hex.replace('#', '').trim();
+    if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+    if (!/^[0-9a-fA-F]{6}$/.test(h)) return null;
+    return {
+      r: parseInt(h.slice(0, 2), 16),
+      g: parseInt(h.slice(2, 4), 16),
+      b: parseInt(h.slice(4, 6), 16)
+    };
+  }
+
+  function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number } {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+      else if (max === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h /= 6;
+    }
+    return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+  }
+
+  function update(hex: string, fromField = false) {
+    const rgb = hexToRgb(hex);
+    if (!rgb) return;
+    const norm = `#${[rgb.r, rgb.g, rgb.b].map((n) => n.toString(16).padStart(2, '0')).join('').toUpperCase()}`;
+    if (preview) preview.style.background = norm;
+    picker.value = norm;
+    if (!fromField) hexIn.value = norm;
+    rgbIn.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+    hslIn.value = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+  }
+
+  picker?.addEventListener('input', () => update(picker.value));
+  hexIn?.addEventListener('input', () => update(hexIn.value, true));
+
+  document.querySelectorAll<HTMLButtonElement>('.col-copy').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target || '') as HTMLInputElement | null;
+      if (!target) return;
+      copyText(target.value);
+      flash(btn, L.copy);
+    });
+  });
+
+  // Init
+  update('#5865F2');
+</script>

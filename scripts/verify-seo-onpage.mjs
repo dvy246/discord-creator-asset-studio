@@ -52,6 +52,11 @@ const indexablePages = [
     primaryKeyword: 'discord image spoiler',
   },
   {
+    path: 'tools/colors/index.html',
+    url: '/tools/colors/',
+    primaryKeyword: 'discord background color',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -140,6 +145,11 @@ const indexablePages = [
     path: 'es/tools/spoiler/index.html',
     url: '/es/tools/spoiler/',
     primaryKeyword: 'spoiler de imagen discord',
+  },
+  {
+    path: 'es/tools/colors/index.html',
+    url: '/es/tools/colors/',
+    primaryKeyword: 'color de fondo de discord',
   },
 ];
 
