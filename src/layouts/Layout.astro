@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import SEOHead from '../components/SEOHead.astro';
+import { generateOrganizationSchema } from '../utils/seo';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import PaletteSelector from '../components/PaletteSelector.astro';
 import LanguagePicker from '../components/LanguagePicker.astro';
@@ -109,6 +110,8 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
       hasSpanishAlternate={hasSpanishAlternate}
       ogImage={ogImage}
     />
+    <!-- Site-wide Organization entity (grounds brand + independence for AI/answer engines) -->
+    <script type="application/ld+json" set:html={generateOrganizationSchema()} />
     <script is:inline>
       (function() {
         const storedTheme = localStorage.getItem('theme');

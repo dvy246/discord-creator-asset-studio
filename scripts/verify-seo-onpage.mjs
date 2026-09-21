@@ -5,6 +5,18 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(__dirname, '../dist');
 
+// Decode common HTML entities so length checks reflect rendered characters
+// (e.g. "&amp;" is one glyph in a SERP, not five).
+function decodeEntities(s) {
+  return s
+    .replace(/&amp;/g, '&')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/gi, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+}
+
 const indexablePages = [
   {
     path: 'index.html',
@@ -201,6 +213,18 @@ const indexablePages = [
     url: '/es/tools/gif-compressor/',
     primaryKeyword: 'comprimir gif discord',
   },
+  // Asset library pages — gated for title/description length, unique title/desc,
+  // single H1, canonical, alt text, and valid JSON-LD (no single-keyword coupling).
+  { path: 'assets/index.html', url: '/assets/' },
+  { path: 'assets/pfps/index.html', url: '/assets/pfps/' },
+  { path: 'assets/anime/index.html', url: '/assets/anime/' },
+  { path: 'assets/gaming/index.html', url: '/assets/gaming/' },
+  { path: 'assets/cyberpunk/index.html', url: '/assets/cyberpunk/' },
+  { path: 'assets/dark/index.html', url: '/assets/dark/' },
+  { path: 'assets/aesthetic/index.html', url: '/assets/aesthetic/' },
+  { path: 'assets/icons-2d/index.html', url: '/assets/icons-2d/' },
+  { path: 'about/index.html', url: '/about/' },
+  { path: 'contact/index.html', url: '/contact/' },
 ];
 
 console.log('--- Starting Mandatory On-Page SEO Programmatic Inspection ---');
@@ -224,11 +248,12 @@ for (const page of indexablePages) {
     errors.push(`[TITLE] Missing <title> in ${page.path}`);
   } else {
     const title = titleMatch[1];
-    if (title.length > 60) {
-      errors.push(`[TITLE] Title in ${page.path} exceeds 60 chars (${title.length} chars): "${title}"`);
+    const cleanTitle = decodeEntities(title);
+    // Measure the rendered length (entities like &amp; render as one glyph).
+    if (cleanTitle.length > 60) {
+      errors.push(`[TITLE] Title in ${page.path} exceeds 60 chars (${cleanTitle.length} chars): "${title}"`);
     }
-    const cleanTitle = title.replace(/&amp;/g, '&');
-    if (!cleanTitle.toLowerCase().includes(page.primaryKeyword.toLowerCase())) {
+    if (page.primaryKeyword && !cleanTitle.toLowerCase().includes(page.primaryKeyword.toLowerCase())) {
       errors.push(`[TITLE] Title in ${page.path} does not contain primary keyword "${page.primaryKeyword}": "${title}"`);
     }
     if (titlesSeen.has(title)) {
@@ -245,11 +270,11 @@ for (const page of indexablePages) {
     errors.push(`[DESCRIPTION] Missing meta description in ${page.path}`);
   } else {
     const desc = descMatch[1];
-    if (desc.length >= 160) {
-      errors.push(`[DESCRIPTION] Description in ${page.path} is >= 160 chars (${desc.length} chars): "${desc}"`);
+    const cleanDesc = decodeEntities(desc);
+    if (cleanDesc.length >= 160) {
+      errors.push(`[DESCRIPTION] Description in ${page.path} is >= 160 chars (${cleanDesc.length} chars): "${desc}"`);
     }
-    const cleanDesc = desc.replace(/&amp;/g, '&');
-    if (!cleanDesc.toLowerCase().includes(page.primaryKeyword.toLowerCase())) {
+    if (page.primaryKeyword && !cleanDesc.toLowerCase().includes(page.primaryKeyword.toLowerCase())) {
       errors.push(`[DESCRIPTION] Description in ${page.path} does not contain primary keyword "${page.primaryKeyword}": "${desc}"`);
     }
     if (descriptionsSeen.has(desc)) {
@@ -267,8 +292,8 @@ for (const page of indexablePages) {
     errors.push(`[H1] Multiple (${h1Matches.length}) <h1> tags in ${page.path}`);
   } else {
     const h1Text = h1Matches[0][1].replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    const cleanH1 = h1Text.replace(/&amp;/g, '&');
-    if (!cleanH1.toLowerCase().includes(page.primaryKeyword.toLowerCase())) {
+    const cleanH1 = decodeEntities(h1Text);
+    if (page.primaryKeyword && !cleanH1.toLowerCase().includes(page.primaryKeyword.toLowerCase())) {
       errors.push(`[H1] H1 in ${page.path} does not contain primary keyword "${page.primaryKeyword}": "${h1Text}"`);
     }
   }

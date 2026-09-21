@@ -52,6 +52,14 @@ export default defineConfig({
       serialize(item) {
         const sourceFile = pathnameToSourceFile(new URL(item.url).pathname);
         item.lastmod = getGitLastmod(sourceFile).toISOString();
+        // Add an x-default hreflang alternate (points at the English URL) so the
+        // sitemap's language signals match the on-page <link rel="alternate">.
+        if (Array.isArray(item.links) && item.links.length) {
+          const en = item.links.find((l) => l.lang === 'en');
+          if (en && !item.links.some((l) => l.lang === 'x-default')) {
+            item.links.push({ lang: 'x-default', url: en.url });
+          }
+        }
         return item;
       }
     })

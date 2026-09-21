@@ -15,13 +15,7 @@ const websiteSchema = {
   "description": pageDescription
 };
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Discord Creator Asset Studio",
-  "url": "https://discord-creator-asset-studio.pages.dev/",
-  "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
-};
+// Organization entity is emitted site-wide by Layout.astro (shared @id).
 
 // FAQPage JSON-LD is built from the same source as the visible <details> list
 // (home-i18n.ts) so structured data and on-page content never diverge.
@@ -60,7 +54,6 @@ const itemListSchema = JSON.parse(generateItemListSchema([
 <Layout title={pageTitle} description={pageDescription}>
   <!-- Inject Schemas -->
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
-  <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
 

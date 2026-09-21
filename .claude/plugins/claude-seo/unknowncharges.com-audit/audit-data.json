@@ -1,0 +1,15 @@
+{
+  "domain": "unknowncharges.com",
+  "auditDate": "2026-09-12",
+  "overallScore": 85,
+  "scores": {
+    "technical": 70,
+    "content": 98,
+    "schema": 88,
+    "performance": 94,
+    "sxo": 98,
+    "geo": 95,
+    "hreflang": 75
+  },
+  "criticalIssues": 2
+}

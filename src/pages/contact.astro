@@ -1,9 +1,24 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SketchUnderline from '../components/SketchUnderline.astro';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '../utils/seo';
+
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/contact/";
+const contactSchema = generateWebPageSchema({
+  type: 'ContactPage',
+  name: 'Contact & Issue Reporting — Discord Creator Asset Studio',
+  description: 'Report Discord spec changes, bugs, or send creator feedback to the Discord Creator Asset Studio team.',
+  url: pageUrl
+});
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Contact", url: pageUrl }
+]);
 ---
 
 <Layout title="Contact & Feedback | Discord Asset Studio" description="Get in touch with the Discord Asset Studio team for rule updates, bug reports, and creator feedback.">
+  <script type="application/ld+json" set:html={contactSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
   <div class="max-w-3xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-10">
       <span class="text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Creator Feedback</span>
