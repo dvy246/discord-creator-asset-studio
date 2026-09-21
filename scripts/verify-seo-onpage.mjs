@@ -49,7 +49,7 @@ const indexablePages = [
   {
     path: 'tools/spoiler/index.html',
     url: '/tools/spoiler/',
-    primaryKeyword: 'discord image spoiler',
+    primaryKeyword: 'discord spoiler tag',
   },
   {
     path: 'tools/colors/index.html',

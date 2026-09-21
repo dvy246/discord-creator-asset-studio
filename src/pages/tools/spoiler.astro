@@ -4,12 +4,12 @@ import SketchUnderline from '../../components/SketchUnderline.astro';
 import SpoilerWorkspace from '../../components/tools/SpoilerWorkspace.astro';
 import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
 
-const pageTitle = "Discord Image Spoiler Maker | Hide Text and Pics";
-const pageDescription = "Free Discord image spoiler maker: wrap text in ||spoiler|| markup or add the SPOILER_ prefix to blur an image attachment until clicked. In-browser, no uploads.";
+const pageTitle = "Discord Spoiler Tag Maker | Hide Text and Images";
+const pageDescription = "Make a Discord spoiler tag fast: wrap text in || || markup or add the SPOILER_ prefix to hide a spoiler image on desktop and mobile. Free, in-browser.";
 const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/spoiler/";
 
 const appSchema = generateSoftwareApplicationSchema(
-  "Discord Image Spoiler Maker",
+  "Discord Spoiler Tag Maker",
   pageDescription,
   pageUrl
 );
@@ -33,18 +33,18 @@ const faqSchema = {
     },
     {
       "@type": "Question",
-      "name": "How do I hide text as a spoiler in Discord?",
+      "name": "How do I make a Discord spoiler tag for text?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Wrap the text in double vertical bars: ||like this||. Discord renders it as a black bar that reveals the text when clicked. Paste your message into the text tab here and it adds the || || markup for you, with an option to hide each line separately."
+        "text": "Wrap the text in double vertical bars: ||like this||. Discord renders that spoiler tag as a black bar that reveals the spoiler text when clicked. Paste your message into the text tab here and it adds the || || markup for you, with an option to turn each line into its own spoiler tag."
       }
     },
     {
       "@type": "Question",
-      "name": "Does the SPOILER_ prefix work on mobile?",
+      "name": "How do I add a Discord spoiler tag on mobile?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. The SPOILER_ filename prefix is read by Discord on desktop, web, and mobile, so a renamed image is blurred everywhere. On the mobile app you can alternatively long-press the attachment thumbnail and choose 'Mark as Spoiler' before sending."
+        "text": "The SPOILER_ filename prefix is read by Discord on desktop, web, and mobile, so a renamed spoiler image is blurred everywhere. In the mobile app you can also long-press the attachment thumbnail and choose 'Mark as Spoiler', or wrap a message in || || to post a text spoiler tag on mobile — the exact same markup works on every device."
       }
     },
     {
@@ -74,9 +74,9 @@ const faqSchema = {
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
-            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Image Spoiler</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span><SketchUnderline color="#66A3BF" /></span>
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Spoiler Tag</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
-          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Wrap text in || || markup or blur an image with the SPOILER_ prefix • 100% in-browser</p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Add a spoiler tag to text with || || markup, or hide a spoiler image with the SPOILER_ prefix — on desktop and mobile</p>
         </div>
         <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
           <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
@@ -99,11 +99,11 @@ const faqSchema = {
           </div>
 
           <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Two ways to <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">hide a spoiler</span><SketchUnderline color="#66A3BF" /></span> on Discord.
+            Two ways to add a <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Discord spoiler tag</span><SketchUnderline color="#66A3BF" /></span>.
           </h2>
 
           <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
-            Discord hides text with <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">|| ||</code> markup and hides images with a <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">SPOILER_</code> filename prefix. This tool does both, entirely in your browser.
+            Discord turns text into a spoiler tag with <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">|| ||</code> markup and hides a spoiler image with a <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">SPOILER_</code> filename prefix. This tool does both, on desktop and mobile, entirely in your browser.
           </p>
 
           <div class="relative pl-6 space-y-5 select-none pt-2">
@@ -112,7 +112,7 @@ const faqSchema = {
 
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
-              <span class="text-xs sm:text-sm">01 / Text Spoilers with || ||</span>
+              <span class="text-xs sm:text-sm">01 / Spoiler Tags for Text (|| ||)</span>
             </div>
             <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
               <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>

@@ -436,11 +436,11 @@ const PAGES = [
   {
     file: 'public/og/spoiler.png',
     config: {
-      title: 'DISCORD IMAGE', titleLine2: 'SPOILER MAKER',
+      title: 'DISCORD SPOILER', titleLine2: 'TAG MAKER',
       subtitle: 'HIDE TEXT WITH || || OR BLUR IMAGES WITH SPOILER PREFIX',
-      tagline1: 'TEXT SPOILER MARKUP • SPOILER_ FILENAME PREFIX',
+      tagline1: 'TEXT SPOILER TAGS • SPOILER_ IMAGE FILENAME PREFIX',
       tagline2: 'DESKTOP & MOBILE • 100% PRIVATE IN-BROWSER',
-      badge: 'TEXT & IMAGE SPOILERS • ZERO UPLOADS',
+      badge: 'TEXT & IMAGE SPOILER TAGS • ZERO UPLOADS',
       cards: [
         { label: 'TEXT', desc: '|| || MARKUP' }, { label: 'IMAGE', desc: 'SPOILER_ PREFIX' },
         { label: 'PER-LINE', desc: 'TOGGLE' }, { label: 'PREVIEW', desc: 'LIVE BLUR' },
