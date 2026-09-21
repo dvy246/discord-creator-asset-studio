@@ -1,0 +1,107 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ImageResizerWorkspace from '../../../components/tools/ImageResizerWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Redimensionar Imágenes Discord | Tamaños Exactos";
+const pageDescription = "Redimensionar imágenes Discord al tamaño exacto: avatar 512x512, sticker 320x320, emoji 128x128 o banner 960x540. En tu navegador, sin subidas.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/image-resizer/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/image-resizer/";
+
+const appSchema = generateSoftwareApplicationSchema("Redimensionador de Imágenes para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Redimensionar Imágenes", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cuáles son los tamaños exactos de imagen en Discord?", a: "Discord espera dimensiones específicas por asset: avatares e iconos de servidor 512×512, emojis personalizados hasta 128×128, stickers exactamente 320×320, iconos de rol exactamente 64×64, banners de servidor 960×540 y banners de perfil 680×240. Esta herramienta incluye un ajuste con un clic para cada uno." },
+  { q: "¿Qué diferencia hay entre Ajustar, Rellenar y Estirar?", a: "Ajustar (contain) escala toda la imagen dentro del objetivo y deja relleno transparente, sin recortar. Rellenar (cover) escala hasta cubrir todo el marco y recorta lo que sobra, ideal para avatares y banners. Estirar fuerza las dimensiones exactas y puede distorsionar, úsalo solo si las proporciones ya coinciden." },
+  { q: "¿Al redimensionar se sube mi imagen a un servidor?", a: "No. La herramienta dibuja tu imagen en un canvas HTML al tamaño objetivo y la exporta por completo dentro de tu navegador. Nada se sube, guarda ni registra, así que es seguro para arte privado o sin publicar." },
+  { q: "¿Qué formato debo exportar para Discord?", a: "Usa PNG cuando necesites transparencia (avatares, stickers, iconos de rol). Usa WebP para el archivo más pequeño si la transparencia es opcional. Usa JPEG solo para fotos sin transparencia. Después de redimensionar, pasa el archivo por el compresor si debe cumplir un límite de bytes." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/image-resizer.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Redimensionar Imágenes</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Redimensionar Imágenes Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Escala cualquier imagen al <strong>tamaño exacto</strong> que Discord exige: avatar 512×512, sticker 320×320, emoji 128×128 o banner 960×540. Con modos ajustar, rellenar y estirar. Todo el procesamiento ocurre localmente en tu navegador.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Avatar</p>
+        <p class="text-sm font-bold text-[#0D9488]">512×512</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Sticker</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">320×320</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Emoji</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">128×128</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Banner</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">960×540</p>
+      </div>
+    </div>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <ImageResizerWorkspace lang="es" />
+
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Un Ajuste por Cada Asset de Discord</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord valida varios assets por dimensiones exactas. Un avatar de 500×500 o un sticker de 319×320 es rechazado. Los ajustes eliminan la adivinanza y exportan el tamaño exacto que Discord quiere. ¿Necesitas otro tamaño? Cambia a Personalizado y escribe cualquier ancho y alto hasta 4096 px.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Redimensiona Primero, Luego Comprime</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Las dimensiones y el tamaño del archivo son dos verificaciones distintas. Esta herramienta ajusta las dimensiones; si el archivo también debe caber en un límite de bytes, pásalo por el <a href="/es/tools/image-compressor/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">compresor de imágenes</a> después.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

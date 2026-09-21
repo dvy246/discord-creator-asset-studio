@@ -42,6 +42,11 @@ const indexablePages = [
     primaryKeyword: 'discord image compressor',
   },
   {
+    path: 'tools/image-resizer/index.html',
+    url: '/tools/image-resizer/',
+    primaryKeyword: 'discord image resizer',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -120,6 +125,11 @@ const indexablePages = [
     path: 'es/tools/image-compressor/index.html',
     url: '/es/tools/image-compressor/',
     primaryKeyword: 'compresor de imágenes discord',
+  },
+  {
+    path: 'es/tools/image-resizer/index.html',
+    url: '/es/tools/image-resizer/',
+    primaryKeyword: 'redimensionar imágenes discord',
   },
 ];
 

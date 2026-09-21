@@ -1,0 +1,502 @@
+---
+/**
+ * ImageResizerWorkspace.astro — shared interactive Discord image resizer.
+ *
+ * Resizes any upload to an exact Discord asset dimension (avatar 512, emoji 128,
+ * sticker 320, role icon 64, server banner 960×540, profile banner 680×240) or a
+ * custom width×height, with fit / fill / stretch modes. Distinct from the
+ * compressor, which keeps the source dimensions. Language-agnostic logic keyed
+ * off fixed element IDs; visible labels vary by locale via `t`, and the client
+ * script's runtime strings pass through data-* attributes via `js` (read into
+ * `L`) — same pattern as StickerWorkspace. Imported by both the EN
+ * (/tools/image-resizer/) and ES (/es/tools/image-resizer/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    dropTitle: 'Upload an image to resize for Discord',
+    dropHint: 'PNG, JPG, WebP, or GIF (first frame) • Pick an exact Discord size',
+    demoBtn: 'Try with Demo Image',
+    editorTitle: 'Resize Controls',
+    editorSub: 'Choose a target size and how the image should fit',
+    reset: 'Reset',
+    presetLabel: 'Target Size Preset',
+    presetAvatar: 'Avatar / Server icon — 512×512',
+    presetEmoji: 'Custom emoji — 128×128',
+    presetSticker: 'Sticker — 320×320',
+    presetRole: 'Role icon — 64×64',
+    presetServerBanner: 'Server banner — 960×540',
+    presetProfileBanner: 'Profile banner — 680×240',
+    presetCustom: 'Custom size (px)',
+    widthLabel: 'Width (px)',
+    heightLabel: 'Height (px)',
+    fitLabel: 'Fit Mode',
+    fitContain: 'Fit (letterbox, no crop)',
+    fitCover: 'Fill (crop to edges)',
+    fitStretch: 'Stretch (may distort)',
+    formatLabel: 'Output Format',
+    formatPng: 'PNG (lossless, transparency)',
+    formatWebp: 'WebP (smaller file)',
+    formatJpeg: 'JPEG (no transparency)',
+    previewTitle: 'Resized Preview',
+    previewBox: 'No image yet',
+    receiptTitle: 'Resize Receipt',
+    awaiting: 'Awaiting Image',
+    origDims: 'Original Dimensions:',
+    outDims: 'Output Dimensions:',
+    outSize: 'Output File Size:',
+    fitMode: 'Fit Mode:',
+    formatOut: 'Output Format:',
+    exportBtn: 'Download Resized Image',
+    links: [
+      { icon: '🗜️', href: '/tools/image-compressor/', label: 'Discord Image Compressor (Under 10 MB)' },
+      { icon: '👤', href: '/tools/avatar/', label: 'Discord Avatar Cropper (Circular 512×512)' },
+      { icon: '📖', href: '/guides/discord-sizes/', label: 'Official Discord Size & Limit Guide' }
+    ]
+  },
+  es: {
+    dropTitle: 'Sube una imagen para redimensionar para Discord',
+    dropHint: 'PNG, JPG, WebP o GIF (primer fotograma) • Elige un tamaño exacto de Discord',
+    demoBtn: 'Probar con Imagen de Demostración',
+    editorTitle: 'Controles de Redimensionado',
+    editorSub: 'Elige un tamaño objetivo y cómo debe encajar la imagen',
+    reset: 'Reiniciar',
+    presetLabel: 'Tamaño Objetivo',
+    presetAvatar: 'Avatar / icono de servidor — 512×512',
+    presetEmoji: 'Emoji personalizado — 128×128',
+    presetSticker: 'Sticker — 320×320',
+    presetRole: 'Icono de rol — 64×64',
+    presetServerBanner: 'Banner de servidor — 960×540',
+    presetProfileBanner: 'Banner de perfil — 680×240',
+    presetCustom: 'Tamaño personalizado (px)',
+    widthLabel: 'Ancho (px)',
+    heightLabel: 'Alto (px)',
+    fitLabel: 'Modo de Ajuste',
+    fitContain: 'Ajustar (sin recorte)',
+    fitCover: 'Rellenar (recorta a los bordes)',
+    fitStretch: 'Estirar (puede distorsionar)',
+    formatLabel: 'Formato de Salida',
+    formatPng: 'PNG (sin pérdida, transparencia)',
+    formatWebp: 'WebP (archivo más pequeño)',
+    formatJpeg: 'JPEG (sin transparencia)',
+    previewTitle: 'Vista Previa Redimensionada',
+    previewBox: 'Aún no hay imagen',
+    receiptTitle: 'Recibo de Redimensionado',
+    awaiting: 'Esperando Imagen',
+    origDims: 'Dimensiones Originales:',
+    outDims: 'Dimensiones de Salida:',
+    outSize: 'Tamaño del Archivo:',
+    fitMode: 'Modo de Ajuste:',
+    formatOut: 'Formato de Salida:',
+    exportBtn: 'Descargar Imagen Redimensionada',
+    links: [
+      { icon: '🗜️', href: '/es/tools/image-compressor/', label: 'Compresor de Imágenes de Discord (Bajo 10 MB)' },
+      { icon: '👤', href: '/es/tools/avatar/', label: 'Recortador de Avatares (Circular 512×512)' },
+      { icon: '📖', href: '/es/guides/discord-sizes/', label: 'Guía Oficial de Tamaños y Límites' }
+    ]
+  }
+}[lang];
+
+// Runtime strings consumed by the client script via data-* attributes.
+const js = {
+  en: {
+    invalidFile: 'Please upload a valid image file (PNG, JPG, WebP, or GIF).',
+    ready: 'Ready',
+    done: '✓ Resized to exact target dimensions — ready to download.',
+    contain: 'Fit',
+    cover: 'Fill',
+    stretch: 'Stretch'
+  },
+  es: {
+    invalidFile: 'Sube un archivo de imagen válido (PNG, JPG, WebP o GIF).',
+    ready: 'Listo',
+    done: '✓ Redimensionado a las dimensiones exactas — listo para descargar.',
+    contain: 'Ajustar',
+    cover: 'Rellenar',
+    stretch: 'Estirar'
+  }
+}[lang];
+---
+
+<!-- Main Workspace Layout -->
+<div
+  class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16"
+  id="ir-workspace"
+  data-invalid-file={js.invalidFile}
+  data-ready={js.ready}
+  data-done={js.done}
+  data-contain={js.contain}
+  data-cover={js.cover}
+  data-stretch={js.stretch}
+  data-awaiting={t.awaiting}
+>
+  <!-- Left Column: Upload & Controls (7 cols) -->
+  <div class="lg:col-span-7 space-y-6">
+    <div id="ir-drop" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] dark:bg-[#141A24] p-8 text-center transition-all cursor-pointer relative shadow-xs">
+      <input type="file" id="ir-file" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+      <div class="space-y-3 pointer-events-none">
+        <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center mx-auto text-xl font-bold">
+          📐
+        </div>
+        <div>
+          <p class="text-sm font-bold text-[#192538] dark:text-white">{t.dropTitle}</p>
+          <p class="text-xs text-[#6B7A90] dark:text-[#8494A7] mt-1">{t.dropHint}</p>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-[#E0DBD0]/60 dark:border-[#263346]/60 flex items-center justify-center gap-2">
+        <button type="button" id="ir-demo" class="text-xs px-3.5 py-1.5 rounded-lg bg-[#FAF8F5] dark:bg-[#1E2738] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:border-[#3368A0] transition-colors flex items-center gap-1.5 pointer-events-auto">
+          <span>✨</span> {t.demoBtn}
+        </button>
+      </div>
+    </div>
+
+    <div id="ir-editor" class="card-panel rounded-[14px] p-6 hidden space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+        <div>
+          <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.editorTitle}</h2>
+          <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.editorSub}</p>
+        </div>
+        <button id="ir-reset" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">
+          {t.reset}
+        </button>
+      </div>
+
+      <!-- Preset -->
+      <div>
+        <label for="ir-preset" class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5">
+          <span>🎯</span> {t.presetLabel}
+        </label>
+        <select id="ir-preset" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none">
+          <option value="512x512">{t.presetAvatar}</option>
+          <option value="128x128">{t.presetEmoji}</option>
+          <option value="320x320">{t.presetSticker}</option>
+          <option value="64x64">{t.presetRole}</option>
+          <option value="960x540">{t.presetServerBanner}</option>
+          <option value="680x240">{t.presetProfileBanner}</option>
+          <option value="custom">{t.presetCustom}</option>
+        </select>
+        <div id="ir-custom-wrap" class="mt-2 hidden grid grid-cols-2 gap-2">
+          <div>
+            <label for="ir-custom-w" class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mb-1 block">{t.widthLabel}</label>
+            <input type="number" id="ir-custom-w" min="1" max="4096" step="1" value="512" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none" />
+          </div>
+          <div>
+            <label for="ir-custom-h" class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mb-1 block">{t.heightLabel}</label>
+            <input type="number" id="ir-custom-h" min="1" max="4096" step="1" value="512" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Fit Mode -->
+      <div>
+        <label for="ir-fit" class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5">
+          <span>🖼️</span> {t.fitLabel}
+        </label>
+        <select id="ir-fit" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none">
+          <option value="contain">{t.fitContain}</option>
+          <option value="cover">{t.fitCover}</option>
+          <option value="stretch">{t.fitStretch}</option>
+        </select>
+      </div>
+
+      <!-- Output Format -->
+      <div>
+        <label for="ir-format" class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5">
+          <span>🧩</span> {t.formatLabel}
+        </label>
+        <select id="ir-format" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none">
+          <option value="image/png">{t.formatPng}</option>
+          <option value="image/webp">{t.formatWebp}</option>
+          <option value="image/jpeg">{t.formatJpeg}</option>
+        </select>
+      </div>
+
+      <button id="ir-download" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2 shadow-sm">
+        <span>{t.exportBtn}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Right Column: Preview & Receipt (5 cols) -->
+  <div class="lg:col-span-5 space-y-6">
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.previewTitle}</h2>
+      </div>
+      <div class="rounded-[10px] bg-[#FAF8F5] dark:bg-[#101622] border border-[#E0DBD0] dark:border-[#263346] p-4 flex items-center justify-center min-h-[200px] overflow-hidden bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] dark:bg-[repeating-conic-gradient(#1A2230_0%_25%,#121824_0%_50%)] [background-size:16px_16px]">
+        <img id="ir-preview" class="max-w-full max-h-[280px] object-contain rounded shadow-md hidden" alt="Resized image preview" />
+        <span id="ir-preview-empty" class="text-xs text-[#6B7A90] dark:text-[#8494A7] font-mono">{t.previewBox}</span>
+      </div>
+    </div>
+
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.receiptTitle}</h2>
+        <span id="ir-badge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
+          {t.awaiting}
+        </span>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.origDims}</span>
+          <span id="ir-stat-orig" class="text-[#192538]">-- × --</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.outDims}</span>
+          <span id="ir-stat-out" class="font-bold text-[#0D9488]">-- × --</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.outSize}</span>
+          <span id="ir-stat-size" class="text-[#192538]">--</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.fitMode}</span>
+          <span id="ir-stat-fit" class="text-[#192538]">--</span>
+        </div>
+        <div class="flex justify-between py-1.5">
+          <span class="text-[#6B7A90]">{t.formatOut}</span>
+          <span id="ir-stat-format" class="text-[#192538]">--</span>
+        </div>
+      </div>
+
+      <div id="ir-alert" class="mt-4 hidden p-3 rounded-[8px] text-xs"></div>
+
+      <div class="mt-4 pt-3 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-medium">
+        {t.links.map((link) => (
+          <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+            <span>{link.icon}</span> {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ws = document.getElementById('ir-workspace');
+  const L = {
+    invalidFile: ws?.dataset.invalidFile || 'Please upload a valid image file (PNG, JPG, WebP, or GIF).',
+    ready: ws?.dataset.ready || 'Ready',
+    done: ws?.dataset.done || '',
+    contain: ws?.dataset.contain || 'Fit',
+    cover: ws?.dataset.cover || 'Fill',
+    stretch: ws?.dataset.stretch || 'Stretch',
+    awaiting: ws?.dataset.awaiting || 'Awaiting Image'
+  };
+
+  const fileInput = document.getElementById('ir-file') as HTMLInputElement;
+  const dropzone = document.getElementById('ir-drop');
+  const demoBtn = document.getElementById('ir-demo');
+  const editor = document.getElementById('ir-editor');
+  const resetBtn = document.getElementById('ir-reset');
+  const presetSel = document.getElementById('ir-preset') as HTMLSelectElement;
+  const customWrap = document.getElementById('ir-custom-wrap');
+  const customW = document.getElementById('ir-custom-w') as HTMLInputElement;
+  const customH = document.getElementById('ir-custom-h') as HTMLInputElement;
+  const fitSel = document.getElementById('ir-fit') as HTMLSelectElement;
+  const formatSel = document.getElementById('ir-format') as HTMLSelectElement;
+  const downloadBtn = document.getElementById('ir-download');
+
+  const previewImg = document.getElementById('ir-preview') as HTMLImageElement;
+  const previewEmpty = document.getElementById('ir-preview-empty');
+
+  const statOrig = document.getElementById('ir-stat-orig');
+  const statOut = document.getElementById('ir-stat-out');
+  const statSize = document.getElementById('ir-stat-size');
+  const statFit = document.getElementById('ir-stat-fit');
+  const statFormat = document.getElementById('ir-stat-format');
+  const badge = document.getElementById('ir-badge');
+  const alertBox = document.getElementById('ir-alert');
+
+  let sourceImage: HTMLImageElement | null = null;
+  let originalFileName = 'image';
+  let currentBlob: Blob | null = null;
+  let currentObjectUrl: string | null = null;
+  let renderTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const DEMO_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%233368A0"/><stop offset="55%" stop-color="%2366A3BF"/><stop offset="100%" stop-color="%230D9488"/></linearGradient></defs><rect width="900" height="600" fill="url(%23g)"/><circle cx="230" cy="200" r="120" fill="%23C8DFDB" opacity="0.55"/><circle cx="680" cy="410" r="160" fill="%23F2EFE7" opacity="0.35"/><rect x="330" y="250" width="380" height="120" rx="18" fill="%23192538" opacity="0.35"/><text x="450" y="325" font-family="sans-serif" font-size="44" font-weight="bold" fill="%23FFFFFF" text-anchor="middle">RESIZE ME</text></svg>`;
+
+  function cleanup() {
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+  }
+
+  function formatBytes(bytes: number): string {
+    if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    if (bytes >= 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${bytes} B`;
+  }
+
+  function getTargetDims(): { w: number; h: number } {
+    if (presetSel.value === 'custom') {
+      const w = Math.max(1, Math.min(4096, parseInt(customW.value, 10) || 512));
+      const h = Math.max(1, Math.min(4096, parseInt(customH.value, 10) || 512));
+      return { w, h };
+    }
+    const [w, h] = presetSel.value.split('x').map((n) => parseInt(n, 10));
+    return { w, h };
+  }
+
+  fileInput?.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) handleFile(file);
+  });
+
+  dropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+  dropzone?.addEventListener('dragleave', () => {
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) handleFile(file);
+  });
+
+  demoBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    loadImage(DEMO_SVG, 'demo-image');
+  });
+
+  function handleFile(file: File) {
+    if (!file.type.startsWith('image/')) {
+      alert(L.invalidFile);
+      return;
+    }
+    const name = file.name.replace(/\.[^/.]+$/, '');
+    const url = URL.createObjectURL(file);
+    loadImage(url, name, url);
+  }
+
+  function loadImage(src: string, name: string, revokeAfter?: string) {
+    const img = new Image();
+    img.onload = () => {
+      sourceImage = img;
+      originalFileName = name;
+      if (revokeAfter) URL.revokeObjectURL(revokeAfter);
+      editor?.classList.remove('hidden');
+      render();
+    };
+    img.src = src;
+  }
+
+  function render() {
+    if (!sourceImage) return;
+    const { w, h } = getTargetDims();
+    const mode = fitSel.value;
+    const type = formatSel.value;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    // JPEG has no alpha — paint a white background first.
+    if (type === 'image/jpeg') {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    const sw = sourceImage.naturalWidth;
+    const sh = sourceImage.naturalHeight;
+
+    if (mode === 'stretch') {
+      ctx.drawImage(sourceImage, 0, 0, w, h);
+    } else if (mode === 'cover') {
+      const scale = Math.max(w / sw, h / sh);
+      const dw = sw * scale;
+      const dh = sh * scale;
+      ctx.drawImage(sourceImage, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    } else {
+      // contain
+      const scale = Math.min(w / sw, h / sh);
+      const dw = sw * scale;
+      const dh = sh * scale;
+      ctx.drawImage(sourceImage, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    }
+
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      currentBlob = blob;
+      cleanup();
+      currentObjectUrl = URL.createObjectURL(blob);
+
+      previewImg.src = currentObjectUrl;
+      previewImg.classList.remove('hidden');
+      previewEmpty?.classList.add('hidden');
+
+      statOrig!.innerText = `${sw} × ${sh}`;
+      statOut!.innerText = `${w} × ${h}`;
+      statSize!.innerText = formatBytes(blob.size);
+      statFit!.innerText = mode === 'cover' ? L.cover : mode === 'stretch' ? L.stretch : L.contain;
+      statFormat!.innerText = blob.type.replace('image/', '').toUpperCase();
+
+      badge!.innerText = L.ready;
+      badge!.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
+      alertBox!.className = 'p-3 rounded-[8px] text-xs bg-[#C8DFDB]/40 text-[#0D9488] border border-[#0D9488]/30 block font-medium';
+      alertBox!.innerText = L.done;
+    }, type, type === 'image/png' ? undefined : 0.92);
+  }
+
+  function scheduleRender() {
+    if (renderTimer) clearTimeout(renderTimer);
+    renderTimer = setTimeout(render, 120);
+  }
+
+  presetSel?.addEventListener('change', () => {
+    customWrap?.classList.toggle('hidden', presetSel.value !== 'custom');
+    render();
+  });
+  customW?.addEventListener('input', scheduleRender);
+  customH?.addEventListener('input', scheduleRender);
+  fitSel?.addEventListener('change', render);
+  formatSel?.addEventListener('change', render);
+
+  downloadBtn?.addEventListener('click', () => {
+    if (!currentBlob || !currentObjectUrl) return;
+    const { w, h } = getTargetDims();
+    const ext = currentBlob.type === 'image/webp' ? 'webp' : currentBlob.type === 'image/jpeg' ? 'jpg' : 'png';
+    const a = document.createElement('a');
+    a.href = currentObjectUrl;
+    a.download = `${originalFileName}_${w}x${h}.${ext}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    cleanup();
+    currentBlob = null;
+    sourceImage = null;
+    editor?.classList.add('hidden');
+    previewImg.classList.add('hidden');
+    previewImg.removeAttribute('src');
+    previewEmpty?.classList.remove('hidden');
+    statOrig!.innerText = '-- × --';
+    statOut!.innerText = '-- × --';
+    statSize!.innerText = '--';
+    statFit!.innerText = '--';
+    statFormat!.innerText = '--';
+    badge!.innerText = L.awaiting;
+    badge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
+    alertBox?.classList.add('hidden');
+    fileInput.value = '';
+    presetSel.value = '512x512';
+    customWrap?.classList.add('hidden');
+    fitSel.value = 'contain';
+    formatSel.value = 'image/png';
+  });
+</script>

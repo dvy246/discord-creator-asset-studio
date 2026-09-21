@@ -344,6 +344,20 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/image-resizer.png',
+    config: {
+      title: 'DISCORD IMAGE', titleLine2: 'RESIZER',
+      subtitle: 'SCALE TO EXACT DISCORD SIZES WITH ONE-CLICK PRESETS',
+      tagline1: 'AVATAR 512 • STICKER 320 • EMOJI 128 • BANNER 960X540',
+      tagline2: 'FIT FILL STRETCH MODES • 100% PRIVATE IN-BROWSER',
+      cards: [
+        { label: 'AVATAR', desc: '512X512' }, { label: 'STICKER', desc: '320X320' },
+        { label: 'EMOJI', desc: '128X128' }, { label: 'BANNER', desc: '960X540' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/role-icon.png',
     config: {
       title: 'DISCORD ROLE', titleLine2: 'ICON MAKER',
