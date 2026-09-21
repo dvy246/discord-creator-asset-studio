@@ -1,0 +1,88 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ServerIconWorkspace from '../../../components/tools/ServerIconWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Creador de Icono de Servidor Discord | 512x512";
+const pageDescription = "Creador de icono de servidor Discord: encuadra tu arte en un lienzo exacto de 512x512 con vista previa de cuadrado redondeado y exporta PNG. En tu navegador.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/server-icon/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/server-icon/";
+
+const appSchema = generateSoftwareApplicationSchema("Creador de Icono de Servidor para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Icono de Servidor", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Qué tamaño tiene un icono de servidor de Discord?", a: "Discord recomienda una imagen cuadrada de 512x512 píxeles para los iconos de servidor. Discord la reduce para la lista de servidores y la muestra como un cuadrado redondeado, así que mantener el sujeto centrado en un lienzo de 512x512 da el resultado más nítido." },
+  { q: "¿Puede ser animado un icono de servidor?", a: "Sí, pero un icono GIF animado requiere que el servidor alcance el Boost Nivel 1. Hasta entonces se usa un PNG o JPG estático. Este creador exporta un PNG estático de 512x512; sube un GIF en Ajustes del Servidor cuando tengas el nivel de boost." },
+  { q: "¿Qué forma tiene un icono de servidor?", a: "Discord enmascara los iconos de servidor como un cuadrado redondeado (squircle) en la lista, redondeándolo más al pasar el cursor. Como las esquinas se recortan, mantén los detalles importantes lejos de los bordes. La vista previa muestra el encuadre exacto." },
+  { q: "¿Cómo cambio el icono de mi servidor de Discord?", a: "Abre Ajustes del Servidor, ve a Descripción General, haz clic en el círculo del icono y sube tu imagen de 512x512. Necesitas el permiso Gestionar Servidor. Exporta tu icono aquí primero para que quede al tamaño recomendado." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/server-icon.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Icono de Servidor</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Creador de Icono de Servidor Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Encuadra tu arte en un lienzo exacto de <strong>512×512</strong> con paneo y zoom, vista previa de cuadrado redondeado como la lista de servidores, y exporta PNG. Todo el procesamiento ocurre localmente.
+      </p>
+    </header>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <ServerIconWorkspace lang="es" />
+
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">¿Qué Tamaño Tiene un Icono de Servidor?</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord recomienda un cuadrado de <strong>512×512 píxeles</strong>. Esa imagen se reduce en todas partes (lista de servidores, embeds de invitación, cabecera), así que empezar en 512×512 la mantiene nítida. Discord la muestra como un cuadrado redondeado, por lo que conviene alejar logos y texto de los bordes.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Iconos Animados y Permisos</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Un icono estático funciona en todos los servidores. Un GIF animado se desbloquea al alcanzar el <strong>Boost Nivel 1</strong>. Para cambiarlo necesitas el permiso Gestionar Servidor. ¿Necesitas un avatar personal? Usa el <a href="/es/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Recortador de Avatares</a>.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

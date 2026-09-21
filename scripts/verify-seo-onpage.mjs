@@ -67,6 +67,11 @@ const indexablePages = [
     primaryKeyword: 'discord emoji copy paste',
   },
   {
+    path: 'tools/server-icon/index.html',
+    url: '/tools/server-icon/',
+    primaryKeyword: 'discord server icon',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -170,6 +175,11 @@ const indexablePages = [
     path: 'es/tools/emoji-copy-paste/index.html',
     url: '/es/tools/emoji-copy-paste/',
     primaryKeyword: 'copiar y pegar emojis discord',
+  },
+  {
+    path: 'es/tools/server-icon/index.html',
+    url: '/es/tools/server-icon/',
+    primaryKeyword: 'icono de servidor discord',
   },
 ];
 

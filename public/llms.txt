@@ -16,6 +16,7 @@ All image processing executes locally in the browser via Web Workers and the HTM
 - [Discord Color Palette & Hex Codes](https://discord-creator-asset-studio.pages.dev/tools/colors/): Reference hex values for Discord's dark backgrounds (#313338, #2B2D31, #1E1F22), light theme, brand blurple (#5865F2), and status colors, with a click-to-copy HEX/RGB/HSL picker.
 - [Discord Timestamp Generator](https://discord-creator-asset-studio.pages.dev/tools/timestamp/): Convert any date/time into Discord's <t:UNIX:style> markup for all seven style codes (t, T, d, D, f, F, R) with live preview; timestamps render in each viewer's local timezone.
 - [Discord Emoji Copy & Paste Board](https://discord-creator-asset-studio.pages.dev/tools/emoji-copy-paste/): Curated click-to-copy grid of Unicode emojis and popular kaomoji (smileys, hands, hearts, symbols, animals, food, activities, text faces) that paste into any Discord chat without Nitro.
+- [Discord Server Icon Maker](https://discord-creator-asset-studio.pages.dev/tools/server-icon/): Pan/zoom framing onto an exact 512×512 canvas with a live rounded-square server-list preview and PNG export. Animated GIF icons require Server Boost Level 1.
 
 ## Documentation & Reference Guides
 - [Discord Asset Sizes Guide (2026)](https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/): Complete verified reference of all official Discord image dimensions, file byte limits, formats, and Nitro gating tiers.

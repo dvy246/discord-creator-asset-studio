@@ -1,0 +1,126 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import ServerIconWorkspace from '../../components/tools/ServerIconWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Server Icon Maker | 512x512 Crop";
+const pageDescription = "Free Discord server icon maker: frame artwork on an exact 512x512 canvas with a live rounded-square preview and PNG export. 100% in-browser, no uploads.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/server-icon/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Server Icon Maker",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Server Icon Maker", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What size is a Discord server icon?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord recommends a 512x512 pixel square image for server icons. Discord downscales it for the server list and displays it as a rounded square, so keeping your subject centered on a 512x512 canvas gives the sharpest result at every size."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can a Discord server icon be animated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, but an animated GIF server icon requires the server to reach Boost Level 1. Until then, a static PNG or JPG is used. This maker exports a static 512x512 PNG; upload a GIF directly in Server Settings once your server has the boost tier."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What shape is a Discord server icon?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord masks server icons as a rounded square (a squircle) in the server list, rounding further to a circle-like shape on hover. Because the corners are cropped, keep important detail away from the very edges. The live preview here shows the exact rounded-square framing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I change my Discord server icon?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Open Server Settings, go to Overview, click the icon circle, and upload your 512x512 image. You need the Manage Server permission. Export your icon here first so it lands at the recommended size and stays crisp."
+      }
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/server-icon.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Server Icon Maker</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Server Icon</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Pan & zoom onto a 512×512 canvas • Live rounded-square server-list preview • Export PNG</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <ServerIconWorkspace lang="en" />
+
+    <!-- Prose reference -->
+    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto space-y-6">
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">What Size Is a Discord Server Icon?</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord recommends a <strong>512×512 pixel</strong> square for server icons. That single image is scaled down everywhere it appears — the server list rail, invite embeds, the server header — so starting at 512×512 keeps it sharp at every size. This maker frames your artwork on an exact 512×512 canvas with pan and zoom, then exports a clean PNG ready to upload in Server Settings.
+        </p>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord displays the icon as a <strong>rounded square</strong> (a squircle) in the server list and rounds it further toward a circle on hover. Because the corners are trimmed by that mask, keep logos, faces, and text away from the very edges. The live preview above shows both the large and small rounded-square renderings on Discord's actual dark sidebar color so you can judge the framing before you export.
+        </p>
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">Animated Icons and Permissions</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          A static icon works on every server. An <strong>animated GIF</strong> server icon unlocks once the server reaches <strong>Boost Level 1</strong>. To change the icon you need the Manage Server permission: open Server Settings → Overview, click the icon, and upload your file. Need a personal avatar instead of a server icon? Use the <a href="/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Avatar Cropper</a>, which applies Discord's circular profile mask. Everything here runs in your browser — no uploads, no tracking.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>

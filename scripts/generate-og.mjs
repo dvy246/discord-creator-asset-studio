@@ -344,6 +344,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/server-icon.png',
+    config: {
+      title: 'DISCORD SERVER', titleLine2: 'ICON MAKER',
+      subtitle: 'FRAME ARTWORK ON AN EXACT 512X512 SERVER ICON CANVAS',
+      tagline1: 'PAN & ZOOM • ROUNDED-SQUARE LIVE PREVIEW',
+      tagline2: 'ANIMATED GIF NEEDS BOOST L1 • 100% IN-BROWSER',
+      badge: 'EXACT 512X512 SERVER ICON • ZERO UPLOADS',
+      cards: [
+        { label: 'SIZE', desc: '512X512 PX' }, { label: 'SHAPE', desc: 'ROUNDED SQ' },
+        { label: 'ANIMATED', desc: 'BOOST L1' }, { label: 'PREVIEW', desc: 'LIVE' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/emoji-copy-paste.png',
     config: {
       title: 'DISCORD EMOJI', titleLine2: 'COPY & PASTE',

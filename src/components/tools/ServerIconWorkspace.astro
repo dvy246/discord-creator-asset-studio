@@ -1,0 +1,374 @@
+---
+/**
+ * ServerIconWorkspace.astro — Discord server icon maker (512×512, rounded-square preview).
+ *
+ * Pan/zoom framing onto a 512×512 square canvas with a live rounded-square
+ * preview matching how Discord shows server icons in the server list. Exports a
+ * 512×512 PNG. Language-agnostic logic on fixed element IDs; visible labels via
+ * `t`, runtime strings via data-* (`js` → `L`). Imported by the EN
+ * (/tools/server-icon/) and ES (/es/tools/server-icon/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    dropTitle: 'Upload artwork for your server icon',
+    dropHint: 'PNG, JPG, WebP, or GIF • Framed on a 512×512 canvas',
+    demoBtn: 'Try with Demo Art',
+    editorTitle: 'Server Icon Studio (512 × 512)',
+    editorSub: 'Drag to reposition • Scroll or slide to zoom',
+    reset: 'Reset',
+    zoomLabel: 'Zoom',
+    fit: 'Fit',
+    fill: 'Fill',
+    center: 'Center',
+    exportBtn: 'Download Server Icon (512×512 PNG)',
+    previewTitle: 'Server List Preview',
+    previewSub: 'How Discord shows your icon (rounded square)',
+    receiptTitle: 'Specification Receipt',
+    outputRes: 'Output Resolution:',
+    originalRes: 'Original Resolution:',
+    shape: 'Display Shape:',
+    shapeVal: 'Rounded square',
+    animatedLabel: 'Animated icons:',
+    animatedVal: 'GIF, requires Server Boost Level 1',
+    links: [
+      { icon: '👤', href: '/tools/avatar/', label: 'Discord Avatar Cropper (Circular 512×512)' },
+      { icon: '🗜️', href: '/tools/image-compressor/', label: 'Discord Image Compressor (Under 10 MB)' },
+      { icon: '📖', href: '/guides/discord-sizes/', label: 'Official Discord Size & Limit Guide' }
+    ]
+  },
+  es: {
+    dropTitle: 'Sube el arte para el icono de tu servidor',
+    dropHint: 'PNG, JPG, WebP o GIF • Encuadrado en un lienzo de 512×512',
+    demoBtn: 'Probar con Arte de Demostración',
+    editorTitle: 'Estudio de Icono de Servidor (512 × 512)',
+    editorSub: 'Arrastra para reposicionar • Rueda o control para hacer zoom',
+    reset: 'Reiniciar',
+    zoomLabel: 'Zoom',
+    fit: 'Ajustar',
+    fill: 'Rellenar',
+    center: 'Centrar',
+    exportBtn: 'Descargar Icono de Servidor (512×512 PNG)',
+    previewTitle: 'Vista Previa en la Lista de Servidores',
+    previewSub: 'Cómo muestra Discord tu icono (cuadrado redondeado)',
+    receiptTitle: 'Recibo de Especificaciones',
+    outputRes: 'Resolución de Salida:',
+    originalRes: 'Resolución Original:',
+    shape: 'Forma de Visualización:',
+    shapeVal: 'Cuadrado redondeado',
+    animatedLabel: 'Iconos animados:',
+    animatedVal: 'GIF, requiere Boost de Servidor Nivel 1',
+    links: [
+      { icon: '👤', href: '/es/tools/avatar/', label: 'Recortador de Avatares (Circular 512×512)' },
+      { icon: '🗜️', href: '/es/tools/image-compressor/', label: 'Compresor de Imágenes de Discord' },
+      { icon: '📖', href: '/es/guides/discord-sizes/', label: 'Guía Oficial de Tamaños y Límites' }
+    ]
+  }
+}[lang];
+
+const js = {
+  en: { invalidFile: 'Please upload a valid image file (PNG, JPG, WebP, or GIF).' },
+  es: { invalidFile: 'Sube un archivo de imagen válido (PNG, JPG, WebP o GIF).' }
+}[lang];
+---
+
+<div
+  class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16"
+  id="si-workspace"
+  data-invalid-file={js.invalidFile}
+>
+  <!-- Left: upload + canvas -->
+  <div class="lg:col-span-7 space-y-6">
+    <div id="si-drop" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] dark:bg-[#141A24] p-8 text-center transition-all cursor-pointer relative shadow-xs">
+      <input type="file" id="si-file" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+      <div class="space-y-3 pointer-events-none">
+        <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center mx-auto text-xl font-bold">🏰</div>
+        <div>
+          <p class="text-sm font-bold text-[#192538] dark:text-white">{t.dropTitle}</p>
+          <p class="text-xs text-[#6B7A90] dark:text-[#8494A7] mt-1">{t.dropHint}</p>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-[#E0DBD0]/60 dark:border-[#263346]/60 flex items-center justify-center gap-2">
+        <button type="button" id="si-demo" class="text-xs px-3.5 py-1.5 rounded-lg bg-[#FAF8F5] dark:bg-[#1E2738] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:border-[#3368A0] transition-colors flex items-center gap-1.5 pointer-events-auto">
+          <span>✨</span> {t.demoBtn}
+        </button>
+      </div>
+    </div>
+
+    <div id="si-editor" class="card-panel rounded-[14px] p-6 hidden space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+        <div>
+          <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.editorTitle}</h2>
+          <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.editorSub}</p>
+        </div>
+        <button id="si-reset" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">{t.reset}</button>
+      </div>
+
+      <div class="relative flex flex-col items-center justify-center p-6 bg-[#FAF8F5] dark:bg-[#101622] rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] overflow-hidden">
+        <canvas id="si-canvas" width="512" height="512" class="max-w-[260px] max-h-[260px] sm:max-w-[300px] sm:max-h-[300px] shadow-md rounded-[10px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] dark:bg-[repeating-conic-gradient(#1A2230_0%_25%,#121824_0%_50%)] [background-size:16px_16px] cursor-grab active:cursor-grabbing select-none touch-none"></canvas>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between text-xs font-semibold text-[#192538] dark:text-white mb-2">
+          <span class="flex items-center gap-1.5"><span>🔍</span> {t.zoomLabel}</span>
+          <span id="si-zoom-val" class="font-mono text-[11px] text-[#3368A0] dark:text-[#66A3BF]">100%</span>
+        </div>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button type="button" id="si-zoom-out" class="btn-secondary text-xs px-2.5 py-1 rounded" aria-label="Zoom out">-</button>
+          <input type="range" id="si-zoom" min="0.3" max="3.0" step="0.05" value="1.0" class="flex-1 accent-[#3368A0] h-1.5 bg-[#E0DBD0] dark:bg-[#263346] rounded-lg cursor-pointer" />
+          <button type="button" id="si-zoom-in" class="btn-secondary text-xs px-2.5 py-1 rounded" aria-label="Zoom in">+</button>
+          <button type="button" id="si-fit" class="text-[11px] px-2 py-1 rounded border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] text-[#475569] dark:text-[#CBD5E1] font-mono">{t.fit}</button>
+          <button type="button" id="si-fill" class="text-[11px] px-2 py-1 rounded border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] text-[#475569] dark:text-[#CBD5E1] font-mono">{t.fill}</button>
+          <button type="button" id="si-center" class="text-[11px] px-2 py-1 rounded border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] text-[#475569] dark:text-[#CBD5E1] font-mono">{t.center}</button>
+        </div>
+      </div>
+
+      <button id="si-export" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2 shadow-sm">
+        <span>{t.exportBtn}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Right: preview + receipt -->
+  <div class="lg:col-span-5 space-y-6">
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.previewTitle}</h2>
+        <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.previewSub}</p>
+      </div>
+      <div class="flex items-center gap-4 p-4 rounded-[10px] bg-[#2B2D31]">
+        <img id="si-preview-lg" class="w-16 h-16 rounded-[18px] object-cover hidden" alt="Server icon preview large" />
+        <span id="si-preview-lg-ph" class="w-16 h-16 rounded-[18px] bg-[#1E1F22] flex items-center justify-center text-[10px] text-[#949ba4] font-mono">512</span>
+        <img id="si-preview-sm" class="w-10 h-10 rounded-[14px] object-cover hidden" alt="Server icon preview small" />
+        <span id="si-preview-sm-ph" class="w-10 h-10 rounded-[14px] bg-[#1E1F22] flex items-center justify-center text-[9px] text-[#949ba4] font-mono">48</span>
+      </div>
+    </div>
+
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.receiptTitle}</h2>
+      </div>
+      <div class="space-y-3 font-mono text-xs">
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.outputRes}</span>
+          <span class="font-bold text-[#0D9488]">512 × 512 px</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.originalRes}</span>
+          <span id="si-stat-orig" class="text-[#192538]">-- × --</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.shape}</span>
+          <span class="text-[#192538]">{t.shapeVal}</span>
+        </div>
+        <div class="flex justify-between py-1.5">
+          <span class="text-[#6B7A90]">{t.animatedLabel}</span>
+          <span class="text-[#192538] text-right max-w-[60%]">{t.animatedVal}</span>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-medium">
+        {t.links.map((link) => (
+          <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+            <span>{link.icon}</span> {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ws = document.getElementById('si-workspace');
+  const L = { invalidFile: ws?.dataset.invalidFile || 'Please upload a valid image file.' };
+
+  const fileInput = document.getElementById('si-file') as HTMLInputElement;
+  const dropzone = document.getElementById('si-drop');
+  const demoBtn = document.getElementById('si-demo');
+  const editor = document.getElementById('si-editor');
+  const canvas = document.getElementById('si-canvas') as HTMLCanvasElement;
+  const resetBtn = document.getElementById('si-reset');
+  const exportBtn = document.getElementById('si-export');
+
+  const zoomSlider = document.getElementById('si-zoom') as HTMLInputElement;
+  const zoomVal = document.getElementById('si-zoom-val');
+  const zoomIn = document.getElementById('si-zoom-in');
+  const zoomOut = document.getElementById('si-zoom-out');
+  const fitBtn = document.getElementById('si-fit');
+  const fillBtn = document.getElementById('si-fill');
+  const centerBtn = document.getElementById('si-center');
+
+  const previewLg = document.getElementById('si-preview-lg') as HTMLImageElement;
+  const previewLgPh = document.getElementById('si-preview-lg-ph');
+  const previewSm = document.getElementById('si-preview-sm') as HTMLImageElement;
+  const previewSmPh = document.getElementById('si-preview-sm-ph');
+  const statOrig = document.getElementById('si-stat-orig');
+
+  const SIZE = 512;
+  let sourceImage: HTMLImageElement | null = null;
+  let originalFileName = 'server-icon';
+  let objectUrl: string | null = null;
+  let panX = 0, panY = 0, zoom = 1.0;
+  let isDragging = false, startX = 0, startY = 0, startPanX = 0, startPanY = 0;
+  let blobTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const DEMO_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%235865F2"/><stop offset="100%" stop-color="%230D9488"/></linearGradient></defs><rect width="600" height="600" fill="url(%23g)"/><circle cx="300" cy="240" r="120" fill="%23FFFFFF" opacity="0.92"/><rect x="180" y="360" width="240" height="120" rx="24" fill="%23FFFFFF" opacity="0.8"/><text x="300" y="250" font-family="sans-serif" font-size="120" font-weight="bold" fill="%235865F2" text-anchor="middle" dominant-baseline="middle">G</text></svg>`;
+
+  function cleanup() {
+    if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+  }
+
+  function handleFile(file: File) {
+    if (!file.type.startsWith('image/')) { alert(L.invalidFile); return; }
+    originalFileName = file.name.replace(/\.[^/.]+$/, '');
+    const url = URL.createObjectURL(file);
+    load(url, url);
+  }
+
+  function load(src: string, revoke?: string) {
+    const img = new Image();
+    img.onload = () => {
+      sourceImage = img;
+      if (revoke) URL.revokeObjectURL(revoke);
+      panX = 0; panY = 0; zoom = 1.0;
+      syncZoom();
+      if (statOrig) statOrig.innerText = `${img.naturalWidth} × ${img.naturalHeight}`;
+      editor?.classList.remove('hidden');
+      render();
+      scheduleBlob();
+    };
+    img.src = src;
+  }
+
+  function render() {
+    const ctx = canvas.getContext('2d');
+    if (!ctx || !sourceImage) return;
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    const base = Math.max(SIZE / sourceImage.width, SIZE / sourceImage.height);
+    const scale = base * zoom;
+    const w = sourceImage.width * scale;
+    const h = sourceImage.height * scale;
+    const x = (SIZE - w) / 2 + panX;
+    const y = (SIZE - h) / 2 + panY;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(sourceImage, x, y, w, h);
+  }
+
+  function scheduleBlob() {
+    if (blobTimer) clearTimeout(blobTimer);
+    blobTimer = setTimeout(() => {
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        cleanup();
+        objectUrl = URL.createObjectURL(blob);
+        previewLg.src = objectUrl;
+        previewSm.src = objectUrl;
+        previewLg.classList.remove('hidden');
+        previewSm.classList.remove('hidden');
+        previewLgPh?.classList.add('hidden');
+        previewSmPh?.classList.add('hidden');
+      }, 'image/png');
+    }, 60);
+  }
+
+  function syncZoom() {
+    zoomSlider.value = String(zoom);
+    if (zoomVal) zoomVal.innerText = `${Math.round(zoom * 100)}%`;
+  }
+
+  function applyZoom(z: number) {
+    zoom = Math.round(Math.min(3, Math.max(0.3, z)) * 100) / 100;
+    syncZoom();
+    render();
+    scheduleBlob();
+  }
+
+  fileInput?.addEventListener('change', (e) => {
+    const f = (e.target as HTMLInputElement).files?.[0];
+    if (f) handleFile(f);
+  });
+  dropzone?.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]'); });
+  dropzone?.addEventListener('dragleave', () => dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]'));
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    const f = e.dataTransfer?.files?.[0];
+    if (f) handleFile(f);
+  });
+  demoBtn?.addEventListener('click', (e) => { e.stopPropagation(); load(DEMO_SVG); });
+
+  canvas.addEventListener('mousedown', (e) => {
+    if (!sourceImage) return;
+    isDragging = true; startX = e.clientX; startY = e.clientY; startPanX = panX; startPanY = panY;
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging || !sourceImage) return;
+    const rect = canvas.getBoundingClientRect();
+    const s = SIZE / rect.width;
+    panX = startPanX + (e.clientX - startX) * s;
+    panY = startPanY + (e.clientY - startY) * s;
+    render();
+  });
+  window.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; scheduleBlob(); } });
+
+  canvas.addEventListener('touchstart', (e) => {
+    if (!sourceImage || !e.touches.length) return;
+    isDragging = true; startX = e.touches[0].clientX; startY = e.touches[0].clientY; startPanX = panX; startPanY = panY;
+  }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (!isDragging || !sourceImage || !e.touches.length) return;
+    const rect = canvas.getBoundingClientRect();
+    const s = SIZE / rect.width;
+    panX = startPanX + (e.touches[0].clientX - startX) * s;
+    panY = startPanY + (e.touches[0].clientY - startY) * s;
+    render();
+  }, { passive: true });
+  window.addEventListener('touchend', () => { if (isDragging) { isDragging = false; scheduleBlob(); } });
+
+  canvas.addEventListener('wheel', (e) => {
+    if (!sourceImage) return;
+    e.preventDefault();
+    applyZoom(zoom + (e.deltaY < 0 ? 0.08 : -0.08));
+  }, { passive: false });
+
+  zoomSlider?.addEventListener('input', () => applyZoom(parseFloat(zoomSlider.value)));
+  zoomIn?.addEventListener('click', () => applyZoom(zoom + 0.15));
+  zoomOut?.addEventListener('click', () => applyZoom(zoom - 0.15));
+  fitBtn?.addEventListener('click', () => { panX = 0; panY = 0; applyZoom(1.0); });
+  fillBtn?.addEventListener('click', () => {
+    if (!sourceImage) return;
+    panX = 0; panY = 0;
+    const minS = Math.min(SIZE / sourceImage.width, SIZE / sourceImage.height);
+    const maxS = Math.max(SIZE / sourceImage.width, SIZE / sourceImage.height);
+    applyZoom(maxS / minS);
+  });
+  centerBtn?.addEventListener('click', () => { panX = 0; panY = 0; render(); scheduleBlob(); });
+
+  exportBtn?.addEventListener('click', () => {
+    if (!objectUrl) return;
+    const a = document.createElement('a');
+    a.href = objectUrl;
+    a.download = `${originalFileName}-server-icon-512x512.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    cleanup();
+    sourceImage = null;
+    panX = 0; panY = 0; zoom = 1.0; syncZoom();
+    editor?.classList.add('hidden');
+    previewLg.classList.add('hidden');
+    previewSm.classList.add('hidden');
+    previewLgPh?.classList.remove('hidden');
+    previewSmPh?.classList.remove('hidden');
+    if (statOrig) statOrig.innerText = '-- × --';
+    fileInput.value = '';
+  });
+</script>
