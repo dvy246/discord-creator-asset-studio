@@ -40,6 +40,22 @@ const NAV_ON = 'border-[#3368A0]/60 dark:border-[#66A3BF]/60 text-[#3368A0] dark
 const NAV_OFF = 'border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] dark:hover:border-[#66A3BF]';
 const navCls = (active: boolean) => `${NAV_BASE} ${active ? NAV_ON : NAV_OFF}`;
 
+// Lang-aware internal link: on an ES page, point nav/footer links at the /es
+// equivalent for routes that actually have a Spanish version; every other
+// route falls back to English (no ES page exists to link to yet). Keeps the
+// user inside their chosen locale instead of bouncing them back to English.
+// Kept in sync with SEOHead SPANISH_ROUTES and LanguagePicker ES_ROUTES.
+const ES_NAV_ROUTES = new Set([
+  '/',
+  '/tools/emoji/',
+  '/tools/sticker/',
+  '/tools/banner/',
+  '/tools/avatar/',
+  '/tools/role-icon/',
+  '/guides/discord-sizes/',
+]);
+const L = (path: string) => (lang === 'es' && ES_NAV_ROUTES.has(path) ? `/es${path}` : path);
+
 // Shared dropdown surface + item tokens
 const MENU_SURFACE = 'absolute top-[calc(100%+8px)] z-50 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white/95 dark:bg-[#141A24]/95 backdrop-blur-xl shadow-xl shadow-[rgba(0,0,0,0.10)] dark:shadow-[rgba(0,0,0,0.45)] p-2';
 const MENU_LABEL = 'px-2.5 pt-1.5 pb-1 text-[10px] font-mono font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7]';
@@ -109,7 +125,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
     <header class="border-b border-[#E0DBD0] bg-[#FAF8F5]/90 backdrop-blur-md sticky top-0 z-50 transition-colors duration-200">
       <div class="max-w-7xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between">
         <!-- Logo -->
-        <a href="/" class="flex items-center gap-2.5 text-lg font-bold tracking-tight text-[#192538] hover:opacity-90 transition-opacity shrink-0">
+        <a href={L("/")} class="flex items-center gap-2.5 text-lg font-bold tracking-tight text-[#192538] hover:opacity-90 transition-opacity shrink-0">
           <img src="/favicon.svg" alt="Discord Creator Asset Studio" class="w-8 h-8 rounded-[8px] shadow-xs hover:scale-105 transition-transform" width="32" height="32" />
           <span class="whitespace-nowrap">Asset Studio</span>
           <span class="text-[10px] leading-none px-2 py-1 rounded-full bg-[#C8DFDB]/60 text-[#3368A0] border border-[#66A3BF]/30 font-semibold hidden xl:inline-block whitespace-nowrap">
@@ -129,11 +145,11 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
               <div class="grid grid-cols-2 gap-x-1">
                 <div>
                   <div class={MENU_LABEL}>Visual &amp; Profile</div>
-                  <a href="/tools/banner/" class={MENU_ITEM}>
+                  <a href={L("/tools/banner/")} class={MENU_ITEM}>
                     <span class="text-sm">🖼️</span>
                     <div><div class="font-bold">Banner Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Server & profile safe zones</div></div>
                   </a>
-                  <a href="/tools/avatar/" class={MENU_ITEM}>
+                  <a href={L("/tools/avatar/")} class={MENU_ITEM}>
                     <span class="text-sm">👤</span>
                     <div><div class="font-bold">Avatar Cropper</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">512×512 circular mask</div></div>
                   </a>
@@ -148,19 +164,19 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
                 </div>
                 <div>
                   <div class={MENU_LABEL}>Server &amp; Chat Assets</div>
-                  <a href="/tools/emoji/" class={MENU_ITEM}>
+                  <a href={L("/tools/emoji/")} class={MENU_ITEM}>
                     <span class="text-sm">😀</span>
                     <div><div class="font-bold">Emoji Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">128×128 · 32px preview</div></div>
                   </a>
-                  <a href="/tools/sticker/" class={MENU_ITEM}>
+                  <a href={L("/tools/sticker/")} class={MENU_ITEM}>
                     <span class="text-sm">🏷️</span>
                     <div><div class="font-bold">Sticker Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Photo to 320×320 sticker</div></div>
                   </a>
-                  <a href="/tools/role-icon/" class={MENU_ITEM}>
+                  <a href={L("/tools/role-icon/")} class={MENU_ITEM}>
                     <span class="text-sm">🛡️</span>
                     <div><div class="font-bold">Role Icon Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">64×64 server badges</div></div>
                   </a>
-                  <a href="/" class={MENU_ITEM}>
+                  <a href={L("/")} class={MENU_ITEM}>
                     <span class="text-sm">📐</span>
                     <div><div class="font-bold">Image Resizer</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Crop & compress any asset</div></div>
                   </a>
@@ -203,7 +219,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
               <div class="grid grid-cols-2 gap-x-1">
                 <div>
                   <div class={MENU_LABEL}>Specs &amp; Guides</div>
-                  <a href="/guides/discord-sizes/" class={MENU_ITEM}>
+                  <a href={L("/guides/discord-sizes/")} class={MENU_ITEM}>
                     <span class="text-sm">📏</span>
                     <div><div class="font-bold">Discord Size Guide</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Every asset dimension & limit</div></div>
                   </a>
@@ -310,10 +326,10 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
               </div>
               <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FFDF82] text-black font-extrabold">50+ Free</span>
             </a>
-            <a href="/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
+            <a href={L("/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
               <span>📐</span> Discord Image Resizer
             </a>
-            <a href="/tools/banner/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
+            <a href={L("/tools/banner/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>🖼️</span> Banner Studio
             </a>
             <a href="/tools/gif-maker/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
@@ -322,16 +338,16 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
             <a href="/tools/profile-viewer/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>🔍</span> Profile Viewer
             </a>
-            <a href="/tools/avatar/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
+            <a href={L("/tools/avatar/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>👤</span> Avatar Studio
             </a>
-            <a href="/tools/emoji/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
+            <a href={L("/tools/emoji/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>😀</span> Emoji Maker
             </a>
-            <a href="/tools/sticker/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
+            <a href={L("/tools/sticker/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>🏷️</span> Sticker Studio
             </a>
-            <a href="/tools/role-icon/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
+            <a href={L("/tools/role-icon/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
               <span>🛡️</span> Role Icon Resizer (64×64)
             </a>
           </div>
@@ -342,7 +358,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
             Guides & Articles
           </span>
           <div class="grid grid-cols-1 gap-1">
-            <a href="/guides/discord-sizes/" class="px-2 py-1.5 rounded-md text-xs font-semibold text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:bg-white dark:hover:bg-[#1E2738] transition-colors flex items-center gap-2">
+            <a href={L("/guides/discord-sizes/")} class="px-2 py-1.5 rounded-md text-xs font-semibold text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:bg-white dark:hover:bg-[#1E2738] transition-colors flex items-center gap-2">
               <span>📋</span> Size Cheat Sheet (2026)
             </a>
             <a href="/guides/discord-gif-guide/" class="px-2 py-1.5 rounded-md text-xs font-semibold text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:bg-white dark:hover:bg-[#1E2738] transition-colors flex items-center gap-2">
@@ -575,12 +591,12 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
           <div>
             <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Core Utilities</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="/" class="hover:text-[#3368A0] transition-colors">Discord Image Resizer</a></li>
-              <li><a href="/tools/emoji/" class="hover:text-[#3368A0] transition-colors">Emoji Maker & Validator</a></li>
-              <li><a href="/tools/sticker/" class="hover:text-[#3368A0] transition-colors">Sticker Compressor (512 KiB)</a></li>
-              <li><a href="/tools/banner/" class="hover:text-[#3368A0] transition-colors">Profile & Server Banners</a></li>
-              <li><a href="/tools/avatar/" class="hover:text-[#3368A0] transition-colors">Avatar Optimizer</a></li>
-              <li><a href="/tools/role-icon/" class="hover:text-[#3368A0] transition-colors">Role Icon Resizer (64x64)</a></li>
+              <li><a href={L("/")} class="hover:text-[#3368A0] transition-colors">Discord Image Resizer</a></li>
+              <li><a href={L("/tools/emoji/")} class="hover:text-[#3368A0] transition-colors">Emoji Maker & Validator</a></li>
+              <li><a href={L("/tools/sticker/")} class="hover:text-[#3368A0] transition-colors">Sticker Compressor (512 KiB)</a></li>
+              <li><a href={L("/tools/banner/")} class="hover:text-[#3368A0] transition-colors">Profile & Server Banners</a></li>
+              <li><a href={L("/tools/avatar/")} class="hover:text-[#3368A0] transition-colors">Avatar Optimizer</a></li>
+              <li><a href={L("/tools/role-icon/")} class="hover:text-[#3368A0] transition-colors">Role Icon Resizer (64x64)</a></li>
               <li><a href="/tools/gif-maker/" class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>
               <li><a href="/tools/profile-viewer/" class="hover:text-[#3368A0] transition-colors">Profile Viewer & Grabber</a></li>
             </ul>
@@ -606,7 +622,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
           <div>
             <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Documentation</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="/guides/discord-sizes/" class="hover:text-[#3368A0] transition-colors">Discord Size Cheat Sheet (2026)</a></li>
+              <li><a href={L("/guides/discord-sizes/")} class="hover:text-[#3368A0] transition-colors">Discord Size Cheat Sheet (2026)</a></li>
               <li><a href="/guides/discord-gif-guide/" class="hover:text-[#3368A0] transition-colors">Discord GIF Guide</a></li>
               <li><a href="/blog/" class="hover:text-[#3368A0] transition-colors">Creator Blog & Tutorials</a></li>
               <li><a href="/es/" class="hover:text-[#3368A0] transition-colors">Versión en Español (ES)</a></li>
