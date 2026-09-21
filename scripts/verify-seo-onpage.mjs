@@ -62,6 +62,11 @@ const indexablePages = [
     primaryKeyword: 'discord timestamp',
   },
   {
+    path: 'tools/emoji-copy-paste/index.html',
+    url: '/tools/emoji-copy-paste/',
+    primaryKeyword: 'discord emoji copy paste',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -160,6 +165,11 @@ const indexablePages = [
     path: 'es/tools/timestamp/index.html',
     url: '/es/tools/timestamp/',
     primaryKeyword: 'marcas de tiempo discord',
+  },
+  {
+    path: 'es/tools/emoji-copy-paste/index.html',
+    url: '/es/tools/emoji-copy-paste/',
+    primaryKeyword: 'copiar y pegar emojis discord',
   },
 ];
 

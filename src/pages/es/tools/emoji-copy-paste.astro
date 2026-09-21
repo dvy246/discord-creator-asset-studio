@@ -1,0 +1,88 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import EmojiCopyPasteWorkspace from '../../../components/tools/EmojiCopyPasteWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Copiar y Pegar Emojis Discord | Tablero Unicode";
+const pageDescription = "Copiar y pegar emojis Discord: haz clic en cualquier emoji o kaomoji Unicode para copiarlo y pégalo en el chat. Caras, corazones, símbolos y más. Sin subidas.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/emoji-copy-paste/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/emoji-copy-paste/";
+
+const appSchema = generateSoftwareApplicationSchema("Tablero para Copiar y Pegar Emojis de Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Copiar y Pegar Emojis", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cómo copio y pego emojis en Discord?", a: "Haz clic en cualquier emoji del tablero para copiarlo al portapapeles y pégalo en un mensaje con Ctrl+V (Cmd+V en Mac). Son emojis Unicode estándar, así que se muestran en escritorio, web y móvil sin subir nada ni necesitar Nitro." },
+  { q: "¿Diferencia entre emojis Unicode y emojis personalizados?", a: "Los emojis Unicode (los de este tablero) están integrados en todos los dispositivos y son gratis para cualquiera. Los emojis personalizados son imágenes subidas a un servidor concreto, limitadas a 128x128 y 256 KiB, y usables solo donde están instaladas. Usa este tablero para reacciones rápidas; usa el Creador de Emojis para uno personalizado." },
+  { q: "¿Puedo usar estos emojis sin Discord Nitro?", a: "Sí. Los emojis Unicode son gratis y funcionan en cualquier cuenta, servidor o MD. Nitro solo hace falta para emojis animados personalizados o de otros servidores, no para los emojis estándar de aquí." },
+  { q: "¿Qué son los kaomoji?", a: "Los kaomoji son caras de texto al estilo japonés hechas con signos de puntuación, como el encogimiento ¯\\_(ツ)_/¯ o la mesa volcada (╯°□°）╯︵ ┻━┻. Al ser texto plano, se pegan y muestran en cualquier parte de Discord. El tablero incluye los más populares listos para copiar." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/emoji-copy-paste.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Copiar y Pegar Emojis</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Copiar y Pegar Emojis Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Haz clic en cualquier emoji o kaomoji Unicode para copiarlo y pégalo en el chat. Funciona sin Nitro y se muestra igual en todos los dispositivos.
+      </p>
+    </header>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <EmojiCopyPasteWorkspace lang="es" />
+
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Emojis Unicode vs. Personalizados</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Todos los emojis del tablero son parte del conjunto Unicode integrado en Windows, macOS, Android e iOS, así que se ven igual para todos y no ocupan espacios de emoji del servidor. Un emoji personalizado, en cambio, es una imagen que subes a un servidor (máx. 128×128 y 256 KiB). Para uno de marca, usa el <a href="/es/tools/emoji/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Creador de Emojis</a>.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Kaomoji y Caras de Texto</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          El tablero incluye kaomoji populares — caras de texto japonesas hechas con puntuación, como el encogimiento <code class="font-mono">¯\_(ツ)_/¯</code>. Al ser texto plano, se pegan en cualquier mensaje, apodo o estado. Usa el filtro para saltar a una categoría y todo se copia con un clic.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

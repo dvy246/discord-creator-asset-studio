@@ -344,6 +344,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/emoji-copy-paste.png',
+    config: {
+      title: 'DISCORD EMOJI', titleLine2: 'COPY & PASTE',
+      subtitle: 'CLICK ANY UNICODE EMOJI OR KAOMOJI TO COPY IT INSTANTLY',
+      tagline1: 'SMILEYS HEARTS SYMBOLS ANIMALS FOOD TEXT FACES',
+      tagline2: 'WORKS WITHOUT NITRO • 100% CLIENT-SIDE',
+      badge: 'ONE-CLICK UNICODE EMOJI BOARD',
+      cards: [
+        { label: 'SMILEYS', desc: '40+' }, { label: 'HEARTS', desc: '20+' },
+        { label: 'SYMBOLS', desc: 'REACTIONS' }, { label: 'KAOMOJI', desc: 'TEXT FACES' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
     file: 'public/og/timestamp.png',
     config: {
       title: 'DISCORD TIMESTAMP', titleLine2: 'GENERATOR',

@@ -57,6 +57,7 @@ const ES_NAV_ROUTES = new Set([
   '/tools/spoiler/',
   '/tools/colors/',
   '/tools/timestamp/',
+  '/tools/emoji-copy-paste/',
   '/guides/discord-sizes/',
 ]);
 const L = (path: string) => (lang === 'es' && ES_NAV_ROUTES.has(path) ? `/es${path}` : path);
@@ -169,6 +170,10 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
                   <a href={L("/tools/colors/")} class={MENU_ITEM}>
                     <span class="text-sm">🎨</span>
                     <div><div class="font-bold">Color & Hex Codes</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Background & blurple palette</div></div>
+                  </a>
+                  <a href={L("/tools/emoji-copy-paste/")} class={MENU_ITEM}>
+                    <span class="text-sm">📋</span>
+                    <div><div class="font-bold">Emoji Copy & Paste</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Unicode emoji & kaomoji board</div></div>
                   </a>
                 </div>
                 <div>
@@ -382,6 +387,9 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
             </a>
             <a href={L("/tools/timestamp/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
               <span>🕒</span> Timestamp Generator
+            </a>
+            <a href={L("/tools/emoji-copy-paste/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
+              <span>📋</span> Emoji Copy & Paste Board
             </a>
           </div>
         </div>
@@ -634,6 +642,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
               <li><a href={L("/tools/spoiler/")} class="hover:text-[#3368A0] transition-colors">Spoiler Maker (Text & Image)</a></li>
               <li><a href={L("/tools/colors/")} class="hover:text-[#3368A0] transition-colors">Color Palette & Hex Codes</a></li>
               <li><a href={L("/tools/timestamp/")} class="hover:text-[#3368A0] transition-colors">Timestamp Generator</a></li>
+              <li><a href={L("/tools/emoji-copy-paste/")} class="hover:text-[#3368A0] transition-colors">Emoji Copy & Paste Board</a></li>
               <li><a href="/tools/gif-maker/" class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>
               <li><a href="/tools/profile-viewer/" class="hover:text-[#3368A0] transition-colors">Profile Viewer & Grabber</a></li>
             </ul>
