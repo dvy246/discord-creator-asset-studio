@@ -1,0 +1,312 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import SpoilerWorkspace from '../../components/tools/SpoilerWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Image Spoiler Maker | Hide Text and Pics";
+const pageDescription = "Free Discord image spoiler maker: wrap text in ||spoiler|| markup or add the SPOILER_ prefix to blur an image attachment until clicked. In-browser, no uploads.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/spoiler/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Image Spoiler Maker",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Spoiler Maker", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I make a Discord image spoiler?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord blurs any image attachment whose filename begins with SPOILER_. Upload your image here and download the renamed copy — when you attach that file, Discord automatically hides it behind a click. On desktop you can also tick 'Mark as spoiler' in the upload dialog before sending."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I hide text as a spoiler in Discord?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wrap the text in double vertical bars: ||like this||. Discord renders it as a black bar that reveals the text when clicked. Paste your message into the text tab here and it adds the || || markup for you, with an option to hide each line separately."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the SPOILER_ prefix work on mobile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The SPOILER_ filename prefix is read by Discord on desktop, web, and mobile, so a renamed image is blurred everywhere. On the mobile app you can alternatively long-press the attachment thumbnail and choose 'Mark as Spoiler' before sending."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the spoiler tool private?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Text markup is generated in your browser and images are only renamed locally — nothing is uploaded to a server. The blurred preview is drawn with CSS on your device so you can confirm the effect before sending."
+      }
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/spoiler.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Spoiler Maker</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Image Spoiler</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Wrap text in || || markup or blur an image with the SPOILER_ prefix • 100% in-browser</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <SpoilerWorkspace lang="en" />
+
+    <!-- Sticky Stacking Technical Dossier (600+ Words) -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+
+        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
+            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+            <span>Spoiler Blueprint</span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
+            Two ways to <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">hide a spoiler</span><SketchUnderline color="#66A3BF" /></span> on Discord.
+          </h2>
+
+          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
+            Discord hides text with <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">|| ||</code> markup and hides images with a <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">SPOILER_</code> filename prefix. This tool does both, entirely in your browser.
+          </p>
+
+          <div class="relative pl-6 space-y-5 select-none pt-2">
+            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
+            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
+
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
+              <span class="text-xs sm:text-sm">01 / Text Spoilers with || ||</span>
+            </div>
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
+              <span class="text-xs sm:text-sm">02 / The SPOILER_ Image Prefix</span>
+            </div>
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
+              <span class="text-xs sm:text-sm">03 / Desktop & Mobile Steps</span>
+            </div>
+            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
+              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
+              <span class="text-xs sm:text-sm">04 / Private, In-Browser Processing</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 relative pb-16 space-y-12">
+
+          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">TEXT MARKUP // 01</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">|| ||</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Hiding Text with Double Bars
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Discord treats two vertical bars on each side of text as a spoiler tag. Typing <code class="font-mono">||plot twist||</code> renders a solid black bar that only reveals the words when a reader clicks it. It works inline in the middle of a sentence, so you can hide a single word or a whole paragraph.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                The text tab above adds the markup for you and offers a "hide each line separately" toggle, which is handy for spoiler lists where every entry should reveal on its own.
+              </p>
+              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
+                <span class="text-[#6B7A90]">You type:</span>
+                <span class="text-[#0D9488] font-bold">||the killer is…||</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">FILE PREFIX // 02</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">SPOILER_</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Blurring an Image with the SPOILER_ Prefix
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Discord automatically blurs any attachment whose filename starts with <code class="font-mono">SPOILER_</code>. Rename <code class="font-mono">art.png</code> to <code class="font-mono">SPOILER_art.png</code> and it uploads pre-hidden — no extra clicks. The image tab above renames your file to that exact form and lets you download the ready-to-send copy.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                This is the most reliable method when you are dragging files in bulk or posting from a bot, because it does not depend on any checkbox in the UI.
+              </p>
+              <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                  <span class="text-[#6B7A90] block text-[10px]">Before:</span>
+                  <span class="font-bold text-[#192538] dark:text-white">art.png</span>
+                </div>
+                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+                  <span class="text-[#6B7A90] block text-[10px]">After:</span>
+                  <span class="font-bold text-[#0D9488]">SPOILER_art.png</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">MANUAL STEPS // 03</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">DESKTOP + MOBILE</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Marking a Spoiler Inside Discord
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                On desktop, attach the image, hover it in the upload preview, and click the eye icon or tick "Mark as spoiler" before you press send. On the mobile app, tap the attachment thumbnail after selecting it and choose "Mark as Spoiler" from the menu.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                Both routes produce the same blurred result as the SPOILER_ prefix, so use whichever fits your workflow — the prefix is faster for batches, the checkbox is faster for a single drag-and-drop.
+              </p>
+              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
+                <span class="text-[#0D9488] font-bold">Tip:</span>
+                <span>Spoilered images still count toward the 10 MB free upload limit — compress large files first.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sticky-step-wrapper sticky top-36 z-40">
+            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
+              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">PRIVACY BY DESIGN // 04</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">ZERO UPLOADS</span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
+                Nothing Leaves Your Device
+              </h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                The text markup is built with plain string handling and the image is only renamed locally — the file bytes are never uploaded. The blurred preview you see is a CSS effect drawn on your machine so you can confirm the spoiler before posting.
+              </p>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
+                That keeps sensitive screenshots, leaks, and surprise reveals private until the moment a reader chooses to look.
+              </p>
+              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span>No server uploads • Local rename & markup only</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    function setupScrollLocking() {
+      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
+      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
+      const progressBar = document.getElementById('scroll-progress-line');
+      if (!cardWrappers.length) return;
+
+      function updateCardStack() {
+        let activeIndex = 0;
+        cardWrappers.forEach((wrapper, index) => {
+          const rect = wrapper.getBoundingClientRect();
+          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
+          const isLocked = rect.top <= stickyTop + 8;
+          if (isLocked) activeIndex = index;
+
+          const nextCard = cardWrappers[index + 1];
+          if (nextCard) {
+            const nextRect = nextCard.getBoundingClientRect();
+            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
+            const transitionDist = 180;
+            if (nextRect.top < nextStickyTop + transitionDist) {
+              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
+              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
+              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
+            } else {
+              wrapper.style.transform = 'scale(1)';
+              wrapper.style.filter = 'brightness(1)';
+            }
+          }
+        });
+
+        stepIndicators.forEach((ind, i) => {
+          const dot = ind.querySelector('.step-dot');
+          if (i <= activeIndex) {
+            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
+            dot?.classList.add('border-current', 'scale-110');
+            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
+          } else {
+            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+            ind.classList.add('text-[#6B7A90]', 'opacity-70');
+            dot?.classList.remove('border-current', 'scale-110');
+            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
+          }
+        });
+
+        if (progressBar) {
+          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
+          progressBar.style.height = `${pct}%`;
+        }
+      }
+
+      window.addEventListener('scroll', updateCardStack, { passive: true });
+      updateCardStack();
+    }
+
+    setupScrollLocking();
+    document.addEventListener('astro:after-swap', setupScrollLocking);
+  </script>
+</Layout>

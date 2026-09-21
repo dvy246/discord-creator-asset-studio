@@ -47,6 +47,11 @@ const indexablePages = [
     primaryKeyword: 'discord image resizer',
   },
   {
+    path: 'tools/spoiler/index.html',
+    url: '/tools/spoiler/',
+    primaryKeyword: 'discord image spoiler',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -130,6 +135,11 @@ const indexablePages = [
     path: 'es/tools/image-resizer/index.html',
     url: '/es/tools/image-resizer/',
     primaryKeyword: 'redimensionar imágenes discord',
+  },
+  {
+    path: 'es/tools/spoiler/index.html',
+    url: '/es/tools/spoiler/',
+    primaryKeyword: 'spoiler de imagen discord',
   },
 ];
 

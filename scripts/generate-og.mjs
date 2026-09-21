@@ -344,6 +344,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/spoiler.png',
+    config: {
+      title: 'DISCORD IMAGE', titleLine2: 'SPOILER MAKER',
+      subtitle: 'HIDE TEXT WITH || || OR BLUR IMAGES WITH SPOILER PREFIX',
+      tagline1: 'TEXT SPOILER MARKUP • SPOILER_ FILENAME PREFIX',
+      tagline2: 'DESKTOP & MOBILE • 100% PRIVATE IN-BROWSER',
+      badge: 'TEXT & IMAGE SPOILERS • ZERO UPLOADS',
+      cards: [
+        { label: 'TEXT', desc: '|| || MARKUP' }, { label: 'IMAGE', desc: 'SPOILER_ PREFIX' },
+        { label: 'PER-LINE', desc: 'TOGGLE' }, { label: 'PREVIEW', desc: 'LIVE BLUR' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/image-resizer.png',
     config: {
       title: 'DISCORD IMAGE', titleLine2: 'RESIZER',
