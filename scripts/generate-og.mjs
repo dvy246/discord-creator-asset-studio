@@ -344,6 +344,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/badge-maker.png',
+    config: {
+      title: 'DISCORD LOGO', titleLine2: 'BADGE MAKER',
+      subtitle: 'BUILD YOUR OWN SERVER BADGE FROM INITIALS OR AN EMOJI',
+      tagline1: 'SOLID & GRADIENT FILLS • CIRCLE ROUNDED SQUARE',
+      tagline2: 'TRADEMARK-SAFE • NOT AFFILIATED WITH DISCORD',
+      badge: 'ORIGINAL 512X512 BADGES • ZERO UPLOADS',
+      cards: [
+        { label: 'SIZE', desc: '512X512 PX' }, { label: 'FILL', desc: 'SOLID GRADIENT' },
+        { label: 'SHAPE', desc: '3 OPTIONS' }, { label: 'CONTENT', desc: 'TEXT EMOJI' },
+        { label: 'SAFE', desc: 'NO LOGOS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/server-icon.png',
     config: {
       title: 'DISCORD SERVER', titleLine2: 'ICON MAKER',

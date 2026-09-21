@@ -1,0 +1,88 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import BadgeMakerWorkspace from '../../../components/tools/BadgeMakerWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Creador de Logos Discord | Insignias de Texto";
+const pageDescription = "Creador de logos Discord: crea tu propia insignia con iniciales o un emoji sobre color o degradado, en círculo o cuadrado. PNG 512x512, en tu navegador.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/badge-maker/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/badge-maker/";
+
+const appSchema = generateSoftwareApplicationSchema("Creador de Logos e Insignias para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Creador de Logos", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cómo hago un logo para mi servidor de Discord?", a: "Escribe las iniciales de tu servidor o elige un emoji, selecciona un color o degradado de fondo y una forma, y descarga el PNG de 512x512. Súbelo como icono en Ajustes del Servidor. Este creador genera tu propio arte original: no usa el logo ni las marcas de Discord." },
+  { q: "¿Es este el logo oficial de Discord?", a: "No. Es un creador de insignias independiente para tu propio icono de servidor o comunidad. No está afiliado ni respaldado por Discord y no reproduce el logo Clyde ni el wordmark. Conservas todos los derechos sobre la insignia de texto/emoji que generas." },
+  { q: "¿A qué tamaño se exporta la insignia?", a: "Cada insignia se exporta como PNG de 512x512, el tamaño recomendado para un icono de servidor de Discord y también válido para avatares. Las esquinas transparentes se conservan al elegir la forma de círculo o cuadrado redondeado." },
+  { q: "¿Puedo usar un emoji en vez de letras?", a: "Sí. Escribe o pega cualquier emoji en el campo de texto y se renderiza como arte a todo color centrado en la insignia. Puedes combinar iniciales cortas o usar un solo emoji, lo que se lea mejor en tamaños pequeños." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/badge-maker.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Creador de Logos</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Creador de Logos Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Crea tu propia insignia de servidor con iniciales o un emoji sobre un color o degradado, en forma de círculo o cuadrado redondeado, y exporta un PNG de <strong>512×512</strong>. Todo el procesamiento ocurre localmente.
+      </p>
+    </header>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <BadgeMakerWorkspace lang="es" />
+
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Crea tu Propio Logo de Servidor</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Un lettermark limpio —las iniciales de tu comunidad sobre un degradado— se lee al instante en la lista de servidores y escala sin perder nitidez. Escribe de una a cuatro letras o un emoji, elige color o degradado y forma, y exporta un PNG nítido de 512×512 listo para usar como icono o avatar.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Independiente y Sin Riesgo de Marca</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Es un generador genérico: crea arte original de texto y color que te pertenece. <strong>No está afiliado ni respaldado por Discord</strong> y no incluye el logo Clyde, el wordmark ni ninguna marca de Discord. Combínalo con el <a href="/es/tools/server-icon/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Creador de Icono de Servidor</a> para ver el encuadre.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

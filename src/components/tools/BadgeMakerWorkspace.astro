@@ -1,0 +1,260 @@
+---
+/**
+ * BadgeMakerWorkspace.astro — generic text/emoji badge & icon maker (512×512).
+ *
+ * Builds a simple server badge from initials or an emoji over a solid or
+ * gradient background in a circle / rounded-square / square shape, exported as a
+ * 512×512 PNG. Deliberately generic and trademark-safe: it does NOT reproduce
+ * Discord's logo or wordmark. Language-agnostic logic on fixed element IDs;
+ * visible labels via `t`, runtime strings via data-* (`js` → `L`). Imported by
+ * the EN (/tools/badge-maker/) and ES (/es/tools/badge-maker/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+// Gradient presets [from, to] — brand-neutral, not Discord's palette.
+const GRADIENTS = [
+  ['#5865F2', '#0D9488'],
+  ['#F23F43', '#F0B232'],
+  ['#3368A0', '#66A3BF'],
+  ['#7C3AED', '#EC4899'],
+  ['#0EA5E9', '#22D3EE'],
+  ['#111214', '#3A3D44']
+];
+
+const t = {
+  en: {
+    editorTitle: 'Badge Studio (512 × 512)',
+    editorSub: 'Type initials or an emoji, pick colors and a shape',
+    textLabel: 'Text or Emoji',
+    textPlaceholder: 'e.g. GG or 🎮',
+    shapeLabel: 'Shape',
+    shapeCircle: 'Circle',
+    shapeRounded: 'Rounded',
+    shapeSquare: 'Square',
+    bgLabel: 'Background',
+    gradientsLabel: 'Gradient presets',
+    solidLabel: 'Solid color',
+    fgLabel: 'Text Color',
+    exportBtn: 'Download Badge (512×512 PNG)',
+    previewTitle: 'Preview',
+    disclaimer: 'Generic badge maker — creates your own artwork. Not affiliated with Discord and does not use Discord logos or trademarks.',
+    links: [
+      { icon: '🏰', href: '/tools/server-icon/', label: 'Discord Server Icon Maker (512×512)' },
+      { icon: '🎨', href: '/tools/colors/', label: 'Discord Color & Hex Codes' },
+      { icon: '🛡️', href: '/tools/role-icon/', label: 'Discord Role Icon Maker (64×64)' }
+    ]
+  },
+  es: {
+    editorTitle: 'Estudio de Insignias (512 × 512)',
+    editorSub: 'Escribe iniciales o un emoji, elige colores y forma',
+    textLabel: 'Texto o Emoji',
+    textPlaceholder: 'ej. GG o 🎮',
+    shapeLabel: 'Forma',
+    shapeCircle: 'Círculo',
+    shapeRounded: 'Redondeado',
+    shapeSquare: 'Cuadrado',
+    bgLabel: 'Fondo',
+    gradientsLabel: 'Degradados',
+    solidLabel: 'Color sólido',
+    fgLabel: 'Color del Texto',
+    exportBtn: 'Descargar Insignia (512×512 PNG)',
+    previewTitle: 'Vista Previa',
+    disclaimer: 'Creador de insignias genérico — genera tu propio arte. No está afiliado con Discord ni usa logos o marcas de Discord.',
+    links: [
+      { icon: '🏰', href: '/es/tools/server-icon/', label: 'Creador de Icono de Servidor (512×512)' },
+      { icon: '🎨', href: '/es/tools/colors/', label: 'Colores y Códigos Hex de Discord' },
+      { icon: '🛡️', href: '/es/tools/role-icon/', label: 'Creador de Iconos de Rol (64×64)' }
+    ]
+  }
+}[lang];
+---
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16" id="bm-workspace">
+  <!-- Left: controls -->
+  <div class="lg:col-span-7 space-y-6">
+    <div class="card-panel rounded-[14px] p-6 space-y-5">
+      <div class="pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.editorTitle}</h2>
+        <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.editorSub}</p>
+      </div>
+
+      <div>
+        <label for="bm-text" class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5"><span>🔤</span> {t.textLabel}</label>
+        <input type="text" id="bm-text" maxlength="4" value="GG" placeholder={t.textPlaceholder} class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none" />
+      </div>
+
+      <div>
+        <span class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5"><span>⬜</span> {t.shapeLabel}</span>
+        <div class="grid grid-cols-3 gap-2">
+          <button type="button" id="bm-shape-circle" class="bm-shape px-3 py-2 rounded-lg border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center gap-1.5" data-shape="circle"><span class="w-3.5 h-3.5 border-2 border-current rounded-full"></span>{t.shapeCircle}</button>
+          <button type="button" id="bm-shape-rounded" class="bm-shape px-3 py-2 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] flex items-center justify-center gap-1.5" data-shape="rounded"><span class="w-3.5 h-3.5 border-2 border-current rounded-md"></span>{t.shapeRounded}</button>
+          <button type="button" id="bm-shape-square" class="bm-shape px-3 py-2 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] flex items-center justify-center gap-1.5" data-shape="square"><span class="w-3.5 h-3.5 border-2 border-current"></span>{t.shapeSquare}</button>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5"><span>🎨</span> {t.bgLabel}</span>
+        <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mb-1.5">{t.gradientsLabel}</p>
+        <div class="flex flex-wrap gap-2 mb-3" id="bm-gradients">
+          {GRADIENTS.map((g, i) => (
+            <button type="button" class="bm-grad w-10 h-10 rounded-[10px] border-2 border-transparent hover:border-[#3368A0] transition-colors" data-from={g[0]} data-to={g[1]} data-index={i} style={`background:linear-gradient(135deg, ${g[0]}, ${g[1]})`} aria-label={`Gradient ${i + 1}`}></button>
+          ))}
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.solidLabel}</span>
+          <input type="color" id="bm-bg" value="#5865F2" class="w-10 h-8 rounded border border-[#E0DBD0] dark:border-[#263346] cursor-pointer bg-transparent" aria-label="Background color" />
+        </div>
+      </div>
+
+      <div>
+        <label for="bm-fg" class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5"><span>🖊️</span> {t.fgLabel}</label>
+        <input type="color" id="bm-fg" value="#FFFFFF" class="w-10 h-8 rounded border border-[#E0DBD0] dark:border-[#263346] cursor-pointer bg-transparent" aria-label="Text color" />
+      </div>
+
+      <button id="bm-export" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2 shadow-sm">
+        <span>{t.exportBtn}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Right: preview -->
+  <div class="lg:col-span-5 space-y-6">
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.previewTitle}</h2>
+      </div>
+      <div class="flex items-center justify-center p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#101622] border border-[#E0DBD0] dark:border-[#263346] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] dark:bg-[repeating-conic-gradient(#1A2230_0%_25%,#121824_0%_50%)] [background-size:16px_16px]">
+        <canvas id="bm-canvas" width="512" height="512" class="max-w-[240px] max-h-[240px] w-full shadow-md rounded-[10px]"></canvas>
+      </div>
+      <p class="mt-4 text-[11px] text-[#6B7A90] dark:text-[#8494A7] leading-relaxed">{t.disclaimer}</p>
+    </div>
+
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex flex-col gap-1.5 text-xs font-medium">
+        {t.links.map((link) => (
+          <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+            <span>{link.icon}</span> {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('bm-canvas') as HTMLCanvasElement;
+  const textIn = document.getElementById('bm-text') as HTMLInputElement;
+  const bgIn = document.getElementById('bm-bg') as HTMLInputElement;
+  const fgIn = document.getElementById('bm-fg') as HTMLInputElement;
+  const exportBtn = document.getElementById('bm-export');
+  const shapeBtns = document.querySelectorAll<HTMLButtonElement>('.bm-shape');
+  const gradBtns = document.querySelectorAll<HTMLButtonElement>('.bm-grad');
+
+  const SIZE = 512;
+  let shape: 'circle' | 'rounded' | 'square' = 'circle';
+  let gradient: { from: string; to: string } | null = null;
+
+  function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function render() {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    ctx.save();
+
+    // Clip to shape
+    if (shape === 'circle') {
+      ctx.beginPath();
+      ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.clip();
+    } else if (shape === 'rounded') {
+      roundRectPath(ctx, 0, 0, SIZE, SIZE, 110);
+      ctx.clip();
+    }
+
+    // Background
+    if (gradient) {
+      const g = ctx.createLinearGradient(0, 0, SIZE, SIZE);
+      g.addColorStop(0, gradient.from);
+      g.addColorStop(1, gradient.to);
+      ctx.fillStyle = g;
+    } else {
+      ctx.fillStyle = bgIn.value;
+    }
+    ctx.fillRect(0, 0, SIZE, SIZE);
+
+    // Text / emoji
+    const text = (textIn.value || '').trim();
+    if (text) {
+      ctx.fillStyle = fgIn.value;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      // Scale font down as the string gets longer.
+      const len = [...text].length;
+      const fontSize = len <= 1 ? 300 : len === 2 ? 230 : len === 3 ? 170 : 130;
+      ctx.font = `800 ${fontSize}px -apple-system, "Segoe UI", "Noto Color Emoji", system-ui, sans-serif`;
+      ctx.fillText(text, SIZE / 2, SIZE / 2 + fontSize * 0.03);
+    }
+
+    ctx.restore();
+  }
+
+  function setShape(s: 'circle' | 'rounded' | 'square') {
+    shape = s;
+    shapeBtns.forEach((b) => {
+      const active = b.dataset.shape === s;
+      b.className = active
+        ? 'bm-shape px-3 py-2 rounded-lg border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center gap-1.5'
+        : 'bm-shape px-3 py-2 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] flex items-center justify-center gap-1.5';
+    });
+    render();
+  }
+
+  shapeBtns.forEach((b) => b.addEventListener('click', () => setShape(b.dataset.shape as 'circle' | 'rounded' | 'square')));
+
+  gradBtns.forEach((b) => {
+    b.addEventListener('click', () => {
+      gradient = { from: b.dataset.from || '#5865F2', to: b.dataset.to || '#0D9488' };
+      gradBtns.forEach((x) => x.classList.remove('border-[#3368A0]'));
+      b.classList.add('border-[#3368A0]');
+      render();
+    });
+  });
+
+  bgIn?.addEventListener('input', () => {
+    gradient = null;
+    gradBtns.forEach((x) => x.classList.remove('border-[#3368A0]'));
+    render();
+  });
+  fgIn?.addEventListener('input', render);
+  textIn?.addEventListener('input', render);
+
+  exportBtn?.addEventListener('click', () => {
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'discord-badge-512x512.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 'image/png');
+  });
+
+  // Init
+  render();
+</script>

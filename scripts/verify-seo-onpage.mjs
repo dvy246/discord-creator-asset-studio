@@ -72,6 +72,11 @@ const indexablePages = [
     primaryKeyword: 'discord server icon',
   },
   {
+    path: 'tools/badge-maker/index.html',
+    url: '/tools/badge-maker/',
+    primaryKeyword: 'discord logo maker',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -180,6 +185,11 @@ const indexablePages = [
     path: 'es/tools/server-icon/index.html',
     url: '/es/tools/server-icon/',
     primaryKeyword: 'icono de servidor discord',
+  },
+  {
+    path: 'es/tools/badge-maker/index.html',
+    url: '/es/tools/badge-maker/',
+    primaryKeyword: 'creador de logos discord',
   },
 ];
 

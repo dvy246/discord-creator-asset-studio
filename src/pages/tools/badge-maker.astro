@@ -1,0 +1,126 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import BadgeMakerWorkspace from '../../components/tools/BadgeMakerWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Logo Maker | Text and Badge Icons";
+const pageDescription = "Free Discord logo maker: build your own server badge from initials or an emoji over a color or gradient, in a circle or square. 512x512 PNG, in-browser.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/badge-maker/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Logo & Badge Maker",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Logo & Badge Maker", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I make a logo for my Discord server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Type your server's initials or pick an emoji, choose a background color or gradient and a shape, then download the 512x512 PNG. Upload it as your server icon in Server Settings. This maker builds your own original artwork — it does not use Discord's logo or brand marks."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this the official Discord logo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. This is an independent badge maker for creating your own server or community icon. It is not affiliated with or endorsed by Discord, and it does not reproduce Discord's Clyde logo or wordmark. You keep full rights to the simple text/emoji badge you generate."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What size does the badge export at?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Every badge exports as a 512x512 PNG, which is the recommended size for a Discord server icon and works for avatars too. Transparent corners are preserved when you choose the circle or rounded-square shape."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use an emoji instead of letters?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Type or paste any emoji into the text field and it is rendered as full-color artwork centered in the badge. You can combine short initials or use a single emoji — whatever reads best at small sizes in the server list."
+      }
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/badge-maker.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Logo & Badge Maker</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Logo Maker</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">& Badge Builder</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Build your own server badge from initials or an emoji • Gradients & shapes • 512×512 PNG</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <BadgeMakerWorkspace lang="en" />
+
+    <!-- Prose reference -->
+    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto space-y-6">
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">Make Your Own Discord Server Logo</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Not every server needs a custom illustration. A clean lettermark — your community's initials over a bold gradient — reads instantly in the server list and scales down without turning to mush. This maker lets you type one to four characters or drop in an emoji, choose a solid color or one of six gradient presets, pick a circle, rounded-square, or square shape, and export a crisp 512×512 PNG ready to use as a server icon or avatar.
+        </p>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          The 512×512 output matches Discord's recommended server-icon size, and the circle and rounded-square options keep transparent corners so the badge sits cleanly on Discord's dark sidebar. Because Discord masks server icons as a rounded square, a centered lettermark or emoji is the safest layout — nothing important gets clipped.
+        </p>
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">Independent and Trademark-Safe</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          This is a generic badge generator: it creates original text-and-color artwork that belongs to you. It is <strong>not affiliated with or endorsed by Discord</strong>, and it deliberately does not include Discord's Clyde logo, wordmark, or any brand assets — so you can use what you make without trademark worries. When you are ready to install it, pair it with the <a href="/tools/server-icon/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Server Icon Maker</a> to preview the rounded-square framing, or drop the file straight into Server Settings.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>
