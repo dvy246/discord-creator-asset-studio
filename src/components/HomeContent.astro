@@ -1,0 +1,624 @@
+---
+/**
+ * HomeContent.astro — the single shared homepage body for EN and ES.
+ *
+ * Both src/pages/index.astro and src/pages/es/index.astro render this exact
+ * component (only the <Layout> meta + JSON-LD differ per page), so the two
+ * locales can never drift structurally again. Every user-facing string lives
+ * in the `t` dictionary below; the FAQ list is pulled from home-i18n.ts so the
+ * visible <details> and the FAQPage JSON-LD stay in lock-step.
+ */
+import SketchUnderline from './SketchUnderline.astro';
+import HeroSimulator from './HeroSimulator.astro';
+import AnimatedHeroTitle from './AnimatedHeroTitle.astro';
+import TemplateCarousel from './TemplateCarousel.astro';
+import { homeFaqs, type Lang } from '../data/home-i18n.ts';
+
+interface Props { lang?: Lang; }
+const { lang = 'en' } = Astro.props;
+
+// Routes that have a real /es/ translation. Everything else falls back to the
+// English URL so the Spanish page never links to a 404.
+const ES_ROUTES = new Set([
+  '/tools/emoji/',
+  '/tools/sticker/',
+  '/tools/banner/',
+  '/tools/avatar/',
+  '/tools/role-icon/',
+  '/guides/discord-sizes/',
+]);
+const p = (path: string) => (lang === 'es' && ES_ROUTES.has(path) ? `/es${path}` : path);
+
+const faqs = homeFaqs[lang];
+
+const t = {
+  en: {
+    hero: {
+      trustBadge: 'Discord rules verified · Private by design',
+      h1Mark: 'Discord Banner Maker',
+      h1Rest: ' & Asset Studio',
+      h1Underline: 'Made to fit Discord.',
+      subPrefix: 'The creator suite built for ',
+      words: ['creators.', 'communities.', 'servers.', 'artists.', 'gamers.'],
+      para: 'Resize, crop, and format custom emojis, stickers, banners, and avatars to fit Discord perfectly. Everything runs right in your browser—fast, free, and completely private.',
+      ctaCreate: 'Create an Asset',
+      ctaCheck: 'Check a File',
+      privacy: 'Private by design: Local browser processing only. No cloud uploads.',
+    },
+    showcase: {
+      badge: 'Interactive 3D Template Showcase · Drag & Explore',
+      h2Prefix: 'Start with a ',
+      h2Underline: 'design',
+      para: 'Swipe or drag through curated Discord templates crafted for exact platform dimensions. Click any design to bring it forward or open it in the studio.',
+    },
+    tools: {
+      h2Underline: 'Utilities',
+      h2Suffix: '',
+      h2Prefix: 'Dedicated ',
+      sub: 'Select an asset type to inspect dimensions, test byte limits, and auto-correct format issues.',
+      cards: [
+        { icon: '😀', href: '/tools/emoji/', title: 'Custom Emoji Studio', desc: 'Upload up to 128x128, preview at 32x32 chat dimensions, and enforce the 256 KiB upload limit with lossless local compression.', cta: 'Inspect Emoji →' },
+        { icon: '🏷️', href: '/tools/sticker/', title: 'Sticker Studio & Photo Cropper', desc: 'Transform photos into custom Discord stickers with interactive pan & zoom framing, die-cut vinyl borders, and exact 320x320 PNG export.', cta: 'Create Sticker →' },
+        { icon: '🖼️', href: '/tools/banner/', title: 'Profile & Server Banners', desc: 'Presets for Global (680x240), Per-Server (600x240), and Server Banners (960x540) with official top 48px safe-zone overlays.', cta: 'Design Banner →' },
+        { icon: '👤', href: '/tools/avatar/', title: 'Avatar & Profile Picture', desc: 'Circular crop preview and 512x512 square authoring canvas with transparent background checks and Nitro animated avatar flags.', cta: 'Crop Avatar →' },
+        { icon: '🛡️', href: '/tools/role-icon/', title: 'Role Icon Maker', desc: 'Resize to exactly 64x64 pixels and verify under 256 KB. Cites Boost Level 2 and Manage Roles permission rules.', cta: 'Create Role Icon →' },
+        { icon: '📋', href: '/guides/discord-sizes/', title: 'Official Size Cheat Sheet', desc: 'Comprehensive specification table covering dimensions, aspect ratios, file extensions, and server level requirements.', cta: 'Browse Specs →' },
+        { icon: '🎞️', href: '/tools/gif-maker/', title: 'Discord GIF Maker', desc: 'Convert MP4 and WebM clips to animated Discord GIFs with auto-compression under the strict 10MB Nitro limit.', cta: 'Make GIF →' },
+        { icon: '🔍', href: '/tools/profile-viewer/', title: 'Profile Viewer & Grabber', desc: 'Inspect full-resolution Discord avatars and animated banners by User ID. Instant snowflake account age calculator.', cta: 'Lookup User →' },
+      ],
+    },
+    sticky: {
+      badge: 'Built for Discord Rules',
+      h2Prefix: 'Never get rejected at ',
+      h2Underline: 'upload',
+      h2Suffix: ' again.',
+      para: 'See how our four-step checker works right in your browser. Your files never get uploaded to a server, text and edges stay crisp, and your assets pass Discord limits on the first try.',
+      steps: ['01 / Open File', '02 / Check Limits', '03 / Crop & Resize', '04 / Ready to Upload'],
+      cta: 'Test With Your Artwork',
+      cards: [
+        { num: '01', label: 'INGESTION', badge: '100% In-Browser', title: 'Everything Stays on Your Device', para: "Drag and drop pictures, animated GIFs, or paste directly from your clipboard. Your files stay in your browser's local memory—nothing is ever uploaded to a remote server.", metricLabel: 'Network Transmission:', metricValue: '0 Bytes Transferred', metricClass: 'text-[#0D9488]' },
+        { num: '02', label: 'EVALUATION', badge: '28 Active Rules', title: 'Instant Rule Checking', para: "We check your file against Discord's official rules. That includes the exact byte limits (like 256 KiB / 262,144 bytes instead of rounded numbers), aspect ratios, and format requirements before you download.", metricLabel: 'Rule Evaluation Latency:', metricValue: '< 4 milliseconds', metricClass: 'text-[#3368A0] dark:text-[#66A3BF]' },
+        { num: '03', label: 'TRANSFORMATION', badge: 'Lossless Canvas', title: 'Smooth Resizing & Safe Zones', para: 'Easily crop and scale your image without losing quality or transparency. For banners, we show you the top 48px safe zone overlay so Discord buttons won\'t hide your text or art.', metricLabel: 'Safe-Zone Precision:', metricValue: '100% Geometry Match', metricClass: 'text-[#0D9488]' },
+        { num: '04', label: 'EXPORT', badge: 'Zero Upload Failures', title: 'Guaranteed Upload on Discord', para: "Before you download, we measure the exact file size down to the byte. If it's too big, our local compressor trims file size without muddying your pixels until it safely fits under Discord's upload ceiling.", metricLabel: 'Verification Status:', metricValue: 'Guaranteed Pass', metricClass: 'text-[#0D9488]' },
+      ],
+    },
+    dossier: {
+      badge: 'Discord Specs Made Simple',
+      h2Prefix: 'Discord Rules: ',
+      h2Underline: 'Sizes & Formats',
+      para: 'Discord has strict limits for file sizes, pixel dimensions, and safe zones. If a file is even one byte or one pixel off, Discord rejects it. Here is everything you need to know in plain English.',
+      steps: [
+        '01 / The 256 KiB Upload Cap',
+        '02 / Banner 48px Safe Zone',
+        '03 / Exact 320×320 Stickers',
+        '04 / True Color & Transparency',
+        '05 / 100% In-Browser Privacy',
+      ],
+      cta: 'Open Complete Size Guide',
+      card1: {
+        tag: 'Rule: 256 KiB Limit',
+        title: 'Why Files Under "256 KB" Still Get Rejected',
+        para: 'Why does Discord say a file is too big when your computer says it is 256 KB? Windows and macOS count 1 kilobyte as 1,000 bytes. But Discord uses binary math, where 1 kibibyte (KiB) is exactly 1,024 bytes—making the real ceiling 262,144 bytes. If your file has 262,800 bytes, your file manager says "256 KB", but Discord blocks the upload immediately. Our studio checks the exact byte count so you never hit that error.',
+        box1title: '❌ What Your Computer Shows',
+        box1body: '262,800 bytes ➔ Computer says 256 KB, but Discord rejects it',
+        box2title: '✓ What Discord Actually Checks',
+        box2body: 'Under 262,144 bytes ➔ Upload succeeds on the first try',
+      },
+      cards: [
+        { num: '02', tag: 'Safe Zone: Top 48px', title: 'Server Banners: Watch the Top 48 Pixels', para: 'Server banners make your community look professional. Discord recommends at least 960x540 pixels (or 1920x1080 for high-resolution screens). But on desktop, Discord covers the top 48 pixels with your server name, search bar, and dropdown menu. Keep text, logos, and faces in the middle or bottom of the banner so they never get hidden behind buttons.', metricLabel: 'Desktop Safe Area:', metricValue: '960 × 492 px Safe Focal Area (below top 48px overlay)', metricClass: 'text-[#3368A0] dark:text-[#66A3BF]' },
+        { num: '03', tag: 'Exact 320×320', title: 'Stickers Must Be Exactly 320×320 Pixels', para: 'Emojis can be any square image because Discord scales them down automatically. But stickers have zero tolerance: your image must measure exactly 320x320 pixels and stay under 512 KiB (524,288 bytes). If it is 319x320, Discord immediately throws an "invalid asset" error. Also, animated stickers must be APNG (Animated PNG)—regular GIFs will not work for server stickers.', metricLabel: 'Animated Sticker Limits:', metricValue: 'Max 5.0 seconds • Max 60 FPS • APNG format', metricClass: 'text-[#0D9488]' },
+        { num: '04', tag: 'Standard sRGB', title: 'Color Profiles & Transparent Backgrounds', para: "Discord runs on mobile screens, tablets, and gaming monitors. When exporting images, stick to the standard sRGB color space. If you export in wide-gamut profiles like Display P3 or Adobe RGB, your colors can look muted or muddy in Discord's desktop client. Always keep transparent backgrounds clean in PNG files so your art looks great in both Dark and Light themes.", metricLabel: 'Recommended Profile:', metricValue: 'sRGB with 8-bit RGBA Transparent Channels', metricClass: 'text-[#3368A0] dark:text-[#66A3BF]' },
+        { num: '05', tag: 'Zero Server Uploads', title: '100% Private in Your Browser', para: 'Most online image converters send your artwork to remote servers, which can be slow and risky if you are preparing unreleased branding or private designs. Discord Asset Studio processes all images right inside your browser memory. We never upload, save, or track your images.', metricLabel: 'Network Data Sent:', metricValue: '0.00 KiB Transmitted (Verify anytime in DevTools)', metricClass: 'text-[#0D9488]' },
+      ],
+      tagClass5: 'text-[#0D9488]',
+    },
+    faq: {
+      eyebrow: 'Frequently Asked Questions',
+      h2: 'Discord Creator Asset FAQs',
+    },
+    hub: {
+      eyebrow: 'Guides & Resources',
+      h2: 'Discord Design Guides, Tutorials & Free Assets',
+      para: 'Step-by-step tutorials, curated PFP and banner libraries, and reference specs to help you build a standout Discord profile or server.',
+      cards: [
+        { icon: '🎨', href: '/assets/', title: 'Free Discord Asset Library', desc: 'Browse 270+ themed banner and icon presets across anime, gaming, cyberpunk, aesthetic, and more categories.', cta: 'Browse Assets →' },
+        { icon: '👤', href: '/assets/pfps/', title: 'Discord PFP Gallery', desc: '60+ free aesthetic, anime, and animated profile pictures ready to download at a crisp 512×512.', cta: 'View PFPs →' },
+        { icon: '⚡', href: '/guides/discord-gif-guide/', title: 'Discord GIF & Animation Guide', desc: 'Master 256 KiB emoji limits, 10MB banner caps, frame rates, and palette compression for animated assets.', cta: 'Read Guide →' },
+        { icon: '🖼️', href: '/blog/discord-banner-ideas-templates/', title: 'Discord Banner Ideas & Templates', desc: 'Aesthetic banner inspiration, layout templates, and sizing tips for standout server and profile banners.', cta: 'Read Article →' },
+        { icon: '💡', href: '/blog/discord-pfp-ideas-anime-avatars/', title: 'Discord PFP Ideas & Anime Avatars', desc: 'Curated profile picture ideas, matching couple PFPs, and anime avatar inspiration with download links.', cta: 'Read Article →' },
+        { icon: '🏷️', href: '/blog/how-to-make-discord-stickers/', title: 'How to Make Discord Stickers', desc: 'Full walkthrough on creating 320×320 custom and animated APNG stickers that pass Discord validation.', cta: 'Read Tutorial →' },
+      ],
+    },
+  },
+  es: {
+    hero: {
+      trustBadge: 'Reglas de Discord verificadas · Privado por diseño',
+      h1Mark: 'Creador de Banners de Discord',
+      h1Rest: ' y Estudio de Assets',
+      h1Underline: 'Hecho para Discord.',
+      subPrefix: 'La suite de creación hecha para ',
+      words: ['creadores.', 'comunidades.', 'servidores.', 'artistas.', 'gamers.'],
+      para: 'Redimensiona, recorta y formatea emojis, stickers, banners y avatares personalizados para que encajen perfectamente en Discord. Todo funciona en tu navegador: rápido, gratis y totalmente privado.',
+      ctaCreate: 'Crear un Asset',
+      ctaCheck: 'Verificar un Archivo',
+      privacy: 'Privado por diseño: Procesamiento local en el navegador. Sin subidas a la nube.',
+    },
+    showcase: {
+      badge: 'Muestrario 3D Interactivo de Plantillas · Arrastra y Explora',
+      h2Prefix: 'Comienza con un ',
+      h2Underline: 'diseño',
+      para: 'Desliza o arrastra por plantillas de Discord seleccionadas y creadas para las dimensiones exactas de la plataforma. Toca cualquier diseño para traerlo al frente o abrirlo en el estudio.',
+    },
+    tools: {
+      h2Underline: 'Utilidades',
+      h2Suffix: ' Dedicadas',
+      h2Prefix: '',
+      sub: 'Selecciona un tipo de asset para inspeccionar dimensiones, probar límites de bytes y corregir problemas de formato automáticamente.',
+      cards: [
+        { icon: '😀', href: '/tools/emoji/', title: 'Estudio de Emojis Personalizados', desc: 'Sube hasta 128x128, previsualiza a 32x32 en dimensiones de chat y aplica el límite de subida de 256 KiB con compresión local sin pérdidas.', cta: 'Inspeccionar Emoji →' },
+        { icon: '🏷️', href: '/tools/sticker/', title: 'Estudio de Stickers y Recortador de Fotos', desc: 'Convierte fotos en stickers personalizados de Discord con encuadre interactivo de paneo y zoom, bordes de vinilo troquelado y exportación PNG exacta de 320x320.', cta: 'Crear Sticker →' },
+        { icon: '🖼️', href: '/tools/banner/', title: 'Banners de Perfil y Servidor', desc: 'Ajustes para Global (680x240), Por Servidor (600x240) y Banners de Servidor (960x540) con superposiciones oficiales de zona segura de 48px superiores.', cta: 'Diseñar Banner →' },
+        { icon: '👤', href: '/tools/avatar/', title: 'Avatar y Foto de Perfil', desc: 'Vista previa de recorte circular y lienzo cuadrado de 512x512 con verificación de fondo transparente y detección de avatares animados de Nitro.', cta: 'Recortar Avatar →' },
+        { icon: '🛡️', href: '/tools/role-icon/', title: 'Creador de Iconos de Rol', desc: 'Redimensiona a exactamente 64x64 píxeles y verifica bajo 256 KB. Cita las reglas de Boost Nivel 2 y el permiso Gestionar Roles.', cta: 'Crear Icono de Rol →' },
+        { icon: '📋', href: '/guides/discord-sizes/', title: 'Hoja Oficial de Tamaños', desc: 'Tabla de especificaciones completa que cubre dimensiones, relaciones de aspecto, extensiones de archivo y requisitos de nivel de servidor.', cta: 'Ver Especificaciones →' },
+        { icon: '🎞️', href: '/tools/gif-maker/', title: 'Creador de GIF de Discord', desc: 'Convierte clips MP4 y WebM en GIF animados de Discord con compresión automática bajo el estricto límite de 10MB de Nitro.', cta: 'Crear GIF →' },
+        { icon: '🔍', href: '/tools/profile-viewer/', title: 'Visor y Extractor de Perfiles', desc: 'Inspecciona avatares y banners animados de Discord a resolución completa por ID de usuario. Calculadora instantánea de antigüedad de cuenta por snowflake.', cta: 'Buscar Usuario →' },
+      ],
+    },
+    sticky: {
+      badge: 'Hecho para las Reglas de Discord',
+      h2Prefix: 'Nunca más te rechacen al ',
+      h2Underline: 'subir',
+      h2Suffix: '.',
+      para: 'Mira cómo funciona nuestro verificador de cuatro pasos en tu navegador. Tus archivos nunca se suben a un servidor, el texto y los bordes se mantienen nítidos, y tus assets pasan los límites de Discord al primer intento.',
+      steps: ['01 / Abrir Archivo', '02 / Verificar Límites', '03 / Recortar y Redimensionar', '04 / Listo para Subir'],
+      cta: 'Prueba con Tu Arte',
+      cards: [
+        { num: '01', label: 'INGESTA', badge: '100% En el Navegador', title: 'Todo Permanece en Tu Dispositivo', para: 'Arrastra y suelta imágenes, GIF animados o pega directamente desde el portapapeles. Tus archivos permanecen en la memoria local de tu navegador: nunca se suben a un servidor remoto.', metricLabel: 'Transmisión de Red:', metricValue: '0 Bytes Transferidos', metricClass: 'text-[#0D9488]' },
+        { num: '02', label: 'EVALUACIÓN', badge: '28 Reglas Activas', title: 'Verificación Instantánea de Reglas', para: 'Verificamos tu archivo con las reglas oficiales de Discord. Eso incluye los límites exactos de bytes (como 256 KiB / 262,144 bytes en vez de números redondeados), relaciones de aspecto y requisitos de formato antes de descargar.', metricLabel: 'Latencia de Evaluación:', metricValue: '< 4 milisegundos', metricClass: 'text-[#3368A0] dark:text-[#66A3BF]' },
+        { num: '03', label: 'TRANSFORMACIÓN', badge: 'Lienzo Sin Pérdidas', title: 'Redimensionado Suave y Zonas Seguras', para: 'Recorta y escala tu imagen sin perder calidad ni transparencia. Para banners, mostramos la superposición de zona segura de 48px superiores para que los botones de Discord no oculten tu texto ni tu arte.', metricLabel: 'Precisión de Zona Segura:', metricValue: '100% Coincidencia Geométrica', metricClass: 'text-[#0D9488]' },
+        { num: '04', label: 'EXPORTACIÓN', badge: 'Cero Fallos de Subida', title: 'Subida Garantizada en Discord', para: 'Antes de descargar, medimos el tamaño exacto del archivo hasta el byte. Si es demasiado grande, nuestro compresor local reduce el tamaño sin enturbiar tus píxeles hasta que quepa de forma segura bajo el techo de subida de Discord.', metricLabel: 'Estado de Verificación:', metricValue: 'Aprobado Garantizado', metricClass: 'text-[#0D9488]' },
+      ],
+    },
+    dossier: {
+      badge: 'Especificaciones de Discord Simplificadas',
+      h2Prefix: 'Reglas de Discord: ',
+      h2Underline: 'Tamaños y Formatos',
+      para: 'Discord tiene límites estrictos de tamaño de archivo, dimensiones en píxeles y zonas seguras. Si un archivo se pasa por un solo byte o un solo píxel, Discord lo rechaza. Aquí tienes todo lo que necesitas saber en lenguaje sencillo.',
+      steps: [
+        '01 / El Tope de Subida de 256 KiB',
+        '02 / Zona Segura de 48px del Banner',
+        '03 / Stickers Exactos de 320×320',
+        '04 / Color Real y Transparencia',
+        '05 / Privacidad 100% En el Navegador',
+      ],
+      cta: 'Abrir Guía Completa de Tamaños',
+      card1: {
+        tag: 'Regla: Límite 256 KiB',
+        title: 'Por Qué los Archivos de "256 KB" Siguen Siendo Rechazados',
+        para: 'Por qué dice Discord que un archivo es demasiado grande cuando tu computadora dice que pesa 256 KB? Windows y macOS cuentan 1 kilobyte como 1,000 bytes. Pero Discord usa matemática binaria, donde 1 kibibyte (KiB) es exactamente 1,024 bytes, lo que hace que el techo real sea de 262,144 bytes. Si tu archivo tiene 262,800 bytes, tu gestor de archivos dice "256 KB", pero Discord bloquea la subida de inmediato. Nuestro estudio verifica el recuento exacto de bytes para que nunca te topes con ese error.',
+        box1title: '❌ Lo Que Muestra Tu Computadora',
+        box1body: '262,800 bytes ➔ La computadora dice 256 KB, pero Discord lo rechaza',
+        box2title: '✓ Lo Que Discord Realmente Verifica',
+        box2body: 'Menos de 262,144 bytes ➔ La subida funciona al primer intento',
+      },
+      cards: [
+        { num: '02', tag: 'Zona Segura: 48px Superiores', title: 'Banners de Servidor: Cuida los 48 Píxeles Superiores', para: 'Los banners de servidor hacen que tu comunidad se vea profesional. Discord recomienda al menos 960x540 píxeles (o 1920x1080 para pantallas de alta resolución). Pero en escritorio, Discord cubre los 48 píxeles superiores con el nombre de tu servidor, la barra de búsqueda y el menú desplegable. Mantén el texto, los logotipos y las caras en el centro o la parte inferior del banner para que nunca queden ocultos tras los botones.', metricLabel: 'Área Segura en Escritorio:', metricValue: '960 × 492 px Área Focal Segura (bajo la superposición de 48px)', metricClass: 'text-[#3368A0] dark:text-[#66A3BF]' },
+        { num: '03', tag: '320×320 Exactos', title: 'Los Stickers Deben Medir Exactamente 320×320 Píxeles', para: 'Los emojis pueden ser cualquier imagen cuadrada porque Discord los reduce automáticamente. Pero los stickers tienen tolerancia cero: tu imagen debe medir exactamente 320x320 píxeles y pesar menos de 512 KiB (524,288 bytes). Si mide 319x320, Discord lanza de inmediato un error de "asset inválido". Además, los stickers animados deben ser APNG (PNG animado); los GIF normales no funcionan para stickers de servidor.', metricLabel: 'Límites de Sticker Animado:', metricValue: 'Máx 5.0 segundos • Máx 60 FPS • formato APNG', metricClass: 'text-[#0D9488]' },
+        { num: '04', tag: 'sRGB Estándar', title: 'Perfiles de Color y Fondos Transparentes', para: 'Discord funciona en pantallas de móvil, tabletas y monitores de gaming. Al exportar imágenes, apégate al espacio de color estándar sRGB. Si exportas en perfiles de gama amplia como Display P3 o Adobe RGB, tus colores pueden verse apagados o turbios en el cliente de escritorio de Discord. Mantén siempre limpios los fondos transparentes en archivos PNG para que tu arte se vea bien en temas oscuros y claros.', metricLabel: 'Perfil Recomendado:', metricValue: 'sRGB con Canales Transparentes RGBA de 8 bits', metricClass: 'text-[#3368A0] dark:text-[#66A3BF]' },
+        { num: '05', tag: 'Cero Subidas al Servidor', title: '100% Privado en Tu Navegador', para: 'La mayoría de los conversores de imágenes en línea envían tu arte a servidores remotos, lo que puede ser lento y arriesgado si preparas marcas sin lanzar o diseños privados. Discord Asset Studio procesa todas las imágenes dentro de la memoria de tu navegador. Nunca subimos, guardamos ni rastreamos tus imágenes.', metricLabel: 'Datos de Red Enviados:', metricValue: '0.00 KiB Transmitidos (Verifica cuando quieras en DevTools)', metricClass: 'text-[#0D9488]' },
+      ],
+      tagClass5: 'text-[#0D9488]',
+    },
+    faq: {
+      eyebrow: 'Preguntas Frecuentes',
+      h2: 'Preguntas Frecuentes sobre Assets de Discord',
+    },
+    hub: {
+      eyebrow: 'Guías y Recursos',
+      h2: 'Guías de Diseño, Tutoriales y Assets Gratis de Discord',
+      para: 'Tutoriales paso a paso, bibliotecas seleccionadas de PFP y banners, y especificaciones de referencia para ayudarte a construir un perfil o servidor de Discord que destaque.',
+      cards: [
+        { icon: '🎨', href: '/assets/', title: 'Biblioteca Gratuita de Assets de Discord', desc: 'Explora más de 270 ajustes de banner e iconos temáticos en categorías de anime, gaming, cyberpunk, estética y más.', cta: 'Explorar Assets →' },
+        { icon: '👤', href: '/assets/pfps/', title: 'Galería de PFP de Discord', desc: 'Más de 60 fotos de perfil gratuitas, estéticas, anime y animadas listas para descargar en nítidos 512×512.', cta: 'Ver PFPs →' },
+        { icon: '⚡', href: '/guides/discord-gif-guide/', title: 'Guía de GIF y Animación de Discord', desc: 'Domina los límites de 256 KiB para emojis, los topes de 10MB para banners, las tasas de fotogramas y la compresión de paleta para assets animados.', cta: 'Leer Guía →' },
+        { icon: '🖼️', href: '/blog/discord-banner-ideas-templates/', title: 'Ideas y Plantillas de Banners de Discord', desc: 'Inspiración de banners estéticos, plantillas de diseño y consejos de tamaño para banners de servidor y perfil que destacan.', cta: 'Leer Artículo →' },
+        { icon: '💡', href: '/blog/discord-pfp-ideas-anime-avatars/', title: 'Ideas de PFP y Avatares Anime de Discord', desc: 'Ideas de fotos de perfil seleccionadas, PFP de pareja a juego e inspiración de avatares anime con enlaces de descarga.', cta: 'Leer Artículo →' },
+        { icon: '🏷️', href: '/blog/how-to-make-discord-stickers/', title: 'Cómo Hacer Stickers de Discord', desc: 'Guía completa para crear stickers personalizados y animados APNG de 320×320 que pasan la validación de Discord.', cta: 'Leer Tutorial →' },
+      ],
+    },
+  },
+}[lang];
+---
+
+<!-- Hero Section: Creative Studio First -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-16">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    <!-- Left Column: Studio Value Prop & Direct Action CTAs (7 cols) -->
+    <div class="lg:col-span-7">
+      <!-- Discreet Trust Badge -->
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-5 shadow-xs">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#0D9488]"></span>
+        <span>{t.hero.trustBadge}</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#192538] dark:text-white tracking-tight leading-[1.15] mb-4">
+        <span class="block"><mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">{t.hero.h1Mark}</mark>{t.hero.h1Rest}</span>
+        <span class="block mt-1 sm:mt-1.5">
+          <span class="relative inline-block sketch-trigger">
+            <span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">{t.hero.h1Underline}</span>
+            <SketchUnderline color="#66A3BF" />
+          </span>
+        </span>
+      </h1>
+
+      <div class="text-lg sm:text-2xl font-bold text-[#475569] dark:text-[#94A3B8] mb-6">
+        {t.hero.subPrefix}<AnimatedHeroTitle words={t.hero.words} />
+      </div>
+
+      <p class="text-[#475569] dark:text-[#94A3B8] text-base sm:text-lg leading-relaxed mb-7 max-w-xl">
+        {t.hero.para}
+      </p>
+
+      <!-- Primary & Secondary Action Group -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 mb-7">
+        <a href="#asset-vault" class="btn-primary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold shadow-sm">
+          {t.hero.ctaCreate}
+        </a>
+        <a href={p('/tools/emoji/')} class="btn-secondary inline-flex items-center justify-center px-7 py-3.5 rounded-[10px] text-sm font-semibold">
+          {t.hero.ctaCheck}
+        </a>
+      </div>
+
+      <!-- Privacy Assurance -->
+      <div class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7]">
+        <svg class="w-3.5 h-3.5 text-[#0D9488] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        <span>{t.hero.privacy}</span>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Studio Stage (5 cols) -->
+    <div class="lg:col-span-5">
+      <HeroSimulator lang={lang} />
+    </div>
+  </div>
+</section>
+
+<!-- 3D Stacked Template Showcase: "Start with a design" -->
+<section id="asset-vault" class="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-16 border-t border-[#E0DBD0] dark:border-[#263346] scroll-mt-20">
+  <div class="mb-8">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-3 shadow-xs">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#0D9488]"></span>
+      <span>{t.showcase.badge}</span>
+    </div>
+    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+      {t.showcase.h2Prefix}<span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">{t.showcase.h2Underline}</span><SketchUnderline color="#66A3BF" /></span>
+    </h2>
+    <p class="text-[#475569] dark:text-[#94A3B8] text-sm sm:text-base mt-2 max-w-2xl">
+      {t.showcase.para}
+    </p>
+  </div>
+
+  <TemplateCarousel lang={lang} />
+</section>
+
+<!-- Core Asset Category Cards -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 border-t border-[#E0DBD0]">
+  <div class="mb-10">
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mt-1">
+      {t.tools.h2Prefix}<span class="relative inline-block sketch-trigger"><span class="relative z-10">{t.tools.h2Underline}</span><SketchUnderline color="#66A3BF" /></span>{t.tools.h2Suffix}
+    </h2>
+    <p class="text-[#475569] text-sm mt-1">{t.tools.sub}</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {t.tools.cards.map((card) => (
+      <a href={p(card.href)} class="card-panel p-6 rounded-[14px] block group">
+        <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg font-bold mb-4 group-hover:scale-110 transition-transform">
+          {card.icon}
+        </div>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">{card.title}</h3>
+        <p class="text-xs text-[#475569] mt-2 leading-relaxed">
+          {card.desc}
+        </p>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">{card.cta}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<!-- Text-Locking Sticky Scroll Section (Linear / Apple aesthetic) -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28 border-t border-[#E0DBD0]">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+
+    <!-- Left Column: Pinned / Sticky Text Lock -->
+    <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-8">
+      <div class="space-y-4">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+          {t.sticky.badge}
+        </div>
+
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
+          {t.sticky.h2Prefix}<span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">{t.sticky.h2Underline}</span><SketchUnderline color="#66A3BF" /></span>{t.sticky.h2Suffix}
+        </h2>
+
+        <p class="text-[#475569] text-base leading-relaxed">
+          {t.sticky.para}
+        </p>
+      </div>
+
+      <!-- Vertical Step Timeline & Lock Indicator -->
+      <div class="relative pl-6 space-y-6 select-none">
+        <!-- Background track line -->
+        <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
+        <!-- Active fill line -->
+        <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
+
+        {t.sticky.steps.map((step, i) => (
+          <div class={`scroll-step-indicator flex items-center gap-4 transition-all duration-200 ${i === 0 ? 'text-[#3368A0] dark:text-[#66A3BF] font-bold' : 'text-[#6B7A90] opacity-70'}`} data-step={i + 1}>
+            <span class={`step-dot w-5 h-5 rounded-full border-2 ${i === 0 ? 'border-current scale-110' : 'border-[#D0C9BD] dark:border-[#35435C]'} bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 transition-transform`}>{i + 1}</span>
+            <span class="text-sm tracking-wide">{step}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="pt-2">
+        <a href={p('/tools/emoji/')} class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-[10px] text-xs font-semibold">
+          <span>{t.sticky.cta}</span>
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Column: Stacking & Locking Cards on Scroll -->
+    <div class="lg:col-span-7 relative pb-20">
+      {t.sticky.cards.map((card, i) => (
+        <div class={`sticky-step-wrapper sticky ${['top-24 sm:top-28 z-10', 'top-28 sm:top-32 z-20', 'top-32 sm:top-36 z-30', 'top-36 sm:top-40 z-40'][i]} ${i === 3 ? 'mb-8' : 'mb-20 sm:mb-28'} transition-all duration-300 origin-top`} data-step={i + 1}>
+          <div class={`card-panel p-6 sm:p-8 rounded-[18px] space-y-4 ${i === 3 ? 'shadow-2xl' : 'shadow-xl'} border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]`}>
+            <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-[6px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-xs font-mono font-bold">{card.num}</span>
+                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">{card.label}</span>
+              </div>
+              <span class="text-[11px] font-mono uppercase bg-[#C8DFDB]/60 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] px-2.5 py-0.5 rounded border border-[#66A3BF]/30 font-semibold">{card.badge}</span>
+            </div>
+            <h3 class="text-xl font-bold text-[#192538]">{card.title}</h3>
+            <p class="text-sm text-[#475569] leading-relaxed">
+              {card.para}
+            </p>
+            <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex items-center justify-between text-xs font-mono text-[#6B7A90]">
+              <span>{card.metricLabel}</span>
+              <span class={`${card.metricClass} font-bold`} set:html={card.metricValue} />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<!-- Authoritative Editorial Technical Dossier with Premium Text-Locking Sticky Stacking Scroll -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28 border-t border-[#E0DBD0] dark:border-[#263346]">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+
+    <!-- Left Column: Pinned / Sticky Text Lock & Step Tracker (5 cols) -->
+    <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-8">
+      <div class="space-y-4">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+          {t.dossier.badge}
+        </div>
+
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
+          {t.dossier.h2Prefix}<span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">{t.dossier.h2Underline}</span><SketchUnderline color="#66A3BF" /></span>
+        </h2>
+
+        <p class="text-[#475569] text-base leading-relaxed">
+          {t.dossier.para}
+        </p>
+      </div>
+
+      <!-- Vertical Step Timeline & Lock Indicator -->
+      <div class="relative pl-6 space-y-6 select-none pt-2">
+        <!-- Background track line -->
+        <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
+        <!-- Active fill line -->
+        <div id="dossier-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
+
+        {t.dossier.steps.map((step, i) => (
+          <div class={`dossier-step-indicator flex items-center gap-4 transition-all duration-200 ${i === 0 ? 'text-[#3368A0] dark:text-[#66A3BF] font-bold' : 'text-[#6B7A90] opacity-70'}`} data-step={i + 1}>
+            <span class={`step-dot w-5 h-5 rounded-full border-2 ${i === 0 ? 'border-current scale-110' : 'border-[#D0C9BD] dark:border-[#35435C]'} bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 transition-transform`}>{i + 1}</span>
+            <span class="text-sm tracking-wide">{step}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="pt-2">
+        <a href={p('/guides/discord-sizes/')} class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-[10px] text-xs font-semibold">
+          <span>{t.dossier.cta}</span>
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Column: Stacking & Locking Cards on Scroll (7 cols) -->
+    <div class="lg:col-span-7 relative pb-20">
+
+      <!-- Dossier Card 1: Binary Byte Ceiling (custom two-box layout) -->
+      <div class="dossier-sticky-wrapper sticky top-24 z-10 mb-20 sm:mb-28">
+        <article class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24] space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+            <div class="flex items-center gap-2.5">
+              <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">01</span>
+              <h3 class="text-lg font-bold text-[#192538]">{t.dossier.card1.title}</h3>
+            </div>
+            <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF]">{t.dossier.card1.tag}</span>
+          </div>
+          <p class="text-sm text-[#475569] leading-relaxed">
+            {t.dossier.card1.para}
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div class="p-3 rounded-[10px] bg-red-500/10 border border-red-500/20 text-xs font-mono">
+              <div class="text-red-600 dark:text-red-400 font-bold mb-1">{t.dossier.card1.box1title}</div>
+              <div class="text-[#475569]">{t.dossier.card1.box1body}</div>
+            </div>
+            <div class="p-3 rounded-[10px] bg-[#0D9488]/10 border border-[#0D9488]/30 text-xs font-mono">
+              <div class="text-[#0D9488] font-bold mb-1">{t.dossier.card1.box2title}</div>
+              <div class="text-[#475569]">{t.dossier.card1.box2body}</div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Dossier Cards 2–5: single-metric layout -->
+      {t.dossier.cards.map((card, i) => (
+        <div class={`dossier-sticky-wrapper sticky ${['top-28 z-20', 'top-32 z-30', 'top-36 z-40', 'top-40 z-50'][i]} ${i === 3 ? 'mb-8' : 'mb-20 sm:mb-28'}`}>
+          <article class={`card-panel p-6 sm:p-8 rounded-[18px] ${i === 0 ? 'shadow-xl' : 'shadow-2xl'} border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24] space-y-4`}>
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+              <div class="flex items-center gap-2.5">
+                <span class="w-7 h-7 rounded-[8px] bg-[#3368A0]/10 dark:bg-[#66A3BF]/20 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center font-mono font-bold text-xs">{card.num}</span>
+                <h3 class="text-lg font-bold text-[#192538]">{card.title}</h3>
+              </div>
+              <span class={`text-xs font-mono font-semibold px-2.5 py-1 rounded bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] ${i === 3 ? t.dossier.tagClass5 : 'text-[#3368A0] dark:text-[#66A3BF]'}`}>{card.tag}</span>
+            </div>
+            <p class="text-sm text-[#475569] leading-relaxed">
+              {card.para}
+            </p>
+            <div class="p-3.5 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+              <span class="text-[#6B7A90]">{card.metricLabel}</span>
+              <span class={`${card.metricClass} font-bold`}>{card.metricValue}</span>
+            </div>
+          </article>
+        </div>
+      ))}
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="max-w-4xl mx-auto px-4 sm:px-6 py-16 border-t border-[#E0DBD0]">
+  <div class="mb-10 text-center">
+    <span class="text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">{t.faq.eyebrow}</span>
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mt-1">{t.faq.h2}</h2>
+  </div>
+
+  <div class="space-y-4">
+    {faqs.map((faq, i) => (
+      <details class="card-panel p-6 rounded-[14px] group" open={i === 0}>
+        <summary class="text-base font-bold text-[#192538] dark:text-[#F0F4F8] cursor-pointer list-none flex items-center justify-between gap-3">
+          <span>{faq.q}</span>
+          <svg class="w-4 h-4 shrink-0 opacity-50 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </summary>
+        <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mt-3">
+          {faq.a}
+        </p>
+      </details>
+    ))}
+  </div>
+</section>
+
+<!-- Guides, Blog & Asset Library (crawlable hub links) -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-[#E0DBD0]">
+  <div class="mb-10 text-center">
+    <span class="text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">{t.hub.eyebrow}</span>
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mt-1">{t.hub.h2}</h2>
+    <p class="text-sm text-[#475569] dark:text-[#94A3B8] mt-3 max-w-2xl mx-auto">
+      {t.hub.para}
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {t.hub.cards.map((card) => (
+      <a href={p(card.href)} class="card-panel p-6 rounded-[14px] block group">
+        <div class="w-10 h-10 rounded-[10px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center text-lg mb-4 group-hover:scale-110 transition-transform">{card.icon}</div>
+        <h3 class="text-base font-bold text-[#192538] group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors">{card.title}</h3>
+        <p class="text-xs text-[#475569] mt-2 leading-relaxed">{card.desc}</p>
+        <span class="inline-flex items-center text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold mt-4 group-hover:translate-x-1 transition-transform">{card.cta}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<!-- Sticky Scroll Stacking & Observer Script -->
+<script>
+  function setupScrollStackSection(wrapperClass: string, indicatorClass: string, progressLineId: string) {
+    const cardWrappers = document.querySelectorAll<HTMLElement>(wrapperClass);
+    const stepIndicators = document.querySelectorAll<HTMLElement>(indicatorClass);
+    const progressBar = document.getElementById(progressLineId);
+
+    if (!cardWrappers.length) return () => {};
+
+    function updateCardStack() {
+      let activeIndex = 0;
+
+      cardWrappers.forEach((wrapper, index) => {
+        const rect = wrapper.getBoundingClientRect();
+        const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
+        const isLocked = rect.top <= stickyTop + 8;
+
+        if (isLocked) {
+          activeIndex = index;
+        }
+
+        // Smoothly scale previous locked cards as next card scrolls up
+        const nextCard = cardWrappers[index + 1];
+        if (nextCard) {
+          const nextRect = nextCard.getBoundingClientRect();
+          const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
+          const transitionDist = 180;
+
+          if (nextRect.top < nextStickyTop + transitionDist) {
+            const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
+            wrapper.style.transform = `scale(${1 - progress * 0.035})`;
+            wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
+          } else {
+            wrapper.style.transform = 'scale(1)';
+            wrapper.style.filter = 'brightness(1)';
+          }
+        }
+      });
+
+      // Update left timeline indicators
+      stepIndicators.forEach((ind, i) => {
+        const dot = ind.querySelector('.step-dot');
+        if (i <= activeIndex) {
+          ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+          ind.classList.remove('text-[#6B7A90]', 'opacity-70');
+          dot?.classList.add('border-current', 'scale-110');
+          dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
+        } else {
+          ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+          ind.classList.add('text-[#6B7A90]', 'opacity-70');
+          dot?.classList.remove('border-current', 'scale-110');
+          dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
+        }
+      });
+
+      if (progressBar) {
+        const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
+        progressBar.style.height = `${pct}%`;
+      }
+    }
+
+    window.addEventListener('scroll', updateCardStack, { passive: true });
+    updateCardStack();
+    return updateCardStack;
+  }
+
+  function setupAllScrollLocking() {
+    setupScrollStackSection('.sticky-step-wrapper', '.scroll-step-indicator', 'scroll-progress-line');
+    setupScrollStackSection('.dossier-sticky-wrapper', '.dossier-step-indicator', 'dossier-progress-line');
+  }
+
+  setupAllScrollLocking();
+  document.addEventListener('astro:after-swap', setupAllScrollLocking);
+</script>
