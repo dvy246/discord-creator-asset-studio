@@ -344,6 +344,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/timestamp.png',
+    config: {
+      title: 'DISCORD TIMESTAMP', titleLine2: 'GENERATOR',
+      subtitle: 'DYNAMIC TIME CODES THAT ADJUST TO EACH VIEWER TIMEZONE',
+      tagline1: 'SEVEN STYLES T T D D F F R • LIVE PREVIEW',
+      tagline2: 'COPY MARKUP INSTANTLY • 100% CLIENT-SIDE',
+      badge: 'TIMEZONE-AWARE DISCORD TIMESTAMPS',
+      cards: [
+        { label: 'STYLES', desc: '7 CODES' }, { label: 'RELATIVE', desc: 'AUTO COUNT' },
+        { label: 'TIMEZONE', desc: 'PER VIEWER' }, { label: 'PREVIEW', desc: 'LIVE' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
     file: 'public/og/colors.png',
     config: {
       title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',

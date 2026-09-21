@@ -57,6 +57,11 @@ const indexablePages = [
     primaryKeyword: 'discord background color',
   },
   {
+    path: 'tools/timestamp/index.html',
+    url: '/tools/timestamp/',
+    primaryKeyword: 'discord timestamp',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -150,6 +155,11 @@ const indexablePages = [
     path: 'es/tools/colors/index.html',
     url: '/es/tools/colors/',
     primaryKeyword: 'color de fondo de discord',
+  },
+  {
+    path: 'es/tools/timestamp/index.html',
+    url: '/es/tools/timestamp/',
+    primaryKeyword: 'marcas de tiempo discord',
   },
 ];
 

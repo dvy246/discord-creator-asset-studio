@@ -1,0 +1,88 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import TimestampWorkspace from '../../../components/tools/TimestampWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Generador de Marcas de Tiempo Discord | Dinámicas";
+const pageDescription = "Generador de marcas de tiempo Discord: elige una fecha y copia el marcado <t:UNIX:F> en todos los estilos. Se ajustan a la zona horaria de cada persona.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/timestamp/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/timestamp/";
+
+const appSchema = generateSoftwareApplicationSchema("Generador de Marcas de Tiempo para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Marcas de Tiempo", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Qué es una marca de tiempo de Discord?", a: "Es un marcado especial con la forma <t:UNIX:estilo> donde UNIX es el tiempo epoch en segundos. Discord lo muestra como una fecha u hora que se convierte automáticamente a la zona horaria de cada persona, así todos ven el momento en su reloj local." },
+  { q: "¿Cuáles son los códigos de formato de marca de tiempo?", a: "Hay siete letras de estilo: t (hora corta), T (hora larga), d (fecha corta), D (fecha larga), f (fecha y hora corta, por defecto), F (fecha y hora larga con día de la semana) y R (relativa, como 'en 2 horas'). Este generador produce las siete." },
+  { q: "¿Cómo uso una marca de tiempo de Discord?", a: "Elige una fecha y hora arriba, copia el código que quieras (por ejemplo <t:1735689600:F>) y pégalo en cualquier mensaje, descripción de evento o embed de Discord. Discord reemplaza el código por una marca de tiempo dinámica y con zona horaria al enviar." },
+  { q: "¿Las marcas de tiempo se actualizan solas?", a: "Sí. Las relativas (estilo R) se recalculan con el paso del tiempo, así 'en 3 horas' pasa a 'en 2 horas' por sí solo. Todos los estilos se muestran en la zona horaria del lector, ideal para programar eventos entre regiones sin listar varias zonas." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/timestamp.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Marcas de Tiempo</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Generador de Marcas de Tiempo Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Elige una fecha y copia el marcado <strong>&lt;t:UNIX:estilo&gt;</strong> en los siete estilos. Cada marca se muestra en la zona horaria de cada persona automáticamente.
+      </p>
+    </header>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <TimestampWorkspace lang="es" />
+
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Cómo Funcionan las Marcas de Tiempo</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Una marca de tiempo es un marcado con la forma <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">&lt;t:UNIX:estilo&gt;</code>. La parte UNIX es el número de segundos desde 1970 y la letra de estilo controla el formato. Discord la muestra distinta a cada lector: alguien en Nueva York y alguien en Tokio ven el mismo momento en su hora local, sin conversión manual.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Los Siete Códigos de Estilo</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord admite siete letras: <strong>t</strong> hora corta, <strong>T</strong> hora larga, <strong>d</strong> fecha corta, <strong>D</strong> fecha larga, <strong>f</strong> fecha y hora corta (por defecto), <strong>F</strong> fecha y hora larga con día, y <strong>R</strong> relativa. El generador muestra una vista previa en vivo de cada uno para copiar con un clic.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>
