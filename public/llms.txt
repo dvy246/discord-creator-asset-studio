@@ -10,6 +10,7 @@ All image processing executes locally in the browser via Web Workers and the HTM
 - [Discord Sticker Maker](https://discord-creator-asset-studio.pages.dev/tools/sticker/): Validate and resize stickers to exact 320×320 dimensions under 512 KiB. Animated APNG max 5s / 60 FPS.
 - [Discord Avatar Cropper](https://discord-creator-asset-studio.pages.dev/tools/avatar/): Crop square 512×512 profile pictures and server icons with a circular preview mask.
 - [Discord Role Icon Maker](https://discord-creator-asset-studio.pages.dev/tools/role-icon/): Format 64×64 role icons under 256 KB for Boost Level 2 servers.
+- [Discord Image Compressor](https://discord-creator-asset-studio.pages.dev/tools/image-compressor/): Shrink PNG, JPG, and WebP under the 10 MB free upload limit (50 MB / 500 MB Nitro tiers) via iterative quality step-down, keeping original pixel dimensions.
 
 ## Documentation & Reference Guides
 - [Discord Asset Sizes Guide (2026)](https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/): Complete verified reference of all official Discord image dimensions, file byte limits, formats, and Nitro gating tiers.

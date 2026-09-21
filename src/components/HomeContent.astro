@@ -25,6 +25,7 @@ const ES_ROUTES = new Set([
   '/tools/banner/',
   '/tools/avatar/',
   '/tools/role-icon/',
+  '/tools/image-compressor/',
   '/guides/discord-sizes/',
 ]);
 const p = (path: string) => (lang === 'es' && ES_ROUTES.has(path) ? `/es${path}` : path);
@@ -62,6 +63,7 @@ const t = {
         { icon: '🖼️', href: '/tools/banner/', title: 'Profile & Server Banners', desc: 'Presets for Global (680x240), Per-Server (600x240), and Server Banners (960x540) with official top 48px safe-zone overlays.', cta: 'Design Banner →' },
         { icon: '👤', href: '/tools/avatar/', title: 'Avatar & Profile Picture', desc: 'Circular crop preview and 512x512 square authoring canvas with transparent background checks and Nitro animated avatar flags.', cta: 'Crop Avatar →' },
         { icon: '🛡️', href: '/tools/role-icon/', title: 'Role Icon Maker', desc: 'Resize to exactly 64x64 pixels and verify under 256 KB. Cites Boost Level 2 and Manage Roles permission rules.', cta: 'Create Role Icon →' },
+        { icon: '🗜️', href: '/tools/image-compressor/', title: 'Image Compressor & Optimizer', desc: 'Shrink PNG, JPG, and WebP under Discord\'s 10MB free upload limit with an iterative quality step-down. Keeps original dimensions.', cta: 'Compress Image →' },
         { icon: '📋', href: '/guides/discord-sizes/', title: 'Official Size Cheat Sheet', desc: 'Comprehensive specification table covering dimensions, aspect ratios, file extensions, and server level requirements.', cta: 'Browse Specs →' },
         { icon: '🎞️', href: '/tools/gif-maker/', title: 'Discord GIF Maker', desc: 'Convert MP4 and WebM clips to animated Discord GIFs with auto-compression under the strict 10MB Nitro limit.', cta: 'Make GIF →' },
         { icon: '🔍', href: '/tools/profile-viewer/', title: 'Profile Viewer & Grabber', desc: 'Inspect full-resolution Discord avatars and animated banners by User ID. Instant snowflake account age calculator.', cta: 'Lookup User →' },
@@ -160,6 +162,7 @@ const t = {
         { icon: '🖼️', href: '/tools/banner/', title: 'Banners de Perfil y Servidor', desc: 'Ajustes para Global (680x240), Por Servidor (600x240) y Banners de Servidor (960x540) con superposiciones oficiales de zona segura de 48px superiores.', cta: 'Diseñar Banner →' },
         { icon: '👤', href: '/tools/avatar/', title: 'Avatar y Foto de Perfil', desc: 'Vista previa de recorte circular y lienzo cuadrado de 512x512 con verificación de fondo transparente y detección de avatares animados de Nitro.', cta: 'Recortar Avatar →' },
         { icon: '🛡️', href: '/tools/role-icon/', title: 'Creador de Iconos de Rol', desc: 'Redimensiona a exactamente 64x64 píxeles y verifica bajo 256 KB. Cita las reglas de Boost Nivel 2 y el permiso Gestionar Roles.', cta: 'Crear Icono de Rol →' },
+        { icon: '🗜️', href: '/tools/image-compressor/', title: 'Compresor y Optimizador de Imágenes', desc: 'Reduce PNG, JPG y WebP por debajo del límite gratuito de subida de 10MB de Discord con reducción de calidad iterativa. Mantiene las dimensiones originales.', cta: 'Comprimir Imagen →' },
         { icon: '📋', href: '/guides/discord-sizes/', title: 'Hoja Oficial de Tamaños', desc: 'Tabla de especificaciones completa que cubre dimensiones, relaciones de aspecto, extensiones de archivo y requisitos de nivel de servidor.', cta: 'Ver Especificaciones →' },
         { icon: '🎞️', href: '/tools/gif-maker/', title: 'Creador de GIF de Discord', desc: 'Convierte clips MP4 y WebM en GIF animados de Discord con compresión automática bajo el estricto límite de 10MB de Nitro.', cta: 'Crear GIF →' },
         { icon: '🔍', href: '/tools/profile-viewer/', title: 'Visor y Extractor de Perfiles', desc: 'Inspecciona avatares y banners animados de Discord a resolución completa por ID de usuario. Calculadora instantánea de antigüedad de cuenta por snowflake.', cta: 'Buscar Usuario →' },

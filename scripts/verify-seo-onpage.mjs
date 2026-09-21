@@ -37,6 +37,11 @@ const indexablePages = [
     primaryKeyword: 'discord role icon maker',
   },
   {
+    path: 'tools/image-compressor/index.html',
+    url: '/tools/image-compressor/',
+    primaryKeyword: 'discord image compressor',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -110,6 +115,11 @@ const indexablePages = [
     path: 'es/tools/role-icon/index.html',
     url: '/es/tools/role-icon/',
     primaryKeyword: 'iconos de rol',
+  },
+  {
+    path: 'es/tools/image-compressor/index.html',
+    url: '/es/tools/image-compressor/',
+    primaryKeyword: 'compresor de imágenes discord',
   },
 ];
 

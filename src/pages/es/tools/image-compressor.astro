@@ -1,0 +1,107 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ImageCompressorWorkspace from '../../../components/tools/ImageCompressorWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Compresor de Imágenes Discord | Bajo 10 MB";
+const pageDescription = "Compresor de imágenes Discord: reduce PNG, JPG y WebP por debajo del límite de subida de 10 MB sin redimensionar. 100% en tu navegador, sin subidas.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/image-compressor/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/image-compressor/";
+
+const appSchema = generateSoftwareApplicationSchema("Compresor de Imágenes para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Compresor de Imágenes", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cuál es el límite de tamaño de imagen en Discord?", a: "Una cuenta gratuita permite subir archivos de hasta 10 MB por adjunto en el chat. Nitro Basic sube el límite a 50 MB y Nitro completo a 500 MB. Los avatares y los iconos de servidor tienen su propio tope de 8 MB. Este compresor te deja elegir el objetivo exacto según tu cuenta." },
+  { q: "¿Cómo comprimo una imagen para Discord sin perder calidad?", a: "Elige WebP como formato de salida y mantén la calidad alta. WebP guarda mucho más detalle por byte que JPG o PNG, así que la mayoría de las fotos bajan de 10 MB sin diferencia visible. Si necesitas un resultado sin pérdida, elige PNG, aunque el archivo será mayor." },
+  { q: "¿Al comprimir se sube mi imagen a algún servidor?", a: "No. Todo el proceso ocurre localmente en tu navegador con la API de canvas. Tu imagen nunca se envía a un servidor, no se almacena y no sale de tu dispositivo. Al cerrar la pestaña no queda nada." },
+  { q: "¿Esta herramienta redimensiona o solo comprime?", a: "Solo comprime: las dimensiones en píxeles se mantienen idénticas, para que la imagen siga nítida en pantallas de alta resolución. Si además necesitas cambiar el tamaño (por ejemplo, un avatar de 512×512), usa la herramienta de recorte correspondiente después de comprimir." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/image-compressor.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Compresor de Imágenes</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Compresor de Imágenes Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Reduce el peso de tus PNG, JPG y WebP por debajo del <strong>límite de 10 MB</strong> de Discord sin cambiar las dimensiones. Todo el procesamiento ocurre localmente en tu navegador.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Gratis</p>
+        <p class="text-sm font-bold text-[#0D9488]">10 MB</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Nitro Basic</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">50 MB</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Nitro</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">500 MB</p>
+      </div>
+      <div class="p-3 rounded-[10px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] text-center">
+        <p class="text-[10px] font-mono text-[#6B7A90] uppercase">Formato</p>
+        <p class="text-sm font-bold text-[#192538] dark:text-white">WebP</p>
+      </div>
+    </div>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <ImageCompressorWorkspace lang="es" />
+
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">El Límite de Subida de 10 MB</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord rechaza cualquier adjunto de más de 10 MB en una cuenta gratuita. En lugar de recortar detalle, este compresor vuelve a codificar los mismos píxeles en un archivo más pequeño para que tu captura, arte o foto se publique al instante.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Comprimir No Es Redimensionar</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Redimensionar elimina píxeles y la imagen se ve borrosa en pantallas de alta densidad. Comprimir mantiene todos los píxeles y solo reduce cuántos bytes los describen. Esta herramienta solo comprime, así que tus dimensiones quedan intactas.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

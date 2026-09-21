@@ -330,6 +330,20 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/image-compressor.png',
+    config: {
+      title: 'DISCORD IMAGE', titleLine2: 'COMPRESSOR',
+      subtitle: 'SHRINK PNG JPG & WEBP UNDER THE 10 MB DISCORD UPLOAD LIMIT',
+      tagline1: 'ITERATIVE QUALITY STEP-DOWN • ORIGINAL DIMENSIONS KEPT',
+      tagline2: '100% PRIVATE IN-BROWSER PROCESSING • ZERO UPLOADS',
+      cards: [
+        { label: 'FREE', desc: '10 MB' }, { label: 'NITRO', desc: 'UP TO 500 MB' },
+        { label: 'FORMATS', desc: 'WEBP JPG PNG' }, { label: 'RESIZE', desc: 'NONE — KEPT' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/role-icon.png',
     config: {
       title: 'DISCORD ROLE', titleLine2: 'ICON MAKER',

@@ -52,6 +52,7 @@ const ES_NAV_ROUTES = new Set([
   '/tools/banner/',
   '/tools/avatar/',
   '/tools/role-icon/',
+  '/tools/image-compressor/',
   '/guides/discord-sizes/',
 ]);
 const L = (path: string) => (lang === 'es' && ES_NAV_ROUTES.has(path) ? `/es${path}` : path);
@@ -175,6 +176,10 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
                   <a href={L("/tools/role-icon/")} class={MENU_ITEM}>
                     <span class="text-sm">🛡️</span>
                     <div><div class="font-bold">Role Icon Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">64×64 server badges</div></div>
+                  </a>
+                  <a href={L("/tools/image-compressor/")} class={MENU_ITEM}>
+                    <span class="text-sm">🗜️</span>
+                    <div><div class="font-bold">Image Compressor</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Shrink files under 10 MB</div></div>
                   </a>
                   <a href={L("/")} class={MENU_ITEM}>
                     <span class="text-sm">📐</span>
@@ -349,6 +354,9 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
             </a>
             <a href={L("/tools/role-icon/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
               <span>🛡️</span> Role Icon Resizer (64×64)
+            </a>
+            <a href={L("/tools/image-compressor/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
+              <span>🗜️</span> Image Compressor (10 MB Limit)
             </a>
           </div>
         </div>
@@ -597,6 +605,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
               <li><a href={L("/tools/banner/")} class="hover:text-[#3368A0] transition-colors">Profile & Server Banners</a></li>
               <li><a href={L("/tools/avatar/")} class="hover:text-[#3368A0] transition-colors">Avatar Optimizer</a></li>
               <li><a href={L("/tools/role-icon/")} class="hover:text-[#3368A0] transition-colors">Role Icon Resizer (64x64)</a></li>
+              <li><a href={L("/tools/image-compressor/")} class="hover:text-[#3368A0] transition-colors">Image Compressor (Under 10 MB)</a></li>
               <li><a href="/tools/gif-maker/" class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>
               <li><a href="/tools/profile-viewer/" class="hover:text-[#3368A0] transition-colors">Profile Viewer & Grabber</a></li>
             </ul>
