@@ -1,0 +1,88 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import GifCompressorWorkspace from '../../../components/tools/GifCompressorWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Comprimir GIF Discord | Reduce GIFs Animados";
+const pageDescription = "Comprimir GIF Discord: reduce GIFs animados bajo el límite de 256 KiB para emojis o 10 MB de chat con controles de escala, paleta y fotogramas. Sin subidas.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/gif-compressor/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/gif-compressor/";
+
+const appSchema = generateSoftwareApplicationSchema("Compresor de GIF para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Comprimir GIF", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cómo comprimo un GIF para Discord?", a: "Sube el GIF y ajusta tres palancas: reduce las dimensiones, baja la paleta de colores (de 256 a 16) y conserva menos fotogramas. Esta herramienta decodifica cada fotograma en tu navegador y recodifica un GIF más pequeño, mostrando el tamaño frente al límite de 256 KiB para emojis o 10 MB de chat." },
+  { q: "¿Cuál es el límite de tamaño de un GIF para emoji de Discord?", a: "Un emoji animado debe pesar 256 KiB (262.144 bytes) o menos y hasta 128x128 píxeles. Las subidas de chat normales permiten 10 MB en una cuenta gratuita. Elige el objetivo correspondiente y la herramienta indica si tu GIF cabe." },
+  { q: "¿Por qué reducir colores encoge tanto un GIF?", a: "El GIF guarda una paleta por archivo. Menos entradas de paleta significan menos bits por píxel, así que pasar de 256 a 64 colores puede recortar mucho el tamaño con poco cambio visible en animación plana o de dibujos. Junto con menos fotogramas y menor tamaño, es la vía más rápida." },
+  { q: "¿Se sube mi GIF a algún sitio?", a: "No. El GIF se decodifica y recodifica por completo en tu navegador con ImageDecoder y un codificador local. Nada se envía a un servidor. Necesitas un Chrome, Edge o Firefox reciente para decodificar fotogramas GIF en el navegador." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/gif-compressor.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Comprimir GIF</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Comprimir GIF Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Reduce GIFs animados por debajo del límite de <strong>256 KiB</strong> para emojis o <strong>10 MB</strong> de chat con controles de escala, paleta y fotogramas. Todo el procesamiento ocurre localmente.
+      </p>
+    </header>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <GifCompressorWorkspace lang="es" />
+
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Tres Palancas que se Suman</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          La <strong>escala</strong> encoge las dimensiones y es la de mayor impacto porque recorta todos los fotogramas a la vez. Los <strong>colores máximos</strong> reducen la paleta —pasar de 256 a 64 suele ser invisible en animación plana—. El <strong>salto de fotogramas</strong> conserva uno de cada dos o tres, y la herramienta traslada los retardos para mantener la velocidad.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Codificación Privada en el Navegador</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          El GIF se lee con ImageDecoder y se reconstruye con un codificador local, así que ningún fotograma sale de tu dispositivo. Si aún supera el objetivo, baja la escala o los colores y comprime de nuevo. Para una imagen estática usa el <a href="/es/tools/image-compressor/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Compresor de Imágenes</a>.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

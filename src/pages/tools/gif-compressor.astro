@@ -1,0 +1,126 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import GifCompressorWorkspace from '../../components/tools/GifCompressorWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+
+const pageTitle = "Discord GIF Compressor | Shrink Animated GIFs";
+const pageDescription = "Free Discord GIF compressor: shrink animated GIFs under the 256 KiB emoji cap or 10 MB chat limit with scale, palette, and frame controls. No uploads.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/gif-compressor/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord GIF Compressor",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "GIF Compressor", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I compress a GIF for Discord?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Upload the GIF, then pull three levers: scale down the dimensions, reduce the color palette (256 down to 16), and keep fewer frames. This compressor decodes every frame in your browser and re-encodes a smaller GIF, showing the exact output size against Discord's 256 KiB emoji cap or 10 MB chat limit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the GIF size limit for a Discord emoji?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An animated emoji must be 256 KiB (262,144 bytes) or smaller and up to 128x128 pixels. Regular chat uploads allow 10 MB on a free account. Pick the matching target in the tool and it flags whether your compressed GIF fits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does reducing colors shrink a GIF so much?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GIF stores a color palette per file. Fewer palette entries mean fewer bits per pixel, so dropping from 256 to 64 colors can cut the file size dramatically with little visible change on flat or cartoon-style animation. Combined with a lower frame rate and smaller dimensions, it is the fastest way under a tight limit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my GIF uploaded anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The GIF is decoded and re-encoded entirely in your browser using the built-in ImageDecoder and a local encoder. Nothing is sent to a server, so it is safe for private clips. A recent Chrome, Edge, or Firefox is needed for in-browser GIF frame decoding."
+      }
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/gif-compressor.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">GIF Compressor</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord GIF</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Compressor</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Shrink animated GIFs with scale, palette & frame controls • 256 KiB / 10 MB targets • In-browser</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <GifCompressorWorkspace lang="en" />
+
+    <!-- Prose reference -->
+    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto space-y-6">
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">How to Compress a GIF for Discord</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Animated GIFs balloon in size fast, and Discord's limits are strict: an animated emoji must fit in <strong>256 KiB</strong>, while a normal chat upload gets <strong>10 MB</strong> on a free account. This compressor decodes every frame of your GIF in the browser and re-encodes a smaller one, giving you three independent levers — scale, color palette, and frame-skip — plus a live readout of the output size against your chosen target.
+        </p>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          The three levers stack. <strong>Scale</strong> shrinks the pixel dimensions, which has the biggest impact because it cuts every frame at once. <strong>Max colors</strong> reduces the palette — going from 256 to 64 colors is often invisible on cartoon or flat-shaded animation but removes a large chunk of data. <strong>Frame-skip</strong> keeps every second or third frame, halving or thirding the frame count while the tool folds the skipped delays forward so the animation still runs at the right speed.
+        </p>
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">Private, In-Browser Encoding</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Everything happens locally: the GIF is read with the browser's ImageDecoder and rebuilt with a lightweight local GIF encoder, so no frame ever leaves your device. If the result is still over your target, drop the scale or colors and compress again. For a static image instead of an animation, use the <a href="/tools/image-compressor/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Image Compressor</a>; to build a GIF from a video, use the <a href="/tools/gif-maker/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">GIF Maker</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>

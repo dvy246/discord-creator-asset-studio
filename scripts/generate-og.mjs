@@ -344,6 +344,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/gif-compressor.png',
+    config: {
+      title: 'DISCORD GIF', titleLine2: 'COMPRESSOR',
+      subtitle: 'SHRINK ANIMATED GIFS UNDER 256 KIB OR 10 MB LIMITS',
+      tagline1: 'SCALE • PALETTE REDUCTION • FRAME-SKIP CONTROLS',
+      tagline2: 'IN-BROWSER DECODE & RE-ENCODE • ZERO UPLOADS',
+      badge: 'ANIMATED GIF COMPRESSION • CLIENT-SIDE',
+      cards: [
+        { label: 'EMOJI', desc: '256 KIB' }, { label: 'CHAT', desc: '10 MB' },
+        { label: 'COLORS', desc: '16-256' }, { label: 'FRAMES', desc: 'SKIP' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/badge-maker.png',
     config: {
       title: 'DISCORD LOGO', titleLine2: 'BADGE MAKER',

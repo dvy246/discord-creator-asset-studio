@@ -18,6 +18,7 @@ All image processing executes locally in the browser via Web Workers and the HTM
 - [Discord Emoji Copy & Paste Board](https://discord-creator-asset-studio.pages.dev/tools/emoji-copy-paste/): Curated click-to-copy grid of Unicode emojis and popular kaomoji (smileys, hands, hearts, symbols, animals, food, activities, text faces) that paste into any Discord chat without Nitro.
 - [Discord Server Icon Maker](https://discord-creator-asset-studio.pages.dev/tools/server-icon/): Pan/zoom framing onto an exact 512×512 canvas with a live rounded-square server-list preview and PNG export. Animated GIF icons require Server Boost Level 1.
 - [Discord Logo & Badge Maker](https://discord-creator-asset-studio.pages.dev/tools/badge-maker/): Generate an original 512×512 text/emoji server badge over a solid or gradient background in circle, rounded-square, or square shapes. Trademark-safe — does not use Discord logos or brand marks.
+- [Discord GIF Compressor](https://discord-creator-asset-studio.pages.dev/tools/gif-compressor/): Decode an animated GIF's frames in-browser (ImageDecoder) and re-encode smaller with scale, palette-reduction, and frame-skip controls to fit the 256 KiB emoji cap or 10 MB chat limit.
 
 ## Documentation & Reference Guides
 - [Discord Asset Sizes Guide (2026)](https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/): Complete verified reference of all official Discord image dimensions, file byte limits, formats, and Nitro gating tiers.

@@ -77,6 +77,11 @@ const indexablePages = [
     primaryKeyword: 'discord logo maker',
   },
   {
+    path: 'tools/gif-compressor/index.html',
+    url: '/tools/gif-compressor/',
+    primaryKeyword: 'discord gif compressor',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -190,6 +195,11 @@ const indexablePages = [
     path: 'es/tools/badge-maker/index.html',
     url: '/es/tools/badge-maker/',
     primaryKeyword: 'creador de logos discord',
+  },
+  {
+    path: 'es/tools/gif-compressor/index.html',
+    url: '/es/tools/gif-compressor/',
+    primaryKeyword: 'comprimir gif discord',
   },
 ];
 

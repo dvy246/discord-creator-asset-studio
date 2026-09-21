@@ -33,6 +33,7 @@ const ES_ROUTES = new Set([
   '/tools/emoji-copy-paste/',
   '/tools/server-icon/',
   '/tools/badge-maker/',
+  '/tools/gif-compressor/',
   '/guides/discord-sizes/',
 ]);
 const p = (path: string) => (lang === 'es' && ES_ROUTES.has(path) ? `/es${path}` : path);
@@ -80,6 +81,7 @@ const t = {
         { icon: '🔰', href: '/tools/badge-maker/', title: 'Logo & Badge Maker', desc: 'Build your own trademark-safe server badge from initials or an emoji over a gradient, in a circle or rounded square. 512x512 PNG.', cta: 'Make a Badge →' },
         { icon: '📋', href: '/guides/discord-sizes/', title: 'Official Size Cheat Sheet', desc: 'Comprehensive specification table covering dimensions, aspect ratios, file extensions, and server level requirements.', cta: 'Browse Specs →' },
         { icon: '🎞️', href: '/tools/gif-maker/', title: 'Discord GIF Maker', desc: 'Convert MP4 and WebM clips to animated Discord GIFs with auto-compression under the strict 10MB Nitro limit.', cta: 'Make GIF →' },
+        { icon: '🗜️', href: '/tools/gif-compressor/', title: 'Discord GIF Compressor', desc: 'Shrink an existing animated GIF under the 256 KiB emoji cap or 10MB chat limit with scale, palette, and frame-skip controls.', cta: 'Compress GIF →' },
         { icon: '🔍', href: '/tools/profile-viewer/', title: 'Profile Viewer & Grabber', desc: 'Inspect full-resolution Discord avatars and animated banners by User ID. Instant snowflake account age calculator.', cta: 'Lookup User →' },
       ],
     },
@@ -186,6 +188,7 @@ const t = {
         { icon: '🔰', href: '/tools/badge-maker/', title: 'Creador de Logos e Insignias', desc: 'Crea tu propia insignia de servidor sin riesgo de marca con iniciales o un emoji sobre un degradado, en círculo o cuadrado. PNG 512x512.', cta: 'Crear Insignia →' },
         { icon: '📋', href: '/guides/discord-sizes/', title: 'Hoja Oficial de Tamaños', desc: 'Tabla de especificaciones completa que cubre dimensiones, relaciones de aspecto, extensiones de archivo y requisitos de nivel de servidor.', cta: 'Ver Especificaciones →' },
         { icon: '🎞️', href: '/tools/gif-maker/', title: 'Creador de GIF de Discord', desc: 'Convierte clips MP4 y WebM en GIF animados de Discord con compresión automática bajo el estricto límite de 10MB de Nitro.', cta: 'Crear GIF →' },
+        { icon: '🗜️', href: '/tools/gif-compressor/', title: 'Compresor de GIF de Discord', desc: 'Reduce un GIF animado existente bajo el límite de 256 KiB para emojis o 10MB de chat con controles de escala, paleta y fotogramas.', cta: 'Comprimir GIF →' },
         { icon: '🔍', href: '/tools/profile-viewer/', title: 'Visor y Extractor de Perfiles', desc: 'Inspecciona avatares y banners animados de Discord a resolución completa por ID de usuario. Calculadora instantánea de antigüedad de cuenta por snowflake.', cta: 'Buscar Usuario →' },
       ],
     },
