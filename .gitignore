@@ -32,3 +32,6 @@ Project-artifacts/
 seo-keyowrds/
 brag-output/
 skills-lock.json
+
+# Local Claude SEO plugin install (not part of the app)
+.claude/plugins/
