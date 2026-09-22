@@ -66,6 +66,7 @@ const ES_NAV_ROUTES = new Set([
   '/tools/colored-text/',
   '/tools/markdown/',
   '/tools/embed-builder/',
+  '/tools/snowflake/',
   '/guides/discord-sizes/',
 ]);
 const L = (path: string) => (lang === 'es' && ES_NAV_ROUTES.has(path) ? `/es${path}` : path);
@@ -185,9 +186,9 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
                     <span class="text-sm">🗜️</span>
                     <div><div class="font-bold">GIF Compressor</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Shrink animated GIFs to fit</div></div>
                   </a>
-                  <a href="/tools/profile-viewer/" class={MENU_ITEM}>
+                  <a href={L("/tools/snowflake/")} class={MENU_ITEM}>
                     <span class="text-sm">🔍</span>
-                    <div><div class="font-bold">Profile Viewer</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Snowflake lookup & grabber</div></div>
+                    <div><div class="font-bold">Snowflake Decoder</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">ID to date, worker & process</div></div>
                   </a>
                   <a href={L("/tools/colors/")} class={MENU_ITEM}>
                     <span class="text-sm">🎨</span>
@@ -402,8 +403,8 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
             <a href={L("/tools/gif-compressor/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>🗜️</span> GIF Compressor
             </a>
-            <a href="/tools/profile-viewer/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🔍</span> Profile Viewer
+            <a href={L("/tools/snowflake/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
+              <span>🔍</span> Snowflake Decoder
             </a>
             <a href={L("/tools/avatar/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>👤</span> Avatar Studio
@@ -710,7 +711,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
               <li><a href={L("/tools/badge-maker/")} class="hover:text-[#3368A0] transition-colors">Logo & Badge Maker</a></li>
               <li><a href="/tools/gif-maker/" class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>
               <li><a href={L("/tools/gif-compressor/")} class="hover:text-[#3368A0] transition-colors">GIF Compressor (256 KiB)</a></li>
-              <li><a href="/tools/profile-viewer/" class="hover:text-[#3368A0] transition-colors">Profile Viewer & Grabber</a></li>
+              <li><a href={L("/tools/snowflake/")} class="hover:text-[#3368A0] transition-colors">Snowflake Decoder</a></li>
             </ul>
           </div>
 

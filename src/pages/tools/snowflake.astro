@@ -1,0 +1,133 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import SnowflakeWorkspace from '../../components/tools/SnowflakeWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Snowflake Decoder | ID to Timestamp | Studio";
+const pageDescription = "Free Discord snowflake decoder. Turn any user, message, or server ID into its creation date, worker & process ID, and timestamp markup. 100% in-browser.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/snowflake/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Snowflake Decoder",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Snowflake Decoder", url: pageUrl }
+]);
+
+const faqItems = [
+  {
+    q: "What is a Discord snowflake?",
+    a: "A snowflake is the 64-bit numeric ID Discord assigns to every user, message, channel, server, and role. The first 42 bits encode the millisecond the object was created (offset from Discord's epoch of 2015-01-01), followed by an internal worker ID, process ID, and a per-process increment. Because the timestamp is baked into the ID, this snowflake decoder reads the exact creation date entirely offline."
+  },
+  {
+    q: "How does the Discord snowflake decoder find the creation date?",
+    a: "It shifts the ID right by 22 bits and adds Discord's epoch (1420070400000 ms): (snowflake >> 22) + 1420070400000. The result is the Unix millisecond timestamp of creation, which the tool renders in UTC, your local time, and a human-readable age — no API call required."
+  },
+  {
+    q: "Does this work for message, channel, and server IDs too?",
+    a: "Yes. Every Discord snowflake — user, message, channel, category, server, role, or emoji — uses the same structure, so the decoder returns a valid creation date for any of them. The optional profile card only appears for user IDs, since that is the only type the public Lanyard API can enrich."
+  },
+  {
+    q: "Is my Discord ID sent anywhere?",
+    a: "The decode itself is pure math that runs in your browser, so nothing is transmitted. The only optional network request is the profile-asset lookup, which queries the public Lanyard API for an avatar and banner and returns nothing if the user is private. No login, token, or account is ever required."
+  },
+  {
+    q: "What are the worker ID and process ID in a snowflake?",
+    a: "Discord generates IDs across a fleet of machines. The 5-bit worker ID and 5-bit process ID identify which internal generator produced the snowflake, and the 12-bit increment counts IDs made by that process within the same millisecond. They are internal metadata — interesting for debugging and verification, but not tied to your account."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map((f) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/snowflake.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Snowflake Decoder</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Snowflake</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Decoder</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Turn any Discord ID into its exact creation date, internal worker & process IDs, and ready-to-paste timestamp markup — all in your browser.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <SnowflakeWorkspace lang="en" />
+
+    <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12 mt-16 mb-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="card-panel rounded-[16px] p-6 sm:p-8">
+          <span class="text-[11px] font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Decode // 01</span>
+          <h2 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mt-2 mb-3">
+            Read a Discord account's creation date from its ID
+          </h2>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
+            Every snowflake carries the moment it was minted in its top 42 bits. This decoder shifts those bits
+            out and adds Discord's 2015 epoch, so you get the exact creation timestamp of any account, message,
+            or server without touching an API. The math is identical whether the ID is 17 or 20 digits long.
+          </p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
+            Need the date inside a message that renders in every reader's own timezone? Copy the generated
+            <a href="/tools/timestamp/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">timestamp markup</a>
+            straight into chat.
+          </p>
+        </div>
+        <div class="card-panel rounded-[16px] p-6 sm:p-8">
+          <span class="text-[11px] font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Assets // 02</span>
+          <h2 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mt-2 mb-3">
+            Grab the profile picture and banner too
+          </h2>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
+            When you decode a public user ID, the tool also pulls the full-resolution avatar and banner from
+            Discord's CDN via the public Lanyard API. Nothing loads for private profiles, and no login is ever
+            requested — it only reads assets anyone can already see.
+          </p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
+            Re-crop a reference avatar in the
+            <a href="/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Avatar Cropper</a>
+            or build a matching header in the <a href="/tools/banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Banner Maker</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12">
+      <h2 class="text-xl font-bold text-[#192538] dark:text-white tracking-tight mb-6">Frequently Asked Questions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {faqItems.map((item) => (
+          <div class="card-panel p-5 rounded-[12px]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

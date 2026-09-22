@@ -1,0 +1,136 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import SketchUnderline from '../../../components/SketchUnderline.astro';
+import SnowflakeWorkspace from '../../../components/tools/SnowflakeWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Decodificador de Snowflake Discord | ID a Fecha";
+const pageDescription = "Decodificador de snowflake Discord gratis. Convierte cualquier ID de usuario, mensaje o servidor en su fecha de creación y marca de tiempo, en el navegador.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/snowflake/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/snowflake/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Decodificador de Snowflake de Discord",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Decodificador de Snowflake", url: pageUrl }
+]);
+
+const faqItems = [
+  {
+    q: "¿Qué es un snowflake de Discord?",
+    a: "Un snowflake es el ID numérico de 64 bits que Discord asigna a cada usuario, mensaje, canal, servidor y rol. Los primeros 42 bits codifican el milisegundo en que se creó el objeto (con desplazamiento desde la época de Discord, 2015-01-01), seguidos de un ID de worker interno, un ID de proceso y un incremento por proceso. Como la marca de tiempo está incrustada en el ID, este decodificador lee la fecha de creación exacta sin conexión."
+  },
+  {
+    q: "¿Cómo obtiene la fecha de creación el decodificador?",
+    a: "Desplaza el ID 22 bits a la derecha y suma la época de Discord (1420070400000 ms): (snowflake >> 22) + 1420070400000. El resultado es la marca de tiempo Unix en milisegundos de la creación, que la herramienta muestra en UTC, tu hora local y una antigüedad legible — sin ninguna llamada a una API."
+  },
+  {
+    q: "¿Funciona también con IDs de mensaje, canal y servidor?",
+    a: "Sí. Cada snowflake de Discord — usuario, mensaje, canal, categoría, servidor, rol o emoji — usa la misma estructura, así que el decodificador devuelve una fecha de creación válida para cualquiera de ellos. La tarjeta de perfil opcional solo aparece con IDs de usuario, porque es el único tipo que la API pública Lanyard puede enriquecer."
+  },
+  {
+    q: "¿Se envía mi ID de Discord a algún sitio?",
+    a: "La decodificación en sí es pura matemática que se ejecuta en tu navegador, así que no se transmite nada. La única petición de red opcional es la búsqueda de recursos del perfil, que consulta la API pública Lanyard para un avatar y un banner, y no devuelve nada si el usuario es privado. Nunca se requiere inicio de sesión, token ni cuenta."
+  },
+  {
+    q: "¿Qué son el ID de worker y el ID de proceso en un snowflake?",
+    a: "Discord genera IDs en una flota de máquinas. El ID de worker de 5 bits y el ID de proceso de 5 bits identifican qué generador interno produjo el snowflake, y el incremento de 12 bits cuenta los IDs creados por ese proceso dentro del mismo milisegundo. Son metadatos internos — útiles para depuración y verificación, pero no están ligados a tu cuenta."
+  }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a }
+  }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/snowflake.png">
+  <link slot="head" rel="alternate" hreflang="en" href={enUrl} />
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Decodificador de Snowflake</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Decodificador de</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Snowflake Discord</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Convierte cualquier ID de Discord en su fecha de creación exacta, los IDs internos de worker y proceso, y marcado de marca de tiempo listo para pegar — todo en tu navegador.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          100% en el navegador · Cero subidas
+        </div>
+      </div>
+    </div>
+
+    <SnowflakeWorkspace lang="es" />
+
+    <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12 mt-16 mb-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="card-panel rounded-[16px] p-6 sm:p-8">
+          <span class="text-[11px] font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Decodifica // 01</span>
+          <h2 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mt-2 mb-3">
+            Lee la fecha de creación de una cuenta desde su ID
+          </h2>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
+            Cada snowflake lleva el momento en que se acuñó en sus 42 bits superiores. Este decodificador extrae
+            esos bits y suma la época de Discord de 2015, así que obtienes la marca de tiempo de creación exacta
+            de cualquier cuenta, mensaje o servidor sin tocar una API.
+          </p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
+            ¿Necesitas la fecha dentro de un mensaje que se muestre en la zona horaria de cada lector? Copia el
+            <a href="/es/tools/timestamp/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">marcado de marca de tiempo</a>
+            directo al chat.
+          </p>
+        </div>
+        <div class="card-panel rounded-[16px] p-6 sm:p-8">
+          <span class="text-[11px] font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Recursos // 02</span>
+          <h2 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mt-2 mb-3">
+            Obtén también la foto de perfil y el banner
+          </h2>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
+            Al decodificar un ID de usuario público, la herramienta también extrae el avatar y el banner a
+            resolución completa desde el CDN de Discord vía la API pública Lanyard. No se carga nada para perfiles
+            privados y nunca se pide inicio de sesión.
+          </p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
+            Recorta un avatar de referencia en el
+            <a href="/es/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Recortador de Avatares</a>
+            o crea un encabezado a juego en el <a href="/es/tools/banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Creador de Banners</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12">
+      <h2 class="text-xl font-bold text-[#192538] dark:text-white tracking-tight mb-6">Preguntas Frecuentes</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {faqItems.map((item) => (
+          <div class="card-panel p-5 rounded-[12px]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

@@ -119,9 +119,9 @@ const indexablePages = [
     primaryKeyword: 'discord gif maker',
   },
   {
-    path: 'tools/profile-viewer/index.html',
-    url: '/tools/profile-viewer/',
-    primaryKeyword: 'discord profile viewer',
+    path: 'tools/snowflake/index.html',
+    url: '/tools/snowflake/',
+    primaryKeyword: 'discord snowflake',
   },
   {
     path: 'guides/discord-sizes/index.html',
@@ -252,6 +252,11 @@ const indexablePages = [
     path: 'es/tools/gif-compressor/index.html',
     url: '/es/tools/gif-compressor/',
     primaryKeyword: 'comprimir gif discord',
+  },
+  {
+    path: 'es/tools/snowflake/index.html',
+    url: '/es/tools/snowflake/',
+    primaryKeyword: 'snowflake discord',
   },
   // Asset library pages — gated for title/description length, unique title/desc,
   // single H1, canonical, alt text, and valid JSON-LD (no single-keyword coupling).

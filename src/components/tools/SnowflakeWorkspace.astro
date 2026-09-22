@@ -1,0 +1,379 @@
+---
+// Discord Snowflake Decoder — 100% client-side.
+// Decodes any snowflake (user/message/channel/server ID) into its embedded
+// timestamp, worker ID, process ID and increment. Optional profile-asset
+// lookup via the public Lanyard API enriches the card when a user is public.
+interface Props { lang?: 'en' | 'es' }
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    inputLabel: 'Discord Snowflake ID',
+    inputHint: '17–20 digit numeric ID',
+    placeholder: 'Paste a user, message, channel or server ID…',
+    decode: 'Decode',
+    demos: 'Try:',
+    demoList: [
+      { id: '80351110224678912', name: 'Wumpus' },
+      { id: '936929561302675456', name: 'Midjourney' },
+      { id: '235148962103951360', name: 'Carl-bot' },
+    ],
+    resultsTitle: 'Decoded snowflake',
+    empty: 'Enter any Discord ID above to decode its creation date and internals.',
+    fCreatedUtc: 'Created (UTC)',
+    fLocal: 'Your local time',
+    fRelative: 'Age',
+    fUnixMs: 'Unix (ms)',
+    fUnixS: 'Unix (s)',
+    fWorker: 'Worker ID',
+    fProcess: 'Process ID',
+    fIncrement: 'Increment',
+    anatomy: 'Snowflake anatomy (64 bits)',
+    aTimestamp: '42-bit timestamp',
+    aWorker: '5-bit worker',
+    aProcess: '5-bit process',
+    aIncrement: '12-bit increment',
+    markupTitle: 'Discord timestamp markup',
+    markupNote: 'Paste this into any chat for a live, timezone-aware date.',
+    markupFull: 'Full',
+    markupRel: 'Relative',
+    tsLink: 'Style custom timestamps →',
+    profileTitle: 'Profile assets (if public)',
+    profileNote: 'Live avatar & banner via the public Lanyard API — falls back to the default avatar when a profile is private or unmonitored.',
+    avatarDl: 'Download avatar',
+    bannerDl: 'Download banner',
+    idHelpToggle: 'How do I copy a Discord ID?',
+    idHelpDesktop: 'Desktop: Settings → Advanced → turn on Developer Mode, then right-click a name → Copy User ID.',
+    idHelpMobile: 'Mobile: Profile tab → ••• (top-right) → Copy User ID.',
+  },
+  es: {
+    inputLabel: 'ID Snowflake de Discord',
+    inputHint: 'ID numérico de 17–20 dígitos',
+    placeholder: 'Pega un ID de usuario, mensaje, canal o servidor…',
+    decode: 'Decodificar',
+    demos: 'Prueba:',
+    demoList: [
+      { id: '80351110224678912', name: 'Wumpus' },
+      { id: '936929561302675456', name: 'Midjourney' },
+      { id: '235148962103951360', name: 'Carl-bot' },
+    ],
+    resultsTitle: 'Snowflake decodificado',
+    empty: 'Introduce cualquier ID de Discord arriba para decodificar su fecha de creación e internos.',
+    fCreatedUtc: 'Creado (UTC)',
+    fLocal: 'Tu hora local',
+    fRelative: 'Antigüedad',
+    fUnixMs: 'Unix (ms)',
+    fUnixS: 'Unix (s)',
+    fWorker: 'ID de worker',
+    fProcess: 'ID de proceso',
+    fIncrement: 'Incremento',
+    anatomy: 'Anatomía del snowflake (64 bits)',
+    aTimestamp: 'timestamp de 42 bits',
+    aWorker: 'worker de 5 bits',
+    aProcess: 'proceso de 5 bits',
+    aIncrement: 'incremento de 12 bits',
+    markupTitle: 'Marcado de marca de tiempo de Discord',
+    markupNote: 'Pégalo en cualquier chat para una fecha en vivo con zona horaria.',
+    markupFull: 'Completa',
+    markupRel: 'Relativa',
+    tsLink: 'Crea estilos de marca de tiempo →',
+    profileTitle: 'Recursos del perfil (si es público)',
+    profileNote: 'Avatar y banner en vivo vía la API pública Lanyard — recurre al avatar por defecto cuando un perfil es privado o no monitoreado.',
+    avatarDl: 'Descargar avatar',
+    bannerDl: 'Descargar banner',
+    idHelpToggle: '¿Cómo copio un ID de Discord?',
+    idHelpDesktop: 'Escritorio: Ajustes → Avanzado → activa el Modo Desarrollador, luego clic derecho en un nombre → Copiar ID de usuario.',
+    idHelpMobile: 'Móvil: pestaña Perfil → ••• (arriba a la derecha) → Copiar ID de usuario.',
+  },
+}[lang];
+
+const js = {
+  en: { copy: 'Copy', copied: 'Copied!', notNumeric: 'That is not a numeric snowflake — enter the 17–20 digit ID.', badLen: 'Discord snowflakes are 17–20 digits. Check the copied ID.', justNow: 'just now' },
+  es: { copy: 'Copiar', copied: '¡Copiado!', notNumeric: 'Eso no es un snowflake numérico — introduce el ID de 17–20 dígitos.', badLen: 'Los snowflakes de Discord tienen 17–20 dígitos. Verifica el ID copiado.', justNow: 'ahora mismo' },
+}[lang];
+
+const locale = lang === 'es' ? 'es-ES' : 'en-US';
+const PLACEHOLDER_BANNER = 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=960&auto=format&fit=crop';
+const PLACEHOLDER_AVATAR = 'https://cdn.discordapp.com/embed/avatars/0.png';
+---
+<div
+  id="sf-workspace"
+  data-locale={locale}
+  data-copy={js.copy}
+  data-copied={js.copied}
+  data-notnumeric={js.notNumeric}
+  data-badlen={js.badLen}
+  data-justnow={js.justNow}
+  data-fcreated={t.fCreatedUtc}
+  data-flocal={t.fLocal}
+  data-frelative={t.fRelative}
+  data-funixms={t.fUnixMs}
+  data-funixs={t.fUnixS}
+  data-fworker={t.fWorker}
+  data-fprocess={t.fProcess}
+  data-fincrement={t.fIncrement}
+  class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
+>
+  <!-- Left: input + decoded fields -->
+  <div class="lg:col-span-7 space-y-5">
+    <div class="card-panel rounded-[14px] p-5 sm:p-6 backdrop-blur-xl bg-white/80 dark:bg-[#141A24]/90 border border-[#E0DBD0] dark:border-[#263346] shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+        <label for="sf-input" class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider">{t.inputLabel}</label>
+        <span class="text-[11px] font-medium text-[#6B7A90] dark:text-[#8494A7]">{t.inputHint}</span>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input type="text" id="sf-input" inputmode="numeric" placeholder={t.placeholder}
+          class="flex-1 bg-[#FAF8F5] dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-[10px] px-4 py-3 text-sm text-[#192538] dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3368A0] dark:focus:border-[#66A3BF] font-mono transition-colors" />
+        <button id="sf-decode" class="btn-primary px-6 py-3 rounded-[10px] text-sm font-semibold shadow-xs cursor-pointer">{t.decode}</button>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mt-3.5 pt-3 border-t border-[#E0DBD0]/60 dark:border-[#263346]">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span>{t.demos}</span>
+          {t.demoList.map((d) => (
+            <button type="button" class="sf-demo px-2 py-0.5 rounded bg-white/70 dark:bg-white/10 border border-[#E0DBD0] dark:border-[#263346] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors cursor-pointer" data-id={d.id}>{d.name}</button>
+          ))}
+        </div>
+        <button type="button" id="sf-help-toggle" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline cursor-pointer">❓ {t.idHelpToggle}</button>
+      </div>
+      <div id="sf-help" class="hidden mt-3 p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-black/40 border border-[#E0DBD0] dark:border-white/10 text-xs space-y-1.5 text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+        <p>💻 {t.idHelpDesktop}</p>
+        <p>📱 {t.idHelpMobile}</p>
+      </div>
+      <p id="sf-error" class="hidden mt-3 text-xs font-medium text-red-600 dark:text-red-400"></p>
+    </div>
+
+    <!-- Decoded field grid -->
+    <div id="sf-results" class="card-panel rounded-[14px] p-5 sm:p-6">
+      <h2 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider mb-4">{t.resultsTitle}</h2>
+      <p id="sf-empty" class="text-xs text-[#6B7A90] dark:text-[#8494A7] leading-relaxed">{t.empty}</p>
+      <div id="sf-fields" class="hidden space-y-2.5"></div>
+    </div>
+  </div>
+
+  <!-- Right: anatomy, markup, profile -->
+  <div class="lg:col-span-5 space-y-5">
+    <div id="sf-anatomy-card" class="hidden card-panel rounded-[14px] p-5 sm:p-6">
+      <h3 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider mb-3">{t.anatomy}</h3>
+      <div id="sf-anatomy" class="font-mono text-[11px] break-all leading-relaxed"></div>
+      <div class="grid grid-cols-2 gap-2 mt-3 text-[10px] font-mono">
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-[#3368A0]"></span>{t.aTimestamp}</div>
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-[#66A3BF]"></span>{t.aWorker}</div>
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-[#0D9488]"></span>{t.aProcess}</div>
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-[#C08457]"></span>{t.aIncrement}</div>
+      </div>
+    </div>
+
+    <div id="sf-markup-card" class="hidden card-panel rounded-[14px] p-5 sm:p-6">
+      <h3 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider mb-1.5">{t.markupTitle}</h3>
+      <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mb-3 leading-relaxed">{t.markupNote}</p>
+      <div class="space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono text-[#6B7A90] w-14 shrink-0">{t.markupFull}</span>
+          <code id="sf-mk-full" class="flex-1 text-[11px] font-mono bg-[#1e1f22] text-[#dbdee1] px-2 py-1.5 rounded truncate"></code>
+          <button type="button" class="sf-copy text-[11px] font-semibold text-[#3368A0] dark:text-[#66A3BF] hover:underline cursor-pointer" data-src="sf-mk-full">{js.copy}</button>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono text-[#6B7A90] w-14 shrink-0">{t.markupRel}</span>
+          <code id="sf-mk-rel" class="flex-1 text-[11px] font-mono bg-[#1e1f22] text-[#dbdee1] px-2 py-1.5 rounded truncate"></code>
+          <button type="button" class="sf-copy text-[11px] font-semibold text-[#3368A0] dark:text-[#66A3BF] hover:underline cursor-pointer" data-src="sf-mk-rel">{js.copy}</button>
+        </div>
+      </div>
+      <a href={lang === 'es' ? '/es/tools/timestamp/' : '/tools/timestamp/'} class="inline-block mt-3 text-[#3368A0] dark:text-[#66A3BF] font-semibold text-xs hover:underline">{t.tsLink}</a>
+    </div>
+
+    <div id="sf-profile-card" class="hidden card-panel rounded-[14px] overflow-hidden border border-[#E0DBD0] dark:border-[#263346]">
+      <div class="relative w-full h-28 bg-gradient-to-r from-[#3368A0] to-[#66A3BF] overflow-hidden">
+        <img id="sf-banner" src={PLACEHOLDER_BANNER} alt="Discord profile banner preview" class="w-full h-full object-cover" />
+        <a id="sf-banner-dl" href={PLACEHOLDER_BANNER} target="_blank" rel="noopener" download="discord-banner"
+          class="absolute top-2 right-2 px-2.5 py-1 rounded-lg bg-black/60 hover:bg-black/80 text-white text-[11px] font-bold backdrop-blur-md border border-white/20 transition-all">💾 {t.bannerDl}</a>
+      </div>
+      <div class="px-5 pb-5 pt-2 bg-[#FAF8F5] dark:bg-[#141A24]">
+        <div class="flex justify-between items-end -mt-10 mb-3">
+          <div class="w-20 h-20 rounded-full border-4 border-[#FAF8F5] dark:border-[#141A24] overflow-hidden bg-gray-900 shadow-lg">
+            <img id="sf-avatar" src={PLACEHOLDER_AVATAR} alt="Discord avatar preview" class="w-full h-full object-cover" />
+          </div>
+          <a id="sf-avatar-dl" href={PLACEHOLDER_AVATAR} target="_blank" rel="noopener" download="discord-avatar"
+            class="btn-secondary px-3 py-1.5 rounded-[8px] text-[11px] font-semibold">🖼️ {t.avatarDl}</a>
+        </div>
+        <h3 id="sf-name" class="text-lg font-bold text-[#192538] dark:text-white leading-tight">—</h3>
+        <p id="sf-username" class="text-xs text-[#6B7A90] dark:text-[#8494A7] font-mono">—</p>
+        <p class="text-[10px] text-[#6B7A90] dark:text-[#8494A7] mt-2 leading-relaxed">{t.profileNote}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('sf-workspace')!;
+  const L = {
+    locale: root.dataset.locale || 'en-US',
+    copy: root.dataset.copy || 'Copy',
+    copied: root.dataset.copied || 'Copied!',
+    notNumeric: root.dataset.notnumeric || 'Not a numeric snowflake.',
+    badLen: root.dataset.badlen || 'Snowflakes are 17–20 digits.',
+    justNow: root.dataset.justnow || 'just now',
+  };
+  const $ = (id: string) => document.getElementById(id);
+  const DISCORD_EPOCH = 1420070400000n;
+
+  const input = $('sf-input') as HTMLInputElement;
+  const errEl = $('sf-error')!;
+  const emptyEl = $('sf-empty')!;
+  const fieldsEl = $('sf-fields')!;
+
+  function esc(s: string) {
+    return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
+  }
+
+  function relativeTime(ms: number) {
+    const diff = ms - Date.now();
+    const abs = Math.abs(diff);
+    const rtf = new Intl.RelativeTimeFormat(L.locale, { numeric: 'auto' });
+    const units: [Intl.RelativeTimeFormatUnit, number][] = [
+      ['year', 31557600000], ['month', 2629800000], ['day', 86400000],
+      ['hour', 3600000], ['minute', 60000], ['second', 1000],
+    ];
+    for (const [unit, size] of units) {
+      if (abs >= size) return rtf.format(Math.round(diff / size), unit);
+    }
+    return L.justNow;
+  }
+
+  function field(label: string, value: string, mono = true) {
+    const id = 'sfv-' + Math.random().toString(36).slice(2, 8);
+    return `<div class="flex items-center justify-between gap-3 py-2 border-b border-[#E0DBD0]/50 dark:border-[#263346] last:border-0">
+      <span class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] uppercase tracking-wide shrink-0">${esc(label)}</span>
+      <span class="flex items-center gap-2 min-w-0">
+        <span id="${id}" class="text-xs ${mono ? 'font-mono' : ''} font-semibold text-[#192538] dark:text-white text-right truncate">${esc(value)}</span>
+        <button type="button" class="sf-copy text-[11px] font-semibold text-[#3368A0] dark:text-[#66A3BF] hover:underline cursor-pointer shrink-0" data-src="${id}">${L.copy}</button>
+      </span>
+    </div>`;
+  }
+
+  function bits(id: bigint, width: number) { return id.toString(2).padStart(width, '0'); }
+
+  function showError(msg: string) {
+    errEl.textContent = msg;
+    errEl.classList.remove('hidden');
+  }
+
+  function decode(raw: string) {
+    let clean = (raw || '').trim().replace(/^[<@!#&]+|>+$/g, '').trim();
+    errEl.classList.add('hidden');
+    if (!clean) return;
+    if (!/^\d+$/.test(clean)) { showError(L.notNumeric); return; }
+    if (clean.length < 17 || clean.length > 20) { showError(L.badLen); return; }
+
+    const idBig = BigInt(clean);
+    const ms = Number((idBig >> 22n) + DISCORD_EPOCH);
+    const worker = Number((idBig & 0x3E0000n) >> 17n);
+    const process = Number((idBig & 0x1F000n) >> 12n);
+    const increment = Number(idBig & 0xFFFn);
+    const date = new Date(ms);
+    const unixS = Math.floor(ms / 1000);
+
+    const utc = date.toLocaleString(L.locale, { timeZone: 'UTC', dateStyle: 'long', timeStyle: 'medium' }) + ' UTC';
+    const local = date.toLocaleString(L.locale, { dateStyle: 'long', timeStyle: 'medium' });
+
+    fieldsEl.innerHTML =
+      field(FLD.created, utc) +
+      field(FLD.local, local) +
+      field(FLD.relative, relativeTime(ms), false) +
+      field(FLD.unixMs, String(ms)) +
+      field(FLD.unixS, String(unixS)) +
+      field(FLD.worker, String(worker)) +
+      field(FLD.process, String(process)) +
+      field(FLD.increment, String(increment));
+    emptyEl.classList.add('hidden');
+    fieldsEl.classList.remove('hidden');
+
+    // Anatomy — 64-bit segmented binary
+    const tsBits = bits(idBig >> 22n, 42);
+    const wBits = bits((idBig & 0x3E0000n) >> 17n, 5);
+    const pBits = bits((idBig & 0x1F000n) >> 12n, 5);
+    const iBits = bits(idBig & 0xFFFn, 12);
+    $('sf-anatomy')!.innerHTML =
+      `<span class="text-[#3368A0]">${tsBits}</span>` +
+      `<span class="text-[#66A3BF]">${wBits}</span>` +
+      `<span class="text-[#0D9488]">${pBits}</span>` +
+      `<span class="text-[#C08457]">${iBits}</span>`;
+    $('sf-anatomy-card')!.classList.remove('hidden');
+
+    // Timestamp markup
+    ($('sf-mk-full') as HTMLElement).textContent = `<t:${unixS}:F>`;
+    ($('sf-mk-rel') as HTMLElement).textContent = `<t:${unixS}:R>`;
+    $('sf-markup-card')!.classList.remove('hidden');
+
+    // Profile enrichment (best-effort, public data only)
+    fetchProfile(clean, idBig);
+  }
+
+  async function fetchProfile(id: string, idBig: bigint) {
+    const defaultAvatar = `https://cdn.discordapp.com/embed/avatars/${Number(idBig >> 22n) % 6}.png`;
+    const card = $('sf-profile-card')!;
+    const avatar = $('sf-avatar') as HTMLImageElement;
+    const avatarDl = $('sf-avatar-dl') as HTMLAnchorElement;
+    const banner = $('sf-banner') as HTMLImageElement;
+    const bannerDl = $('sf-banner-dl') as HTMLAnchorElement;
+    const nameEl = $('sf-name')!;
+    const userEl = $('sf-username')!;
+    try {
+      const res = await fetch(`https://api.lanyard.rest/v1/users/${id}`);
+      const data = await res.json();
+      if (data.success && data.data && data.data.discord_user) {
+        const u = data.data.discord_user;
+        const av = u.avatar
+          ? `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.${u.avatar.startsWith('a_') ? 'gif' : 'png'}?size=1024`
+          : defaultAvatar;
+        const bn = u.banner
+          ? `https://cdn.discordapp.com/banners/${u.id}/${u.banner}.${u.banner.startsWith('a_') ? 'gif' : 'png'}?size=1024`
+          : '';
+        avatar.src = av; avatarDl.href = av;
+        if (bn) { banner.src = bn; bannerDl.href = bn; }
+        nameEl.textContent = u.global_name || u.username;
+        userEl.textContent = '@' + u.username;
+      } else {
+        avatar.src = defaultAvatar; avatarDl.href = defaultAvatar;
+        nameEl.textContent = 'Discord ID #' + id.slice(-4);
+        userEl.textContent = 'ID ' + id;
+      }
+    } catch {
+      avatar.src = defaultAvatar; avatarDl.href = defaultAvatar;
+      nameEl.textContent = 'Discord ID #' + id.slice(-4);
+      userEl.textContent = 'ID ' + id;
+    }
+    card.classList.remove('hidden');
+  }
+
+  // Field labels pulled from server-rendered dataset-free constants via DOM text.
+  const FLD = {
+    created: root.dataset.fcreated || 'Created (UTC)',
+    local: root.dataset.flocal || 'Local time',
+    relative: root.dataset.frelative || 'Age',
+    unixMs: root.dataset.funixms || 'Unix (ms)',
+    unixS: root.dataset.funixs || 'Unix (s)',
+    worker: root.dataset.fworker || 'Worker ID',
+    process: root.dataset.fprocess || 'Process ID',
+    increment: root.dataset.fincrement || 'Increment',
+  };
+
+  $('sf-decode')!.addEventListener('click', () => decode(input.value));
+  input.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') decode(input.value); });
+  document.querySelectorAll('.sf-demo').forEach((b) => b.addEventListener('click', () => {
+    const id = (b as HTMLElement).dataset.id || '';
+    input.value = id; decode(id);
+  }));
+  $('sf-help-toggle')!.addEventListener('click', () => $('sf-help')!.classList.toggle('hidden'));
+
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.sf-copy') as HTMLElement | null;
+    if (!btn) return;
+    const src = document.getElementById(btn.dataset.src || '');
+    if (!src) return;
+    navigator.clipboard.writeText(src.textContent || '').then(() => {
+      const prev = btn.textContent;
+      btn.textContent = L.copied;
+      setTimeout(() => { btn.textContent = prev; }, 1200);
+    });
+  });
+</script>

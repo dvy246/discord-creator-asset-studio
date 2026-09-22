@@ -479,6 +479,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/snowflake.png',
+    config: {
+      title: 'DISCORD SNOWFLAKE', titleLine2: 'DECODER',
+      subtitle: 'TURN ANY ID INTO ITS EXACT CREATION DATE',
+      tagline1: 'TIMESTAMP • WORKER ID • PROCESS ID • INCREMENT',
+      tagline2: 'PURE CLIENT-SIDE MATH • NO API • NO LOGIN',
+      badge: 'USER, MESSAGE, CHANNEL & SERVER IDS',
+      cards: [
+        { label: 'CREATED', desc: 'UTC+LOCAL' }, { label: 'AGE', desc: 'RELATIVE' },
+        { label: 'MARKUP', desc: '<t:…:F>' }, { label: 'ANATOMY', desc: '64-BIT' },
+        { label: 'PROFILE', desc: 'ASSETS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/colors.png',
     config: {
       title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',
