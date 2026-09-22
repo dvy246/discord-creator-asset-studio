@@ -36,6 +36,7 @@ const ES_ROUTES = new Set([
   '/tools/gif-compressor/',
   '/tools/fonts/',
   '/tools/colored-text/',
+  '/tools/markdown/',
   '/guides/discord-sizes/',
 ]);
 const p = (path: string) => (lang === 'es' && ES_ROUTES.has(path) ? `/es${path}` : path);
@@ -81,6 +82,7 @@ const t = {
         { icon: '📋', href: '/tools/emoji-copy-paste/', title: 'Emoji Copy & Paste Board', desc: 'Click-to-copy Unicode emojis and kaomoji—smileys, hearts, symbols, animals, text faces—that paste into any chat without Nitro.', cta: 'Copy Emojis →' },
         { icon: '🔤', href: '/tools/fonts/', title: 'Fancy Font & Text Generator', desc: 'Turn plain text into bold, italic, script, and boxed Unicode fonts for names, bios, and chat. Readable styles first, one-click copy, favorites.', cta: 'Generate Fonts →' },
         { icon: '🌈', href: '/tools/colored-text/', title: 'Colored Text Generator', desc: 'Style words with Discord ANSI colors, bold, and underline, then copy a ready-to-paste code block. Live preview mirrors how Discord renders it.', cta: 'Color Text →' },
+        { icon: '📝', href: '/tools/markdown/', title: 'Markdown Previewer', desc: 'Format bold, italics, spoilers, quotes, lists, and code blocks with a live chat preview that mirrors how Discord renders your message. Copy and paste.', cta: 'Preview Markdown →' },
         { icon: '🏰', href: '/tools/server-icon/', title: 'Server Icon Maker', desc: 'Frame artwork on an exact 512x512 canvas with pan, zoom, and a live rounded-square server-list preview, then export a clean PNG.', cta: 'Make Server Icon →' },
         { icon: '🔰', href: '/tools/badge-maker/', title: 'Logo & Badge Maker', desc: 'Build your own trademark-safe server badge from initials or an emoji over a gradient, in a circle or rounded square. 512x512 PNG.', cta: 'Make a Badge →' },
         { icon: '📋', href: '/guides/discord-sizes/', title: 'Official Size Cheat Sheet', desc: 'Comprehensive specification table covering dimensions, aspect ratios, file extensions, and server level requirements.', cta: 'Browse Specs →' },
@@ -190,6 +192,7 @@ const t = {
         { icon: '📋', href: '/tools/emoji-copy-paste/', title: 'Tablero de Copiar y Pegar Emojis', desc: 'Copia con un clic emojis Unicode y kaomoji—caras, corazones, símbolos, animales—que se pegan en cualquier chat sin Nitro.', cta: 'Copiar Emojis →' },
         { icon: '🔤', href: '/tools/fonts/', title: 'Generador de Fuentes y Letras', desc: 'Convierte texto plano en fuentes Unicode en negrita, cursiva, manuscrita y cuadrada para nombres, biografías y chat. Estilos legibles primero, copia con un clic.', cta: 'Generar Fuentes →' },
         { icon: '🌈', href: '/tools/colored-text/', title: 'Generador de Texto de Colores', desc: 'Aplica colores ANSI de Discord, negrita y subrayado a tus palabras y copia un bloque listo para pegar. La vista previa refleja cómo lo muestra Discord.', cta: 'Colorear Texto →' },
+        { icon: '📝', href: '/tools/markdown/', title: 'Previsualizador de Markdown', desc: 'Da formato con negrita, cursiva, spoilers, citas, listas y bloques de código con una vista previa en vivo que refleja cómo Discord muestra tu mensaje. Copia y pega.', cta: 'Previsualizar Markdown →' },
         { icon: '🏰', href: '/tools/server-icon/', title: 'Creador de Icono de Servidor', desc: 'Encuadra tu arte en un lienzo exacto de 512x512 con paneo, zoom y vista previa de cuadrado redondeado, luego exporta un PNG limpio.', cta: 'Crear Icono →' },
         { icon: '🔰', href: '/tools/badge-maker/', title: 'Creador de Logos e Insignias', desc: 'Crea tu propia insignia de servidor sin riesgo de marca con iniciales o un emoji sobre un degradado, en círculo o cuadrado. PNG 512x512.', cta: 'Crear Insignia →' },
         { icon: '📋', href: '/guides/discord-sizes/', title: 'Hoja Oficial de Tamaños', desc: 'Tabla de especificaciones completa que cubre dimensiones, relaciones de aspecto, extensiones de archivo y requisitos de nivel de servidor.', cta: 'Ver Especificaciones →' },

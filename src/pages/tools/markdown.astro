@@ -1,0 +1,126 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import MarkdownWorkspace from '../../components/tools/MarkdownWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Markdown Preview | Live Editor";
+const pageDescription = "Free Discord markdown editor with live preview: bold, italic, headers, spoilers, code blocks, quotes and lists. See exactly how it renders in chat.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/markdown/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Markdown Previewer",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Markdown Previewer", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does Discord markdown formatting work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discord uses a lightweight markdown flavor: **bold**, *italic* or _italic_, __underline__, ~~strikethrough~~, ||spoiler||, `inline code`, and triple-backtick code blocks. Headers use #, ##, and ###, subtext uses -#, and > starts a quote. Type on the left and this tool shows the exact chat rendering on the right."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I write a spoiler in Discord?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Wrap the text in double vertical bars: ||like this||. Discord hides it behind a gray box until a reader clicks to reveal it. In this previewer the spoiler renders blacked-out and reveals on click, just like the real app."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I make a multi-line code block?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use three backticks on their own line, your code, then three backticks to close. Add a language name after the opening backticks (for example ```js) for syntax context. Single backticks around a word make inline code instead."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this send my message to Discord?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The previewer runs entirely in your browser and never uploads anything. Write and format your message here, click Copy markdown, then paste it into any Discord channel or DM."
+      }
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/markdown.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Markdown Previewer</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Markdown</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Previewer</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Format bold, italics, spoilers &amp; code • Live chat preview • Copy &amp; paste</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <MarkdownWorkspace lang="en" />
+
+    <!-- Prose reference -->
+    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto space-y-6">
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">How Discord Markdown Works</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord borrows a small slice of <strong>markdown</strong> for chat. Surround text with symbols and it renders styled: <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">**bold**</code>, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">*italic*</code>, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">__underline__</code>, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">~~strikethrough~~</code>, and <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">||spoiler||</code>. The toolbar above wraps your current selection for you, and the panel on the right mirrors the exact chat rendering as you type.
+        </p>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Structure uses line prefixes: <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]"># </code>, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">## </code>, and <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">### </code> for the three header sizes, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">-# </code> for small subtext, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">&gt; </code> for a quote, and <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">- </code> for a bulleted list. Wrap code in single backticks inline or a triple-backtick fence for a block. Nothing leaves your browser — when the preview looks right, copy the raw markdown and paste it into Discord.
+        </p>
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">Formatting That Does Not Render in Chat</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord ignores image markdown and most tables, and headers or subtext only render in messages — not in usernames or About Me, which stay plain text. For styled names use a <a href="/tools/fonts/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">Unicode font</a>, and for colored words inside a code block use the <a href="/tools/colored-text/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">colored text generator</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>

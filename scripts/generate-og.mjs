@@ -449,6 +449,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/markdown.png',
+    config: {
+      title: 'DISCORD MARKDOWN', titleLine2: 'PREVIEWER',
+      subtitle: 'FORMAT YOUR MESSAGE AND SEE THE LIVE CHAT PREVIEW',
+      tagline1: 'BOLD ITALIC UNDERLINE • SPOILERS • QUOTES • LISTS',
+      tagline2: 'CODE BLOCKS & HEADERS • 100% CLIENT-SIDE',
+      badge: 'COPY THE MARKDOWN AND PASTE INTO DISCORD',
+      cards: [
+        { label: 'STYLES', desc: 'B I U S' }, { label: 'SPOILERS', desc: '|| ||' },
+        { label: 'PREVIEW', desc: 'LIVE' }, { label: 'NO NITRO', desc: 'NEEDED' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
     file: 'public/og/colors.png',
     config: {
       title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',

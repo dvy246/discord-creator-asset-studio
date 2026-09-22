@@ -64,6 +64,7 @@ const ES_NAV_ROUTES = new Set([
   '/tools/gif-compressor/',
   '/tools/fonts/',
   '/tools/colored-text/',
+  '/tools/markdown/',
   '/guides/discord-sizes/',
 ]);
 const L = (path: string) => (lang === 'es' && ES_NAV_ROUTES.has(path) ? `/es${path}` : path);
@@ -233,6 +234,10 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
                   <a href={L("/tools/colored-text/")} class={MENU_ITEM}>
                     <span class="text-sm">🌈</span>
                     <div><div class="font-bold">Colored Text Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">ANSI colors, bold & underline</div></div>
+                  </a>
+                  <a href={L("/tools/markdown/")} class={MENU_ITEM}>
+                    <span class="text-sm">📝</span>
+                    <div><div class="font-bold">Markdown Previewer</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Live formatting preview</div></div>
                   </a>
                 </div>
               </div>
@@ -433,6 +438,9 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
             </a>
             <a href={L("/tools/colored-text/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
               <span>🌈</span> Colored Text Generator
+            </a>
+            <a href={L("/tools/markdown/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
+              <span>📝</span> Markdown Previewer
             </a>
           </div>
         </div>
@@ -688,6 +696,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
               <li><a href={L("/tools/emoji-copy-paste/")} class="hover:text-[#3368A0] transition-colors">Emoji Copy & Paste Board</a></li>
               <li><a href={L("/tools/fonts/")} class="hover:text-[#3368A0] transition-colors">Fancy Font & Text Generator</a></li>
               <li><a href={L("/tools/colored-text/")} class="hover:text-[#3368A0] transition-colors">Colored Text Generator (ANSI)</a></li>
+              <li><a href={L("/tools/markdown/")} class="hover:text-[#3368A0] transition-colors">Markdown Previewer</a></li>
               <li><a href={L("/tools/server-icon/")} class="hover:text-[#3368A0] transition-colors">Server Icon Maker (512x512)</a></li>
               <li><a href={L("/tools/badge-maker/")} class="hover:text-[#3368A0] transition-colors">Logo & Badge Maker</a></li>
               <li><a href="/tools/gif-maker/" class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>

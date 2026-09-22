@@ -1,0 +1,412 @@
+---
+/**
+ * MarkdownWorkspace.astro — Discord Markdown live preview + editor.
+ *
+ * Left: a plain textarea for Discord-flavored markdown, with a formatting
+ * toolbar that wraps/prefixes the current selection. Right: a live preview
+ * rendered by a small Discord-accurate parser (headers, subtext, bold, italic,
+ * underline, strikethrough, spoilers, inline code, fenced code blocks, block
+ * quotes incl. >>>, lists, and masked links). One-click copy of the raw
+ * markdown. 100% client-side, no deps, no network. Language-agnostic logic on
+ * fixed element IDs; visible labels via `t`, runtime strings via data-*.
+ * Imported by the EN (/tools/markdown/) and ES (/es/tools/markdown/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    inputLabel: 'Your message',
+    inputHint: 'Type Discord markdown on the left — the preview mirrors how it renders in chat.',
+    previewLabel: 'Live preview',
+    copyBtn: 'Copy markdown',
+    clearBtn: 'Clear',
+    username: 'You',
+    stamp: 'Today at 12:00',
+    toolbar: {
+      bold: 'Bold', italic: 'Italic', underline: 'Underline', strike: 'Strikethrough',
+      spoiler: 'Spoiler', code: 'Inline code', codeblock: 'Code block', quote: 'Quote',
+      h1: 'Big header', h2: 'Header', h3: 'Small header', subtext: 'Subtext',
+      bullet: 'Bulleted list', link: 'Masked link'
+    },
+    starter: "# Welcome to the server!\n**Read the rules** before you post.\n\n> Be kind, keep it fun, and hide plot twists behind ||spoiler tags||.\n\n- Say hi in _general_\n- Grab a `role` in #roles\n- Report issues to the mods\n\n-# Made with the Discord Markdown previewer.",
+    links: [
+      { icon: '🌈', href: '/tools/colored-text/', label: 'Colored Text Generator (ANSI)' },
+      { icon: '🔤', href: '/tools/fonts/', label: 'Fancy Font Generator' },
+      { icon: '🕒', href: '/tools/timestamp/', label: 'Timestamp Generator' }
+    ]
+  },
+  es: {
+    inputLabel: 'Tu mensaje',
+    inputHint: 'Escribe markdown de Discord a la izquierda — la vista previa refleja cómo se ve en el chat.',
+    previewLabel: 'Vista previa en vivo',
+    copyBtn: 'Copiar markdown',
+    clearBtn: 'Borrar',
+    username: 'Tú',
+    stamp: 'Hoy a las 12:00',
+    toolbar: {
+      bold: 'Negrita', italic: 'Cursiva', underline: 'Subrayado', strike: 'Tachado',
+      spoiler: 'Spoiler', code: 'Código en línea', codeblock: 'Bloque de código', quote: 'Cita',
+      h1: 'Título grande', h2: 'Título', h3: 'Título pequeño', subtext: 'Subtexto',
+      bullet: 'Lista con viñetas', link: 'Enlace con texto'
+    },
+    starter: "# ¡Bienvenido al servidor!\n**Lee las reglas** antes de publicar.\n\n> Sé amable, diviértete y esconde los spoilers con ||etiquetas de spoiler||.\n\n- Saluda en _general_\n- Consigue un `rol` en #roles\n- Avisa a los mods si hay problemas\n\n-# Hecho con el previsualizador de Markdown de Discord.",
+    links: [
+      { icon: '🌈', href: '/es/tools/colored-text/', label: 'Texto de Colores (ANSI)' },
+      { icon: '🔤', href: '/es/tools/fonts/', label: 'Generador de Fuentes' },
+      { icon: '🕒', href: '/es/tools/timestamp/', label: 'Generador de Timestamps' }
+    ]
+  }
+}[lang];
+
+// Toolbar actions: wrap = surround selection with token; prefix = add at line
+// start; block = fenced code block; link = masked [text](url).
+const TOOLS = [
+  { id: 'bold', act: 'wrap', tok: '**', txt: 'B', cls: 'font-bold' },
+  { id: 'italic', act: 'wrap', tok: '*', txt: 'I', cls: 'italic' },
+  { id: 'underline', act: 'wrap', tok: '__', txt: 'U', cls: 'underline' },
+  { id: 'strike', act: 'wrap', tok: '~~', txt: 'S', cls: 'line-through' },
+  { id: 'spoiler', act: 'wrap', tok: '||', txt: '▐▐', cls: 'tracking-tighter' },
+  { id: 'code', act: 'wrap', tok: '`', txt: '</>', cls: 'font-mono text-[10px]' },
+  { id: 'codeblock', act: 'block', tok: '```', txt: '{ }', cls: 'font-mono' },
+  { id: 'quote', act: 'prefix', tok: '> ', txt: '❝', cls: '' },
+  { id: 'bullet', act: 'prefix', tok: '- ', txt: '•', cls: '' },
+  { id: 'h1', act: 'prefix', tok: '# ', txt: 'H1', cls: 'font-bold text-[10px]' },
+  { id: 'h2', act: 'prefix', tok: '## ', txt: 'H2', cls: 'font-bold text-[10px]' },
+  { id: 'h3', act: 'prefix', tok: '### ', txt: 'H3', cls: 'font-bold text-[10px]' },
+  { id: 'subtext', act: 'prefix', tok: '-# ', txt: '-#', cls: 'font-mono text-[10px]' },
+  { id: 'link', act: 'link', tok: '', txt: '🔗', cls: '' }
+] as const;
+
+const js = {
+  en: { copy: 'Copy markdown', copied: 'Copied!', linkText: 'text', linkUrl: 'https://', empty: 'Nothing to preview yet…' },
+  es: { copy: 'Copiar markdown', copied: '¡Copiado!', linkText: 'texto', linkUrl: 'https://', empty: 'Nada que previsualizar todavía…' }
+}[lang];
+---
+<div
+  id="md-workspace"
+  class="space-y-6 mb-16"
+  data-copy={js.copy}
+  data-copied={js.copied}
+  data-link-text={js.linkText}
+  data-link-url={js.linkUrl}
+  data-empty={js.empty}
+>
+  <!-- Toolbar -->
+  <div class="card-panel rounded-[14px] p-3 sm:p-4">
+    <div class="flex flex-wrap items-center gap-1.5">
+      {TOOLS.map((tool) => (
+        <button
+          type="button"
+          class:list={[
+            'md-btn w-9 h-9 flex items-center justify-center rounded-[8px] text-xs border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#161F2E] text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:border-[#3368A0]/50 dark:hover:border-[#66A3BF]/50 transition-colors',
+            tool.cls
+          ]}
+          data-act={tool.act}
+          data-tok={tool.tok}
+          title={t.toolbar[tool.id as keyof typeof t.toolbar]}
+          aria-label={t.toolbar[tool.id as keyof typeof t.toolbar]}
+        >{tool.txt}</button>
+      ))}
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+    <!-- Editor -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.inputLabel}</h2>
+        <div class="flex items-center gap-2">
+          <span id="md-count" class="text-[11px] font-mono text-[#6B7A90] dark:text-[#8494A7] tabular-nums">0/2000</span>
+          <button type="button" id="md-clear" class="btn-secondary text-[11px] px-2.5 py-1 rounded-[6px]">{t.clearBtn}</button>
+        </div>
+      </div>
+      <textarea
+        id="md-input"
+        spellcheck="false"
+        aria-label={t.inputLabel}
+        class="w-full min-h-[300px] rounded-[12px] bg-white dark:bg-[#101622] text-[#192538] dark:text-[#DBDEE1] font-mono text-sm leading-relaxed px-4 py-3.5 resize-y focus:outline-none focus:ring-2 focus:ring-[#3368A0] border border-[#E0DBD0] dark:border-[#263346]"
+      >{t.starter}</textarea>
+      <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.inputHint}</p>
+    </div>
+
+    <!-- Discord-styled preview -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.previewLabel}</h2>
+        <button type="button" id="md-copy" class="btn-primary text-xs px-4 py-2 rounded-[8px] font-semibold">{t.copyBtn}</button>
+      </div>
+      <div class="rounded-[12px] bg-[#313338] border border-[#232428] px-4 py-4 min-h-[300px]">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#5865F2] to-[#3368A0] shrink-0 flex items-center justify-center text-white text-sm font-bold shadow-sm" aria-hidden="true">D</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-baseline gap-2">
+              <span class="text-[#f2f3f5] font-semibold text-[15px]">{t.username}</span>
+              <span class="text-[#949ba4] text-[11px]">{t.stamp}</span>
+            </div>
+            <div id="md-render" class="dc mt-0.5"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related links -->
+  <div class="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium pt-1">
+    {t.links.map((link) => (
+      <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+        <span>{link.icon}</span> {link.label}
+      </a>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  #md-render { color: #dbdee1; font-size: 1rem; line-height: 1.375; word-break: break-word; white-space: normal; }
+  #md-render > *:first-child { margin-top: 0; }
+  #md-render h1 { font-size: 1.5rem; font-weight: 700; line-height: 1.25; margin: .5rem 0 .25rem; color: #f2f3f5; }
+  #md-render h2 { font-size: 1.25rem; font-weight: 700; line-height: 1.25; margin: .5rem 0 .25rem; color: #f2f3f5; }
+  #md-render h3 { font-size: 1rem; font-weight: 700; line-height: 1.25; margin: .5rem 0 .25rem; color: #f2f3f5; }
+  #md-render .dc-subtext { font-size: .8rem; color: #949ba4; }
+  #md-render strong { font-weight: 700; }
+  #md-render em { font-style: italic; }
+  #md-render u { text-decoration: underline; }
+  #md-render s { text-decoration: line-through; }
+  #md-render a { color: #00a8fc; text-decoration: none; }
+  #md-render a:hover { text-decoration: underline; }
+  #md-render code { background: #1e1f22; border-radius: 4px; padding: .1em .3em; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85em; }
+  #md-render pre { background: #1e1f22; border: 1px solid #2b2d31; border-radius: 6px; padding: .5rem .75rem; margin: .4rem 0; overflow-x: auto; }
+  #md-render pre code { background: none; border-radius: 0; padding: 0; font-size: .8125rem; white-space: pre-wrap; word-break: break-word; }
+  #md-render blockquote { border-left: 4px solid #4e5058; padding: 0 .75rem; margin: .25rem 0; }
+  #md-render ul, #md-render ol { margin: .1rem 0; padding-left: 1.5rem; }
+  #md-render ul { list-style: disc; }
+  #md-render ol { list-style: decimal; }
+  #md-render li { margin: .1rem 0; }
+  #md-render li > ul, #md-render li > ol { margin: 0; }
+  #md-render .dc-spoiler { background: #1e1f22; color: transparent; border-radius: 4px; padding: 0 2px; cursor: pointer; user-select: none; }
+  #md-render .dc-spoiler.revealed { background: rgba(78,80,88,.35); color: #dbdee1; cursor: text; user-select: text; }
+  #md-render .dc-empty { color: #949ba4; font-style: italic; }
+</style>
+<script>
+  const ws = document.getElementById('md-workspace');
+  const L = {
+    copy: ws?.dataset.copy || 'Copy markdown',
+    copied: ws?.dataset.copied || 'Copied!',
+    linkText: ws?.dataset.linkText || 'text',
+    linkUrl: ws?.dataset.linkUrl || 'https://',
+    empty: ws?.dataset.empty || 'Nothing to preview yet…'
+  };
+  const input = document.getElementById('md-input') as HTMLTextAreaElement;
+  const render = document.getElementById('md-render') as HTMLElement;
+  const countEl = document.getElementById('md-count');
+  const copyBtn = document.getElementById('md-copy') as HTMLButtonElement;
+
+  const CODE = ' ';
+  const BLOCK = '';
+
+  function esc(s: string): string {
+    return s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // Inline formatting for one block-stripped line of RAW text.
+  function inline(raw: string): string {
+    const codes: string[] = [];
+    // Pull inline code spans out first so their contents stay literal.
+    let s = raw.replace(/`([^`\n]+?)`/g, (_m, c) => {
+      codes.push('<code>' + esc(c) + '</code>');
+      return CODE + (codes.length - 1) + CODE;
+    });
+    s = esc(s);
+    s = s.replace(/\|\|([\s\S]+?)\|\|/g, '<span class="dc-spoiler">$1</span>');
+    s = s.replace(/\*\*\*([\s\S]+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    s = s.replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/__([\s\S]+?)__/g, '<u>$1</u>');
+    s = s.replace(/(^|[^*])\*(?!\s)([^*\n]+?)\*(?!\*)/g, '$1<em>$2</em>');
+    s = s.replace(/(^|[^_\w])_(?!\s)([^_\n]+?)_(?![_\w])/g, '$1<em>$2</em>');
+    s = s.replace(/~~([\s\S]+?)~~/g, '<s>$1</s>');
+    s = s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^)\s]+)\)/g,
+      (_m, txt, url) => '<a href="' + url + '" target="_blank" rel="noopener nofollow">' + txt + '</a>');
+    s = s.replace(new RegExp(CODE + '(\\d+)' + CODE, 'g'), (_m, i) => codes[+i]);
+    return s;
+  }
+  // Build nested <ul>/<ol> from flat items using an indent stack.
+  function buildList(items: { indent: number; ordered: boolean; text: string }[]): string {
+    let idx = 0;
+    function level(min: number): string {
+      const ordered = items[idx].ordered;
+      const tag = ordered ? 'ol' : 'ul';
+      let out = '';
+      while (idx < items.length && items[idx].indent >= min) {
+        const it = items[idx];
+        let li = '<li>' + inline(it.text);
+        idx++;
+        if (idx < items.length && items[idx].indent > it.indent) li += level(items[idx].indent);
+        out += li + '</li>';
+      }
+      return '<' + tag + '>' + out + '</' + tag + '>';
+    }
+    return level(items[0].indent);
+  }
+
+  // Full Discord message → HTML. Fenced code blocks are pulled out first so no
+  // block/inline rule runs inside them; blockquotes recurse over shared blocks.
+  function renderMarkdown(src: string): string {
+    const blocks: string[] = [];
+    const text = src.replace(/\r\n/g, '\n').replace(
+      /```(?:([a-zA-Z0-9+#.\-]*)\n)?([\s\S]*?)```/g,
+      (_m, _lang, body) => {
+        blocks.push('<pre><code>' + esc(String(body).replace(/\n$/, '')) + '</code></pre>');
+        return BLOCK + (blocks.length - 1) + BLOCK;
+      }
+    );
+    const blockRe = new RegExp('^' + BLOCK + '(\\d+)' + BLOCK + '\\s*$');
+    const listRe = /^(\s*)(?:[-*]|(\d+)\.)\s+(.*)$/;
+
+    function renderLines(chunk: string): string {
+      const lines = chunk.split('\n');
+      let html = '';
+      let i = 0;
+      let para: string[] = [];
+      const flush = () => {
+        if (para.length) html += '<p>' + para.map(inline).join('<br>') + '</p>';
+        para = [];
+      };
+      while (i < lines.length) {
+        const line = lines[i];
+        const bm = line.match(blockRe);
+        if (bm) { flush(); html += blocks[+bm[1]]; i++; continue; }
+        // >>> quotes the entire rest of the message.
+        if (line.startsWith('>>> ')) {
+          flush();
+          const rest = [line.slice(4), ...lines.slice(i + 1)];
+          html += '<blockquote>' + renderLines(rest.join('\n')) + '</blockquote>';
+          break;
+        }
+        // Consecutive > lines collapse into one blockquote.
+        if (/^>(?: |$)/.test(line)) {
+          flush();
+          const q: string[] = [];
+          while (i < lines.length && /^>(?: |$)/.test(lines[i])) {
+            q.push(lines[i].replace(/^> ?/, ''));
+            i++;
+          }
+          html += '<blockquote>' + renderLines(q.join('\n')) + '</blockquote>';
+          continue;
+        }
+        const hm = line.match(/^(#{1,3}) +(.*)$/);
+        if (hm) { flush(); const lv = hm[1].length; html += '<h' + lv + '>' + inline(hm[2]) + '</h' + lv + '>'; i++; continue; }
+        if (line.startsWith('-# ')) { flush(); html += '<div class="dc-subtext">' + inline(line.slice(3)) + '</div>'; i++; continue; }
+        if (listRe.test(line)) {
+          flush();
+          const items: { indent: number; ordered: boolean; text: string }[] = [];
+          let m: RegExpMatchArray | null;
+          while (i < lines.length && (m = lines[i].match(listRe))) {
+            items.push({ indent: m[1].length, ordered: m[2] !== undefined, text: m[3] });
+            i++;
+          }
+          html += buildList(items);
+          continue;
+        }
+        if (line.trim() === '') { flush(); i++; continue; }
+        para.push(line);
+        i++;
+      }
+      flush();
+      return html;
+    }
+    return renderLines(text);
+  }
+  function updatePreview() {
+    const raw = input.value;
+    if (countEl) {
+      const n = raw.length;
+      countEl.textContent = n + '/2000';
+      countEl.classList.toggle('!text-[#dc322f]', n > 2000);
+    }
+    const html = renderMarkdown(raw);
+    render.innerHTML = html.trim() ? html : '<span class="dc-empty">' + L.empty + '</span>';
+  }
+
+  // Wrap the textarea selection with a token on each side (bold, italic, …).
+  function surround(before: string, after: string) {
+    const s = input.selectionStart, e = input.selectionEnd, val = input.value;
+    const sel = val.slice(s, e);
+    input.value = val.slice(0, s) + before + sel + after + val.slice(e);
+    if (sel) { input.selectionStart = s + before.length; input.selectionEnd = e + before.length; }
+    else input.selectionStart = input.selectionEnd = s + before.length;
+    input.focus();
+    updatePreview();
+  }
+
+  // Prefix each line the selection touches (headers, quotes, lists, subtext).
+  function prefixLines(tok: string) {
+    const s = input.selectionStart, e = input.selectionEnd, val = input.value;
+    const from = val.lastIndexOf('\n', s - 1) + 1;
+    let to = val.indexOf('\n', e); if (to === -1) to = val.length;
+    const block = val.slice(from, to).split('\n').map((l) => tok + l).join('\n');
+    input.value = val.slice(0, from) + block + val.slice(to);
+    input.selectionStart = from; input.selectionEnd = from + block.length;
+    input.focus();
+    updatePreview();
+  }
+
+  // Insert a masked link, pre-selecting the URL for quick typing.
+  function insertLink() {
+    const s = input.selectionStart, e = input.selectionEnd, val = input.value;
+    const sel = val.slice(s, e) || L.linkText;
+    const ins = '[' + sel + '](' + L.linkUrl + ')';
+    input.value = val.slice(0, s) + ins + val.slice(e);
+    const urlAt = s + sel.length + 3;
+    input.selectionStart = urlAt; input.selectionEnd = urlAt + L.linkUrl.length;
+    input.focus();
+    updatePreview();
+  }
+  document.querySelectorAll<HTMLButtonElement>('.md-btn').forEach((b) => {
+    // Prevent the button from stealing focus so the textarea selection survives.
+    b.addEventListener('mousedown', (e) => e.preventDefault());
+    b.addEventListener('click', () => {
+      const act = b.dataset.act, tok = b.dataset.tok || '';
+      if (act === 'wrap') surround(tok, tok);
+      else if (act === 'prefix') prefixLines(tok);
+      else if (act === 'block') surround('```\n', '\n```');
+      else if (act === 'link') insertLink();
+    });
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    const text = input.value;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    copyBtn.textContent = L.copied;
+    setTimeout(() => { copyBtn.textContent = L.copy; }, 1400);
+  });
+
+  document.getElementById('md-clear')?.addEventListener('click', () => {
+    input.value = '';
+    updatePreview();
+    input.focus();
+  });
+
+  // Click a spoiler in the preview to reveal it, mirroring Discord.
+  render.addEventListener('click', (e) => {
+    const sp = (e.target as HTMLElement).closest('.dc-spoiler');
+    if (sp) sp.classList.add('revealed');
+  });
+
+  input.addEventListener('input', updatePreview);
+  updatePreview();
+</script>

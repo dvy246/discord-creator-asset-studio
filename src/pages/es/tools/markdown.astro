@@ -1,0 +1,88 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import MarkdownWorkspace from '../../../components/tools/MarkdownWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Markdown Discord | Editor con Vista Previa";
+const pageDescription = "Editor de markdown Discord gratis con vista previa en vivo: negrita, cursiva, títulos, spoilers, bloques de código y citas. Copia y pega en el chat.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/markdown/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/markdown/";
+
+const appSchema = generateSoftwareApplicationSchema("Previsualizador de Markdown para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Markdown", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cómo funciona el formato markdown de Discord?", a: "Discord usa una variante ligera de markdown: **negrita**, *cursiva* o _cursiva_, __subrayado__, ~~tachado~~, ||spoiler||, `código en línea` y bloques de código con triples comillas invertidas. Los títulos usan #, ## y ###, el subtexto usa -#, y > inicia una cita. Escribe a la izquierda y esta herramienta muestra el renderizado exacto del chat a la derecha." },
+  { q: "¿Cómo escribo un spoiler en Discord?", a: "Envuelve el texto entre barras verticales dobles: ||así||. Discord lo oculta tras una caja gris hasta que alguien hace clic para revelarlo. En este previsualizador el spoiler se muestra tapado y se revela al hacer clic, igual que en la app real." },
+  { q: "¿Cómo hago un bloque de código de varias líneas?", a: "Usa tres comillas invertidas en su propia línea, tu código, y luego tres comillas para cerrar. Añade el nombre de un lenguaje tras las comillas de apertura (por ejemplo ```js). Una sola comilla invertida alrededor de una palabra crea código en línea." },
+  { q: "¿Esto envía mi mensaje a Discord?", a: "No. El previsualizador funciona por completo en tu navegador y nunca sube nada. Escribe y da formato a tu mensaje aquí, pulsa Copiar markdown y pégalo en cualquier canal o mensaje directo de Discord." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/markdown.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Markdown</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Previsualizador de Markdown Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Da formato con <strong>markdown</strong> — negrita, cursiva, spoilers, citas y bloques de código — y mira la <strong>vista previa en vivo</strong> tal como se ve en el chat. Copia y pega.
+      </p>
+    </header>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <MarkdownWorkspace lang="es" />
+
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Cómo Funciona el Markdown de Discord</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord toma una pequeña parte del <strong>markdown</strong> para el chat. Rodea el texto con símbolos y se muestra con estilo: <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">**negrita**</code>, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">*cursiva*</code>, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">__subrayado__</code> y <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">||spoiler||</code>. La barra de herramientas envuelve tu selección y el panel de la derecha refleja el renderizado exacto del chat mientras escribes.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Lo Que No Se Renderiza en el Chat</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord ignora el markdown de imágenes y la mayoría de las tablas, y los títulos o el subtexto solo se renderizan en los mensajes — no en los nombres ni en el Sobre mí, que son texto plano. Para nombres con estilo usa una <a href="/es/tools/fonts/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">fuente Unicode</a>, y para palabras de colores dentro de un bloque de código usa el <a href="/es/tools/colored-text/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">generador de texto de colores</a>.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

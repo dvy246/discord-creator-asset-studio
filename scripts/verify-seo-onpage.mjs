@@ -89,6 +89,11 @@ const indexablePages = [
     primaryKeyword: 'discord colored text',
   },
   {
+    path: 'tools/markdown/index.html',
+    url: '/tools/markdown/',
+    primaryKeyword: 'discord markdown',
+  },
+  {
     path: 'tools/server-icon/index.html',
     url: '/tools/server-icon/',
     primaryKeyword: 'discord server icon',
@@ -217,6 +222,11 @@ const indexablePages = [
     path: 'es/tools/colored-text/index.html',
     url: '/es/tools/colored-text/',
     primaryKeyword: 'texto de colores discord',
+  },
+  {
+    path: 'es/tools/markdown/index.html',
+    url: '/es/tools/markdown/',
+    primaryKeyword: 'markdown discord',
   },
   {
     path: 'es/tools/server-icon/index.html',
