@@ -1,0 +1,88 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import FancyTextWorkspace from '../../../components/tools/FancyTextWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+
+const pageTitle = "Generador de Fuentes Discord | Letras Bonitas";
+const pageDescription = "Generador de fuentes Discord: convierte texto en fuentes Unicode que puedes copiar y pegar en nombres, biografías y chat. Estilos legibles. En el navegador.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/fonts/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/fonts/";
+
+const appSchema = generateSoftwareApplicationSchema("Generador de Fuentes para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Generador de Fuentes", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Son fuentes reales de Discord?", a: "No. Discord no tiene un selector de fuentes. Estos estilos se crean con caracteres Unicode parecidos a letras — el mismo estándar que da los emojis y letras acentuadas. Como son texto normal, puedes pegarlos donde Discord acepte texto, sin Nitro ni bot." },
+  { q: "¿Dónde puedo usar el texto bonito?", a: "Funciona en tu nombre para mostrar, apodo del servidor, nombres de roles, nombre del servidor, nombres de canales y en Sobre mí. No funciona en el @usuario, que Discord limita a minúsculas, números, guiones bajos y puntos." },
+  { q: "¿Por qué algunos textos se ven como recuadros?", a: "Los recuadros vacíos (tofu) aparecen cuando la fuente del dispositivo no incluye ese carácter Unicode. Los estilos decorativos suelen fallar más en móviles antiguos. Usa los estilos legibles de arriba para la mayor compatibilidad." },
+  { q: "¿El texto bonito afecta la búsqueda de Discord?", a: "Puede hacerlo. Discord trata el Unicode con estilo como caracteres distintos de las letras normales, así que un apodo con fuente bonita puede no aparecer en búsquedas o menciones. Úsalo para dar estilo, pero mantén en texto normal lo que necesites buscar." }
+];
+
+const faqSchema = {
+  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
+  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/fonts.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Generador de Fuentes</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Generador de Fuentes Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Escribe una vez y copia cualquier estilo. Convierte tu texto en <strong>fuentes Unicode</strong> para nombres, biografías y chat. Los estilos legibles van primero.
+      </p>
+    </header>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <FancyTextWorkspace lang="es" />
+
+    <div class="space-y-6 mb-12 mt-8">
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Cómo Funciona el Texto Bonito</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord no permite cambiar la fuente directamente. Lo que parece una "fuente" aquí son en realidad <strong>caracteres Unicode</strong> que se parecen a letras en negrita, cursiva, manuscrita o cuadrada. Como son texto normal, los copias y pegas como cualquier mensaje, sin Nitro ni bot. Todo ocurre en tu navegador.
+        </p>
+      </article>
+      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Dónde Funcionan las Fuentes</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          El texto bonito es ideal para tu <strong>nombre para mostrar, apodo, nombres de roles, servidor y canales, y Sobre mí</strong>. No funciona en el <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">@usuario</code>. Ten en cuenta que puede no ser buscable y que los estilos muy decorativos pueden verse como recuadros en dispositivos antiguos — por eso los estilos legibles van primero.
+        </p>
+      </article>
+    </div>
+
+    <section>
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

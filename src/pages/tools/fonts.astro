@@ -1,0 +1,126 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import FancyTextWorkspace from '../../components/tools/FancyTextWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Font Generator | Fancy Text & Fonts";
+const pageDescription = "Free Discord font generator: turn text into fancy Unicode fonts you can copy-paste into names, bios, and chat. Curated readable styles. In-browser.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/fonts/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Font Generator",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Font Generator", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are these real Discord fonts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Discord has no built-in font switcher. These styles are made from Unicode look-alike characters — the same standard that gives you emoji and accented letters. Because they are ordinary text characters, you can paste them anywhere Discord accepts text, no Nitro or bot required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I use fancy Discord text?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fancy text works in your display name, server nickname, role names, server name, channel names, and your About Me. It does not work in the @username handle, which Discord restricts to lowercase letters, numbers, underscores, and periods."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does some fancy text show up as boxes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Empty boxes (called tofu) appear when a device's font does not include a glyph for that Unicode character. Decorative styles are more likely to box out on older phones. Stick to the readable styles at the top for the widest compatibility."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does fancy text break Discord search?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It can. Discord treats styled Unicode as different characters from plain letters, so a nickname in fancy text may not turn up in searches or mentions the way normal text does. Use it for flair, but keep anything you need to be searchable in plain text."
+      }
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/fonts.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Font Generator</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Font</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Generator</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Type once, copy any style • Readable fonts first • Works in names, bios &amp; chat</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <FancyTextWorkspace lang="en" />
+
+    <!-- Prose reference -->
+    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto space-y-6">
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">How Fancy Discord Text Works</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Discord does not let you change fonts directly. What looks like a "font" here is really a set of <strong>Unicode characters</strong> that happen to resemble bold, italic, script, or boxed letters. Unicode is the same universal character standard behind emoji and accented letters, so these glyphs are just ordinary text — you copy them and paste them like any other message, no Nitro and no bot needed.
+        </p>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Everything runs in your browser. Type once at the top and every style updates instantly. Tap <strong>Copy</strong> on the one you like, or star it to pin it to your favorites for next time. No account, no upload, no tracking.
+        </p>
+        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">Where Fonts Work (and Where They Don't)</h2>
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+          Fancy text is perfect for your <strong>display name, server nickname, role names, server and channel names, and About Me</strong>. It will <em>not</em> work in the <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">@username</code> handle — Discord limits that field to lowercase letters, numbers, underscores, and periods. Two things to keep in mind: styled text may not be searchable (Discord sees the Unicode glyphs as different from plain letters), and heavily decorative styles can show up as empty boxes on older devices. That is why the <strong>readable styles</strong> sit at the top of the generator — they render cleanly almost everywhere.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel p-6 rounded-[14px]">
+              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
+              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>

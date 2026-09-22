@@ -62,6 +62,7 @@ const ES_NAV_ROUTES = new Set([
   '/tools/server-icon/',
   '/tools/badge-maker/',
   '/tools/gif-compressor/',
+  '/tools/fonts/',
   '/guides/discord-sizes/',
 ]);
 const L = (path: string) => (lang === 'es' && ES_NAV_ROUTES.has(path) ? `/es${path}` : path);
@@ -223,6 +224,10 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
                   <a href={L("/tools/timestamp/")} class={MENU_ITEM}>
                     <span class="text-sm">🕒</span>
                     <div><div class="font-bold">Timestamp Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Dynamic &lt;t:&gt; time codes</div></div>
+                  </a>
+                  <a href={L("/tools/fonts/")} class={MENU_ITEM}>
+                    <span class="text-sm">🔤</span>
+                    <div><div class="font-bold">Font Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Fancy Unicode text styles</div></div>
                   </a>
                 </div>
               </div>
@@ -417,6 +422,9 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
             </a>
             <a href={L("/tools/emoji-copy-paste/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
               <span>📋</span> Emoji Copy & Paste Board
+            </a>
+            <a href={L("/tools/fonts/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
+              <span>🔤</span> Fancy Font Generator
             </a>
           </div>
         </div>
@@ -670,6 +678,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
               <li><a href={L("/tools/colors/")} class="hover:text-[#3368A0] transition-colors">Color Palette & Hex Codes</a></li>
               <li><a href={L("/tools/timestamp/")} class="hover:text-[#3368A0] transition-colors">Timestamp Generator</a></li>
               <li><a href={L("/tools/emoji-copy-paste/")} class="hover:text-[#3368A0] transition-colors">Emoji Copy & Paste Board</a></li>
+              <li><a href={L("/tools/fonts/")} class="hover:text-[#3368A0] transition-colors">Fancy Font & Text Generator</a></li>
               <li><a href={L("/tools/server-icon/")} class="hover:text-[#3368A0] transition-colors">Server Icon Maker (512x512)</a></li>
               <li><a href={L("/tools/badge-maker/")} class="hover:text-[#3368A0] transition-colors">Logo & Badge Maker</a></li>
               <li><a href="/tools/gif-maker/" class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>

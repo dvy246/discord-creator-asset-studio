@@ -419,6 +419,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/fonts.png',
+    config: {
+      title: 'DISCORD FONT', titleLine2: 'GENERATOR',
+      subtitle: 'TURN TEXT INTO FANCY UNICODE FONTS YOU CAN COPY AND PASTE',
+      tagline1: 'BOLD ITALIC SCRIPT FRAKTUR SMALL CAPS • 18 STYLES',
+      tagline2: 'READABLE STYLES FIRST • 100% CLIENT-SIDE',
+      badge: 'FANCY TEXT FOR NAMES BIOS AND CHAT',
+      cards: [
+        { label: 'STYLES', desc: '18+' }, { label: 'READABLE', desc: 'FIRST' },
+        { label: 'FAVORITES', desc: 'SAVED' }, { label: 'NO NITRO', desc: 'NEEDED' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
     file: 'public/og/colors.png',
     config: {
       title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',
