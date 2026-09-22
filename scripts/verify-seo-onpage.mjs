@@ -84,6 +84,11 @@ const indexablePages = [
     primaryKeyword: 'discord font',
   },
   {
+    path: 'tools/colored-text/index.html',
+    url: '/tools/colored-text/',
+    primaryKeyword: 'discord colored text',
+  },
+  {
     path: 'tools/server-icon/index.html',
     url: '/tools/server-icon/',
     primaryKeyword: 'discord server icon',
@@ -207,6 +212,11 @@ const indexablePages = [
     path: 'es/tools/fonts/index.html',
     url: '/es/tools/fonts/',
     primaryKeyword: 'generador de fuentes discord',
+  },
+  {
+    path: 'es/tools/colored-text/index.html',
+    url: '/es/tools/colored-text/',
+    primaryKeyword: 'texto de colores discord',
   },
   {
     path: 'es/tools/server-icon/index.html',

@@ -434,6 +434,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/colored-text.png',
+    config: {
+      title: 'DISCORD COLORED', titleLine2: 'TEXT GENERATOR',
+      subtitle: 'STYLE WORDS WITH ANSI COLORS AND COPY A READY CODE BLOCK',
+      tagline1: 'RED GREEN GOLD BLUE PINK CYAN • BOLD & UNDERLINE',
+      tagline2: 'LIVE ANSI PREVIEW • 100% CLIENT-SIDE',
+      badge: 'PASTE INTO ANY CHANNEL OR DM',
+      cards: [
+        { label: 'COLORS', desc: '8 FG / 8 BG' }, { label: 'STYLES', desc: 'BOLD + U' },
+        { label: 'PREVIEW', desc: 'LIVE' }, { label: 'NO NITRO', desc: 'NEEDED' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
     file: 'public/og/colors.png',
     config: {
       title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',
