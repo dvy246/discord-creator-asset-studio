@@ -1,0 +1,122 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import EmbedWorkspace from '../../components/tools/EmbedWorkspace.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Embed Builder | Live Webhook Preview";
+const pageDescription = "Free Discord embed builder with live preview and copy-ready webhook JSON. Design rich embeds—author, fields, images, footer—then send to a webhook.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/embed-builder/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Embed Builder",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Embed Builder", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a Discord embed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An embed is the rich, colored card a bot or webhook can post instead of plain text — with a title, description, colored side bar, fields, thumbnail, image, and footer. This builder gives you a visual form and a live preview, then outputs the exact JSON a webhook or bot expects."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my webhook URL stored anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The webhook URL is held only in the page's memory while the tab is open. It is never written to localStorage, never included in the copied JSON, and never sent anywhere except directly to Discord when you click Send. Close the tab and it is gone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get a webhook URL?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In your Discord server open Server Settings → Integrations → Webhooks → New Webhook, pick a channel, and click Copy Webhook URL. You need Manage Webhooks permission. Paste that URL into the Send box here to post your embed to that channel."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use this embed JSON with a bot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Click Copy JSON and drop the embeds array into any bot library — discord.js, discord.py, or a raw REST call. The color is emitted as the decimal integer Discord expects, and empty fields are omitted so the payload stays valid."
+      }
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/embed-builder.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Embed Builder</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Embed</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Builder</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Design rich embeds • Live preview • Copy webhook JSON or send it</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <EmbedWorkspace lang="en" />
+
+    <!-- Prose / SEO body -->
+    <section class="mt-14 max-w-3xl space-y-10 text-[#334155] dark:text-[#B7C2D0] text-sm leading-relaxed">
+      <div class="space-y-3">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white">Build a Discord embed, see it before you send it</h2>
+        <p>This Discord embed builder turns a simple form into the exact rich card a webhook or bot posts to a channel. Set the color bar, author row, title, description, inline fields, thumbnail, big image, and footer — the preview on the right updates on every keystroke, so what you see is what your server sees.</p>
+        <p>Everything runs in your browser. There is no account, no upload, and nothing is logged. The only time this page talks to the network is when <em>you</em> click <strong>Send to Discord</strong> with your own webhook URL.</p>
+      </div>
+
+      <div class="space-y-3">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white">Copy the JSON, or send it straight to a channel</h2>
+        <p>The <strong>Webhook JSON</strong> panel always mirrors your embed as a valid payload. Copy it into <code class="px-1 py-0.5 rounded bg-[#EEF1F5] dark:bg-[#1B2534] font-mono text-xs">discord.js</code>, <code class="px-1 py-0.5 rounded bg-[#EEF1F5] dark:bg-[#1B2534] font-mono text-xs">discord.py</code>, or a raw REST call — the color is emitted as the decimal integer Discord expects and empty parts are dropped so the payload never breaks. To post right now, paste a webhook URL into the Send box and click once.</p>
+      </div>
+
+      <div class="space-y-3">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white">Your webhook URL never leaves your browser</h2>
+        <p>The webhook URL is held in the page's memory only while the tab is open. It is <strong>never</strong> written to storage, never included in the copied JSON, and never sent anywhere except directly to Discord's API on the send you trigger. Close the tab and it is gone.</p>
+      </div>
+
+      <div class="space-y-4">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-white">Frequently asked questions</h2>
+        <div class="space-y-4">
+          {faqSchema.mainEntity.map((item) => (
+            <div class="card-panel rounded-[12px] p-4">
+              <h3 class="font-semibold text-[#192538] dark:text-white mb-1.5">{item.name}</h3>
+              <p class="text-[#475569] dark:text-[#94A3B8]">{item.acceptedAnswer.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>

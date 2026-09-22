@@ -464,6 +464,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/embed-builder.png',
+    config: {
+      title: 'DISCORD EMBED', titleLine2: 'BUILDER',
+      subtitle: 'DESIGN A RICH EMBED AND SEE THE LIVE PREVIEW',
+      tagline1: 'AUTHOR • TITLE • FIELDS • IMAGES • FOOTER',
+      tagline2: 'COPY WEBHOOK JSON OR SEND IT • 100% CLIENT-SIDE',
+      badge: 'WEBHOOK URL STAYS IN YOUR BROWSER — NEVER STORED',
+      cards: [
+        { label: 'PREVIEW', desc: 'LIVE' }, { label: 'JSON', desc: 'VALID' },
+        { label: 'WEBHOOK', desc: 'SEND' }, { label: 'FIELDS', desc: 'INLINE' },
+        { label: 'PRIVATE', desc: 'IN-MEMORY' }
+      ]
+    }
+  },
+  {
     file: 'public/og/colors.png',
     config: {
       title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',

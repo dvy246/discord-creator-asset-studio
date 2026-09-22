@@ -94,6 +94,11 @@ const indexablePages = [
     primaryKeyword: 'discord markdown',
   },
   {
+    path: 'tools/embed-builder/index.html',
+    url: '/tools/embed-builder/',
+    primaryKeyword: 'discord embed builder',
+  },
+  {
     path: 'tools/server-icon/index.html',
     url: '/tools/server-icon/',
     primaryKeyword: 'discord server icon',
@@ -227,6 +232,11 @@ const indexablePages = [
     path: 'es/tools/markdown/index.html',
     url: '/es/tools/markdown/',
     primaryKeyword: 'markdown discord',
+  },
+  {
+    path: 'es/tools/embed-builder/index.html',
+    url: '/es/tools/embed-builder/',
+    primaryKeyword: 'embeds discord',
   },
   {
     path: 'es/tools/server-icon/index.html',
