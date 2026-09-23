@@ -80,6 +80,11 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
 <!doctype html>
 <html lang={lang}>
   <head>
+    <!-- Resource hints: warm up the analytics origins so TLS/connection setup overlaps the async gtag fetch (shaves connection latency off first beacon). dns-prefetch is the graceful fallback for engines that ignore preconnect. -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.google-analytics.com" />
     <!-- Google tag (gtag.js) with Consent Mode v2 — analytics denied until user consents (GDPR / PECR) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6N2NB5MZQ8"></script>
     <script is:inline>
