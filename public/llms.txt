@@ -44,6 +44,7 @@ All image processing executes locally in the browser via Web Workers and the HTM
 - [How to Make a Discord Sticker](https://discord-creator-asset-studio.pages.dev/blog/how-to-make-discord-stickers/): Avoid invalid-asset errors with exact 320×320 dimensions and APNG compression.
 - [Discord Banner Ideas & Templates](https://discord-creator-asset-studio.pages.dev/blog/discord-banner-ideas-templates/): 960×540 server and 680×240 profile banner layouts by aesthetic theme.
 - [How to Change a Discord Server Banner](https://discord-creator-asset-studio.pages.dev/blog/how-to-change-discord-server-banner/): Boost tier requirements and step-by-step settings walkthrough.
+- [How to Change Discord Username](https://discord-creator-asset-studio.pages.dev/blog/how-to-change-discord-username/): The new unique @handle rules, username vs display name, desktop and mobile steps, change limits, and common errors.
 - [How to Put a Spoiler on a Discord Image](https://discord-creator-asset-studio.pages.dev/blog/how-to-put-spoiler-on-discord-image/): Hide sensitive media on desktop and mobile.
 - [PFP Discord Ideas](https://discord-creator-asset-studio.pages.dev/blog/discord-pfp-ideas-anime-avatars/): Anime avatar and profile picture design inspiration.
 

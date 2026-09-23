@@ -668,5 +668,150 @@ When members view your server:
         answer: 'In the Discord mobile app, tap the server name > Settings > Overview, tap Server Banner Background, choose a 960×540 image from your photos, reposition it in the preview, and tap Save. You still need Boost Level 2 and Manage Server permission for the option to show.'
       }
     ]
+  },
+  {
+    slug: 'how-to-change-discord-username',
+    title: 'How to Change Discord Username | 2026 Guide | Studio',
+    heading: 'How to Change Discord Username',
+    howToSteps: [
+      { name: 'Open User Settings', text: 'Click the gear icon next to your name in the bottom-left of Discord on desktop, or tap your avatar then the gear on mobile.' },
+      { name: 'Go to My Account', text: 'Select the "My Account" tab (or "Account" on mobile) to see your username and display name fields.' },
+      { name: 'Edit your username', text: 'Click Edit next to Username, then type a new handle using only lowercase a–z, 0–9, underscores, and periods (2–32 characters).' },
+      { name: 'Check availability', text: 'Discord shows a red warning if the handle is taken. Unique usernames are first-come, first-served, so try variations if yours is gone.' },
+      { name: 'Confirm and save', text: 'Enter your password to confirm, then click Save. Your new @username updates everywhere instantly.' }
+    ],
+    metaDescription: 'How to change Discord username on desktop and mobile in 2026 — the new unique @handle rules, display name vs username, change limits, and errors fixed.',
+    primaryKeyword: 'how to change discord username',
+    secondaryKeywords: [
+      'how to change your name on discord',
+      'discord username vs display name',
+      'change discord display name',
+      'discord username change limit'
+    ],
+    longTailKeywords: [
+      'how to change discord username on mobile',
+      'how often can you change your discord username',
+      'why cant i change my discord username',
+      'change discord name on iphone'
+    ],
+    category: 'Tutorials',
+    readTime: '5 min read',
+    datePublished: '2026-03-05T08:00:00Z',
+    dateModified: '2026-03-05T08:00:00Z',
+    author: {
+      name: 'Discord Asset Studio Engineering',
+      role: 'Client Architecture Specialist'
+    },
+    summary: 'A clear walkthrough of how to change your Discord username on desktop and mobile under the new unique-handle system. Learn the difference between your @username and your display name, the character rules, how often you can change it, and how to fix the most common errors.',
+    toolCta: {
+      name: 'Discord Username Generator',
+      headline: 'Stuck on a New Handle? Generate One',
+      description: 'Get twelve valid username ideas across nine styles — with a 3 & 4-letter mode — all following Discord’s handle rules. Click to copy, star to save.',
+      buttonText: 'Open Username Generator',
+      href: '/tools/username-generator/',
+      badge: '2–32 chars • a-z 0-9 _ .'
+    },
+    sections: [
+      {
+        id: 'username-vs-display-name',
+        heading: '1. Username vs Display Name: What You Are Actually Changing',
+        content: `Before learning <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">how to change your Discord username</mark>, it helps to know that Discord now has two separate names, and most people actually want to change the second one.
+
+- **Username (@handle)**: Your unique, lowercase identity — like <code>@aurora.dev</code>. No two accounts can share one. This replaced the old <code>Name#1234</code> discriminator system.
+- **Display Name**: The friendly name shown in bold above your messages. It allows capital letters, spaces, and emoji, and it does <strong>not</strong> have to be unique.
+
+If you just want a prettier name in chat, change your <strong>display name</strong> — it is far less restrictive and has no availability conflicts. If you want a new <em>@handle</em> people use to find and mention you, change your <strong>username</strong>. Need a fresh handle idea? Our <a href="/tools/username-generator/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord username generator</a> only produces handles that follow the rules below.`,
+        table: {
+          headers: ['Attribute', 'Username (@handle)', 'Display Name'],
+          rows: [
+            ['Must be unique', 'Yes', 'No'],
+            ['Allowed characters', 'a–z, 0–9, _ and .', 'Almost anything + emoji'],
+            ['Capital letters', 'Not allowed', 'Allowed'],
+            ['Length', '2–32 characters', 'Up to 32 characters'],
+            ['Used for @mentions', 'Yes', 'No']
+          ]
+        },
+        callout: {
+          type: 'info',
+          title: 'Most People Want the Display Name',
+          text: 'If your goal is a stylish name with capitals or emoji shown in chat, change your Display Name — not your username. The username is the unique @handle used to add and mention you.'
+        }
+      },
+      {
+        id: 'change-username-desktop',
+        heading: '2. How to Change Your Discord Username on Desktop',
+        content: `On the desktop app or discord.com in a browser, changing your <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord username</mark> takes about thirty seconds:
+
+1. Click the <strong>gear icon</strong> (User Settings) next to your name in the bottom-left corner.
+2. Open the <strong>My Account</strong> tab.
+3. Click <strong>Edit</strong> next to your username (or the pencil icon on your profile card).
+4. Type your new handle. Only lowercase <code>a–z</code>, digits <code>0–9</code>, underscores <code>_</code>, and periods <code>.</code> are valid — 2 to 32 characters.
+5. If the handle is taken, Discord shows it in red. Try a variation or add a number.
+6. Enter your <strong>password</strong> to confirm and click <strong>Save</strong>.
+
+To change only the name shown in chat, edit the <strong>Display Name</strong> field on the same screen instead — no password required. Want a matching aesthetic across your profile? Pair a new handle with a <a href="/tools/fonts/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">fancy font display name</a>.`,
+        callout: {
+          type: 'tip',
+          title: 'Handle Rules at a Glance',
+          text: 'Valid usernames use only lowercase letters, numbers, one or more underscores, and periods. No spaces, no capitals, no emoji — save those for your display name.'
+        }
+      },
+      {
+        id: 'change-username-mobile',
+        heading: '3. How to Change Your Discord Username on Mobile (iPhone & Android)',
+        content: `The steps for <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">how to change Discord username on mobile</mark> are nearly identical on iOS and Android:
+
+1. Tap your <strong>profile avatar</strong> in the bottom-right of the app.
+2. Tap the <strong>gear / Settings</strong> icon, then choose <strong>Account</strong>.
+3. Tap <strong>Username</strong>, type your new handle, and follow the same lowercase <code>a–z 0–9 _ .</code> rules.
+4. Tap <strong>Save</strong> and confirm with your password.
+
+On iPhone specifically, if the Save button looks greyed out, make sure the handle contains no capital letters or spaces — that is the most common reason a valid-looking name is rejected on iOS.`,
+        callout: {
+          type: 'success',
+          title: 'Display Name Changes Are Instant',
+          text: 'Editing your display name on mobile takes effect immediately and does not count against any username limit, so experiment freely.'
+        }
+      },
+      {
+        id: 'username-change-limits-errors',
+        heading: '4. Change Limits & Why You Can’t Change Your Username',
+        content: `Discord rate-limits <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">how often you can change your Discord username</mark> to stop abuse. If a change is blocked, one of these is usually why:
+
+- **Rate limit hit**: Discord restricts frequent username edits (historically about two per hour). Wait an hour and try again. Display-name edits are not limited the same way.
+- **Handle already taken**: Unique usernames are first-come, first-served. If your ideal <em>@handle</em> is gone, add a period, underscore, or number — or generate fresh options.
+- **Invalid characters**: Capitals, spaces, and emoji are rejected in the username field. Move those to your display name.
+- **Too short or too long**: Handles must be 2–32 characters.
+
+If you keep colliding with taken handles, skip the guesswork — the <a href="/tools/username-generator/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">username generator</a> spins up a dozen rule-valid ideas at a time, and you can lock in a short 3- or 4-letter handle before someone else grabs it.`,
+        callout: {
+          type: 'warning',
+          title: 'The Old #1234 Tag Is Gone',
+          text: 'Discord retired the four-digit discriminator. Everyone now has a single unique @username, which is why popular short handles are claimed so quickly.'
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: 'How do I change my Discord username?',
+        answer: 'Open User Settings (the gear icon), go to My Account, click Edit next to Username, type a new handle using only lowercase a–z, 0–9, underscores, and periods (2–32 characters), then confirm with your password and save. On mobile, tap your avatar, then Settings, then Account, then Username.'
+      },
+      {
+        question: 'What is the difference between a Discord username and display name?',
+        answer: 'Your username is your unique @handle used to add and mention you — it must be lowercase and unique across all of Discord. Your display name is the bold name shown above your messages; it allows capitals, spaces, and emoji and does not have to be unique.'
+      },
+      {
+        question: 'How often can you change your Discord username?',
+        answer: 'Discord rate-limits username changes to prevent abuse (historically around two changes per hour). If you hit the limit, wait about an hour and try again. Display-name changes are effectively unlimited.'
+      },
+      {
+        question: 'Why can’t I change my Discord username?',
+        answer: 'The usual reasons are that the handle is already taken (usernames are unique and first-come, first-served), it contains invalid characters like capitals, spaces, or emoji, it is shorter than 2 or longer than 32 characters, or you have hit the hourly change limit.'
+      },
+      {
+        question: 'Do I need Nitro to change my Discord username?',
+        answer: 'No. Changing your username or display name is free for every account. Discord Nitro is not required to update either name.'
+      }
+    ]
   }
 ];

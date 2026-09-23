@@ -179,6 +179,11 @@ const indexablePages = [
     primaryKeyword: 'how to change discord server banner',
   },
   {
+    path: 'blog/how-to-change-discord-username/index.html',
+    url: '/blog/how-to-change-discord-username/',
+    primaryKeyword: 'how to change discord username',
+  },
+  {
     path: 'es/tools/emoji/index.html',
     url: '/es/tools/emoji/',
     primaryKeyword: 'emojis discord',

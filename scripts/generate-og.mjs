@@ -648,7 +648,8 @@ const BLOG = [
   { file: 'public/og/blog-banners.png', title: 'DISCORD BANNER', titleLine2: 'IDEAS', subtitle: 'SERVER & PROFILE BANNER TEMPLATES BY AESTHETIC' },
   { file: 'public/og/blog-pfp.png', title: 'DISCORD PFP', titleLine2: 'IDEAS', subtitle: 'ANIME AVATARS & PROFILE PICTURE INSPIRATION' },
   { file: 'public/og/blog-spoiler.png', title: 'DISCORD IMAGE', titleLine2: 'SPOILER', subtitle: 'HIDE SENSITIVE MEDIA ON DESKTOP & MOBILE' },
-  { file: 'public/og/blog-server-banner.png', title: 'CHANGE SERVER', titleLine2: 'BANNER', subtitle: 'BOOST TIER REQUIREMENTS & STEP-BY-STEP GUIDE' }
+  { file: 'public/og/blog-server-banner.png', title: 'CHANGE SERVER', titleLine2: 'BANNER', subtitle: 'BOOST TIER REQUIREMENTS & STEP-BY-STEP GUIDE' },
+  { file: 'public/og/blog-change-username.png', title: 'CHANGE YOUR', titleLine2: 'DISCORD USERNAME', subtitle: 'NEW @HANDLE RULES • DESKTOP & MOBILE • LIMITS FIXED' }
 ];
 
 for (const b of BLOG) {
