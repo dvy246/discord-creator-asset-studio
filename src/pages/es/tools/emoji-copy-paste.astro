@@ -1,88 +1,126 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import EmojiCopyPasteWorkspace from '../../../components/tools/EmojiCopyPasteWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Copiar y Pegar Emojis Discord | Tablero Unicode";
 const pageDescription = "Copiar y pegar emojis Discord: haz clic en cualquier emoji o kaomoji Unicode para copiarlo y pégalo en el chat. Caras, corazones y símbolos. Sin subidas.";
 const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/emoji-copy-paste/";
 const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/emoji-copy-paste/";
 
-const appSchema = generateSoftwareApplicationSchema("Tablero para Copiar y Pegar Emojis de Discord", pageDescription, pageUrl);
+const appSchema = generateSoftwareApplicationSchema(
+  "Tablero para Copiar y Pegar Emojis de Discord",
+  pageDescription,
+  pageUrl
+);
+
 const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
   { name: "Copiar y Pegar Emojis", url: pageUrl }
 ]);
 
 const faqItems = [
-  { q: "¿Cómo copio y pego emojis en Discord?", a: "Haz clic en cualquier emoji del tablero para copiarlo al portapapeles y pégalo en un mensaje con Ctrl+V (Cmd+V en Mac). Son emojis Unicode estándar, así que se muestran en escritorio, web y móvil sin subir nada ni necesitar Nitro." },
-  { q: "¿Diferencia entre emojis Unicode y emojis personalizados?", a: "Los emojis Unicode (los de este tablero) están integrados en todos los dispositivos y son gratis para cualquiera. Los emojis personalizados son imágenes subidas a un servidor concreto, limitadas a 128x128 y 256 KiB, y usables solo donde están instaladas. Usa este tablero para reacciones rápidas; usa el Creador de Emojis para uno personalizado." },
-  { q: "¿Puedo usar estos emojis sin Discord Nitro?", a: "Sí. Los emojis Unicode son gratis y funcionan en cualquier cuenta, servidor o MD. Nitro solo hace falta para emojis animados personalizados o de otros servidores, no para los emojis estándar de aquí." },
-  { q: "¿Qué son los kaomoji?", a: "Los kaomoji son caras de texto al estilo japonés hechas con signos de puntuación, como el encogimiento ¯\\_(ツ)_/¯ o la mesa volcada (╯°□°）╯︵ ┻━┻. Al ser texto plano, se pegan y muestran en cualquier parte de Discord. El tablero incluye los más populares listos para copiar." }
+  { q: "¿Cómo copio y pego emojis en Discord?", a: "Haz clic en cualquier emoji del tablero para copiarlo al portapapeles y pégalo en la caja de mensaje de Discord con Ctrl+V en Windows o Cmd+V en Mac. Son emojis Unicode estándar, así que se muestran en escritorio, web y móvil sin subir nada ni necesitar Nitro. Encadena varios clics para armar una reacción completa." },
+  { q: "¿Cuál es la diferencia entre emojis Unicode y personalizados de Discord?", a: "Los emojis Unicode están integrados en todos los dispositivos y son gratis para escribir o pegar en cualquier parte, incluidos los apodos. Los emojis personalizados de Discord son imágenes subidas a un servidor concreto, limitadas a 128×128 píxeles y 256 KiB, sujetas a los espacios de ese servidor y usables en otros solo con Nitro. Usa este tablero para reacciones rápidas; usa el Creador de Emojis para uno personalizado." },
+  { q: "¿Puedo usar emojis en Discord sin Nitro?", a: "Sí. Todos los emojis Unicode del tablero son totalmente gratis y funcionan en cualquier cuenta, servidor o MD, e incluso en nombres de usuario y apodos. Nitro solo hace falta para reutilizar el emoji personalizado de otro servidor o para publicar emojis animados personalizados; nunca para los emojis Unicode estándar que copias aquí." },
+  { q: "¿Qué son los kaomoji (caras de texto japonesas)?", a: "Los kaomoji son caras de texto al estilo japonés hechas con caracteres Unicode en lugar de imágenes, como el encogimiento ¯\\_(ツ)_/¯ o la mesa volcada (╯°□°）╯︵ ┻━┻. Al ser texto plano, se pegan y se muestran en cualquier parte de Discord — mensajes, apodos y tu Acerca de mí — sin Nitro ni soporte del servidor. El tablero incluye los más populares listos para copiar." },
+  { q: "¿Cómo escribo el emoji de encogimiento ¯\\_(ツ)_/¯ en Discord?", a: "El encogimiento ¯\\_(ツ)_/¯ no es un emoji sino un kaomoji — una cadena de caracteres Unicode — así que lo más fácil es copiarlo entero. Haz clic en él en el tablero y pega con Ctrl+V o Cmd+V; la cara completa aparece intacta, sin Nitro ni subida personalizada. Funciona en mensajes, apodos y tu Acerca de mí." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Manual de Copiar y Pegar Emojis",
+  heading: "De un solo clic a",
+  highlight: "emojis que pegas donde sea",
+  intro: "Cada glifo aquí es un emoji Unicode estándar o un kaomoji, copiado con un solo clic y pegado en cualquier parte de Discord. Así encajan el mecanismo de copia, la diferencia entre Unicode y personalizados, las caras de texto y la promesa sin Nitro y 100% local — sin necesidad de cuenta.",
+  steps: [
+    "Mecanismo de Copia",
+    "Unicode vs. Personalizados",
+    "Kaomoji y Caras de Texto",
+    "Gratis, Sin Nitro"
+  ],
+  cards: [
+    {
+      kicker: "MECÁNICA DE COPIA // 01",
+      badge: "CLIC PARA COPIAR",
+      badgeTone: "emerald" as const,
+      title: "Un clic deja cualquier emoji en tu portapapeles",
+      body: [
+        "Cada glifo de este tablero es un emoji Unicode estándar, así que un solo clic lo copia directo a tu portapapeles — sin diálogo, sin descarga y sin iniciar sesión. Pégalo en un mensaje de Discord con Ctrl+V en Windows o Cmd+V en macOS y aparece al instante, tal como lo viste aquí. El mismo carácter copiado cae igual de limpio en un mensaje de canal, un mensaje directo, una respuesta en hilo o la barra de búsqueda. Como la copia ocurre en el momento del clic, puedes juntar varios emojis seguidos y armar toda una cadena de reacción, un toque a la vez, antes de volver a Discord.",
+        "Los emojis Unicode se muestran en todas partes porque pertenecen al conjunto de caracteres ya integrado en Windows, macOS, Android e iOS. Discord solo dibuja la versión que trae tu dispositivo, así que una cara o un corazón que copias aquí se ve bien para cada amigo que lee el canal, sea cual sea su plataforma. Nada se sube y nada se adjunta, lo que significa que estos emojis nunca ocupan los espacios limitados de emoji personalizado de un servidor — escribes un carácter, no envías una imagen. Eso mantiene el mensaje ligero y hace que se vea idéntico en escritorio, web y móvil, sin esperar a que cargue una imagen."
+      ]
+    },
+    {
+      kicker: "UNICODE VS. PERSONALIZADOS // 02",
+      badge: "128×128 · 256 KiB",
+      badgeTone: "blue" as const,
+      title: "En qué se diferencian los emojis Unicode de las subidas personalizadas",
+      body: [
+        "Un emoji personalizado de Discord es una imagen que subes a un servidor concreto, y vive bajo límites estrictos: cada archivo debe medir 128×128 píxeles o menos y pesar como máximo 256 KiB, y cada servidor tiene un número fijo de espacios de emoji por llenar. Una vez subido, ese emoji solo funciona dentro del servidor donde se instaló — los miembros que navegan desde otros servidores no pueden verlo ni escribirlo por su nombre. Los emojis personalizados son ideales para dar identidad a una comunidad con un logo o un chiste interno, pero cada uno cuesta un espacio, hay que gestionarlo y queda atado al único sitio donde lo agregaste.",
+        "Los emojis Unicode de este tablero se saltan todo eso. No pertenecen a ningún servidor, no ocupan espacios y son gratis para cada cuenta, así que puedes soltarlos en cualquier servidor o MD en el instante en que pegas. Y lo más importante: nunca requieren Nitro. Reutilizar el emoji personalizado de un servidor en otro distinto es una ventaja exclusiva de Nitro, pero una cara o un corazón Unicode se comporta igual en todas partes sin suscripción. Los emojis Unicode también llegan a lugares donde los personalizados no pueden — directo a tu nombre de usuario, tu apodo o tu Acerca de mí — porque son caracteres de texto plano, no imágenes atadas a un servidor."
+      ]
+    },
+    {
+      kicker: "KAOMOJI Y CARAS DE TEXTO // 03",
+      badge: "TEXTO PLANO",
+      badgeTone: "amber" as const,
+      title: "Caras de texto japonesas hechas con Unicode",
+      body: [
+        "Los kaomoji son las caras de texto al estilo japonés armadas por completo con caracteres Unicode — el encogimiento ¯\\_(ツ)_/¯, la mesa volcada (╯°□°）╯︵ ┻━┻ y docenas de estados de ánimo entre medias. Aquí nada es una imagen: cada cara es puntuación, corchetes y símbolos unidos en una expresión, que es justo por lo que han viajado por todas las apps de chat durante años. Este tablero mantiene las más usadas a un solo clic, así que nunca tienes que buscar la secuencia correcta de caracteres ni memorizar una hilera desbalanceada de paréntesis, flechas y katakana solo para voltear una mesa.",
+        "Como un kaomoji es solo texto, se pega limpio en lugares que un emoji de imagen o una subida personalizada no alcanzan. Suéltalo en un mensaje de canal, un hilo, un apodo de servidor, tu nombre para mostrar global o tu Acerca de mí, y se muestra con los mismos caracteres para todos — sin Nitro, sin soporte del servidor y sin sorpresas de renderizado. Un solo Ctrl+V o Cmd+V coloca la cara entera de una vez, así que una mesa volcada llega intacta en vez de como media cadena revuelta. Usa el filtro para saltar directo a la cara que quieres y cópiala en un toque, todo en tu navegador."
+      ],
+      footer: "Cada kaomoji es texto Unicode plano — se pega intacto en mensajes, apodos y tu Acerca de mí."
+    },
+    {
+      kicker: "GRATIS, SIN NITRO // 04",
+      badge: "100% LOCAL",
+      badgeTone: "purple" as const,
+      title: "Gratis, privado y por completo en tu navegador",
+      body: [
+        "Este tablero no pide nada: sin inicio de sesión, sin suscripción a Nitro y sin paso de subida. Cada emoji y kaomoji ya está cargado en la página, y al hacer clic en uno se copia mediante el propio portapapeles de tu navegador — el carácter nunca sale de tu dispositivo y nada de lo que copias se registra ni se envía a un servidor. Como el trabajo es completamente local, el tablero se mantiene rápido y sigue funcionando incluso con una conexión inestable, y no queda ningún historial que nadie pueda rastrear después. Copia tantos emojis como quieras, tan a menudo como quieras, sin crear jamás una cuenta ni chocar con un límite de uso.",
+        "Los emojis Unicode cubren reacciones y caras de texto, pero a veces quieres un emoji de imagen con identidad para tu propio servidor — un logo, una mascota o un chiste interno. Ese es otro trabajo, y el Creador de Emojis en /es/tools/emoji/ se encarga: redimensiona tu arte al límite exacto de 128×128 píxeles y 256 KiB que Discord exige, para que la subida se acepte al primer intento. Usa este tablero de copiar y pegar cuando necesites una reacción rápida y universal que funcione para todos, y cambia al Creador de Emojis cuando quieras añadir un espacio de emoji personalizado a un servidor que administras."
+      ],
+      footer: "¿Necesitas un emoji de imagen personalizado? El Creador de Emojis en /es/tools/emoji/ ajusta el arte al límite de 128×128 y 256 KiB de Discord."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/emoji-copy-paste.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
-      <div class="flex items-center gap-2">
-        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
-        <span>/</span>
-        <span class="text-[#192538] dark:text-white font-semibold">Copiar y Pegar Emojis</span>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Copiar y Pegar Emojis</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Copiar y Pegar Emojis Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Copia con un clic emojis Unicode y kaomoji • Funciona sin Nitro • Pega donde sea</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
       </div>
-      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
-    </nav>
-
-    <header class="mb-8">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
-        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
-        100% en el navegador · Cero subidas
-      </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
-        Copiar y Pegar Emojis Discord
-      </h1>
-      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
-        Haz clic en cualquier emoji o kaomoji Unicode para copiarlo y pégalo en el chat. Funciona sin Nitro y se muestra igual en todos los dispositivos.
-      </p>
-    </header>
+    </div>
 
     <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
     <EmojiCopyPasteWorkspace lang="es" />
 
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Emojis Unicode vs. Personalizados</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Todos los emojis del tablero son parte del conjunto Unicode integrado en Windows, macOS, Android e iOS, así que se ven igual para todos y no ocupan espacios de emoji del servidor. Un emoji personalizado, en cambio, es una imagen que subes a un servidor (máx. 128×128 y 256 KiB). Para uno de marca, usa el <a href="/es/tools/emoji/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Creador de Emojis</a>.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Kaomoji y Caras de Texto</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          El tablero incluye kaomoji populares — caras de texto japonesas hechas con puntuación, como el encogimiento <code class="font-mono">¯\_(ツ)_/¯</code>. Al ser texto plano, se pegan en cualquier mensaje, apodo o estado. Usa el filtro para saltar a una categoría y todo se copia con un clic.
-        </p>
-      </article>
-    </div>
+    <ToolDossier {...dossier} />
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>

@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import ImageResizerWorkspace from '../../components/tools/ImageResizerWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Image Resizer | Exact Discord Sizes";
 const pageDescription = "Free Discord image resizer: scale any picture to exact avatar 512x512, sticker 320x320, emoji 128x128, or 960x540 banner sizes. In-browser, zero uploads.";
@@ -19,41 +21,67 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Image Resizer", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "What size is a Discord profile picture in pixels?", a: "A Discord profile picture, or avatar, displays at 128×128 pixels and is always square. Upload a square image at least 128 pixels on each side; a larger square such as 256 or 512 also works and stays crisp when Discord scales it down. Avoid non-square images, since Discord will crop them to fit the circle." },
+  { q: "How do I resize an image for a Discord server icon?", a: "Set the resizer to 512×512, the size Discord uses for server icons. If your source isn't square, crop it to a square first so the icon isn't distorted or letterboxed, then export. Because the icon is also shown inside a circle in some places, keep the important part centered so nothing critical sits in the corners." },
+  { q: "What are the Discord banner dimensions?", a: "Discord profile and server banners use 960×540 pixels, a 16:9 landscape rectangle. Resize your image to exactly that size and keep the aspect ratio so the scene isn't stretched. Remember the middle band is the most visible area, since parts of the top and bottom can be covered by overlaid profile elements." },
+  { q: "How do I make an image square for a Discord avatar?", a: "Use the crop-to-square option, which trims the longer side of a rectangular photo down to a 1:1 shape, then scale it to 128×128 or larger. Center the subject's face before you crop, because Discord displays avatars inside a circular mask — a centered square keeps heads and key details safely inside the visible circle." },
+  { q: "Does resizing an image reduce its quality?", a: "Resizing down barely affects quality — you are discarding pixels you didn't need, and edges stay sharp. Scaling up is different: enlarging a small image can't recover detail that was never captured, so it looks soft or blurry. For the best result, start from the highest-resolution original you have and resize down toward the Discord target." }
+];
+
+const dossier = {
+  eyebrow: "Image Resizer Blueprint",
+  heading: "From any picture to",
+  highlight: "exact Discord dimensions",
+  intro: "Discord validates several assets by exact pixel dimensions, and uploading the wrong size hands the crop to Discord instead of you. Here is how the asset sizes, the canvas resize and crop, the aspect-ratio choice, and the privacy of local processing fit together — all in your browser.",
+  steps: [
+    "Discord Asset Sizes",
+    "Resize & Crop",
+    "Aspect Ratio",
+    "Local & Private"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "What are the exact Discord image sizes?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Discord expects specific pixel dimensions per asset: avatars and server icons are 512×512, custom emojis up to 128×128, stickers exactly 320×320, role icons exactly 64×64, server banners 960×540, and profile banners 680×240. This Discord image resizer includes one-click presets for each so you never have to remember the numbers."
-      }
+      kicker: "ASSET SIZE MAP // 01",
+      badge: "DISCORD ASSET SIZES",
+      badgeTone: "emerald" as const,
+      title: "The exact pixel size for every Discord asset",
+      body: [
+        "Discord validates several assets by exact pixel dimensions, and uploading the wrong size hands the crop to Discord instead of you. A profile picture, or avatar, renders at 128×128 — upload a square at least 128 pixels wide and it stays crisp. A server icon wants 512×512, custom emoji sit at 128×128, and stickers go up to 320×320 as an APNG. A profile or server banner is 960×540, a clean 16:9 rectangle, while a role icon is a tiny 64×64. Match those numbers up front and Discord accepts the file as-is, with none of its own downscaling softening the edges.",
+        "Getting the size right before you upload is the whole point, because Discord's automatic resize is not kind to detail. When you hand it a picture that is too large, or the wrong shape, it crops and compresses on its own terms — heads drift out of frame, thin lines blur, and small text turns mushy. Setting the canvas to the target dimensions here means the pixels you export are the pixels Discord stores. There is no guesswork about whether a 500×500 image will pass as a server icon or a 319×320 sticker will bounce; each preset lands on the value the platform expects."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "What is the difference between Fit, Fill, and Stretch?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Fit (contain) scales the whole image inside the target and leaves transparent padding — nothing is cropped. Fill (cover) scales up until the image covers the whole frame and crops the overflow — best for avatars and banners. Stretch forces the exact dimensions and can distort the image, so use it only when the aspect ratios already match."
-      }
+      kicker: "CANVAS CONTROLS // 02",
+      badge: "RESIZE & CROP",
+      badgeTone: "blue" as const,
+      title: "Set an exact pixel size or crop to a square",
+      body: [
+        "This resizer works on a browser canvas, so every change happens on the pixels themselves rather than on a stretched CSS preview. Type an exact width and height and the tool redraws your image at that size and exports a real file at those dimensions — a true 512×512 server icon, not a large image squeezed into a small box. When you already know the number Discord wants, this is the fastest path: enter it, export, and upload. The output is a fresh raster at the resolution you asked for, ready to drop straight into Discord's upload dialog without any further editing.",
+        "When the shape matters more than a single dimension, crop to a square instead. Most Discord slots — avatars, server icons, emoji, and stickers — are square, so trimming a rectangular photo down to a 1:1 crop is usually the real fix. The canvas lets you cut the image to a square and then scale that square to the exact target size in one pass. Because it all runs on the same canvas, you preview the crop and the final dimensions together, and the file you download already matches both the shape and the pixel count Discord asks for."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "Does resizing upload my image to a server?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. The resizer draws your image onto an HTML canvas at the target size and exports it entirely inside your browser. Nothing is uploaded, stored, or logged, so it is safe for private or unreleased artwork."
-      }
+      kicker: "RATIO CONTROL // 03",
+      badge: "ASPECT RATIO",
+      badgeTone: "amber" as const,
+      title: "Keep the aspect ratio or crop to fill",
+      body: [
+        "Every resize forces a choice between two behaviors when the source shape and the target shape disagree. Preserving the aspect ratio scales the whole image to fit and letterboxes the leftover space, so nothing is cut but you may see padding around a photo that isn't square. Cropping to fill does the opposite: it scales up until the frame is completely covered and trims whatever spills past the edges. For a banner that must sit in a 960×540 rectangle, keeping the ratio protects the composition; for a square avatar, cropping to fill is almost always what you actually want.",
+        "The reason crop-to-square matters so much for avatars is Discord's circular mask. Your profile picture is stored as a square but displayed inside a circle, so the corners are hidden and anything near an edge can be clipped. If you letterbox a wide photo into a square, the subject shrinks into a thin strip; if you crop to fill and center the face, it sits comfortably inside the circle. Deciding the crop here — rather than letting Discord guess — is how you stop the mask from slicing off the top of someone's head or cutting a logo in half."
+      ],
+      footer: "For avatars, crop to a centered square so Discord's circular mask never cuts off heads or edges."
     },
     {
-      "@type": "Question",
-      "name": "Which format should I export for Discord?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Use PNG when you need transparency (avatars, stickers, role icons). Use WebP for the smallest file when transparency is optional. Use JPEG only for full-frame photos with no transparency, since it fills the background white. After resizing, run the file through the image compressor if it needs to fit a byte limit."
-      }
+      kicker: "PRIVACY BY DESIGN // 04",
+      badge: "LOCAL & PRIVATE",
+      badgeTone: "purple" as const,
+      title: "Everything runs in your browser",
+      body: [
+        "The resize happens entirely on a canvas inside your browser tab. When you pick a file, it is read into memory, redrawn at the target size, and offered back as a download — it is never sent to a server, never stored, and never logged. That makes the tool safe for private screenshots, client work, and unreleased branding you can't hand to a third party. There is no account to create and no queue to wait in; the work is instant because it is local. Close the tab and every trace of the image is gone from the page, with nothing left behind on a remote server to worry about.",
+        "One limit is worth planning around: resizing down keeps an image sharp, but scaling a small picture up cannot invent detail that was never captured. Enlarging a 64×64 icon to a 512×512 server icon just spreads the same pixels over sixteen times the area, so edges soften and the result looks blurry. Always start from the highest-resolution source you have and resize down toward the Discord target, not up from something tiny. If your only copy is small, it is better to re-export from the original artwork or take a larger screenshot than to upscale and accept the blur."
+      ],
+      footer: "Resizing down stays sharp — start from the largest source you have, since scaling up only adds blur."
     }
   ]
 };
@@ -62,7 +90,7 @@ const faqSchema = {
 <Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/image-resizer.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
@@ -88,232 +116,9 @@ const faqSchema = {
     <!-- Main Workspace Layout (shared component, EN + ES) -->
     <ImageResizerWorkspace lang="en" />
 
-    <!-- Sticky Stacking Technical Dossier (600+ Words) -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+    <ToolDossier {...dossier} />
 
-        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
-            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
-            <span>Resize Blueprint</span>
-          </div>
-
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Hit every <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">exact Discord size</span><SketchUnderline color="#66A3BF" /></span> in one click.
-          </h2>
-
-          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
-            Discord validates several assets by exact pixel dimensions. An avatar that is 500×500 or a sticker that is 319×320 gets rejected. Presets take the guesswork out and export the precise size Discord wants.
-          </p>
-
-          <div class="relative pl-6 space-y-5 select-none pt-2">
-            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
-            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
-              <span class="text-xs sm:text-sm">01 / One Preset per Discord Asset</span>
-            </div>
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
-              <span class="text-xs sm:text-sm">02 / Fit vs. Fill vs. Stretch</span>
-            </div>
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
-              <span class="text-xs sm:text-sm">03 / Resize Then Compress</span>
-            </div>
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
-              <span class="text-xs sm:text-sm">04 / Private, In-Browser Processing</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="lg:col-span-7 relative pb-16 space-y-12">
-
-          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">EXACT DIMENSIONS // 01</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">6 PRESETS</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                A Preset for Every Discord Asset
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Avatars and server icons are 512×512, custom emojis up to 128×128, stickers exactly 320×320, role icons exactly 64×64, server banners 960×540, and profile banners 680×240. Pick the preset and the resizer sets the canvas to those exact pixels — no manual math, no off-by-one rejections.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Need a size that isn't listed? Switch to Custom and type any width and height up to 4096 px.
-              </p>
-              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
-                <div>
-                  <span class="text-[#6B7A90]">Avatar / icon:</span>
-                  <span class="text-[#0D9488] font-bold ml-1">512 × 512 px</span>
-                </div>
-                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">Sticker: 320 × 320</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">FIT LOGIC // 02</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">3 MODES</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Fit, Fill, and Stretch Explained
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Fit scales the whole image inside the target and adds transparent padding, so nothing is cropped — ideal for logos and art that must stay complete. Fill scales up until the frame is fully covered and crops the overflow — the right choice for avatars and banners where edge-to-edge coverage matters.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Stretch forces the exact dimensions regardless of aspect ratio, which can squash or elongate the image. Reach for it only when the source already matches the target ratio.
-              </p>
-              <div class="grid grid-cols-3 gap-3 text-xs font-mono">
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Fit:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">No crop</span>
-                </div>
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Fill:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">Crops edges</span>
-                </div>
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Stretch:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">May distort</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">WORKFLOW // 03</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">SIZE THEN BYTES</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Resize First, Then Compress
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Dimensions and file size are two separate checks. This tool fixes the dimensions; if the exported file also needs to slip under a byte limit — 256 KiB for emojis and role icons, 512 KiB for stickers, 10 MB for chat uploads — send it through the image compressor afterward.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Doing it in that order keeps the result as sharp as possible: resize to the exact pixels first, then shave bytes only as much as the limit demands.
-              </p>
-              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
-                <span class="text-[#0D9488] font-bold">✓ Pair the tools:</span>
-                <span>Resizer sets dimensions, compressor trims bytes — both fully in-browser.</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="sticky-step-wrapper sticky top-36 z-40">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">PRIVACY BY DESIGN // 04</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">ZERO UPLOADS</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Everything Runs in Your Browser
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                The resizer uses the browser's canvas API to redraw your image at the target size and export it locally. Your file is never sent to a server, never stored, and never logged.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                That makes it safe for private screenshots, work assets, and unreleased branding. Close the tab and nothing remains.
-              </p>
-              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span>No server uploads • In-browser canvas resizing</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <ToolFaq items={faqItems} />
 
   </div>
-
-  <script>
-    function setupScrollLocking() {
-      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
-      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
-      const progressBar = document.getElementById('scroll-progress-line');
-      if (!cardWrappers.length) return;
-
-      function updateCardStack() {
-        let activeIndex = 0;
-        cardWrappers.forEach((wrapper, index) => {
-          const rect = wrapper.getBoundingClientRect();
-          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
-          const isLocked = rect.top <= stickyTop + 8;
-          if (isLocked) activeIndex = index;
-
-          const nextCard = cardWrappers[index + 1];
-          if (nextCard) {
-            const nextRect = nextCard.getBoundingClientRect();
-            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
-            const transitionDist = 180;
-            if (nextRect.top < nextStickyTop + transitionDist) {
-              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
-              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
-              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
-            } else {
-              wrapper.style.transform = 'scale(1)';
-              wrapper.style.filter = 'brightness(1)';
-            }
-          }
-        });
-
-        stepIndicators.forEach((ind, i) => {
-          const dot = ind.querySelector('.step-dot');
-          if (i <= activeIndex) {
-            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.add('border-current', 'scale-110');
-            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          } else {
-            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.add('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.remove('border-current', 'scale-110');
-            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          }
-        });
-
-        if (progressBar) {
-          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
-          progressBar.style.height = `${pct}%`;
-        }
-      }
-
-      window.addEventListener('scroll', updateCardStack, { passive: true });
-      updateCardStack();
-    }
-
-    setupScrollLocking();
-    document.addEventListener('astro:after-swap', setupScrollLocking);
-  </script>
 </Layout>

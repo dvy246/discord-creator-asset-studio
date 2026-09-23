@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import MarkdownWorkspace from '../../components/tools/MarkdownWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Markdown Preview | Live Editor";
 const pageDescription = "Free Discord markdown editor with live preview: bold, italic, headers, spoilers, code blocks, quotes and lists. See exactly how it renders in chat.";
@@ -19,41 +21,66 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Markdown Previewer", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "How do I make text bold in Discord?", a: "Wrap the words in two asterisks on each side: **like this**. Discord renders everything between the pairs in bold. Combine it with italics using three asterisks for ***bold italic***, or select the text and hit the bold button in the toolbar above, which inserts the asterisks for you." },
+  { q: "How do I make a spoiler tag in Discord?", a: "Put double vertical bars around the text: ||spoiler here||. Discord hides it behind a grey box that a reader must click or tap to reveal, so it will not spoil anyone scrolling the channel. In the preview here it renders blacked-out and uncovers on click, exactly like the real app does." },
+  { q: "How do Discord headers work (how do I make big text)?", a: "Begin a line with # and a space for a large header, ## for a medium one, or ### for a small one. There is no bigger size — # is the largest text Discord offers. Headers only render inside messages, not in usernames or your About Me, and the space after the hashes is required." },
+  { q: "How do I underline text in Discord?", a: "Surround the text with two underscores: __underline__. This is unique to Discord and is not part of standard markdown, where double underscores mean bold. A single underscore, _like this_, gives italics instead, and you can stack them as __*underlined italic*__ when you need both at once." },
+  { q: "How do I make a masked hyperlink in Discord?", a: "Use the syntax [visible text](https://example.com) — the label shows as a clickable link and the URL is hidden. The catch is that masked links only render in embeds and a few surfaces, not in ordinary chat messages, where they stay as literal text. Bot and webhook embeds are the usual place they work." }
+];
+const dossier = {
+  eyebrow: "Markdown Formatting Blueprint",
+  heading: "From plain text to",
+  highlight: "formatted chat messages",
+  intro: "Discord messages support a lightweight markdown flavor for styling text inline. Here is how the core syntax, the inline styles, the block formats, and the structural elements fit together — with a live preview that shows exactly how each renders before you send.",
+  steps: [
+    "What Markdown Is",
+    "Inline Text Styles",
+    "Blocks: Code, Quote, Spoiler",
+    "Headers, Lists & Links"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "How does Discord markdown formatting work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Discord uses a lightweight markdown flavor: **bold**, *italic* or _italic_, __underline__, ~~strikethrough~~, ||spoiler||, `inline code`, and triple-backtick code blocks. Headers use #, ##, and ###, subtext uses -#, and > starts a quote. Type on the left and this tool shows the exact chat rendering on the right."
-      }
+      kicker: "WHAT IT IS // 01",
+      badge: "LIVE PREVIEW",
+      badgeTone: "emerald" as const,
+      title: "A lightweight markdown built for chat",
+      body: [
+        "Discord borrows a small slice of markdown for its messages. You wrap text in a few symbols and it renders styled — no HTML and no toolbar required. The core set covers bold, italic, underline, strikethrough, inline code, spoilers, block quotes, multi-line code fences, headers, bullet and numbered lists, and small subtext. Because it is just characters you type inline, the exact same shortcuts work on the desktop app, the browser client, and mobile, so what you learn here transfers everywhere you chat.",
+        "The editor here mirrors that flavor exactly. Type on the left and the panel on the right redraws on every keystroke, showing precisely how Discord will render the message before you send it. Everything runs locally in your browser — nothing is uploaded, no account is needed, and no message is posted for you. When the preview looks right, copy the raw markdown and paste it into any channel or direct message. It works as a safe scratchpad for getting a tricky combination of bold, quotes, and code blocks right the first time, instead of editing a real message again and again in front of everyone."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "How do I write a spoiler in Discord?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Wrap the text in double vertical bars: ||like this||. Discord hides it behind a gray box until a reader clicks to reveal it. In this previewer the spoiler renders blacked-out and reveals on click, just like the real app."
-      }
+      kicker: "INLINE STYLES // 02",
+      badge: "BOLD / ITALIC / CODE",
+      badgeTone: "blue" as const,
+      title: "Bold, italic, underline, strike, and code",
+      body: [
+        "The inline styles each wrap a span of text on both sides with the same marker. Two asterisks make text **bold**, a single asterisk or underscore makes it *italic*, two underscores add an __underline__ that is unique to Discord and not part of standard markdown, two tildes ~~strike it through~~, and a single backtick makes `inline code` that skips every other format inside it. These five are the styles you reach for most in everyday messages, and the toolbar above wraps whatever you have selected so you rarely type the symbols by hand.",
+        "You can nest these markers to combine effects. Three asterisks give ***bold italic*** at once, and you can layer an underline over bold italic by wrapping the whole thing in two more underscores for maximum emphasis. The order of the markers does not matter as long as each opening marker has a matching closing marker around the same text. Because inline code disables every other format inside it, a single pair of backticks is the quickest way to make asterisks, underscores, or tildes appear literally in a short span, instead of escaping each symbol one at a time with a backslash."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "How do I make a multi-line code block?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Use three backticks on their own line, your code, then three backticks to close. Add a language name after the opening backticks (for example ```js) for syntax context. Single backticks around a word make inline code instead."
-      }
+      kicker: "BLOCK FORMATS // 03",
+      badge: "CODE / QUOTE / SPOILER",
+      badgeTone: "amber" as const,
+      title: "Code fences, block quotes, and spoilers",
+      body: [
+        "For a block of code, open and close with three backticks on their own lines and put your code between them. Add a language name right after the opening backticks — ```js, ```py, ```json — and Discord applies syntax highlighting for that language, which is perfect for sharing snippets that stay readable and monospaced. A code fence preserves your line breaks and indentation exactly and, like inline code, ignores every other markdown symbol inside, so it doubles as a way to show raw formatting characters without them rendering.",
+        "Quotes and spoilers work at the line and span level. A greater-than sign and a space at the start of a line, > like this, makes a single-line block quote; three of them, >>>, turn every line that follows into one continuous quote until the message ends. To hide text behind a clickable box, wrap it in double vertical bars: ||spoiler||. Discord blacks it out until a reader taps to reveal it, which is ideal for plot twists, answers, or anything that should not spoil the channel at a glance. All three render live in the preview here."
+      ],
+      footer: "Name the language after the opening fence — ```js or ```py — for syntax highlighting; >>> starts a multi-line quote."
     },
     {
-      "@type": "Question",
-      "name": "Does this send my message to Discord?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. The previewer runs entirely in your browser and never uploads anything. Write and format your message here, click Copy markdown, then paste it into any Discord channel or DM."
-      }
+      kicker: "STRUCTURE & LINKS // 04",
+      badge: "HEADERS / LISTS",
+      badgeTone: "purple" as const,
+      title: "Headers, lists, subtext, and masked links",
+      body: [
+        "Discord added block structure in 2023. Start a line with # for a large header, ## for a medium one, and ### for a small one — the space after the hashes is required, and headers only render inside messages, never in usernames or your About Me. A dash or an asterisk followed by a space begins a bulleted list, and a number with a period, like 1., begins a numbered list; indent the marker to nest a sub-item. For a line of small, muted grey text — handy for captions or footnotes — prefix it with -# subtext.",
+        "Masked links come with an important caveat. The syntax [text](https://example.com) shows a clickable label instead of a raw URL, but Discord only renders it in embeds and a handful of surfaces — in an ordinary chat message it stays as literal text, so do not rely on it there. Finally, to make any special character show up literally instead of triggering formatting, put a backslash directly before it: \\*not italic\\* prints the asterisks. That escape is the clean way to type a lone symbol, show a piece of syntax, or stop an accidental style from firing mid-sentence."
+      ],
+      footer: "Masked links [text](url) only render in embeds, not plain messages; escape any symbol with a leading backslash \\."
     }
   ]
 };
@@ -62,7 +89,7 @@ const faqSchema = {
 <Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/markdown.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
@@ -88,39 +115,9 @@ const faqSchema = {
     <!-- Main Workspace Layout (shared component, EN + ES) -->
     <MarkdownWorkspace lang="en" />
 
-    <!-- Prose reference -->
-    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto space-y-6">
-        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">How Discord Markdown Works</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord borrows a small slice of <strong>markdown</strong> for chat. Surround text with symbols and it renders styled: <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">**bold**</code>, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">*italic*</code>, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">__underline__</code>, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">~~strikethrough~~</code>, and <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">||spoiler||</code>. The toolbar above wraps your current selection for you, and the panel on the right mirrors the exact chat rendering as you type.
-        </p>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Structure uses line prefixes: <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]"># </code>, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">## </code>, and <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">### </code> for the three header sizes, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">-# </code> for small subtext, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">&gt; </code> for a quote, and <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">- </code> for a bulleted list. Wrap code in single backticks inline or a triple-backtick fence for a block. Nothing leaves your browser — when the preview looks right, copy the raw markdown and paste it into Discord.
-        </p>
-        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">Formatting That Does Not Render in Chat</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord ignores image markdown and most tables, and headers or subtext only render in messages — not in usernames or About Me, which stay plain text. For styled names use a <a href="/tools/fonts/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">Unicode font</a>, and for colored words inside a code block use the <a href="/tools/colored-text/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">colored text generator</a>.
-        </p>
-      </div>
-    </section>
+    <ToolDossier {...dossier} />
 
-    <!-- FAQ Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <ToolFaq items={faqItems} />
 
   </div>
 </Layout>

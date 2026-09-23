@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import EmojiCopyPasteWorkspace from '../../components/tools/EmojiCopyPasteWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Emoji Copy Paste Board | Unicode";
 const pageDescription = "Discord emoji copy paste board: click any Unicode emoji or kaomoji to copy it, then paste into chat. Smileys, hearts, symbols, animals and more. No uploads.";
@@ -19,41 +21,67 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Emoji Copy & Paste", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "How do I copy and paste emojis in Discord?", a: "Click any emoji on this board to copy it to your clipboard, then paste it into the Discord message box with Ctrl+V on Windows or Cmd+V on Mac. These are standard Unicode emoji, so they render on desktop, web, and mobile with no upload and no Nitro. Stack several clicks to build a full reaction." },
+  { q: "What's the difference between Unicode and custom Discord emojis?", a: "Unicode emoji are built into every device and free for anyone to type or paste anywhere, including nicknames. Custom Discord emoji are images uploaded to one specific server, capped at 128×128 pixels and 256 KiB, limited by that server's slots, and usable elsewhere only with Nitro. Use this board for quick reactions; use the Emoji Maker to build a custom server emoji." },
+  { q: "Can I use emojis in Discord without Nitro?", a: "Yes. Every Unicode emoji on this board is completely free and works on any account, in any server or DM, and even in usernames and nicknames. Nitro is only needed to reuse another server's custom emoji or to post custom animated emoji — never for the standard Unicode emoji you copy here." },
+  { q: "What are kaomoji (Japanese text faces)?", a: "Kaomoji are Japanese-style text faces built from Unicode characters rather than images, like the shrug ¯\\_(ツ)_/¯ or the table flip (╯°□°）╯︵ ┻━┻. Because they are plain text, they paste and render anywhere in Discord — messages, nicknames, and your About Me — with no Nitro or server support. This board keeps the most popular ones ready to copy." },
+  { q: "How do I type the shrug emoji ¯\\_(ツ)_/¯ in Discord?", a: "The shrug ¯\\_(ツ)_/¯ is not one emoji but a kaomoji — a string of Unicode characters — so it is easiest to copy it whole. Click it on this board and paste with Ctrl+V or Cmd+V; the whole face lands intact, no Nitro or custom upload needed. It works in messages, nicknames, and your About Me." }
+];
+
+const dossier = {
+  eyebrow: "Emoji Copy & Paste Playbook",
+  heading: "From one click to",
+  highlight: "emoji that paste anywhere",
+  intro: "Every glyph here is a standard Unicode emoji or kaomoji, copied with a single click and pasted anywhere in Discord. Here is how the copy mechanic, the Unicode-versus-custom tradeoff, text faces, and the no-Nitro, all-local promise fit together — no account required.",
+  steps: [
+    "Copy Mechanics",
+    "Unicode vs Custom",
+    "Kaomoji & Text Faces",
+    "Free, No Nitro"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "How do I copy and paste emojis into Discord?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Click any emoji on this board to copy it to your clipboard, then paste it into a Discord message with Ctrl+V (Cmd+V on Mac). These are standard Unicode emojis, so they render on desktop, web, and mobile without needing a custom upload or Nitro."
-      }
+      kicker: "COPY MECHANICS // 01",
+      badge: "CLICK TO COPY",
+      badgeTone: "emerald" as const,
+      title: "One click lands any emoji on your clipboard",
+      body: [
+        "Every glyph on this board is a standard Unicode emoji, so a single click copies it straight to your clipboard — no dialog, no download, and no sign-in. Paste it into a Discord message with Ctrl+V on Windows or Cmd+V on macOS and it appears instantly, exactly as you saw it here. The same copied character drops just as cleanly into a channel post, a direct message, a thread reply, or the search bar. Because the copy fires the moment you click, you can grab several emoji in a row and build a whole reaction string one tap at a time before switching back to Discord.",
+        "Unicode emoji render everywhere because they belong to the character set already built into Windows, macOS, Android, and iOS. Discord just draws the version your device ships, so a face or heart you copy here looks right to every friend reading the channel, whatever platform they are on. Nothing is uploaded and nothing is attached, which means these emoji never touch a server's limited custom-emoji slots — you are typing a character, not sending an image. That keeps the message lightweight and makes it show up identically on desktop, web, and phone, with no waiting for an image to load."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "What is the difference between Unicode emojis and custom Discord emojis?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Unicode emojis (the ones on this board) are built into every device and free for anyone to type or paste. Custom Discord emojis are images uploaded to a specific server, capped at 128x128 and 256 KiB, and usable only where they are installed. Use this board for quick reactions; use the Emoji Maker to build a custom server emoji."
-      }
+      kicker: "UNICODE VS CUSTOM // 02",
+      badge: "128×128 · 256 KiB",
+      badgeTone: "blue" as const,
+      title: "How Unicode emoji differ from custom uploads",
+      body: [
+        "A custom Discord emoji is an image you upload to one specific server, and it lives under strict limits: each file must be 128×128 pixels or smaller and weigh no more than 256 KiB, and every server has a fixed number of emoji slots to fill. Once uploaded, that emoji works only inside the server where it was installed — members browsing from other servers cannot see it or type it by name. Custom emoji are great for branding a community with a logo or an inside joke, but each one costs a slot, needs managing, and stays tied to the single place you added it.",
+        "The Unicode emoji on this board sidestep all of that. They belong to no server, occupy no slots, and are free for every account, so you can drop them into any server or DM the instant you paste. Crucially, they never require Nitro. Reusing one server's custom emoji in a different server is a Nitro-only perk, but a Unicode smiley or heart behaves the same everywhere with no subscription. Unicode emoji also reach places custom ones cannot — straight into your username, your nickname, or your About Me — because they are plain text characters rather than server-scoped image attachments."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "Can I use these emojis without Discord Nitro?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Unicode emojis are completely free and work for every account, in any server or DM. Nitro is only needed to use custom animated emojis or custom emojis from other servers — not for the standard emojis here."
-      }
+      kicker: "KAOMOJI & TEXT FACES // 03",
+      badge: "PLAIN TEXT",
+      badgeTone: "amber" as const,
+      title: "Japanese text faces built from Unicode",
+      body: [
+        "Kaomoji are the Japanese-style text faces assembled entirely from Unicode characters — the shrug ¯\\_(ツ)_/¯, the table flip (╯°□°）╯︵ ┻━┻, and dozens of moods in between. Nothing here is an image: each face is punctuation, brackets, and symbols strung together into an expression, which is exactly why they have traveled across every chat app for years. This board keeps the most-used faces a single click away, so you never have to hunt down the right run of characters or memorize an unbalanced string of parentheses, arrows, and katakana just to flip a table.",
+        "Because a kaomoji is only text, it pastes cleanly into places a picture emoji or custom upload cannot reach. Drop one into a channel message, a thread, a server nickname, your global display name, or your About Me, and it renders as the same characters for everyone — no Nitro, no server support, and no rendering surprises. A single Ctrl+V or Cmd+V places the whole face at once, so a table flip arrives intact instead of a scrambled half-string. Use the filter box to jump straight to the face you want and copy it in one tap, all in your browser."
+      ],
+      footer: "Every kaomoji is plain Unicode text — it pastes intact into messages, nicknames, and your About Me."
     },
     {
-      "@type": "Question",
-      "name": "What are kaomoji?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Kaomoji are Japanese-style text faces built from punctuation, like the shrug ¯\\_(ツ)_/¯ or the table flip (╯°□°）╯︵ ┻━┻. Because they are plain text, they paste and render anywhere in Discord. This board includes the most popular ones ready to copy."
-      }
+      kicker: "FREE, NO NITRO // 04",
+      badge: "100% LOCAL",
+      badgeTone: "purple" as const,
+      title: "Free, private, and entirely in your browser",
+      body: [
+        "This board asks for nothing: no login, no Nitro subscription, and no upload step. Every emoji and kaomoji is already loaded in the page, and clicking one copies it through your browser's own clipboard — the character never leaves your device, and nothing you copy is logged or sent to a server. Because the work is entirely local, the board stays fast and keeps working even on a shaky connection, and there is no history for anyone to mine later. Copy as many emoji as you like, as often as you like, without ever creating an account or bumping into a rate limit.",
+        "Unicode emoji cover reactions and text faces, but sometimes you want a branded image emoji for your own server — a logo, a mascot, or an inside joke. That is a different job, and the Emoji Maker at /tools/emoji/ handles it: it resizes your artwork to the exact 128×128 pixel, 256 KiB limit Discord requires, so the upload is accepted on the first try. Reach for this copy-and-paste board when you need a quick, universal reaction that works for everyone, and switch to the Emoji Maker when you want to add a custom emoji slot to a server you manage."
+      ],
+      footer: "Need a custom image emoji? The Emoji Maker at /tools/emoji/ resizes art to Discord's 128×128, 256 KiB limit."
     }
   ]
 };
@@ -62,7 +90,7 @@ const faqSchema = {
 <Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/emoji-copy-paste.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
@@ -88,39 +116,9 @@ const faqSchema = {
     <!-- Main Workspace Layout (shared component, EN + ES) -->
     <EmojiCopyPasteWorkspace lang="en" />
 
-    <!-- Prose reference -->
-    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto space-y-6">
-        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">Copy and Paste Emojis Into Discord</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          The fastest way to drop a reaction into chat is a Unicode emoji. Every emoji on this board is part of the standard character set built into Windows, macOS, Android, and iOS, so it renders identically for everyone and never counts against a server's custom-emoji slots. Click one, and it lands on your clipboard ready to paste with Ctrl+V or Cmd+V.
-        </p>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          This differs from a custom Discord emoji, which is an image you upload to one specific server (capped at 128×128 pixels and 256 KiB). Custom emojis only work where they are installed and often need Nitro to use elsewhere. The Unicode emojis here are free for every account, in every server and DM, with no upload and no subscription. When you do want a branded server emoji, the <a href="/tools/emoji/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Emoji Maker</a> formats your artwork to the exact size Discord requires.
-        </p>
-        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">Kaomoji and Text Faces</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Beyond picture emojis, this board includes popular kaomoji — Japanese text faces made from punctuation, such as the shrug <code class="font-mono">¯\_(ツ)_/¯</code> and the table flip <code class="font-mono">(╯°□°）╯︵ ┻━┻</code>. Because they are plain text, they paste cleanly into any message, nickname, or status. Use the filter box to jump to a category, and everything copies in one click, entirely in your browser.
-        </p>
-      </div>
-    </section>
+    <ToolDossier {...dossier} />
 
-    <!-- FAQ Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <ToolFaq items={faqItems} />
 
   </div>
 </Layout>

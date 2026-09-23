@@ -1,0 +1,442 @@
+---
+/**
+ * Lang-aware GIF maker workspace, extracted from the former inline
+ * gif-maker.astro so EN + ES share one encoder (gifenc, client-side).
+ * UI strings come from the label map; runtime (JS) strings are passed to the
+ * bundled module script via data-* attributes on #gifWorkspace.
+ */
+export interface Props {
+  lang?: 'en' | 'es';
+}
+
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    dropTitle: 'Choose video or GIF',
+    dropHint: 'MP4, WebM, or animated GIF · Auto-framed to Discord dimensions',
+    previewTitle: 'Timeline & Video Preview',
+    chooseAnother: 'Choose Another File',
+    safeZoneTop: 'Top 48px Header Zone',
+    avatarLabel: 'Avatar',
+    assetTarget: 'Asset Target',
+    presetProfile: 'Profile Banner (600×240)',
+    presetServer: 'Server Banner (960×540)',
+    presetAvatar: 'Avatar / PFP (512×512)',
+    presetEmoji: 'Animated Emoji (128×128)',
+    frameRate: 'Frame Rate',
+    fps15: '15 FPS (Recommended — Best Quality/Size)',
+    fps30: '30 FPS (Ultra Smooth — High File Size)',
+    fps12: '12 FPS (Anime / Lo-Fi Aesthetic)',
+    compression: 'Compression',
+    qHigh: 'Fit Under 10.0 MB (Nitro)',
+    qMedium: 'Aggressive (Fit Under 5.0 MB)',
+    qEmoji: 'Emoji Limit (Fit Under 256 KiB)',
+    safeToggle: 'Show Discord UI Profile Safe Zone Mask',
+    convertIdle: 'Process & Download Discord GIF',
+    specsTitle: 'Discord GIF Specs',
+    specsBadge: '10MB Max',
+    specBannerLabel: 'Nitro Banner:',
+    specAvatarLabel: 'Nitro Avatar:',
+    specEmojiLabel: 'Anim. Emoji:',
+    specStickerLabel: 'Anim. Sticker:',
+    tipsTitle: 'Quick Tips',
+    tipsBody: 'Discord loops profile GIFs automatically. Aim for a seamless 2 to 4 second loop to keep the animation smooth without hitting the 10MB file limit.',
+    guideLink: 'Read Complete Discord GIF Guide →',
+    encoding: 'Encoding GIF…',
+    over: 'over target, try lower FPS or Emoji compression',
+    under: 'within target ✓',
+    downloaded: 'Downloaded',
+    alertGif: 'Your browser cannot decode GIF frames. Try the latest Chrome, Edge, or Firefox.',
+    alertErr: 'Could not process this file. Make sure it is a valid video or animated GIF.',
+  },
+  es: {
+    dropTitle: 'Elige un vídeo o GIF',
+    dropHint: 'MP4, WebM o GIF animado · Encuadrado automático a las dimensiones de Discord',
+    previewTitle: 'Línea de tiempo y vista previa',
+    chooseAnother: 'Elegir otro archivo',
+    safeZoneTop: 'Zona de cabecera superior 48px',
+    avatarLabel: 'Avatar',
+    assetTarget: 'Destino del asset',
+    presetProfile: 'Banner de perfil (600×240)',
+    presetServer: 'Banner de servidor (960×540)',
+    presetAvatar: 'Avatar / PFP (512×512)',
+    presetEmoji: 'Emoji animado (128×128)',
+    frameRate: 'Fotogramas por segundo',
+    fps15: '15 FPS (Recomendado — Mejor calidad/tamaño)',
+    fps30: '30 FPS (Ultra fluido — Archivo grande)',
+    fps12: '12 FPS (Estética anime / lo-fi)',
+    compression: 'Compresión',
+    qHigh: 'Caber bajo 10.0 MB (Nitro)',
+    qMedium: 'Agresiva (Caber bajo 5.0 MB)',
+    qEmoji: 'Límite emoji (Caber bajo 256 KiB)',
+    safeToggle: 'Mostrar máscara de zona segura del perfil de Discord',
+    convertIdle: 'Procesar y descargar GIF de Discord',
+    specsTitle: 'Especificaciones de GIF',
+    specsBadge: '10MB Máx',
+    specBannerLabel: 'Banner Nitro:',
+    specAvatarLabel: 'Avatar Nitro:',
+    specEmojiLabel: 'Emoji anim.:',
+    specStickerLabel: 'Sticker anim.:',
+    tipsTitle: 'Consejos rápidos',
+    tipsBody: 'Discord repite los GIF de perfil automáticamente. Busca un bucle continuo de 2 a 4 segundos para mantener la animación fluida sin superar el límite de 10MB.',
+    guideLink: 'Leer la guía completa de GIF de Discord →',
+    encoding: 'Codificando GIF…',
+    over: 'sobre el objetivo, prueba menos FPS o compresión emoji',
+    under: 'dentro del objetivo ✓',
+    downloaded: 'Descargado',
+    alertGif: 'Tu navegador no puede decodificar fotogramas GIF. Prueba con la última versión de Chrome, Edge o Firefox.',
+    alertErr: 'No se pudo procesar este archivo. Asegúrate de que sea un vídeo o GIF animado válido.',
+  },
+}[lang];
+---
+
+<!-- Main Tool Container -->
+<div
+  id="gifWorkspace"
+  class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16"
+  data-str-encoding={t.encoding}
+  data-str-over={t.over}
+  data-str-under={t.under}
+  data-str-downloaded={t.downloaded}
+  data-str-idle={t.convertIdle}
+  data-str-alert-gif={t.alertGif}
+  data-str-alert-err={t.alertErr}
+>
+  <!-- Left Column: Media Uploader & Interactive Canvas (8 cols) -->
+  <div class="lg:col-span-8 space-y-6">
+    <!-- Aesthetic Video Dropzone -->
+    <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] dark:border-white/20 hover:border-[#3368A0] dark:hover:border-[#66A3BF] rounded-[14px] bg-white/60 dark:bg-black/40 backdrop-blur-md p-10 text-center transition-all cursor-pointer relative shadow-sm group">
+      <input type="file" id="fileInput" accept="video/mp4,video/webm,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
+      <div class="space-y-4 pointer-events-none">
+        <div class="w-14 h-14 rounded-[14px] bg-[#C8DFDB]/50 dark:bg-white/10 text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center mx-auto text-2xl font-bold group-hover:scale-110 transition-transform">
+          🎞️
+        </div>
+        <div>
+          <p class="text-base font-bold text-[#192538] dark:text-white">{t.dropTitle}</p>
+          <p class="text-xs text-[#6B7A90] dark:text-gray-400 mt-1">{t.dropHint}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editor & Preview Panel -->
+    <div id="editorPanel" class="card-panel rounded-[14px] p-6 backdrop-blur-xl bg-white/80 dark:bg-[#141A24]/90 border border-[#E0DBD0] dark:border-[#263346] shadow-md hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] dark:border-[#263346] mb-6">
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+          {t.previewTitle}
+        </h2>
+        <button id="resetBtn" class="btn-secondary text-xs px-2.5 py-1 rounded-[6px] cursor-pointer">
+          {t.chooseAnother}
+        </button>
+      </div>
+
+      <!-- Video Surface -->
+      <div class="relative bg-black/90 rounded-[12px] overflow-hidden mb-6 flex items-center justify-center aspect-video shadow-inner">
+        <video id="previewVideo" class="max-w-full max-h-full object-contain" loop muted playsinline autoplay></video>
+
+        <!-- Safe Zone Mask Overlay -->
+        <div id="gifSafeZone" class="absolute inset-0 pointer-events-none hidden flex flex-col justify-between p-4">
+          <div class="bg-black/70 backdrop-blur-md px-3 py-1 rounded text-[10px] font-mono text-white/80 w-fit">{t.safeZoneTop}</div>
+          <div class="w-16 h-16 rounded-full border-2 border-white/60 bg-black/60 backdrop-blur-md flex items-center justify-center text-[9px] font-bold text-white/80">{t.avatarLabel}</div>
+        </div>
+      </div>
+      <!-- Parameter Controls -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label for="targetPreset" class="text-xs text-[#6B7A90] dark:text-gray-400 font-bold uppercase block mb-1.5">{t.assetTarget}</label>
+          <select id="targetPreset" class="w-full bg-[#FAF8F5] dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-3 py-2 text-xs text-[#192538] dark:text-white focus:outline-none focus:border-[#3368A0]">
+            <option value="profileBanner">{t.presetProfile}</option>
+            <option value="serverBanner">{t.presetServer}</option>
+            <option value="avatar">{t.presetAvatar}</option>
+            <option value="emoji">{t.presetEmoji}</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="fpsSelect" class="text-xs text-[#6B7A90] dark:text-gray-400 font-bold uppercase block mb-1.5">{t.frameRate}</label>
+          <select id="fpsSelect" class="w-full bg-[#FAF8F5] dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-3 py-2 text-xs text-[#192538] dark:text-white focus:outline-none focus:border-[#3368A0]">
+            <option value="15">{t.fps15}</option>
+            <option value="30">{t.fps30}</option>
+            <option value="12">{t.fps12}</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="qualitySelect" class="text-xs text-[#6B7A90] dark:text-gray-400 font-bold uppercase block mb-1.5">{t.compression}</label>
+          <select id="qualitySelect" class="w-full bg-[#FAF8F5] dark:bg-black/50 border border-[#E0DBD0] dark:border-white/20 rounded-lg px-3 py-2 text-xs text-[#192538] dark:text-white focus:outline-none focus:border-[#3368A0]">
+            <option value="high">{t.qHigh}</option>
+            <option value="medium">{t.qMedium}</option>
+            <option value="emoji">{t.qEmoji}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Safe Zone Toggle -->
+      <div class="flex items-center gap-2 mb-6">
+        <input type="checkbox" id="toggleSafeZone" class="rounded border-[#D8D3C8] text-[#3368A0] cursor-pointer" />
+        <label for="toggleSafeZone" class="text-xs text-[#475569] dark:text-gray-300 font-medium cursor-pointer">
+          {t.safeToggle}
+        </label>
+      </div>
+
+      <!-- Export Action -->
+      <button id="convertBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2 shadow-sm cursor-pointer">
+        <span id="convertSpinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+        <span id="convertText">{t.convertIdle}</span>
+      </button>
+    </div>
+  </div>
+  <!-- Right Column: Validation & Spec Receipts (4 cols) -->
+  <div class="lg:col-span-4 space-y-6">
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+        <h3 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider">{t.specsTitle}</h3>
+        <span class="text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2 py-0.5 rounded font-bold">{t.specsBadge}</span>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <div class="flex justify-between py-1 border-b border-[#FAF8F5] dark:border-gray-800">
+          <span class="text-[#6B7A90]">{t.specBannerLabel}</span>
+          <span class="font-bold text-[#192538] dark:text-white">600×240 (5:2)</span>
+        </div>
+        <div class="flex justify-between py-1 border-b border-[#FAF8F5] dark:border-gray-800">
+          <span class="text-[#6B7A90]">{t.specAvatarLabel}</span>
+          <span class="font-bold text-[#192538] dark:text-white">512×512 (1:1)</span>
+        </div>
+        <div class="flex justify-between py-1 border-b border-[#FAF8F5] dark:border-gray-800">
+          <span class="text-[#6B7A90]">{t.specEmojiLabel}</span>
+          <span class="font-bold text-[#192538] dark:text-white">128×128 (≤256KB)</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="text-[#6B7A90]">{t.specStickerLabel}</span>
+          <span class="font-bold text-[#192538] dark:text-white">320×320 (≤512KB APNG)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-panel rounded-[14px] p-6">
+      <h3 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider mb-2">{t.tipsTitle}</h3>
+      <p class="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
+        {t.tipsBody}
+      </p>
+      <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346]">
+        <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline text-xs font-medium flex items-center gap-1">
+          <span>📖</span> {t.guideLink}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { GIFEncoder, quantize, applyPalette } from 'gifenc';
+
+  const root = document.getElementById('gifWorkspace');
+  const S = (root?.dataset ?? {}) as Record<string, string>;
+  const STR_ENCODING = S.strEncoding || 'Encoding GIF…';
+  const STR_IDLE = S.strIdle || 'Process & Download Discord GIF';
+  const STR_OVER = S.strOver || 'over target, try lower FPS or Emoji compression';
+  const STR_UNDER = S.strUnder || 'within target ✓';
+  const STR_DOWNLOADED = S.strDownloaded || 'Downloaded';
+  const STR_ALERT_GIF = S.strAlertGif || 'Your browser cannot decode GIF frames. Try the latest Chrome, Edge, or Firefox.';
+  const STR_ALERT_ERR = S.strAlertErr || 'Could not process this file. Make sure it is a valid video or animated GIF.';
+
+  const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+  const dropzone = document.getElementById('dropzone');
+  const editorPanel = document.getElementById('editorPanel');
+  const previewVideo = document.getElementById('previewVideo') as HTMLVideoElement;
+  const resetBtn = document.getElementById('resetBtn');
+  const toggleSafeZone = document.getElementById('toggleSafeZone') as HTMLInputElement;
+  const gifSafeZone = document.getElementById('gifSafeZone');
+  const convertBtn = document.getElementById('convertBtn');
+  const convertSpinner = document.getElementById('convertSpinner');
+  const convertText = document.getElementById('convertText');
+
+  let currentFile: File | null = null;
+  let currentObjectUrl: string | null = null;
+
+  function cleanup() {
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+  }
+
+  fileInput?.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    handleFile(file);
+  });
+
+  dropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('border-[#3368A0]');
+  });
+
+  dropzone?.addEventListener('dragleave', () => {
+    dropzone.classList.remove('border-[#3368A0]');
+  });
+
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-[#3368A0]');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) handleFile(file);
+  });
+
+  function handleFile(file: File) {
+    cleanup();
+    currentFile = file;
+    currentObjectUrl = URL.createObjectURL(file);
+    if (previewVideo) {
+      previewVideo.src = currentObjectUrl;
+      previewVideo.play().catch(() => {});
+    }
+    dropzone?.classList.add('hidden');
+    editorPanel?.classList.remove('hidden');
+  }
+
+  resetBtn?.addEventListener('click', () => {
+    cleanup();
+    currentFile = null;
+    if (fileInput) fileInput.value = '';
+    editorPanel?.classList.add('hidden');
+    dropzone?.classList.remove('hidden');
+  });
+
+  toggleSafeZone?.addEventListener('change', () => {
+    if (toggleSafeZone.checked) {
+      gifSafeZone?.classList.remove('hidden');
+    } else {
+      gifSafeZone?.classList.add('hidden');
+    }
+  });
+  const PRESETS: Record<string, { w: number; h: number }> = {
+    profileBanner: { w: 600, h: 240 },
+    serverBanner: { w: 960, h: 540 },
+    avatar: { w: 512, h: 512 },
+    emoji: { w: 128, h: 128 }
+  };
+  const QUALITY: Record<string, { maxBytes: number; colors: number }> = {
+    high: { maxBytes: 10 * 1024 * 1024, colors: 256 },
+    medium: { maxBytes: 5 * 1024 * 1024, colors: 128 },
+    emoji: { maxBytes: 262144, colors: 64 }
+  };
+  const MAX_SECONDS = 6;
+
+  const targetPreset = document.getElementById('targetPreset') as HTMLSelectElement;
+  const fpsSelect = document.getElementById('fpsSelect') as HTMLSelectElement;
+  const qualitySelect = document.getElementById('qualitySelect') as HTMLSelectElement;
+
+  function coverRect(sw: number, sh: number, w: number, h: number) {
+    const scale = Math.max(w / sw, h / sh);
+    const dw = sw * scale, dh = sh * scale;
+    return { dx: (w - dw) / 2, dy: (h - dh) / 2, dw, dh };
+  }
+
+  function seek(video: HTMLVideoElement, time: number): Promise<void> {
+    return new Promise((resolve) => {
+      const onSeeked = () => { video.removeEventListener('seeked', onSeeked); resolve(); };
+      video.addEventListener('seeked', onSeeked);
+      video.currentTime = time;
+    });
+  }
+
+  async function encodeFromVideo(w: number, h: number, fps: number, colors: number): Promise<Uint8Array> {
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
+    const enc = GIFEncoder();
+    const duration = Math.min(previewVideo.duration || MAX_SECONDS, MAX_SECONDS);
+    const frameCount = Math.max(1, Math.round(duration * fps));
+    const delay = Math.round(1000 / fps);
+    const wasPlaying = !previewVideo.paused;
+    previewVideo.pause();
+    for (let i = 0; i < frameCount; i++) {
+      await seek(previewVideo, (i / fps));
+      const r = coverRect(previewVideo.videoWidth, previewVideo.videoHeight, w, h);
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(previewVideo, r.dx, r.dy, r.dw, r.dh);
+      const { data } = ctx.getImageData(0, 0, w, h);
+      const palette = quantize(data, colors);
+      const index = applyPalette(data, palette);
+      enc.writeFrame(index, w, h, { palette, delay });
+    }
+    enc.finish();
+    if (wasPlaying) previewVideo.play().catch(() => {});
+    return enc.bytes();
+  }
+  async function encodeFromGif(w: number, h: number, colors: number): Promise<Uint8Array> {
+    if (!currentFile) throw new Error('no file');
+    const buf = await currentFile.arrayBuffer();
+    const decoder = new (window as any).ImageDecoder({ data: buf, type: 'image/gif' });
+    await decoder.tracks.ready;
+    const frameCount = decoder.tracks.selectedTrack.frameCount;
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
+    const enc = GIFEncoder();
+    for (let i = 0; i < frameCount; i++) {
+      const { image } = await decoder.decode({ frameIndex: i });
+      const delay = image.duration ? Math.max(20, Math.round(image.duration / 1000)) : 100;
+      const r = coverRect(image.displayWidth, image.displayHeight, w, h);
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(image, r.dx, r.dy, r.dw, r.dh);
+      image.close();
+      const { data } = ctx.getImageData(0, 0, w, h);
+      const palette = quantize(data, colors, { format: 'rgba4444' });
+      const index = applyPalette(data, palette, 'rgba4444');
+      enc.writeFrame(index, w, h, { palette, delay, transparent: true });
+    }
+    enc.finish();
+    decoder.close();
+    return enc.bytes();
+  }
+
+  convertBtn?.addEventListener('click', async () => {
+    if (!currentFile) return;
+    const preset = PRESETS[targetPreset?.value || 'profileBanner'] || PRESETS.profileBanner;
+    const fps = parseInt(fpsSelect?.value || '15', 10);
+    const q = QUALITY[qualitySelect?.value || 'high'] || QUALITY.high;
+
+    convertSpinner?.classList.remove('hidden');
+    if (convertBtn instanceof HTMLButtonElement) convertBtn.disabled = true;
+    if (convertText) convertText.innerText = STR_ENCODING;
+
+    try {
+      const isGif = currentFile.type === 'image/gif';
+      if (isGif && typeof (window as any).ImageDecoder === 'undefined') {
+        alert(STR_ALERT_GIF);
+        return;
+      }
+      const bytes = isGif
+        ? await encodeFromGif(preset.w, preset.h, q.colors)
+        : await encodeFromVideo(preset.w, preset.h, fps, q.colors);
+
+      const blob = new Blob([bytes], { type: 'image/gif' });
+      const sizeMB = (blob.size / (1024 * 1024)).toFixed(2);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `discord-gif-${preset.w}x${preset.h}-${Date.now()}.gif`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      if (convertText) {
+        const overCap = blob.size > q.maxBytes;
+        convertText.innerText = `${STR_DOWNLOADED} ${sizeMB} MB — ${overCap ? STR_OVER : STR_UNDER}`;
+        setTimeout(() => { if (convertText) convertText.innerText = STR_IDLE; }, 4000);
+      }
+    } catch (e) {
+      console.error(e);
+      alert(STR_ALERT_ERR);
+      if (convertText) convertText.innerText = STR_IDLE;
+    } finally {
+      convertSpinner?.classList.add('hidden');
+      if (convertBtn instanceof HTMLButtonElement) convertBtn.disabled = false;
+    }
+  });
+</script>

@@ -1,7 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import GifCompressorWorkspace from '../../../components/tools/GifCompressorWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Comprimir GIF Discord | Reduce GIFs Animados";
 const pageDescription = "Comprimir GIF Discord: reduce GIFs animados bajo el límite de 256 KiB para emojis o 10 MB de chat con controles de escala, paleta y fotogramas. Sin subidas.";
@@ -15,74 +17,105 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  { q: "¿Cómo comprimo un GIF para Discord?", a: "Sube el GIF y ajusta tres palancas: reduce las dimensiones, baja la paleta de colores (de 256 a 16) y conserva menos fotogramas. Esta herramienta decodifica cada fotograma en tu navegador y recodifica un GIF más pequeño, mostrando el tamaño frente al límite de 256 KiB para emojis o 10 MB de chat." },
-  { q: "¿Cuál es el límite de tamaño de un GIF para emoji de Discord?", a: "Un emoji animado debe pesar 256 KiB (262.144 bytes) o menos y hasta 128x128 píxeles. Las subidas de chat normales permiten 10 MB en una cuenta gratuita. Elige el objetivo correspondiente y la herramienta indica si tu GIF cabe." },
-  { q: "¿Por qué reducir colores encoge tanto un GIF?", a: "El GIF guarda una paleta por archivo. Menos entradas de paleta significan menos bits por píxel, así que pasar de 256 a 64 colores puede recortar mucho el tamaño con poco cambio visible en animación plana o de dibujos. Junto con menos fotogramas y menor tamaño, es la vía más rápida." },
-  { q: "¿Se sube mi GIF a algún sitio?", a: "No. El GIF se decodifica y recodifica por completo en tu navegador con ImageDecoder y un codificador local. Nada se envía a un servidor. Necesitas un Chrome, Edge o Firefox reciente para decodificar fotogramas GIF en el navegador." }
+  { q: "¿Cómo hago un GIF más pequeño para Discord?", a: "Carga el GIF y ajusta tres palancas: reduce las dimensiones, baja la paleta de colores de 256 hacia 16 y conserva menos fotogramas. La herramienta decodifica cada fotograma en tu navegador y recodifica un GIF más pequeño, mostrando el tamaño de salida en vivo frente a tu objetivo para que pares en cuanto quepa." },
+  { q: "¿Cuál es el límite de tamaño de archivo para GIFs en Discord?", a: "Una cuenta gratuita puede subir archivos de hasta 10 MB, subido desde los 8 MB en 2022. Los niveles de Boost del servidor elevan ese tope para todos sus miembros, y Nitro aumenta tu límite personal hasta 500 MB. Los emojis personalizados animados son mucho más estrictos: 256 KiB y 128 por 128 píxeles." },
+  { q: "¿Por qué mi GIF no se reproduce (aparece como un enlace) en Discord?", a: "La causa habitual es el tamaño: cuando un GIF supera tu límite de subida, Discord lo rechaza o lo publica como un enlace plano sin reproducción en línea. Unas dimensiones enormes pueden provocar lo mismo. Comprimir el archivo por debajo del límite restaura la animación en línea normal y evita por completo la ruta de subida fallida." },
+  { q: "¿Cómo comprimo un GIF sin perder calidad?", a: "La compresión de GIF es intrínsecamente con pérdida porque la paleta se limita a 256 colores, pero puedes minimizar el cambio visible. Reduce la escala antes de recortar colores, ya que el arte plano y de estilo dibujo tolera una paleta menor casi sin notarse. Reserva el descarte agresivo de fotogramas para clips donde el movimiento no sea crítico, y recodifica desde el origen en vez de apilar pasadas." },
+  { q: "¿Discord comprime los GIFs automáticamente?", a: "Discord reprocesa las subidas y puede servir sus propias versiones optimizadas, pero no encogerá un archivo para que quepa en tu límite — un GIF que se pasa se rechaza o se publica como un enlace muerto primero. Quedar por debajo del tope tú mismo con un compresor evita esa ruta y mantiene la animación reproduciéndose en línea." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Plano del Compresor de GIF",
+  heading: "De un clip enorme a",
+  highlight: "un GIF que cabe en Discord",
+  intro: "Un GIF que supera el límite de subida de Discord es rechazado o se publica como un enlace muerto que nunca se reproduce. Así encajan el límite, el proceso de decodificar y recodificar, las palancas de tamaño y la privacidad en el navegador para dejar tu animación por debajo del tope.",
+  steps: [
+    "El Límite de Subida",
+    "Cómo Funciona la Compresión",
+    "Las Palancas de Tamaño",
+    "Local y Privado"
+  ],
+  cards: [
+    {
+      kicker: "TOPE DE TAMAÑO // 01",
+      badge: "10 MB GRATIS / BOOST / NITRO",
+      badgeTone: "emerald" as const,
+      title: "Por qué se rechaza un GIF grande",
+      body: [
+        "El límite de subida por defecto de Discord es de 10 MB para una cuenta gratuita — subido desde los 8 MB en 2022. El nivel de Boost de un servidor eleva ese tope para todos sus miembros, y una suscripción Nitro aumenta tu límite personal mucho más, hasta 500 MB. El problema es que un GIF animado crece de tamaño muy rápido: unos segundos de movimiento a todo color y en una resolución grande superan fácilmente los 10 MB, y por eso tantos clips necesitan un recorte antes de poder publicarse en un canal normal.",
+        "Cuando un GIF queda por encima del límite que te corresponde, Discord no lo encoge en silencio — la subida se rechaza directamente, o el archivo se publica como un enlace plano que no muestra animación en línea. En ambos casos, el movimiento que tus espectadores esperaban nunca se reproduce. Los emojis personalizados animados afrontan un tope aún más estricto: 256 KiB y 128 por 128 píxeles. Esta herramienta te deja elegir el objetivo en bytes al que apuntas y recodifica hasta que la salida queda por debajo, así evitas la ruta de subida fallida y la sorpresa del enlace muerto."
+      ]
+    },
+    {
+      kicker: "EL PROCESO // 02",
+      badge: "DECODIFICAR / RECUANTIZAR / RECODIFICAR",
+      badgeTone: "blue" as const,
+      title: "Decodificar, recuantizar, recodificar",
+      body: [
+        "Comprimir un GIF no es un solo control deslizante — es un proceso encadenado. Primero el archivo se decodifica de nuevo en sus fotogramas individuales, cada uno un mapa de bits completo de píxeles. Luego se recuantiza la paleta de colores: el formato GIF limita cada fotograma a 256 colores, así que el codificador elige un conjunto reducido que represente mejor la imagen y asigna cada píxel a él. Por último, los fotogramas se recodifican en un GIF nuevo y más pequeño. Como ese paso de paleta descarta detalle de color que no puede recuperar, el proceso es con pérdida — cambias algo de fidelidad por un archivo mucho más ligero.",
+        "Entender el proceso explica por qué un GIF comprimido se ve algo distinto del original y por qué unos clips encogen mucho más que otros. El arte plano de estilo dibujo, con grandes bloques de color sólido, sobrevive a recortes de paleta agresivos casi sin notarse, mientras que los degradados, el grano de película y el material fotográfico muestran bandas en cuanto la paleta se reduce. La recodificación también permite a la herramienta descartar fotogramas o cambiar las dimensiones en la misma pasada. Todo se recalcula a partir de los fotogramas decodificados, así que cada ajuste produce una codificación realmente nueva en lugar de una copia con pérdida apilada sobre otra."
+      ]
+    },
+    {
+      kicker: "LOS CONTROLES // 03",
+      badge: "COLORES / FOTOGRAMAS / DIMENSIONES",
+      badgeTone: "amber" as const,
+      title: "Tres palancas para dar con un objetivo en bytes",
+      body: [
+        "Tres controles independientes deciden el tamaño final, y se suman. Reducir las dimensiones es lo de mayor efecto porque quita píxeles de todos y cada uno de los fotogramas a la vez — reducir a la mitad el ancho y el alto deja el número de píxeles en torno a una cuarta parte. Recortar la paleta de colores, de 256 hacia 64 o 16, quita bits de cada píxel y suele ser invisible en animación plana. Descartar fotogramas conserva uno de cada dos o tres, y la herramienta traslada hacia adelante los retardos omitidos para que el clip siga reproduciéndose a su velocidad original en vez de ir rápido.",
+        "La mezcla adecuada depende del clip y del objetivo que hayas elegido. Para el estricto tope de 256 KiB de los emojis normalmente te apoyarás en las tres a la vez; para una subida de chat de 10 MB, una reducción de escala moderada por sí sola suele bastar. Un indicador de tamaño en vivo muestra la salida actual frente a tu objetivo mientras ajustas, así afinas hacia el tope en lugar de adivinar. Si el resultado aún se pasa, baja la escala o el número de colores un paso más y recodifica — cada pasada se recalcula desde los fotogramas de origen, así que la calidad nunca se degrada por intentos repetidos."
+      ],
+      footer: "La escala recorta la mayoría de los bytes; la paleta y el salto de fotogramas afinan el resto para quedar bajo tu objetivo."
+    },
+    {
+      kicker: "MODELO DE PRIVACIDAD // 04",
+      badge: "NADA SE SUBE",
+      badgeTone: "purple" as const,
+      title: "Cada fotograma se queda en tu dispositivo",
+      body: [
+        "Toda la compresión ocurre dentro de tu navegador. Tu GIF se lee con el ImageDecoder integrado del navegador, sus fotogramas se recuantizan y recodifican con un codificador local en la página, y el archivo terminado se te devuelve directamente como una descarga. En ningún momento el clip se envía a un servidor, se pone en cola en un trabajo en la nube ni se escribe en ninguna cuenta — no hay nada en lo que iniciar sesión ni un paso de subida que esperar. Eso hace que la herramienta sea segura para grabaciones de pantalla privadas, arte en progreso y cualquier cosa que preferirías no entregar a un tercero.",
+        "Correr en local es también por lo que la herramienta es rápida y funciona sin conexión una vez cargada la página: no hay latencia de ida y vuelta, ni cola, ni ancho de banda de subida gastado en un archivo que podría pesar decenas de megabytes. El único requisito es un Chrome, Edge o Firefox razonablemente reciente, ya que la decodificación de fotogramas GIF en el navegador depende de la API moderna ImageDecoder. Cierra la pestaña y todo rastro del clip desaparece de la memoria — nada queda en un registro de servidor, un bucket temporal ni un historial de procesamiento, porque ninguno de ellos formó parte nunca del camino."
+      ],
+      footer: "Leído con el ImageDecoder del navegador y recodificado en local — el GIF nunca sale de tu dispositivo."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/gif-compressor.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
-      <div class="flex items-center gap-2">
-        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
-        <span>/</span>
-        <span class="text-[#192538] dark:text-white font-semibold">Comprimir GIF</span>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Comprimir GIF</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Comprimir GIF Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Reduce GIFs animados por debajo del límite de <strong>256 KiB</strong> para emojis o <strong>10 MB</strong> de chat con controles de escala, paleta y fotogramas. Todo el procesamiento ocurre localmente.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          100% en el navegador · Cero subidas
+        </div>
       </div>
-      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
-    </nav>
-
-    <header class="mb-8">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
-        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
-        100% en el navegador · Cero subidas
-      </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
-        Comprimir GIF Discord
-      </h1>
-      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
-        Reduce GIFs animados por debajo del límite de <strong>256 KiB</strong> para emojis o <strong>10 MB</strong> de chat con controles de escala, paleta y fotogramas. Todo el procesamiento ocurre localmente.
-      </p>
-    </header>
+    </div>
 
     <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
     <GifCompressorWorkspace lang="es" />
 
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Tres Palancas que se Suman</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          La <strong>escala</strong> encoge las dimensiones y es la de mayor impacto porque recorta todos los fotogramas a la vez. Los <strong>colores máximos</strong> reducen la paleta —pasar de 256 a 64 suele ser invisible en animación plana—. El <strong>salto de fotogramas</strong> conserva uno de cada dos o tres, y la herramienta traslada los retardos para mantener la velocidad.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Codificación Privada en el Navegador</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          El GIF se lee con ImageDecoder y se reconstruye con un codificador local, así que ningún fotograma sale de tu dispositivo. Si aún supera el objetivo, baja la escala o los colores y comprime de nuevo. Para una imagen estática usa el <a href="/es/tools/image-compressor/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Compresor de Imágenes</a>.
-        </p>
-      </article>
-    </div>
+    <ToolDossier {...dossier} />
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>

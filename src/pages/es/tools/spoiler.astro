@@ -1,7 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import SpoilerWorkspace from '../../../components/tools/SpoilerWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Spoiler de Imagen Discord | Oculta Texto e Imágenes";
 const pageDescription = "Crea un spoiler de imagen Discord: envuelve texto en marcado ||spoiler|| o añade el prefijo SPOILER_ para difuminar una imagen. En tu navegador, sin subidas.";
@@ -15,24 +17,78 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  { q: "¿Cómo hago un spoiler de imagen en Discord?", a: "Discord difumina cualquier adjunto cuyo nombre de archivo empiece por SPOILER_. Sube tu imagen aquí y descarga la copia renombrada — al adjuntar ese archivo, Discord la oculta automáticamente tras un clic. En escritorio también puedes marcar 'Marcar como spoiler' antes de enviar." },
-  { q: "¿Cómo oculto texto como spoiler en Discord?", a: "Envuelve el texto en dobles barras verticales: ||así||. Discord lo muestra como una barra negra que revela el texto al hacer clic. Pega tu mensaje en la pestaña de texto y añade el marcado || || por ti, con opción de ocultar cada línea por separado." },
-  { q: "¿Funciona el prefijo SPOILER_ en el móvil?", a: "Sí. El prefijo SPOILER_ lo lee Discord en escritorio, web y móvil, así que una imagen renombrada se difumina en todas partes. En la app móvil también puedes mantener pulsada la miniatura del adjunto y elegir 'Marcar como Spoiler' antes de enviar." },
-  { q: "¿La herramienta de spoiler es privada?", a: "Sí. El marcado de texto se genera en tu navegador y las imágenes solo se renombran localmente — nada se sube a un servidor. La vista previa difuminada se dibuja con CSS en tu dispositivo para que confirmes el efecto antes de enviar." }
+  { q: "¿Cómo se hace un spoiler en Discord?", a: "Envuelve el texto en dobles barras verticales, como ||esto||, y Discord lo oculta tras una barra gris difuminada que se revela al hacer clic. En la caja de mensaje también puedes seleccionar las palabras y pulsar Ctrl+Shift+S (Cmd+Shift+S en Mac) para añadir las barras. Pega tu mensaje en la pestaña de texto y el marcado se inserta por ti." },
+  { q: "¿Cómo marco una imagen como spoiler en Discord?", a: "Para ocultar una imagen o vídeo subido, haz clic en el icono del ojo en la vista previa antes de enviar, o renombra el archivo para que empiece por SPOILER_. En ambos casos Discord muestra el adjunto difuminado hasta que alguien hace clic. La pestaña de imagen renombra tu archivo a SPOILER_tuarchivo para que se suba ya oculto, sin clics extra." },
+  { q: "¿Por qué no funciona mi spoiler de Discord en el móvil?", a: "La causa más común es un espacio sobrante dentro de las barras: ||texto|| funciona, pero || texto || no. Comprueba que las dobles barras tocan las palabras por ambos lados y que usaste dos barras, no una. El marcado || || y el prefijo SPOILER_ funcionan en la app móvil, así que un spoiler bien formado se difumina en cualquier dispositivo." },
+  { q: "¿Cuál es el atajo de teclado para añadir un spoiler en Discord?", a: "Selecciona el texto en la caja de mensaje y pulsa Ctrl+Shift+S en Windows o Linux, o Cmd+Shift+S en Mac, y Discord envuelve tu selección en el marcado || || automáticamente. Es lo mismo que escribir las barras a mano, solo que más rápido. También puedes teclear las dos barras verticales alrededor de las palabras si lo prefieres." },
+  { q: "¿Esta herramienta de spoiler sube mis imágenes a un servidor?", a: "No. El marcado de texto se genera en tu navegador y las imágenes solo se renombran en tu dispositivo — los bytes del archivo nunca salen de tu equipo. La vista previa difuminada es un efecto CSS dibujado localmente para que confirmes el spoiler antes de publicarlo. No hay cuenta, ni subida, ni seguimiento." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Plano Técnico del Spoiler",
+  heading: "Oculta lo que quieras con un",
+  highlight: "spoiler de Discord",
+  intro: "Un spoiler de Discord oculta el contenido tras una barra gris difuminada que solo se revela al hacer clic. Hay dos mecanismos: el marcado || || para texto y el prefijo SPOILER_ (o el icono del ojo) para los adjuntos. Así funciona cada uno en escritorio, web y móvil, todo dentro de tu navegador.",
+  steps: [
+    "Marcado de Texto (|| ||)",
+    "El Atajo de Teclado",
+    "Imágenes y Adjuntos",
+    "Procesamiento Privado en el Navegador"
+  ],
+  cards: [
+    {
+      kicker: "MARCADO DE TEXTO // 01",
+      badge: "|| ||",
+      badgeTone: "emerald" as const,
+      title: "Ocultar texto con dobles barras verticales",
+      body: [
+        "Discord interpreta dos barras verticales a cada lado de tus palabras como una etiqueta de spoiler. Escribir ||giro argumental|| muestra una barra gris y difuminada que solo revela el texto cuando el lector hace clic o toca. El marcado funciona en línea, en mitad de una frase, así que puedes ocultar una sola palabra, un enlace o un párrafo entero sin romper el resto del mensaje.",
+        "La regla que más confunde es el espaciado: las barras deben ir pegadas al texto, así que ||secreto|| funciona pero || secreto || no. La pestaña de texto de arriba añade el marcado por ti y ofrece un interruptor de 'ocultar cada línea por separado', muy útil para listas de spoilers donde cada entrada debe revelarse por su cuenta."
+      ],
+      footer: "Escribes ||el asesino es…|| — los lectores ven una barra difuminada hasta que hacen clic."
+    },
+    {
+      kicker: "ATAJO DE TECLADO // 02",
+      badge: "CTRL+SHIFT+S",
+      badgeTone: "blue" as const,
+      title: "El atajo de spoiler en la caja de mensaje",
+      body: [
+        "Añadir las barras a mano es rápido, pero Discord también incluye un atajo integrado. Selecciona el texto que quieres ocultar en la caja de mensaje y pulsa Ctrl+Shift+S en Windows o Linux, o Cmd+Shift+S en Mac. Discord envuelve tu selección en el marcado || || al instante, así que no tienes que buscar la tecla de barra ni contar barras.",
+        "El atajo y el marcado escrito producen exactamente la misma etiqueta de spoiler, así que usa el que te resulte más rápido. Si estás redactando un mensaje largo con varias revelaciones ocultas, seleccionar y pulsar el atajo para cada frase suele ser más rápido que teclear cuatro barras cada vez."
+      ]
+    },
+    {
+      kicker: "SPOILERS DE ADJUNTOS // 03",
+      badge: "SPOILER_ / ICONO OJO",
+      badgeTone: "amber" as const,
+      title: "Marcar una imagen, vídeo o archivo como spoiler",
+      body: [
+        "Los adjuntos se ocultan de dos formas. En la vista previa de subida, haz clic en el icono del ojo (o marca 'Marcar como spoiler') antes de enviar, y Discord difumina la imagen, el vídeo o el archivo tras un clic. En la app móvil, toca el adjunto tras seleccionarlo y elige 'Marcar como Spoiler' en el menú.",
+        "La segunda vía es el prefijo del nombre: renombra arte.png a SPOILER_arte.png y se sube ya oculto, sin ninguna casilla. El prefijo es la opción más fiable para arrastrar archivos en lote o publicar desde un bot, porque no depende de la interfaz. La pestaña de imagen de arriba renombra tu archivo a esa forma exacta y te da una copia lista para enviar."
+      ],
+      footer: "Los archivos con spoiler siguen contando para el límite de tamaño de subida de Discord — comprime primero los archivos grandes."
+    },
+    {
+      kicker: "PRIVACIDAD POR DISEÑO // 04",
+      badge: "CERO SUBIDAS",
+      badgeTone: "purple" as const,
+      title: "Nada sale de tu dispositivo",
+      body: [
+        "Todo aquí funciona localmente. El marcado de texto se construye con manejo simple de cadenas y tu imagen solo se renombra en el navegador — los bytes del archivo nunca se envían a un servidor. La vista previa difuminada que ves es un efecto CSS dibujado en tu propia máquina, para que confirmes que el spoiler se ve bien antes de publicar.",
+        "Eso es clave para el propósito mismo de un spoiler: las capturas sensibles, las filtraciones de la trama y las sorpresas quedan privadas hasta el momento en que un lector decide mirar. No hay cuenta que crear, ni paso de subida, ni seguimiento — copias el marcado o descargas el archivo renombrado y lo pegas directamente en Discord."
+      ],
+      footer: "Cero subidas al servidor · solo renombrado y marcado en local."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/spoiler.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
     <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
       <div class="flex items-center gap-2">
         <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
@@ -58,31 +114,10 @@ const faqSchema = {
     <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
     <SpoilerWorkspace lang="es" />
 
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Ocultar Texto con Dobles Barras</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord trata dos barras verticales a cada lado del texto como una etiqueta de spoiler. Escribir <code class="font-mono">||giro argumental||</code> muestra una barra negra que solo revela las palabras al hacer clic. Funciona en medio de una frase, así que puedes ocultar una palabra o un párrafo entero.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Difuminar una Imagen con el Prefijo SPOILER_</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord difumina automáticamente cualquier adjunto cuyo nombre empiece por <code class="font-mono">SPOILER_</code>. Renombra <code class="font-mono">arte.png</code> a <code class="font-mono">SPOILER_arte.png</code> y se sube ya oculto, sin clics extra. La pestaña de imagen renombra tu archivo a esa forma exacta.
-        </p>
-      </article>
-    </div>
+    <!-- Dossier de desplazamiento (componente compartido) -->
+    <ToolDossier {...dossier} />
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <!-- FAQ (componente compartido, misma fuente que el JSON-LD) -->
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>

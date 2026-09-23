@@ -62,6 +62,23 @@ export function generateWebPageSchema(opts: {
   });
 }
 
+/**
+ * FAQPage schema from a unified {q,a}[] shape. Single source of truth so the
+ * visible FAQ accordion and the JSON-LD never drift. Pass lang for inLanguage.
+ */
+export function generateFaqSchema(items: { q: string; a: string }[], lang?: string) {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    ...(lang ? { "inLanguage": lang } : {}),
+    "mainEntity": items.map((f) => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a }
+    }))
+  });
+}
+
 export function generateBreadcrumbSchema(items: { name: string, url: string }[]) {
   return JSON.stringify({
     "@context": "https://schema.org",

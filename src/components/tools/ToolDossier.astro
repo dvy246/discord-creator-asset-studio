@@ -1,0 +1,155 @@
+---
+import SketchUnderline from '../SketchUnderline.astro';
+
+/**
+ * Shared sticky-scroll "dossier" section generalized from the banner tool.
+ * Left: pinned progress timeline that lights up on scroll.
+ * Right: stacking cards that scale/lock via setupScrollLocking().
+ * One canonical script (was drifted into 4 copies across pages).
+ */
+export interface Props {
+  eyebrow: string;
+  heading: string;
+  highlight?: string;
+  intro: string;
+  steps: string[];
+  cards: Array<{
+    kicker: string;
+    badge: string;
+    badgeTone?: 'emerald' | 'blue' | 'amber' | 'purple';
+    title: string;
+    body: string[];
+    footer?: string;
+  }>;
+}
+
+const { eyebrow, heading, highlight, intro, steps, cards } = Astro.props;
+
+const badgeToneMap: Record<string, string> = {
+  emerald: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+  blue: 'bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF]',
+  amber: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+  purple: 'bg-purple-500/10 text-purple-600 dark:text-purple-300',
+};
+
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+
+    <!-- Left: pinned progress timeline -->
+    <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
+        <span>{eyebrow}</span>
+      </div>
+
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight leading-[1.15]">
+        {heading}{highlight && (
+          <> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">{highlight}</span><SketchUnderline color="#66A3BF" /></span></>
+        )}
+      </h2>
+
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed">{intro}</p>
+
+      <div class="relative pl-6 space-y-5 select-none pt-2">
+        <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
+        <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
+        {steps.map((label, i) => (
+          <div class:list={["scroll-step-indicator flex items-center gap-3.5", i === 0 ? "text-[#3368A0] dark:text-[#66A3BF] font-bold" : "text-[#6B7A90] opacity-70"]} data-step={i + 1}>
+            <span class:list={["step-dot w-5 h-5 rounded-full border-2 bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10", i === 0 ? "border-current scale-110" : "border-[#D0C9BD] dark:border-[#35435C]"]}>{i + 1}</span>
+            <span class="text-xs sm:text-sm">{pad(i + 1)} / {label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Right: stacking cards -->
+    <div class="lg:col-span-7 relative pb-16">
+      {cards.map((card, i) => (
+        <div class="sticky-step-wrapper sticky mb-16 transition-transform duration-200 ease-out will-change-transform" style={`top: ${96 + i * 16}px; z-index: ${(i + 1) * 10};`}>
+          <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
+            <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
+              <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">{card.kicker}</span>
+              <span class:list={["text-[10px] font-mono px-2 py-0.5 rounded font-bold", badgeToneMap[card.badgeTone ?? 'blue']]}>{card.badge}</span>
+            </div>
+            <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mb-3">{card.title}</h3>
+            {card.body.map((para) => (
+              <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">{para}</p>
+            ))}
+            {card.footer && (
+              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
+                <span class="text-[#0D9488] font-bold">✓</span>
+                <span>{card.footer}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<script>
+  // Canonical dossier driver — one bundled module, deduped by Astro across every
+  // tool page. Idempotent + re-armed on view transitions.
+  function setupScrollLocking() {
+    const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
+    const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
+    const progressBar = document.getElementById('scroll-progress-line');
+    if (!cardWrappers.length) return;
+
+    function updateCardStack() {
+      let activeIndex = 0;
+      cardWrappers.forEach((wrapper, index) => {
+        const rect = wrapper.getBoundingClientRect();
+        const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
+        if (rect.top <= stickyTop + 8) activeIndex = index;
+
+        const nextCard = cardWrappers[index + 1];
+        if (nextCard) {
+          const nextRect = nextCard.getBoundingClientRect();
+          const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
+          const transitionDist = 180;
+          if (nextRect.top < nextStickyTop + transitionDist) {
+            const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
+            wrapper.style.transform = `scale(${1 - progress * 0.035})`;
+            wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
+          } else {
+            wrapper.style.transform = 'scale(1)';
+            wrapper.style.filter = 'brightness(1)';
+          }
+        } else {
+          wrapper.style.transform = 'scale(1)';
+          wrapper.style.filter = 'brightness(1)';
+        }
+      });
+
+      stepIndicators.forEach((ind, i) => {
+        const dot = ind.querySelector('.step-dot');
+        if (i <= activeIndex) {
+          ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+          ind.classList.remove('text-[#6B7A90]', 'opacity-70');
+          dot?.classList.add('border-current', 'scale-110');
+          dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
+        } else {
+          ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
+          ind.classList.add('text-[#6B7A90]', 'opacity-70');
+          dot?.classList.remove('border-current', 'scale-110');
+          dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
+        }
+      });
+
+      if (progressBar && cardWrappers.length > 1) {
+        progressBar.style.height = `${(activeIndex / (cardWrappers.length - 1)) * 100}%`;
+      }
+    }
+
+    window.addEventListener('scroll', updateCardStack, { passive: true });
+    window.addEventListener('resize', updateCardStack, { passive: true });
+    updateCardStack();
+  }
+
+  setupScrollLocking();
+  document.addEventListener('astro:after-swap', setupScrollLocking);
+</script>

@@ -1,7 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 import StickerWorkspace from '../../../components/tools/StickerWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
 
 const pageTitle = "Creador de Stickers Discord | Exacto 320×320";
 const pageDescription = "Creador de stickers Discord: formatea a exactamente 320×320 px por debajo de 512 KiB. Soporta PNG y APNG animado. 100% en tu navegador, sin subidas.";
@@ -15,23 +17,77 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  { q: "¿Cuáles son las dimensiones exactas de un sticker de Discord?", a: "Discord exige exactamente 320×320 píxeles para todos los stickers personalizados. Cualquier desviación provoca un error de asset inválido." },
-  { q: "¿Cuál es el tamaño máximo de archivo para un sticker?", a: "Los stickers deben permanecer por debajo de 512 KiB (524.288 bytes). Los stickers animados deben ser APNG con duración máxima de 5 segundos y 60 FPS." },
-  { q: "¿Puedo usar un GIF como sticker de Discord?", a: "No directamente. Los stickers animados requieren el formato APNG. Convierte tu GIF a APNG y asegúrate de que no supere los 512 KiB." }
+  { q: "¿Qué tamaño debe tener un sticker de Discord?", a: "Cada sticker personalizado de Discord debe medir exactamente 320×320 píxeles, un cuadrado perfecto. Cualquier desviación, como 319×320, o un tamaño mayor como 640×640, provoca un error de 'asset inválido'. En el chat, Discord muestra el sticker a unos 160×160, así que asegúrate de que el detalle principal se lea con claridad a ese tamaño reducido." },
+  { q: "¿Cómo agrego stickers personalizados a mi servidor de Discord?", a: "Abre tu servidor, ve a Ajustes del Servidor → Stickers y haz clic en Subir. Añade un PNG de 320×320 (o APNG para animación) por debajo de 512 KiB, y ponle un nombre y un emoji relacionado. Necesitas el permiso Gestionar Expresiones y que el servidor tenga una ranura de sticker libre." },
+  { q: "¿Por qué no se sube mi sticker o por qué veo un error de asset inválido?", a: "Las tres causas habituales son dimensiones incorrectas, archivos demasiado grandes y formato equivocado. La imagen debe medir exactamente 320×320 píxeles, pesar menos de 512 KiB y ser PNG o APNG; los GIF se rechazan. Comprueba también que el servidor tenga una ranura libre. Esta herramienta verifica tamaño y dimensiones antes de subir." },
+  { q: "¿Cuántas ranuras de sticker tiene un servidor de Discord?", a: "Un servidor empieza con 5 ranuras de sticker personalizado. El Boost del servidor amplía el límite por niveles: el Nivel 1 lo sube a 15 ranuras, el Nivel 2 a 30 y el Nivel 3 a 60. Si el servidor pierde boosts y baja de nivel, los stickers que excedan el nuevo límite se desactivan hasta recuperar ese nivel." },
+  { q: "¿Puedo usar un GIF como sticker de Discord, o debe ser PNG o APNG?", a: "Los stickers estáticos usan PNG y los animados usan APNG; los GIF estándar no se aceptan. APNG ofrece color completo de 24 bits y transparencia suave, así que se ve mucho más limpio que un GIF de 256 colores. Se recomienda fondo transparente para un acabado troquelado. También existen stickers Lottie (.json), pero solo para algunos servidores asociados o verificados." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Plano Técnico del Sticker",
+  heading: "Diseña stickers que Discord",
+  highlight: "acepta a la primera",
+  intro: "Los stickers personalizados tienen reglas más estrictas que los emojis: un cuadrado exacto de 320×320, un tope de 512 KiB, solo PNG o APNG, y un número de ranuras que crece con el Boost del servidor. Así encaja cada requisito antes de subir.",
+  steps: [
+    "El Cuadrado Exacto 320×320",
+    "Formatos PNG y APNG",
+    "El Límite de 512 KiB",
+    "Ranuras y Boost del Servidor"
+  ],
+  cards: [
+    {
+      kicker: "REQUISITO GEOMÉTRICO // 01",
+      badge: "ESTRICTO 320×320 PX",
+      badgeTone: "emerald" as const,
+      title: "Exactamente 320×320 píxeles, sin excepciones",
+      body: [
+        "Los emojis de Discord pueden tener cualquier forma rectangular, pero los stickers personalizados son estrictos: cada sticker debe medir exactamente 320×320 píxeles. Si tu imagen se desvía aunque sea un píxel —por ejemplo 319×320— o es demasiado grande como 640×640, Discord rechaza la subida con un error de 'asset inválido' antes de llegar al servidor.",
+        "En el chat de escritorio y móvil, Discord reduce ese cuadrado a unos 160×160, así que el detalle fino debe leerse a la mitad de tamaño. Nuestro redimensionador te deja mover, ampliar y encuadrar una foto o ilustración, y luego exporta un PNG perfecto de 320×320, sin sorpresas de recorte ni cálculos manuales de lienzo."
+      ]
+    },
+    {
+      kicker: "ARQUITECTURA DE FORMATO // 02",
+      badge: "PNG / APNG",
+      badgeTone: "blue" as const,
+      title: "PNG para estáticos, APNG para animados",
+      body: [
+        "Los stickers estáticos se suben como PNG; los animados deben ser APNG (PNG animado). Se recomienda encarecidamente un fondo transparente para que tu arte se lea como una forma troquelada en lugar de quedar dentro de una caja visible. Los archivos GIF estándar no se aceptan para stickers personalizados: Discord los bloquea al subir.",
+        "El GIF está limitado a 256 colores con transparencia de bordes duros, lo que deja contornos dentados; APNG conserva color completo de 24 bits y alfa suave en cada fotograma, así que los degradados y los bordes suaves quedan limpios. También existen los stickers vectoriales Lottie (.json), pero solo un conjunto limitado de servidores asociados o verificados puede usarlos."
+      ]
+    },
+    {
+      kicker: "TOPE BINARIO // 03",
+      badge: "512 KIB MÁX",
+      badgeTone: "amber" as const,
+      title: "Mantente por debajo del límite de 512 KiB",
+      body: [
+        "Cada sticker también debe superar el tope de tamaño de Discord: mantén el archivo exportado por debajo de 512 KiB, exactamente 524.288 bytes. Parece generoso, pero las fotografías muy detalladas y las animaciones APNG de varios fotogramas superan el límite rápidamente, y un archivo demasiado grande se rechaza igual que una dimensión incorrecta.",
+        "El compresor integrado elimina el peso oculto —etiquetas EXIF de la cámara, perfiles de color y metadatos del editor— y luego optimiza el PNG para que baje de 512 KiB sin tocar visiblemente tus píxeles. Como todo se ejecuta en tu navegador, no se sube nada a ningún servidor mientras experimentas."
+      ],
+      footer: "Limpieza sin pérdidas: elimina metadatos para mantener los píxeles nítidos por debajo de 512 KiB."
+    },
+    {
+      kicker: "ECONOMÍA DE RANURAS // 04",
+      badge: "5 → 60 RANURAS",
+      badgeTone: "purple" as const,
+      title: "Las ranuras de sticker crecen con el Boost",
+      body: [
+        "Un servidor nuevo incluye 5 ranuras de sticker personalizado. El Boost del servidor amplía ese tope por niveles: el Nivel 1 te lleva a 15 ranuras, el Nivel 2 a 30 y el Nivel 3 a 60. Si un servidor pierde boosts y baja de nivel, los stickers que superan el nuevo límite se desactivan hasta que vuelvas a impulsarlo.",
+        "Para añadir uno, abre Ajustes del Servidor → Stickers, haz clic en Subir, arrastra tu PNG o APNG de 320×320 y ponle un nombre más un emoji relacionado. Necesitas el permiso Gestionar Expresiones. Encuadra y exporta tu archivo aquí primero para que pase todas las comprobaciones antes de abrir ese panel."
+      ],
+      footer: "Cero subidas al servidor · Alineación en el navegador sobre lienzo 320×320."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/sticker.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
     <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
       <div class="flex items-center gap-2">
         <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
@@ -76,32 +132,10 @@ const faqSchema = {
     <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
     <StickerWorkspace lang="es" />
 
+    <!-- Dossier de desplazamiento (componente compartido) -->
+    <ToolDossier {...dossier} />
 
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Dimensiones Exactas de 320×320</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord exige un lienzo cuadrado exacto de 320×320 píxeles para todos los stickers personalizados. Un sticker de 319×320 provoca un error inmediato de "asset inválido". La herramienta ajusta y rellena tu arte dentro de un lienzo perfecto de 320×320.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">APNG Animado: 5 Segundos y 60 FPS</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Los stickers animados deben usar el formato APNG, con duración máxima de 5 segundos y 60 fotogramas por segundo o menos. Subir un GIF como sticker fallará a menos que se convierta a APNG.
-        </p>
-      </article>
-    </div>
-
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <!-- FAQ (componente compartido, misma fuente que el JSON-LD) -->
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>

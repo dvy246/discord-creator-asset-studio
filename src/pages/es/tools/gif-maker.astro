@@ -1,0 +1,130 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import GifMakerWorkspace from '../../../components/tools/GifMakerWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+
+const pageTitle = "Creador de GIF para Discord | Comprime Bajo 10MB Nitro";
+const pageDescription = "Creador de GIF para Discord: convierte vídeos, recorta banners animados y optimiza avatares animados bajo el estricto límite de 10MB de Nitro. 100% en tu navegador.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/gif-maker/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/gif-maker/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Creador de GIF y Conversor de Vídeo para Discord",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Creador de GIF", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cuál es el tamaño máximo de un GIF animado para avatar o banner de Discord?", a: "Discord limita los banners y avatares de perfil animados a 10.0 MB con Nitro. Los emojis animados deben quedar bajo 256 KiB y los stickers animados bajo 512 KiB en formato APNG. Este creador apunta al límite del asset que elijas para que la exportación quepa al primer intento." },
+  { q: "¿Cómo hago un GIF de Discord a partir de un vídeo MP4 o WebM?", a: "Arrastra un clip MP4 o WebM a la herramienta, elige el destino (banner de perfil, banner de servidor, avatar o emoji) y escoge una tasa de fotogramas. Un bucle de 2 a 4 segundos a 15 FPS deja el GIF exportado holgadamente bajo el límite de 10MB de Discord." },
+  { q: "¿Por qué mi GIF de Discord se ve pixelado, borroso o lento?", a: "Las animaciones de alta resolución crecen rápido. Cuando un GIF supera los 10MB hay que comprimirlo con fuerza, lo que destroza colores y detalle. Bajar de 30 FPS a 15 FPS reduce el tamaño casi a la mitad manteniendo el movimiento fluido, así que baja los fotogramas antes de sacrificar calidad." },
+  { q: "¿Necesito Discord Nitro para subir un avatar GIF animado?", a: "Sí. Las fotos de perfil animadas, los banners animados y usar emojis personalizados animados en otros servidores requieren una suscripción activa a Discord Nitro o Nitro Basic. Los avatares estáticos PNG y JPG funcionan en cualquier cuenta sin Nitro." },
+  { q: "¿Puedo convertir un GIF de Twitter, Tenor o Giphy en un GIF de Discord?", a: "Sí. Guarda el GIF original y cárgalo aquí para reencuadrarlo a las dimensiones exactas de avatar, emoji o banner. Un GIF de Tenor o Twitter normalmente solo necesita un recorte de tamaño y una compresión ligera para caber bajo los límites de Discord, todo en tu navegador." }
+];
+
+const dossier = {
+  eyebrow: "Plano Técnico del GIF",
+  heading: "GIF animados que caben bajo el",
+  highlight: "límite de 10MB de Nitro",
+  intro: "Una grabación de pantalla en bruto casi nunca es lo bastante pequeña para Discord. El truco es recortar duración, fotogramas y dimensiones a la vez, y luego encajar la forma exacta de cada superficie. Así se alinean la matemática de compresión, los formatos y las reglas de Nitro.",
+  steps: [
+    "Matemática de Compresión",
+    "Dimensiones por Superficie",
+    "Fotogramas y Bucle",
+    "Nitro y Límites de Formato"
+  ],
+  cards: [
+    {
+      kicker: "MATEMÁTICA DE COMPRESIÓN // 01",
+      badge: "CABER BAJO 10MB",
+      badgeTone: "emerald" as const,
+      title: "Cómo un compresor de GIF alcanza el límite de 10MB",
+      body: [
+        "Un clip en bruto rara vez es lo bastante pequeño para subirlo directo a Discord. La solución es recortar tres cosas a la vez: la duración, la tasa de fotogramas y las dimensiones en píxeles. Bajar de 30 FPS a 15 FPS por sí solo reduce casi a la mitad el GIF exportado, y recortar al destino exacto —un avatar 512×512 o un banner 600×240— elimina píxeles desperdiciados que consumen tu presupuesto de bytes.",
+        "Discord Nitro sube el techo a 10.0 MB, pero un bucle limpio de 2 a 4 segundos suele quedar muy por debajo. Si en cambio apuntas a un emoji animado, el mismo clip debe caber bajo 256 KiB, así que baja las dimensiones a 128×128 y mantén el bucle corto y simple."
+      ],
+      footer: "Todo se codifica en tu navegador con gifenc — sin subidas, sin cola, sin marca de agua."
+    },
+    {
+      kicker: "GEOMETRÍA DE SUPERFICIE // 02",
+      badge: "5:2 / 16:9 / 1:1",
+      badgeTone: "blue" as const,
+      title: "Tamaños de banner, avatar y emoji descifrados",
+      body: [
+        "Cada superficie de Discord espera una forma distinta. Un banner de perfil animado usa un marco ancho 600×240 (5:2), mientras un banner de servidor es un panorámico 960×540 (16:9). Un GIF de PFP es un cuadrado 1:1 exportado a 512×512 y enmascarado en círculo, así que mantén caras y logos centrados lejos de las esquinas que se recortan.",
+        "Ya sea que conviertas un vídeo o redimensiones un GIF que ya tienes, ajustar estas dimensiones antes de subir evita que Discord estire o recorte la animación de forma inesperada. El creador reencuadra tu fuente al destino con un recorte centrado para que el sujeto importante quede a la vista."
+      ]
+    },
+    {
+      kicker: "AJUSTE DE MOVIMIENTO // 03",
+      badge: "BUCLE 2-4 SEG",
+      badgeTone: "amber" as const,
+      title: "Fotogramas y duración de bucle que lucen bien",
+      body: [
+        "Discord repite los GIF de perfil automáticamente y pausa las animaciones de banner tras unos 5 segundos salvo que alguien pase el cursor. Eso hace del bucle continuo de 2 a 4 segundos el punto ideal: suficiente para sentirse vivo, corto para seguir siendo diminuto. Los clips más largos suman tamaño, no impacto.",
+        "La tasa de fotogramas es la mayor palanca de tamaño tras la duración. 15 FPS se ve fluido para casi todo movimiento y es el valor recomendado; 30 FPS duplica los bytes con retornos decrecientes; 12 FPS encaja en ediciones lo-fi o anime donde un ligero salto queda estético. Elige la tasa más baja que aún se lea como fluida."
+      ],
+      footer: "Los bucles se pausan tras ~5s sin cursor — pon delante el movimiento que importa."
+    },
+    {
+      kicker: "PROTOCOLOS DE PERMISO // 04",
+      badge: "REQUIERE NITRO",
+      badgeTone: "purple" as const,
+      title: "Nitro, límites de emoji y formatos de sticker",
+      body: [
+        "Los avatares animados, los banners animados y los emojis personalizados animados usados en otros servidores requieren Nitro o Nitro Basic. Antes de exportar, confirma que la cuenta o el servidor tiene el nivel correcto para que la subida no sea rechazada en silencio ni se muestre como un fotograma estático al resto.",
+        "Los límites de formato difieren por asset: un emoji animado debe caber en 128×128 bajo 256 KiB, y los stickers animados usan APNG a 320×320 bajo 512 KiB en vez de GIF. Los ajustes de Compresión del creador se mapean directo a estos techos, así que elegir «Límite emoji» cuantiza colores y fotogramas lo bastante para pasar la barrera de 256 KiB."
+      ],
+      footer: "Los ajustes de compresión se mapean 1:1 a los techos de 10MB / 256 KiB / 512 KiB de Discord."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/gif-maker.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <!-- Breadcrumb & Header -->
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Creador de GIF</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Creador de GIF para Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Convierte MP4, WebM o clips en GIF animados optimizados para Discord bajo el estricto techo de 10MB de Nitro.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Calibrado a 10MB Nitro
+        </div>
+      </div>
+    </div>
+
+    <!-- Herramienta interactiva (mismo componente de workspace EN + ES) -->
+    <GifMakerWorkspace lang="es" />
+
+    <!-- Dossier técnico de desplazamiento (componente compartido) -->
+    <ToolDossier {...dossier} />
+
+    <!-- FAQ (componente compartido, misma fuente que el JSON-LD) -->
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
+  </div>
+</Layout>

@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import AnsiWorkspace from '../../components/tools/AnsiWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Colored Text Generator | ANSI Codes";
 const pageDescription = "Free Discord colored text generator: style words with ANSI color codes and copy a ready-to-paste code block. Bold, underline, live preview.";
@@ -19,41 +21,67 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Colored Text Generator", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "How do I make colored text in Discord?", a: "Discord colors text inside a code block written with the ansi language tag. This generator does the escape codes for you: type your text, select a part, pick a color, then copy. Paste the result into Discord and the triple-backtick ansi block renders in color on desktop and web." },
+  { q: "Why is my Discord colored text showing as plain code or not working?", a: "Discord only colors ANSI code blocks on desktop and the web app. Older mobile builds show the block as plain monospaced text without color, and if you drop a backtick or the ansi tag, the whole thing renders as literal text. Copy the full block from this tool to keep the fence intact." },
+  { q: "What colors can I use in Discord ANSI text?", a: "Discord supports eight foreground colors (gray, red, green, gold, blue, pink, cyan, white) and eight background highlights, plus bold and underline. They map to standard ANSI SGR codes 30-37 and 40-47, rendered with Discord's Solarized-style palette — so shades look slightly muted rather than pure primary colors." },
+  { q: "Does Discord colored text work in usernames, nicknames, or bios?", a: "No. ANSI colors only appear inside a code block in messages. Names, nicknames, and About Me are plain text, so the code-block markup would show literally there. For styled names use a Unicode font generator instead, which swaps letters for styled Unicode glyphs." },
+  { q: "How do I make colored text on the Discord mobile app?", a: "Build the ansi block on desktop or here in the browser, then copy and paste it into a mobile message. Newer versions of the Discord mobile app now render ANSI colors; on older builds the same message stays readable as plain monospaced text, so nothing breaks for those viewers." }
+];
+
+const dossier = {
+  eyebrow: "Colored Text Blueprint",
+  heading: "Coloring chat with",
+  highlight: "ANSI code blocks",
+  intro: "Discord has no color picker for chat — the trick is a code block tagged ansi, where Discord reads terminal-style escape codes and paints each run of text. Here is how the block, the palette, and the clients fit together.",
+  steps: [
+    "The ansi Code Block",
+    "Colors, Backgrounds & SGR Codes",
+    "Stacking Styles & Copy",
+    "Where It Renders"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "How do I make colored text in Discord?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Discord colors text inside a code block written with the ansi language tag. This generator does the escape codes for you: type your text, select a part, pick a color, then copy. Paste the result into Discord and the triple-backtick ansi block renders in color."
-      }
+      kicker: "SYNTAX ANATOMY // 01",
+      badge: "```ansi FENCE",
+      badgeTone: "emerald" as const,
+      title: "Why a code block is what makes text colored",
+      body: [
+        "Discord exposes no color button in chat. What actually tints text is a code block opened with a triple backtick and the ansi language tag. Inside that fence, Discord reads classic ANSI escape codes — the same SGR sequences a terminal uses — and colors each run accordingly.",
+        "This tool writes those escape sequences for you, so you never type a raw control character. Select text, tap a color, and it wraps your words in the right codes. The key rule: the whole message must stay inside one ansi fence, or Discord renders the codes as literal text instead of color."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "Why is my colored text showing as plain code?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Discord only colors ANSI code blocks on desktop and the web app. Older versions of the mobile app show the block as plain monospaced text without color. The words still read fine — they simply are not tinted on those clients."
-      }
+      kicker: "PALETTE REGISTER // 02",
+      badge: "8 FG / 8 BG",
+      badgeTone: "blue" as const,
+      title: "The eight colors, highlights, bold and underline",
+      body: [
+        "Discord's ANSI mode supports eight foreground colors — gray, red, green, gold, blue, pink, cyan, and white — plus eight background highlights and the bold and underline attributes. These map to standard SGR codes 30-37 for text and 40-47 for backgrounds.",
+        "Because Discord renders them with a Solarized-style palette, the colors look slightly muted and warm rather than harsh primaries. That is why 'green' reads olive-tinted and 'blue' looks softened — it is by design, and previewing here shows the exact shade before you paste."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "What colors can I use in Discord ANSI text?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Discord supports eight foreground colors (gray, red, green, gold, blue, pink, cyan, white) and eight background highlights, plus bold and underline. They map to standard ANSI SGR codes 30-37 and 40-47, rendered with Discord's Solarized-style palette."
-      }
+      kicker: "COMPOSITION FLOW // 03",
+      badge: "STACKABLE",
+      badgeTone: "amber" as const,
+      title: "Stacking styles with a live preview",
+      body: [
+        "Styles stack. Select a phrase and click a text color, then click again to add a background highlight, bold, or underline on the same run. The preview updates live and mirrors how Discord will actually render the finished block.",
+        "When it looks right, copy the block with one tap. The output is a ready-to-paste triple-backtick ansi fence — drop it into any channel or DM and your styled words turn to color. Everything runs in your browser, so nothing you type is uploaded anywhere."
+      ],
+      footer: "Live preview mirrors Discord's render — copy a ready ansi fence, paste anywhere."
     },
     {
-      "@type": "Question",
-      "name": "Does colored text work in usernames or bios?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. ANSI colors only appear inside a code block in messages. Names, nicknames, and About Me are plain text, so the code block markup would show literally there. For styled names use a Unicode font instead."
-      }
+      kicker: "CLIENT COVERAGE // 04",
+      badge: "DESKTOP / WEB",
+      badgeTone: "purple" as const,
+      title: "Where colored text shows up (and where it doesn't)",
+      body: [
+        "ANSI color renders in messages on Discord desktop and the web app, and on newer mobile builds. Older mobile versions show the same block as plain monospaced text — still readable, simply not tinted — so your message never breaks for anyone.",
+        "Colored text does not work in usernames, nicknames, or About Me, because those fields are plain text with no code-block support. For styled names, reach for a Unicode font generator, which substitutes styled glyphs that display everywhere."
+      ],
+      footer: "Renders in messages on desktop, web & newer mobile — not in names or bios."
     }
   ]
 };
@@ -62,7 +90,7 @@ const faqSchema = {
 <Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/colored-text.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
@@ -73,12 +101,12 @@ const faqSchema = {
       </nav>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
             <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Colored Text</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Generator</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
-          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Style text with ANSI colors • Bold &amp; underline • Copy a ready ```ansi block</p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Style text with ANSI colors • Bold &amp; underline • Copy a ready ```ansi block</p>
         </div>
-        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
           <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
           Local Browser Processing
         </div>
@@ -88,39 +116,9 @@ const faqSchema = {
     <!-- Main Workspace Layout (shared component, EN + ES) -->
     <AnsiWorkspace lang="en" />
 
-    <!-- Prose reference -->
-    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto space-y-6">
-        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">How Discord Colored Text Works</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord has no color picker for chat. What makes text colored is a <strong>code block tagged with the <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">ansi</code> language</strong>. Inside it, Discord reads classic ANSI escape codes — the same <em>SGR</em> sequences a terminal uses — and paints each run of text. This tool writes those escape codes for you, so you never touch a raw <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">[</code> sequence. Everything runs in your browser: select text, tap a color, and copy the finished block.
-        </p>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Colors stack. Select a phrase and click a text color, then click again to add a highlight, bold, or underline — the preview updates live and mirrors how Discord will render it. When you paste the copied block into any channel or DM, the triple-backtick <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">ansi</code> fence turns your styled words into color.
-        </p>
-        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">Where Colored Text Shows Up</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          ANSI color renders in <strong>messages on Discord desktop and the web app</strong>. Older mobile app builds show the same block as plain monospaced text — readable, just not tinted. Colored text does <em>not</em> work in usernames, nicknames, or About Me, because those fields are plain text with no code-block support. For styled names, use a <a href="/tools/fonts/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">Unicode font</a> instead.
-        </p>
-      </div>
-    </section>
+    <ToolDossier {...dossier} />
 
-    <!-- FAQ Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <ToolFaq items={faqItems} />
 
   </div>
 </Layout>

@@ -1,8 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import SketchUnderline from '../../../components/SketchUnderline.astro';
 import EmbedWorkspace from '../../../components/tools/EmbedWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Creador de Embeds Discord | Webhook y Vista Previa";
 const pageDescription = "Creador de embeds Discord gratis con vista previa en vivo y JSON de webhook listo para copiar. Diseña embeds ricos y envíalos a un webhook.";
@@ -21,95 +22,105 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  {
-    q: "¿Qué es un embed de Discord?",
-    a: "Un embed es la tarjeta rica y con color que un bot o webhook puede publicar en lugar de texto plano — con título, descripción, barra de color, campos, miniatura, imagen y pie. Esta herramienta te da un formulario visual y una vista previa en vivo, y luego produce el JSON exacto que espera un webhook o bot."
-  },
-  {
-    q: "¿Se guarda mi URL de webhook en algún sitio?",
-    a: "No. La URL del webhook solo se mantiene en la memoria de la página mientras la pestaña está abierta. Nunca se escribe en localStorage, nunca se incluye en el JSON copiado y nunca se envía a ningún lado salvo directamente a Discord cuando pulsas Enviar. Cierra la pestaña y desaparece."
-  },
-  {
-    q: "¿Cómo consigo una URL de webhook?",
-    a: "En tu servidor de Discord abre Ajustes del servidor → Integraciones → Webhooks → Nuevo webhook, elige un canal y pulsa Copiar URL del webhook. Necesitas el permiso Gestionar webhooks. Pega esa URL en la caja de envío para publicar tu embed en ese canal."
-  },
-  {
-    q: "¿Puedo usar este JSON con un bot?",
-    a: "Sí. Pulsa Copiar JSON y coloca el array embeds en cualquier librería de bots — discord.js, discord.py o una llamada REST directa. El color se emite como el entero decimal que Discord espera y los campos vacíos se omiten para que el payload siga siendo válido."
-  }
+  { q: "¿Qué es un embed de Discord?", a: "Un embed es la tarjeta rica y con color que un bot o webhook puede publicar en lugar de texto plano — con título, descripción, barra de color, campos, miniatura, imagen y pie. Esta herramienta te da un formulario visual y una vista previa en vivo, y luego produce el JSON exacto que espera un webhook o bot." },
+  { q: "¿Cómo consigo una URL de webhook de Discord?", a: "En tu servidor de Discord abre Ajustes del servidor → Integraciones → Webhooks → Nuevo webhook, elige un canal y pulsa Copiar URL del webhook. Necesitas el permiso Gestionar webhooks. Pega esa URL en la caja de envío para publicar tu embed directamente en ese canal." },
+  { q: "¿Se guarda mi URL de webhook en algún sitio?", a: "No. La URL del webhook solo se mantiene en la memoria de la página mientras la pestaña está abierta. Nunca se escribe en localStorage, nunca se incluye en el JSON copiado y nunca se envía a ningún lado salvo directamente a Discord cuando pulsas Enviar. Cierra la pestaña y desaparece." },
+  { q: "¿Puedo usar este JSON con un bot como discord.js o discord.py?", a: "Sí. Pulsa Copiar JSON y coloca el array embeds en cualquier librería de bots — discord.js, discord.py o una llamada REST directa. El color se emite como el entero decimal que Discord espera y los campos vacíos se omiten para que el payload siga siendo válido." },
+  { q: "¿Cuáles son los límites de un embed de Discord (caracteres y campos)?", a: "Discord limita un embed a 256 caracteres en el título, 4096 en la descripción, 25 campos (nombre de 256 y valor de 1024 caracteres cada uno), 2048 en el pie y 6000 caracteres en total entre los embeds de un mensaje. Esta herramienta refleja la vista previa en vivo para que detectes un desbordamiento antes de enviar." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "inLanguage": "es",
-  "mainEntity": faqItems.map((item) => ({
-    "@type": "Question",
-    "name": item.q,
-    "acceptedAnswer": { "@type": "Answer", "text": item.a }
-  }))
+const dossier = {
+  eyebrow: "Plano del Creador de Embeds",
+  heading: "De un formulario visual a",
+  highlight: "JSON de webhook válido",
+  intro: "Un embed de Discord es una tarjeta estructurada con campos y límites estrictos, publicada por un webhook o bot como JSON. Así encajan la anatomía, la vista previa en vivo, la salida JSON y el paso de envío — todo en tu navegador.",
+  steps: [
+    "Anatomía del Embed",
+    "Vista Previa Visual en Vivo",
+    "Salida JSON del Webhook",
+    "Envío y Privacidad"
+  ],
+  cards: [
+    {
+      kicker: "MAPA DE ESTRUCTURA // 01",
+      badge: "TÍTULO / CAMPOS / IMAGEN",
+      badgeTone: "emerald" as const,
+      title: "Cada parte de una tarjeta embed rica",
+      body: [
+        "Un embed es la tarjeta rica y con color que un bot o webhook publica en lugar de texto plano. Tiene una barra lateral de color, una fila de autor con icono, un título y descripción, hasta 25 campos en línea o apilados, una miniatura pequeña, una imagen grande y un pie con marca de tiempo.",
+        "Esta herramienta expone cada una de esas partes como un control de formulario simple, así compones la tarjeta sin escribir a mano ni una sola llave. Los campos que dejas vacíos se descartan de la salida, lo que mantiene el payload válido y evita los errores de objeto vacío que rompen la publicación de un webhook."
+      ]
+    },
+    {
+      kicker: "VISTA PREVIA WYSIWYG // 02",
+      badge: "EN VIVO CON CADA TECLA",
+      badgeTone: "blue" as const,
+      title: "Velo exactamente como lo verá tu servidor",
+      body: [
+        "La vista previa de la derecha se redibuja con cada tecla, igualando el espaciado, los colores y el recorte propios de Discord. Lo que ves es lo que ve tu canal — incluido cómo se ajusta un título largo y dónde cae el color de la barra lateral.",
+        "Como la vista previa refleja los límites reales de Discord, detectas el desbordamiento antes de publicar: una descripción de más de 4096 caracteres o un campo número 26 aparece aquí primero. Sin ida y vuelta a un canal de prueba, sin mensajes borrados limpiando tras un envío fallido."
+      ]
+    },
+    {
+      kicker: "SALIDA DE PAYLOAD // 03",
+      badge: "COPIAR JSON",
+      badgeTone: "amber" as const,
+      title: "El JSON que espera un webhook o bot",
+      body: [
+        "El panel JSON del webhook siempre refleja tu embed como un payload válido. Cópialo en discord.js, discord.py o una llamada REST directa — el color se emite como el entero decimal que Discord espera, no como cadena hex, y las partes vacías se descartan para que el payload nunca falle.",
+        "Esto hace de la herramienta un andamio rápido para desarrolladores de bots: diseña visualmente, copia el array embeds y pégalo directo en tu manejador de comandos. La salida se mantiene sincronizada con la vista previa, así que la tarjeta que aprobaste es la que envía tu código."
+      ],
+      footer: "El color se emite como el entero decimal que Discord espera — pégalo directo en discord.js o discord.py."
+    },
+    {
+      kicker: "ENTREGA Y CONFIANZA // 04",
+      badge: "URL NUNCA GUARDADA",
+      badgeTone: "purple" as const,
+      title: "Envía a un canal sin filtrar la URL",
+      body: [
+        "Para publicar ahora, pega una URL de webhook en la caja de envío y haz clic una vez — el embed aterriza en ese canal. La URL del webhook se mantiene en la memoria de la página solo mientras la pestaña está abierta.",
+        "Nunca se escribe en almacenamiento, nunca se incluye en el JSON copiado y nunca se envía a ningún lado salvo directamente a la API de Discord en el envío que tú activas. Todo lo demás corre en local sin cuenta ni registros, así que diseñar un embed no filtra nada."
+      ],
+      footer: "La URL del webhook vive solo en la memoria de la pestaña — nunca guardada, nunca en el JSON copiado."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/embed-builder.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
     <div class="mb-8">
-      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
-        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
-        <span>/</span>
-        <span class="text-[#192538] dark:text-white font-semibold">Creador de Embeds</span>
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Creador de Embeds</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
       </nav>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
-            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Creador de</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Embeds Discord</span><SketchUnderline color="#66A3BF" /></span>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Creador de Embeds Discord
           </h1>
-          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Diseña embeds ricos • Vista previa en vivo • Copia el JSON o envíalo</p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Diseña embeds ricos • Vista previa en vivo • Copia el JSON del webhook o envíalo</p>
         </div>
-        <a href={enUrl} class="text-xs text-[#3368A0] dark:text-[#66A3BF] hover:underline font-medium shrink-0">🌐 English</a>
-      </div>
-      <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs w-fit mt-3">
-        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
-        100% en el navegador · Cero subidas
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
       </div>
     </div>
 
-    <!-- Workspace (shared component) -->
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
     <EmbedWorkspace lang="es" />
 
-    <!-- Prose / SEO body -->
-    <section class="mt-14 space-y-10 text-[#334155] dark:text-[#B7C2D0] text-sm leading-relaxed">
-      <div class="space-y-3">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white">Crea un embed de Discord y velo antes de enviarlo</h2>
-        <p>Este creador de embeds Discord convierte un formulario simple en la tarjeta rica exacta que un webhook o bot publica en un canal. Define la barra de color, la fila del autor, el título, la descripción, los campos en línea, la miniatura, la imagen grande y el pie — la vista previa se actualiza con cada tecla.</p>
-        <p>Todo se ejecuta en tu navegador. Sin cuenta, sin subidas y sin registros. La única vez que esta página usa la red es cuando <em>tú</em> pulsas <strong>Enviar a Discord</strong> con tu propia URL de webhook.</p>
-      </div>
+    <ToolDossier {...dossier} />
 
-      <div class="space-y-3">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white">Copia el JSON o envíalo directo a un canal</h2>
-        <p>El panel <strong>JSON del webhook</strong> siempre refleja tu embed como un payload válido. Cópialo en <code class="px-1 py-0.5 rounded bg-[#EEF1F5] dark:bg-[#1B2534] font-mono text-xs">discord.js</code>, <code class="px-1 py-0.5 rounded bg-[#EEF1F5] dark:bg-[#1B2534] font-mono text-xs">discord.py</code> o una llamada REST directa — el color se emite como el entero decimal que Discord espera y las partes vacías se descartan para que el payload nunca falle.</p>
-      </div>
-
-      <div class="space-y-3">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white">Tu URL de webhook nunca sale de tu navegador</h2>
-        <p>La URL del webhook se mantiene en la memoria de la página solo mientras la pestaña está abierta. <strong>Nunca</strong> se guarda, nunca se incluye en el JSON copiado y nunca se envía a ningún lado salvo directamente a la API de Discord en el envío que tú activas.</p>
-      </div>
-
-      <div class="space-y-4">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white">Preguntas frecuentes</h2>
-        <div class="space-y-4">
-          {faqItems.map((item) => (
-            <div class="card-panel rounded-[12px] p-4">
-              <h3 class="font-semibold text-[#192538] dark:text-white mb-1.5">{item.q}</h3>
-              <p class="text-[#475569] dark:text-[#94A3B8]">{item.a}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>

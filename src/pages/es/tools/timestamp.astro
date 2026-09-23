@@ -1,7 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import TimestampWorkspace from '../../../components/tools/TimestampWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Generador de Marcas de Tiempo Discord | Dinámicas";
 const pageDescription = "Generador de marcas de tiempo Discord: elige una fecha y copia el marcado <t:UNIX:F> en todos los estilos. Se ajustan a la zona horaria de cada persona.";
@@ -15,74 +17,107 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  { q: "¿Qué es una marca de tiempo de Discord?", a: "Es un marcado especial con la forma <t:UNIX:estilo> donde UNIX es el tiempo epoch en segundos. Discord lo muestra como una fecha u hora que se convierte automáticamente a la zona horaria de cada persona, así todos ven el momento en su reloj local." },
-  { q: "¿Cuáles son los códigos de formato de marca de tiempo?", a: "Hay siete letras de estilo: t (hora corta), T (hora larga), d (fecha corta), D (fecha larga), f (fecha y hora corta, por defecto), F (fecha y hora larga con día de la semana) y R (relativa, como 'en 2 horas'). Este generador produce las siete." },
-  { q: "¿Cómo uso una marca de tiempo de Discord?", a: "Elige una fecha y hora arriba, copia el código que quieras (por ejemplo <t:1735689600:F>) y pégalo en cualquier mensaje, descripción de evento o embed de Discord. Discord reemplaza el código por una marca de tiempo dinámica y con zona horaria al enviar." },
-  { q: "¿Las marcas de tiempo se actualizan solas?", a: "Sí. Las relativas (estilo R) se recalculan con el paso del tiempo, así 'en 3 horas' pasa a 'en 2 horas' por sí solo. Todos los estilos se muestran en la zona horaria del lector, ideal para programar eventos entre regiones sin listar varias zonas." }
+  { q: "¿Qué es una marca de tiempo de Discord y cómo funciona el formato <t:UNIX:estilo>?", a: "Una marca de tiempo de Discord es un marcado escrito como <t:UNIX:estilo>, donde UNIX es el tiempo epoch en segundos y la letra de estilo fija el formato. Discord reemplaza el código por una fecha con zona horaria que cada lector ve en su propio reloj local." },
+  { q: "¿Cuáles son todos los códigos de formato de marca de tiempo de Discord (t, T, d, D, f, F, R)?", a: "Hay siete letras de estilo: t (hora corta), T (hora larga con segundos), d (fecha corta), D (fecha larga), f (fecha y hora corta, por defecto), F (fecha y hora larga con día de la semana) y R (relativa, como 'en 2 horas'). Este generador produce las siete para cualquier fecha." },
+  { q: "¿Cómo obtengo la marca de tiempo Unix para un mensaje de Discord?", a: "Elige la fecha y hora que quieras en el generador de arriba y convierte tu selección a un valor epoch Unix automáticamente, luego lo envuelve en el código <t:UNIX:estilo> completo. Copia el estilo que necesites y pégalo directo en Discord, sin cálculos de epoch manuales." },
+  { q: "¿Las marcas de tiempo de Discord se ajustan a la zona horaria de cada usuario?", a: "Sí. Discord muestra el mismo código en la zona horaria local de cada lector, así una persona en Nueva York y otra en Tokio ven el momento correcto en su propia hora. Eso hace ideales las marcas de tiempo para programar eventos sin listar varias zonas horarias." },
+  { q: "¿Cómo hago un temporizador de cuenta regresiva o una marca de tiempo relativa en Discord?", a: "Usa el estilo relativo, <t:UNIX:R>. Se muestra como 'en 3 horas' o 'hace 2 días' y se recalcula solo con el paso del tiempo, así un evento cuenta regresiva de forma discreta. Elige tu fecha objetivo arriba y copia la salida en estilo R para insertar una cuenta viva en cualquier mensaje." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Plano Técnico de Marcas de Tiempo",
+  heading: "Marcas de tiempo que se adaptan a la",
+  highlight: "zona horaria de cada lector",
+  intro: "Las marcas de tiempo de Discord son más que una fecha: son marcado dinámico que se muestra en la hora local de cada persona e incluso puede contar hacia atrás por sí solo. Así encajan la sintaxis, los estilos y el motor de zona horaria.",
+  steps: [
+    "Sintaxis de la Marca",
+    "Los Siete Códigos de Estilo",
+    "Conversión Automática de Zona",
+    "Cuentas Regresivas y Eventos"
+  ],
+  cards: [
+    {
+      kicker: "ANATOMÍA DE SINTAXIS // 01",
+      badge: "<t:UNIX:ESTILO>",
+      badgeTone: "emerald" as const,
+      title: "El marcado <t:UNIX:estilo>, descifrado",
+      body: [
+        "Toda marca de tiempo de Discord sigue un patrón: una apertura <t:, un tiempo epoch Unix medido en segundos desde el 1 de enero de 1970, dos puntos, una letra de estilo opcional y un cierre >. Por ejemplo, <t:1735689600:F> apunta a un instante preciso, y la F le dice a Discord que lo muestre como fecha y hora larga.",
+        "El número epoch es el mismo para todo el planeta: es el ancla neutral respecto a la zona horaria. La letra de estilo es puramente cosmética. Como nunca escribes una fecha humana directamente, no hay ambigüedad de orden día-mes ni AM/PM: eliges un momento arriba y el generador produce el código exacto que Discord espera."
+      ]
+    },
+    {
+      kicker: "REGISTRO DE ESTILOS // 02",
+      badge: "7 LETRAS DE ESTILO",
+      badgeTone: "blue" as const,
+      title: "Los siete códigos de estilo y cuándo usar cada uno",
+      body: [
+        "Discord admite siete estilos: t hora corta, T hora larga con segundos, d fecha corta, D fecha larga, f fecha y hora corta (por defecto cuando no se da letra), F fecha y hora larga con día de la semana, y R relativa. Cada uno lee el mismo epoch subyacente pero lo enmarca distinto.",
+        "Usa D o F para anuncios puntuales donde importa la fecha completa, t para horas rápidas dentro de una frase, y R para lo que deba sentirse vivo. El generador muestra una vista previa de los siete a la vez, así copias con un clic el estilo que se lea más natural en tu mensaje."
+      ]
+    },
+    {
+      kicker: "MOTOR DE ZONA HORARIA // 03",
+      badge: "AUTO-LOCALIZADO",
+      badgeTone: "amber" as const,
+      title: "Por qué cada lector ve su propia hora local",
+      body: [
+        "La mayor razón para usar marcas de tiempo es la seguridad de zona horaria. En vez de escribir 'la raid empieza a las 8 PM EST / 1 AM UTC / 10 AM JST', publicas un código <t:UNIX:F> y Discord lo convierte al reloj del dispositivo de cada miembro automáticamente. Nadie hace cálculos y nadie llega una hora antes.",
+        "Esto funciona porque el valor epoch es absoluto. El cliente de Discord lee la zona horaria del sistema operativo al mostrar y formatea el momento en consecuencia, así el mismo mensaje es correcto para un lector en Los Ángeles, Londres o Sídney."
+      ],
+      footer: "Un código, correcto en cada zona horaria — sin listar EST / UTC / JST a mano."
+    },
+    {
+      kicker: "RENDERIZADO DINÁMICO // 04",
+      badge: "CUENTA ESTILO R",
+      badgeTone: "purple" as const,
+      title: "Cuentas regresivas vivas para eventos y horarios",
+      body: [
+        "El estilo relativo, <t:UNIX:R>, es el único que cambia después de enviarlo. Se muestra como 'en 3 horas' antes de un evento y pasa a 'hace 2 horas' después, recalculándose cada vez que se ve el mensaje. Eso lo hace perfecto para descripciones de eventos, fines de sorteo y avisos de mantenimiento programado.",
+        "Combina un estilo fijo con uno relativo para lo mejor de ambos: por ejemplo 'Empieza <t:UNIX:F> (<t:UNIX:R>)' muestra la fecha local exacta y una cuenta regresiva que se actualiza sola, lado a lado. Todo se genera en tu navegador, sin cuenta, sin subida ni rastreo."
+      ],
+      footer: "El estilo R se recalcula en cada vista — una cuenta regresiva que se mantiene sola."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/timestamp.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
-      <div class="flex items-center gap-2">
-        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
-        <span>/</span>
-        <span class="text-[#192538] dark:text-white font-semibold">Marcas de Tiempo</span>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Marcas de Tiempo</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Generador de Marcas de Tiempo Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Elige una fecha y copia el marcado &lt;t:UNIX:estilo&gt; en los siete estilos • Se ajusta a la zona horaria de cada lector.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
       </div>
-      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
-    </nav>
-
-    <header class="mb-8">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
-        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
-        100% en el navegador · Cero subidas
-      </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
-        Generador de Marcas de Tiempo Discord
-      </h1>
-      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
-        Elige una fecha y copia el marcado <strong>&lt;t:UNIX:estilo&gt;</strong> en los siete estilos. Cada marca se muestra en la zona horaria de cada persona automáticamente.
-      </p>
-    </header>
-
-    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
-    <TimestampWorkspace lang="es" />
-
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Cómo Funcionan las Marcas de Tiempo</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Una marca de tiempo es un marcado con la forma <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">&lt;t:UNIX:estilo&gt;</code>. La parte UNIX es el número de segundos desde 1970 y la letra de estilo controla el formato. Discord la muestra distinta a cada lector: alguien en Nueva York y alguien en Tokio ven el mismo momento en su hora local, sin conversión manual.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Los Siete Códigos de Estilo</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord admite siete letras: <strong>t</strong> hora corta, <strong>T</strong> hora larga, <strong>d</strong> fecha corta, <strong>D</strong> fecha larga, <strong>f</strong> fecha y hora corta (por defecto), <strong>F</strong> fecha y hora larga con día, y <strong>R</strong> relativa. El generador muestra una vista previa en vivo de cada uno para copiar con un clic.
-        </p>
-      </article>
     </div>
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <!-- Herramienta interactiva (mismo componente de workspace EN + ES) -->
+    <TimestampWorkspace lang="es" />
+
+    <!-- Dossier técnico de desplazamiento (componente compartido) -->
+    <ToolDossier {...dossier} />
+
+    <!-- FAQ (componente compartido, misma fuente que el JSON-LD) -->
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>

@@ -1,88 +1,126 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import FancyTextWorkspace from '../../../components/tools/FancyTextWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Generador de Fuentes Discord | Letras Bonitas";
 const pageDescription = "Generador de fuentes Discord: convierte texto en fuentes Unicode que puedes copiar y pegar en nombres, biografías y chat. Estilos legibles. En el navegador.";
 const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/fonts/";
 const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/fonts/";
 
-const appSchema = generateSoftwareApplicationSchema("Generador de Fuentes para Discord", pageDescription, pageUrl);
+const appSchema = generateSoftwareApplicationSchema(
+  "Generador de Fuentes para Discord",
+  pageDescription,
+  pageUrl
+);
+
 const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
   { name: "Generador de Fuentes", url: pageUrl }
 ]);
 
 const faqItems = [
-  { q: "¿Son fuentes reales de Discord?", a: "No. Discord no tiene un selector de fuentes. Estos estilos se crean con caracteres Unicode parecidos a letras — el mismo estándar que da los emojis y letras acentuadas. Como son texto normal, puedes pegarlos donde Discord acepte texto, sin Nitro ni bot." },
-  { q: "¿Dónde puedo usar el texto bonito?", a: "Funciona en tu nombre para mostrar, apodo del servidor, nombres de roles, nombre del servidor, nombres de canales y en Sobre mí. No funciona en el @usuario, que Discord limita a minúsculas, números, guiones bajos y puntos." },
-  { q: "¿Por qué algunos textos se ven como recuadros?", a: "Los recuadros vacíos (tofu) aparecen cuando la fuente del dispositivo no incluye ese carácter Unicode. Los estilos decorativos suelen fallar más en móviles antiguos. Usa los estilos legibles de arriba para la mayor compatibilidad." },
-  { q: "¿El texto bonito afecta la búsqueda de Discord?", a: "Puede hacerlo. Discord trata el Unicode con estilo como caracteres distintos de las letras normales, así que un apodo con fuente bonita puede no aparecer en búsquedas o menciones. Úsalo para dar estilo, pero mantén en texto normal lo que necesites buscar." }
+  { q: "¿Cómo pongo texto en negrita en un nombre de usuario de Discord?", a: "Escribe tu nombre en el generador y copia el estilo en negrita (𝐛𝐨𝐥𝐝) de los resultados. Pégalo en Ajustes → Perfil como tu nombre para mostrar o apodo de servidor — la etiqueta @usuario no lo acepta. La **negrita** propia de Discord solo funciona dentro de los mensajes, así que este copiar y pegar Unicode es la única forma de poner un nombre en negrita." },
+  { q: "¿Por qué las fuentes de Discord se ven como recuadros o cuadrados?", a: "Esos cuadrados vacíos se llaman tofu y aparecen cuando el dispositivo que muestra tu texto no tiene un glifo para ese carácter Unicode. Los móviles antiguos y los clientes de Discord desactualizados son los culpables habituales, y los estilos decorativos como fraktur o al revés fallan con más frecuencia. Quédate con negrita, cursiva o monoespaciada para la mayor compatibilidad." },
+  { q: "¿Las fuentes bonitas de Discord van contra los Términos de Servicio o son baneables?", a: "No. Las fuentes bonitas son solo caracteres Unicode estándar, del mismo tipo que hay detrás de los emojis y las letras acentuadas, así que usarlas no infringe los Términos de Servicio de Discord ni hará que te baneen. La única pega real es la legibilidad — los lectores de pantalla anuncian los glifos como símbolos ininteligibles, así que abusar puede frustrar a otros miembros." },
+  { q: "¿Cómo consigo texto en cursiva o manuscrita en Discord?", a: "Escribe tu texto en el generador y copia el estilo manuscrito o cursiva (𝓼𝓬𝓻𝓲𝓹𝓽) de la lista. Pégalo en un apodo, una biografía o un mensaje como cualquier texto — sin necesidad de Nitro. La manuscrita es uno de los conjuntos más decorativos, así que puede verse como recuadros en dispositivos antiguos; pruébala antes de usarla mucho." },
+  { q: "¿Funcionan estas fuentes en los apodos de Discord y en la sección Sobre mí?", a: "Sí. Como la salida es Unicode normal y no markdown, funciona en los apodos de servidor, tu nombre para mostrar y el Sobre mí de tu perfil, además de en los nombres de roles, servidores y canales. El único sitio donde falla es la etiqueta @usuario en minúsculas, que Discord limita a letras, números, guiones bajos y puntos." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Plano del Generador de Fuentes",
+  heading: "De letras normales a",
+  highlight: "texto Unicode con estilo",
+  intro: "Un generador de fuentes de Discord no cambia ninguna fuente — sustituye cada letra por un carácter Unicode parecido que copias y pegas. Así funciona el truco, dónde aterriza el texto con estilo, la variedad de estilos disponibles y las concesiones de legibilidad que conviene sopesar antes de usarlo.",
+  steps: [
+    "El Truco Unicode",
+    "Dónde Funciona",
+    "Variedad de Estilos",
+    "Legibilidad y Límites"
+  ],
+  cards: [
+    {
+      kicker: "EL TRUCO UNICODE // 01",
+      badge: "NO ES UNA FUENTE REAL",
+      badgeTone: "emerald" as const,
+      title: "Mapea letras a puntos de código con estilo",
+      body: [
+        "Una fuente bonita de Discord no es una fuente en absoluto. Discord no tiene selector de fuentes, así que este generador nunca cambia cómo se representa tu texto. En su lugar, mapea cada letra normal a un punto de código Unicode preexistente que ya se ve en negrita, cursiva, manuscrita o cuadrada. La letra b se convierte en 𝐛, una i en cursiva pasa a 𝑖, una s manuscrita pasa a 𝓼 — cada uno es su propio carácter distinto grabado en el estándar Unicode, el mismo estándar detrás de los emojis y las letras acentuadas. Nada se estiliza al vuelo; los glifos con estilo simplemente ya existen.",
+        "Ese diseño es lo que hace portable la salida. Como cada carácter con estilo es texto Unicode real, copiarlo y pegarlo funciona igual que pegar cualquier otra letra — sin Nitro, sin bot y sin ningún permiso especial. Escribe una vez en la caja de arriba y cada estilo se actualiza a la vez; pulsa Copiar en el que quieras y aterriza en tu portapapeles como caracteres normales. La trampa es que la transformación es de un solo sentido a nivel de glifo: lo que pegas es una cadena de símbolos matemáticos o manuscritos que se parecen a tu palabra, no tus letras originales con una marca de estilo."
+      ]
+    },
+    {
+      kicker: "DÓNDE FUNCIONA // 02",
+      badge: "NOMBRES / BIOS / CANALES",
+      badgeTone: "blue" as const,
+      title: "Aparece donde el markdown no puede",
+      body: [
+        "Como la salida es Unicode normal y no markdown de Discord, funciona en los muchos sitios donde el markdown no lo hace. La **negrita** y la *cursiva* propias de Discord solo se representan dentro de los mensajes — escríbelas en un nombre de usuario y solo verás los asteriscos. El Unicode con estilo no tiene ese límite. Pégalo en tu nombre para mostrar, un apodo de servidor, nombres de roles, el propio nombre del servidor, nombres de canales o el Sobre mí de tu perfil, y el estilo viaja con el texto porque está grabado en los caracteres, no aplicado por un motor de formato.",
+        "También funciona en los mensajes de chat normales, así que puedes mezclar una palabra con estilo en una frase corriente. El único campo que lo rechaza es el @usuario en minúsculas, que Discord limita a minúsculas, números, guiones bajos y puntos — esa es la etiqueta de la cuenta, distinta de tu nombre para mostrar. Cualquier otro sitio que acepte texto libre vale. Por eso existe el truco Unicode: es la única forma de meter letras en negrita o cursiva en un apodo o una biografía, ya que el formato markdown de Discord se limita al cuerpo de un mensaje."
+      ]
+    },
+    {
+      kicker: "VARIEDAD DE ESTILOS // 03",
+      badge: "MÁS DE 10 ESTILOS",
+      badgeTone: "amber" as const,
+      title: "Negrita, manuscrita, monoespaciada y más",
+      body: [
+        "El generador cubre todo el abanico de formas de letra Unicode. Tienes negrita (𝐛𝐨𝐥𝐝) y cursiva (𝑖𝑡𝑎𝑙𝑖𝑐) para un énfasis limpio, manuscrita o cursiva fluida (𝓼𝓬𝓻𝓲𝓹𝓽) para un aire decorativo de firma, y monoespaciada de ancho fijo para un aspecto de código. Más allá están los conjuntos más ornamentales: fraktur angular, doble trazo con contorno, letras dentro de círculos, caracteres de ancho completo con espaciado amplio e incluso texto al revés que voltea tu cadena de arriba abajo. Cada estilo se genera desde la misma entrada, así que una línea escrita te da todas las opciones una al lado de otra.",
+        "No todos los estilos son iguales en la práctica, por eso los legibles van arriba. La negrita, la cursiva y la monoespaciada solo cambian el peso o la forma de letras familiares, así que siguen siendo legibles de un vistazo y se representan en casi cualquier dispositivo. Los conjuntos muy decorativos — fraktur, manuscrita, dentro de círculos, al revés — cambian legibilidad por vistosidad y conviene reservarlos para un acento corto en lugar de una frase entera. Una buena regla es dar estilo a una o dos palabras, no a un párrafo completo, para que el efecto se lea como diseño intencionado y no como ruido."
+      ],
+      footer: "Los estilos legibles — negrita, cursiva, monoespaciada — van arriba; los decorativos lucen mejor como un acento corto."
+    },
+    {
+      kicker: "LEGIBILIDAD Y LÍMITES // 04",
+      badge: "ÚSALO CON MODERACIÓN",
+      badgeTone: "purple" as const,
+      title: "Las concesiones antes de pegar",
+      body: [
+        "El texto con estilo tiene costes reales. Los lectores de pantalla no saben que están pensados como letras; anuncian cada glifo por su nombre formal Unicode, así que un apodo en cursiva se lee en voz alta como una sarta de nombres de símbolos matemáticos en lugar de tu palabra real. Quien depende de tecnología de asistencia oye un galimatías. Los móviles antiguos y los clientes desactualizados pueden carecer por completo de los glifos y recurrir a recuadros vacíos — los cuadraditos apodados tofu — así que lo que en tu pantalla se ve elegante puede aparecer como □□□□ en la de otra persona. La búsqueda y las menciones de Discord también los tratan como caracteres distintos, así que un apodo bonito puede desaparecer discretamente de los resultados.",
+        "Nada de esto hará que te baneen. El texto Unicode bonito no infringe los Términos de Servicio de Discord — es texto normal, y usarlo está totalmente permitido. El límite real es la legibilidad, no el riesgo. El uso excesivo en todo un nombre o en cada mensaje se vuelve rápidamente difícil de leer y puede molestar a la gente con la que hablas. Trata estos estilos como un condimento: una sola palabra en negrita en una biografía o un acento manuscrito en un apodo se lee como personalidad, mientras que un muro de glifos decorativos solo estorba. Da estilo con moderación y funciona."
+      ],
+      footer: "No infringe los Términos de Servicio de Discord ni hará que te baneen — el único coste real es la legibilidad."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/fonts.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
-      <div class="flex items-center gap-2">
-        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
-        <span>/</span>
-        <span class="text-[#192538] dark:text-white font-semibold">Generador de Fuentes</span>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Generador de Fuentes</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Generador de Fuentes Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Escribe una vez, copia cualquier estilo • Fuentes legibles primero • Funciona en nombres, biografías y chat</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
       </div>
-      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
-    </nav>
-
-    <header class="mb-8">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
-        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
-        100% en el navegador · Cero subidas
-      </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
-        Generador de Fuentes Discord
-      </h1>
-      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
-        Escribe una vez y copia cualquier estilo. Convierte tu texto en <strong>fuentes Unicode</strong> para nombres, biografías y chat. Los estilos legibles van primero.
-      </p>
-    </header>
+    </div>
 
     <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
     <FancyTextWorkspace lang="es" />
 
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Cómo Funciona el Texto Bonito</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord no permite cambiar la fuente directamente. Lo que parece una "fuente" aquí son en realidad <strong>caracteres Unicode</strong> que se parecen a letras en negrita, cursiva, manuscrita o cuadrada. Como son texto normal, los copias y pegas como cualquier mensaje, sin Nitro ni bot. Todo ocurre en tu navegador.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Dónde Funcionan las Fuentes</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          El texto bonito es ideal para tu <strong>nombre para mostrar, apodo, nombres de roles, servidor y canales, y Sobre mí</strong>. No funciona en el <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">@usuario</code>. Ten en cuenta que puede no ser buscable y que los estilos muy decorativos pueden verse como recuadros en dispositivos antiguos — por eso los estilos legibles van primero.
-        </p>
-      </article>
-    </div>
+    <ToolDossier {...dossier} />
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>

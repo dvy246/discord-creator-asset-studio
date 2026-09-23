@@ -359,6 +359,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/gif-maker.png',
+    config: {
+      title: 'DISCORD GIF', titleLine2: 'MAKER',
+      subtitle: 'CONVERT MP4 & WEBM TO ANIMATED GIFS UNDER 10 MB NITRO',
+      tagline1: 'PROFILE 600X240 • SERVER 960X540 • AVATAR 512 • EMOJI 128',
+      tagline2: 'IN-BROWSER GIFENC ENCODE • ZERO UPLOADS',
+      badge: 'VIDEO TO DISCORD GIF • CLIENT-SIDE',
+      cards: [
+        { label: 'BANNER', desc: '10 MB' }, { label: 'EMOJI', desc: '256 KIB' },
+        { label: 'FPS', desc: '12-30' }, { label: 'SOURCE', desc: 'MP4 WEBM GIF' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/badge-maker.png',
     config: {
       title: 'DISCORD LOGO', titleLine2: 'BADGE MAKER',

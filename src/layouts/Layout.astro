@@ -67,6 +67,7 @@ const ES_NAV_ROUTES = new Set([
   '/tools/markdown/',
   '/tools/embed-builder/',
   '/tools/snowflake/',
+  '/tools/gif-maker/',
   '/guides/discord-sizes/',
 ]);
 const L = (path: string) => (lang === 'es' && ES_NAV_ROUTES.has(path) ? `/es${path}` : path);
@@ -183,7 +184,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
                     <span class="text-sm">🔰</span>
                     <div><div class="font-bold">Logo & Badge Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Text & emoji server badges</div></div>
                   </a>
-                  <a href="/tools/gif-maker/" class={MENU_ITEM}>
+                  <a href={L('/tools/gif-maker/')} class={MENU_ITEM}>
                     <span class="text-sm">🎞️</span>
                     <div><div class="font-bold">GIF Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Video to GIF under 10MB</div></div>
                   </a>
@@ -402,7 +403,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
             <a href={L("/tools/banner/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>🖼️</span> Banner Studio
             </a>
-            <a href="/tools/gif-maker/" class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
+            <a href={L('/tools/gif-maker/')} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>🎞️</span> GIF Maker
             </a>
             <a href={L("/tools/gif-compressor/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
@@ -714,7 +715,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
               <li><a href={L("/tools/embed-builder/")} class="hover:text-[#3368A0] transition-colors">Embed Builder</a></li>
               <li><a href={L("/tools/server-icon/")} class="hover:text-[#3368A0] transition-colors">Server Icon Maker (512x512)</a></li>
               <li><a href={L("/tools/badge-maker/")} class="hover:text-[#3368A0] transition-colors">Logo & Badge Maker</a></li>
-              <li><a href="/tools/gif-maker/" class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>
+              <li><a href={L('/tools/gif-maker/')} class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>
               <li><a href={L("/tools/gif-compressor/")} class="hover:text-[#3368A0] transition-colors">GIF Compressor (256 KiB)</a></li>
               <li><a href={L("/tools/snowflake/")} class="hover:text-[#3368A0] transition-colors">Snowflake Decoder</a></li>
             </ul>

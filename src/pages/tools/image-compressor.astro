@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import ImageCompressorWorkspace from '../../components/tools/ImageCompressorWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Image Compressor | Shrink Under 10 MB";
 const pageDescription = "Free Discord image compressor: shrink PNG, JPG & WebP under Discord's 10 MB upload limit without resizing. 100% private in your browser, zero uploads.";
@@ -19,41 +21,67 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Image Compressor", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "How do I compress an image for Discord?", a: "Drop your PNG, JPG, or WebP into the tool, choose a target size that matches your account's upload limit, and pick an output format. The image is redrawn on a browser canvas and re-encoded smaller; for JPEG or WebP you nudge the quality slider until it fits, then download the compressed file and attach it in Discord." },
+  { q: "What is the Discord image upload size limit?", a: "On a free Discord account the limit is 10 MB per file in chat. Nitro Basic raises it to 50 MB and full Nitro to 500 MB, while avatars and server icons have a separate 8 MB ceiling. The limit is per attachment, so one oversized image has to be compressed rather than split." },
+  { q: "How do I reduce a PNG file size without losing quality?", a: "PNG is already lossless, so a quality slider cannot shrink it. To make a PNG smaller without visible loss, reduce its color depth or its dimensions, or re-encode it as WebP, which supports transparency and lossless mode while producing a much smaller file. For flat graphics and logos those steps cut size with no quality drop you can see." },
+  { q: "JPEG vs PNG vs WebP — which is best for Discord?", a: "It depends on the image. Use PNG for transparency or crisp flat graphics that must stay lossless, and JPEG for photos you also share outside Discord. For most photos and screenshots posted in Discord, WebP wins: it renders natively in chat and packs the most detail into the fewest bytes, giving the best size-to-quality balance under the limit." },
+  { q: "Does compressing an image lower its resolution?", a: "No. Compression re-encodes the same pixels more efficiently, so the width and height stay exactly the same and the image looks just as sharp on a high-resolution display. Only resizing changes resolution. If you need an exact size like a 512×512 avatar, compress first, then use the studio's resize tool afterward." }
+];
+
+const dossier = {
+  eyebrow: "Image Compressor Blueprint",
+  heading: "From an oversized export to",
+  highlight: "a file Discord accepts",
+  intro: "Discord bounces any chat attachment over its free 10 MB limit. Instead of cropping detail away, this compressor re-encodes the same pixels into a smaller file — here is how the limit, the encoder, the format choice, and your privacy fit together, all in your browser.",
+  steps: [
+    "The 10 MB Limit",
+    "Lossy vs Lossless",
+    "Picking the Format",
+    "Local & Private"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "What is Discord's image size limit?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "On a free account, Discord caps chat uploads at 10 MB per file. Nitro Basic raises that to 50 MB and full Nitro raises it to 500 MB. Profile avatars and server icons have their own 8 MB ceiling. This Discord image compressor lets you pick the exact target that matches your account so your file clears the limit on the first try."
-      }
+      kicker: "UPLOAD CAP // 01",
+      badge: "10 MB FREE TIER",
+      badgeTone: "emerald" as const,
+      title: "Why your PNG won't upload",
+      body: [
+        "Every free Discord account caps chat attachments at 10 MB per file. That sounds generous until you try to share a 4K screenshot, a lightly edited phone photo, or a detailed piece of art — any of which can sail past the ceiling and bounce back with a \"file too large\" message. High-resolution PNGs are the worst offenders: because PNG stores every pixel losslessly, a single full-screen capture can weigh 15, 20, even 30 MB before you have added a thing. The limit is per file, so splitting an upload does not help a single large image.",
+        "Compression fixes this by shrinking the byte size while leaving the picture usable. You point the tool at a target — Discord's free 10 MB, or a higher Nitro tier if you have one — and it re-encodes the image to land under that number. Nitro Basic raises the limit to 50 MB and full Nitro to 500 MB, but the free 10 MB is the wall most people hit. Because you compress to an exact target rather than guessing, the exported file clears the limit on the first upload instead of forcing you to try, fail, and shave it down by hand."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "How do I compress an image for Discord without losing quality?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Choose WebP as the output format and keep the quality slider high. WebP packs far more detail into each byte than JPG or PNG, so most photos drop well under 10 MB with no visible difference. If you need a perfectly lossless result, pick PNG — but expect a larger file. The tool steps the quality down automatically only as far as it needs to hit your target."
-      }
+      kicker: "ENCODER SCIENCE // 02",
+      badge: "QUALITY SLIDER",
+      badgeTone: "blue" as const,
+      title: "Lossy versus lossless, explained",
+      body: [
+        "Under the hood the tool draws your image onto an HTML canvas and asks the browser to re-encode it. That single step is where the size drop happens, and how it happens depends on the format. JPEG and WebP are lossy: a quality slider lets you trade a little fine detail for a much smaller file, and at moderate settings the detail it discards is invisible to the eye. Drag the slider down and the encoder throws away high-frequency information most screens and viewers never resolve anyway, so the picture still looks clean while the byte count falls sharply.",
+        "PNG works differently. It is lossless, meaning it stores an exact copy of every pixel, so a quality slider has nothing to trade and the tool disables it for PNG output. You can still make a PNG smaller — by reducing its dimensions or its color depth — but you cannot dial quality the way you can with a lossy format. That is the core decision: lossy formats give you a smooth size-versus-quality knob, while lossless PNG guarantees a pixel-perfect result at the cost of a bigger file. Knowing which lever each format offers is what lets you hit the target without wrecking the image."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "Does compressing my image upload it anywhere?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. Every step runs locally in your browser using the HTML canvas API. Your image is never sent to a server, never stored, and never leaves your device. When you close the tab, nothing remains."
-      }
+      kicker: "FORMAT CHOICE // 03",
+      badge: "PNG / JPEG / WEBP",
+      badgeTone: "amber" as const,
+      title: "Pick the right format for the job",
+      body: [
+        "Format choice matters as much as the quality setting, and it comes down to what the image contains. Reach for PNG when you need transparency or crisp flat graphics — logos, UI mockups, pixel art, anything with hard edges or an alpha channel that must stay razor-sharp. Choose JPEG for photographs when you want the broadest compatibility with other apps and platforms outside Discord. For photos and screenshots that live inside Discord, WebP is usually the smartest default: it holds photographic detail beautifully and Discord renders it natively in chat, so there is no compatibility penalty for the smaller file.",
+        "WebP earns its reputation on the size-to-quality trade: modern block prediction and entropy coding routinely make a WebP file noticeably smaller than a JPEG at the same visual quality, and far smaller than a PNG for photographic content. The practical rule is simple. If the image has transparency or must be lossless, pick PNG. If it is a photo headed somewhere beyond Discord, JPEG is the safe bet. For nearly everything else — photos, screenshots, and rich graphics posted in Discord — WebP gives you the best balance and the smallest file that still looks right, which is exactly what you want under a hard limit."
+      ],
+      footer: "PNG for transparency, JPEG for wide compatibility, WebP for the best size-to-quality balance in Discord."
     },
     {
-      "@type": "Question",
-      "name": "Does this tool resize my image or just compress it?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "It compresses only — the pixel dimensions stay exactly the same. That keeps your image sharp on high-resolution displays. If you also need to change dimensions (for example to hit an exact 512×512 avatar or 320×320 sticker), use the matching resize tool in the studio after compressing."
-      }
+      kicker: "PRIVACY BY DESIGN // 04",
+      badge: "ZERO UPLOADS",
+      badgeTone: "purple" as const,
+      title: "Everything runs in your browser",
+      body: [
+        "Most online compressors upload your file to a server, process it there, and hand you back a download link — which means a copy of your image now lives on someone else's machine. This tool does none of that. It uses the browser's own canvas encoder, so your image is read, re-encoded, and saved entirely on your own device. Nothing is transmitted to a server, nothing is logged, and nothing is retained after you leave. There is no account to create and no queue to wait in; the work happens the instant you drop a file in, right there in the tab.",
+        "That local-only design makes the tool safe for the things you would never want to hand to a stranger's cloud: private screenshots, unreleased work assets, personal photos, client mockups under NDA. Because the image never leaves your browser, there is no upload to intercept, no server log to leak, and no retention policy to trust. When you close the tab, every trace of the file is gone from memory. You get the same convenience as an online service — drag in, compress, download — with none of the exposure that comes from sending your originals across the internet to be processed."
+      ],
+      footer: "Canvas re-encoding runs on your device — no uploads, no logs, nothing kept after you close the tab."
     }
   ]
 };
@@ -62,7 +90,7 @@ const faqSchema = {
 <Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/image-compressor.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
@@ -88,234 +116,9 @@ const faqSchema = {
     <!-- Main Workspace Layout (shared component, EN + ES) -->
     <ImageCompressorWorkspace lang="en" />
 
-    <!-- Sticky Stacking Technical Dossier (600+ Words) -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+    <ToolDossier {...dossier} />
 
-        <!-- Left Column: Pinned Progress Timeline (5 cols) -->
-        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
-            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
-            <span>Compression Blueprint</span>
-          </div>
-
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Beat the <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Discord upload limit</span><SketchUnderline color="#66A3BF" /></span> without losing sharpness.
-          </h2>
-
-          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
-            Discord rejects any chat attachment over 10 MB on a free account. Instead of cropping detail away, a smart compressor re-encodes the same pixels into a smaller file — so your screenshot, art, or photo posts instantly.
-          </p>
-
-          <div class="relative pl-6 space-y-5 select-none pt-2">
-            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
-            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
-              <span class="text-xs sm:text-sm">01 / The 10 MB Free Upload Limit</span>
-            </div>
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
-              <span class="text-xs sm:text-sm">02 / Why WebP Beats JPG & PNG</span>
-            </div>
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
-              <span class="text-xs sm:text-sm">03 / Compress vs. Resize</span>
-            </div>
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
-              <span class="text-xs sm:text-sm">04 / Private, In-Browser Processing</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Column: Stacking Sticky Dossier Cards (7 cols) -->
-        <div class="lg:col-span-7 relative pb-16 space-y-12">
-
-          <!-- Card 1 -->
-          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">UPLOAD CAP // 01</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">10 MB FREE TIER</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Discord's Per-File Upload Limits
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Every Discord account can attach files up to 10 MB each in chat for free. Nitro Basic lifts that to 50 MB, and full Nitro to 500 MB. A single 4K screenshot or a lightly edited phone photo can easily blow past the free 10 MB ceiling, which is why so many uploads bounce back with a "file too large" message.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                This Discord image compressor puts all three account tiers plus the 8 MB avatar limit in a single dropdown, so you compress to the exact number Discord will accept — not a guess.
-              </p>
-              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
-                <div>
-                  <span class="text-[#6B7A90]">Free chat limit:</span>
-                  <span class="text-[#0D9488] font-bold ml-1">10 MB per file</span>
-                </div>
-                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">Nitro: up to 500 MB</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">FORMAT SCIENCE // 02</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">WEBP WINS</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Why WebP Compresses Better Than JPG or PNG
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                WebP uses modern block-prediction and entropy coding that routinely produces files 25–35% smaller than a JPG at the same visual quality, and dramatically smaller than a PNG for photographic content. Discord displays WebP natively in chat, so there is no downside for most images.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Reach for JPEG when you need the broadest compatibility outside Discord, and PNG when you need a perfectly lossless copy or crisp transparency. Because PNG is lossless, the quality slider has no effect on it — the tool disables the slider automatically.
-              </p>
-              <div class="grid grid-cols-2 gap-3 text-xs font-mono">
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Best for photos:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">WebP</span>
-                </div>
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Best for transparency:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">PNG</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">PIXELS PRESERVED // 03</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">NO DIMENSION CHANGE</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Compression Is Not the Same as Resizing
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Resizing throws away pixels — a 4000×3000 photo becomes 1000×750, and it looks soft on a retina display. Compression keeps every pixel and instead reduces how many bytes describe them. This tool compresses only, so your image stays exactly as wide and tall as it started.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                When Discord requires an exact size — a 512×512 avatar, a 320×320 sticker, a 128×128 emoji — compress first, then use the matching resize tool in the studio. Doing both in the right order gives you the sharpest result under the limit.
-              </p>
-              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
-                <span class="text-[#0D9488] font-bold">✓ Dimensions locked:</span>
-                <span>Your export keeps the source width and height, pixel for pixel.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="sticky-step-wrapper sticky top-36 z-40">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">PRIVACY BY DESIGN // 04</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">ZERO UPLOADS</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Everything Runs in Your Browser
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Most online compressors upload your file to a server, process it there, and hand back a link. This one doesn't. It uses the browser's built-in canvas encoder, so your image is read, re-encoded, and downloaded entirely on your own device.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Nothing is transmitted, logged, or retained. That makes it safe for private screenshots, work assets, and anything you would rather not send to a stranger's cloud. Close the tab and every trace is gone.
-              </p>
-              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span>No server uploads • In-browser canvas re-encoding</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <ToolFaq items={faqItems} />
 
   </div>
-
-  <script>
-    function setupScrollLocking() {
-      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
-      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
-      const progressBar = document.getElementById('scroll-progress-line');
-      if (!cardWrappers.length) return;
-
-      function updateCardStack() {
-        let activeIndex = 0;
-        cardWrappers.forEach((wrapper, index) => {
-          const rect = wrapper.getBoundingClientRect();
-          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
-          const isLocked = rect.top <= stickyTop + 8;
-          if (isLocked) activeIndex = index;
-
-          const nextCard = cardWrappers[index + 1];
-          if (nextCard) {
-            const nextRect = nextCard.getBoundingClientRect();
-            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
-            const transitionDist = 180;
-            if (nextRect.top < nextStickyTop + transitionDist) {
-              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
-              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
-              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
-            } else {
-              wrapper.style.transform = 'scale(1)';
-              wrapper.style.filter = 'brightness(1)';
-            }
-          }
-        });
-
-        stepIndicators.forEach((ind, i) => {
-          const dot = ind.querySelector('.step-dot');
-          if (i <= activeIndex) {
-            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.add('border-current', 'scale-110');
-            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          } else {
-            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.add('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.remove('border-current', 'scale-110');
-            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          }
-        });
-
-        if (progressBar) {
-          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
-          progressBar.style.height = `${pct}%`;
-        }
-      }
-
-      window.addEventListener('scroll', updateCardStack, { passive: true });
-      updateCardStack();
-    }
-
-    setupScrollLocking();
-    document.addEventListener('astro:after-swap', setupScrollLocking);
-  </script>
 </Layout>

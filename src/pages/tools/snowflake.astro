@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import SnowflakeWorkspace from '../../components/tools/SnowflakeWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Snowflake Decoder | ID to Timestamp | Studio";
 const pageDescription = "Free Discord snowflake decoder. Turn any user, message, or server ID into its creation date, worker & process ID, and timestamp markup. 100% in-browser.";
@@ -20,43 +22,75 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  {
-    q: "What is a Discord snowflake?",
-    a: "A snowflake is the 64-bit numeric ID Discord assigns to every user, message, channel, server, and role. The first 42 bits encode the millisecond the object was created (offset from Discord's epoch of 2015-01-01), followed by an internal worker ID, process ID, and a per-process increment. Because the timestamp is baked into the ID, this snowflake decoder reads the exact creation date entirely offline."
-  },
-  {
-    q: "How does the Discord snowflake decoder find the creation date?",
-    a: "It shifts the ID right by 22 bits and adds Discord's epoch (1420070400000 ms): (snowflake >> 22) + 1420070400000. The result is the Unix millisecond timestamp of creation, which the tool renders in UTC, your local time, and a human-readable age — no API call required."
-  },
-  {
-    q: "Does this work for message, channel, and server IDs too?",
-    a: "Yes. Every Discord snowflake — user, message, channel, category, server, role, or emoji — uses the same structure, so the decoder returns a valid creation date for any of them. The optional profile card only appears for user IDs, since that is the only type the public Lanyard API can enrich."
-  },
-  {
-    q: "Is my Discord ID sent anywhere?",
-    a: "The decode itself is pure math that runs in your browser, so nothing is transmitted. The only optional network request is the profile-asset lookup, which queries the public Lanyard API for an avatar and banner and returns nothing if the user is private. No login, token, or account is ever required."
-  },
-  {
-    q: "What are the worker ID and process ID in a snowflake?",
-    a: "Discord generates IDs across a fleet of machines. The 5-bit worker ID and 5-bit process ID identify which internal generator produced the snowflake, and the 12-bit increment counts IDs made by that process within the same millisecond. They are internal metadata — interesting for debugging and verification, but not tied to your account."
-  }
+  { q: "What is a Discord ID (snowflake)?", a: "A Discord ID, or snowflake, is the unique 64-bit number Discord assigns to every object it stores — users, messages, channels, servers, roles, and emoji. It looks like a long integer such as 175928847299117063. The value is not random: its upper bits encode exactly when the object was created, which is why any ID can be decoded back into a precise timestamp." },
+  { q: "How do I find someone's Discord user ID?", a: "First enable Developer Mode under User Settings → Advanced. Then right-click any person's name or avatar — in chat, a member list, or their profile — and choose Copy ID. On mobile, long-press the user and tap Copy ID. Paste that number into the decoder above to reveal exactly when their account was created." },
+  { q: "How do I convert a Discord ID to a date/timestamp?", a: "Paste the ID into the tool and it does the math instantly: it shifts the number right by 22 bits and adds Discord's epoch, 1420070400000 milliseconds, giving the exact Unix time the object was minted. You get that moment shown in UTC, in your local timezone, and as a relative age — with no API call." },
+  { q: "How do I enable Developer Mode in Discord?", a: "Open User Settings (the gear icon), go to the Advanced tab, and toggle Developer Mode on. That single switch adds the Copy ID option to every right-click and long-press menu across the app. Without it, Discord hides raw IDs, so enabling Developer Mode is the prerequisite for grabbing any snowflake to decode here." },
+  { q: "When was my Discord account created?", a: "Copy your own user ID (enable Developer Mode, right-click your name, Copy ID) and paste it above. Because your account's creation millisecond is encoded in the ID's top 42 bits, the decoder shows the precise date and time you signed up — accurate to the second, and impossible to fake by editing a profile." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqItems.map((f) => ({
-    "@type": "Question",
-    "name": f.q,
-    "acceptedAnswer": { "@type": "Answer", "text": f.a }
-  }))
+const dossier = {
+  eyebrow: "Snowflake Decoder Blueprint",
+  heading: "From a 64-bit ID to",
+  highlight: "an exact creation date",
+  intro: "Every Discord ID is a snowflake — a 64-bit number with a timestamp baked into its highest bits. Here is how the ID is structured, how that timestamp is decoded, what the remaining bits mean, and how to grab any object's ID inside Discord — all in your browser.",
+  steps: [
+    "What a Snowflake Is",
+    "Decoding the Timestamp",
+    "The Bit Layout",
+    "Finding IDs in Discord"
+  ],
+  cards: [
+    {
+      kicker: "WHAT A SNOWFLAKE IS // 01",
+      badge: "64-BIT OBJECT ID",
+      badgeTone: "emerald" as const,
+      title: "One unique ID on every Discord object",
+      body: [
+        "A snowflake is the unique 64-bit integer Discord stamps onto everything it stores — every user account, message, channel, category, server (guild), role, and custom emoji carries one. You see them as long numbers like 175928847299117063, usually 17 to 20 digits depending on when the object was made. Because Discord operates at massive scale across many machines, it needs IDs that are guaranteed unique without a central counter, and the snowflake format solves that: each ID is minted locally yet can never collide with another anywhere in the platform.",
+        "What makes a snowflake special is that the number is not random — it is a tightly packed record of when and where it was generated. The most significant bits hold a millisecond-precision timestamp, and the lower bits hold internal machine and sequence data. That design means the ID itself is a self-contained receipt of its own creation: no database lookup and no API request are needed to learn a message's or account's exact age. This decoder simply unpacks those bit fields and translates the timestamp portion into a human date."
+      ]
+    },
+    {
+      kicker: "DECODING THE TIMESTAMP // 02",
+      badge: "TOP 42 BITS",
+      badgeTone: "blue" as const,
+      title: "How the creation date falls out of the ID",
+      body: [
+        "The top 42 bits of every snowflake store the number of milliseconds since the Discord epoch — a fixed reference point of 2015-01-01 at 00:00:00 UTC, which as a Unix timestamp is 1420070400000. To pull that value out, you shift the whole ID right by 22 bits, discarding the worker, process, and increment fields below, then add the epoch back. In one line: (id >> 22) + 1420070400000 gives the exact Unix millisecond the object was created. Discord counts from 2015 rather than 1970 so the timestamp field stays small enough to fit in 42 bits for decades.",
+        "Once the tool has that Unix millisecond value, it renders the moment three ways: in UTC for an unambiguous reference, in your browser's local timezone so it reads naturally, and as a relative age like \"created 6 years ago.\" Because the arithmetic is exact and deterministic, two people decoding the same ID always get the same instant down to the millisecond. Nothing about this step touches the network — it is plain integer math running in your browser, so even a private or deleted account's ID still yields its original creation time."
+      ]
+    },
+    {
+      kicker: "THE BIT LAYOUT // 03",
+      badge: "42 / 5 / 5 / 12",
+      badgeTone: "amber" as const,
+      title: "What each of the 64 bits actually holds",
+      body: [
+        "Read from the most significant bit down, a snowflake divides into four fields. The first 42 bits are the millisecond timestamp covered above. The next 5 bits are the internal worker ID, and the 5 bits after that are the internal process ID — together they identify which of Discord's machines and which process on it generated this particular number. The final 12 bits are a per-process increment: a counter that ticks up for each ID a single process mints within the same millisecond, then resets. This tool splits any ID you paste into exactly these four labeled parts.",
+        "Those lower 22 bits are what let Discord create many unique IDs in the very same millisecond without coordination between servers. With 5 bits each for worker and process, up to 32 workers and 32 processes can run in parallel, and the 12-bit increment gives each of them 4,096 distinct IDs per millisecond before the counter wraps. Multiply it out and the format can mint millions of collision-free IDs per second across the fleet. For decoding purposes these fields are mostly internal trivia, but they confirm the ID is a genuine, well-formed Discord snowflake."
+      ],
+      footer: "42-bit timestamp · 5-bit worker · 5-bit process · 12-bit increment — the full 64-bit split."
+    },
+    {
+      kicker: "FINDING IDs IN DISCORD // 04",
+      badge: "DEVELOPER MODE",
+      badgeTone: "purple" as const,
+      title: "Enable Developer Mode, then Copy ID",
+      body: [
+        "Discord hides raw IDs by default, so first turn on Developer Mode: open User Settings, go to the Advanced tab, and flip the Developer Mode toggle. That adds a Copy ID entry to context menus everywhere in the app. Now right-click almost anything — a user's name or avatar, a specific message, a channel, or the server icon — and choose Copy ID to put that snowflake on your clipboard. On the mobile apps the flow is the same: enable Developer Mode in settings, then long-press an object and tap Copy ID.",
+        "Paste any ID you copy into the field above and it decodes instantly. The most popular use is checking account age: copy your own user ID to see the exact second you joined Discord, or copy someone else's to judge how new an account is — a handy signal when screening a suspicious DM or a fresh member. The same trick dates a message, reveals when a channel or server was founded, and works even on accounts you cannot otherwise inspect, since the creation time is locked into the ID and cannot be edited."
+      ],
+      footer: "Right-click or long-press any object → Copy ID → paste here to reveal its creation date."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/snowflake.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
     <div class="mb-8">
@@ -81,53 +115,8 @@ const faqSchema = {
 
     <SnowflakeWorkspace lang="en" />
 
-    <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12 mt-16 mb-4">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="card-panel rounded-[16px] p-6 sm:p-8">
-          <span class="text-[11px] font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Decode // 01</span>
-          <h2 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mt-2 mb-3">
-            Read a Discord account's creation date from its ID
-          </h2>
-          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
-            Every snowflake carries the moment it was minted in its top 42 bits. This decoder shifts those bits
-            out and adds Discord's 2015 epoch, so you get the exact creation timestamp of any account, message,
-            or server without touching an API. The math is identical whether the ID is 17 or 20 digits long.
-          </p>
-          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
-            Need the date inside a message that renders in every reader's own timezone? Copy the generated
-            <a href="/tools/timestamp/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">timestamp markup</a>
-            straight into chat.
-          </p>
-        </div>
-        <div class="card-panel rounded-[16px] p-6 sm:p-8">
-          <span class="text-[11px] font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Assets // 02</span>
-          <h2 class="text-lg sm:text-xl font-extrabold text-[#192538] dark:text-white mt-2 mb-3">
-            Grab the profile picture and banner too
-          </h2>
-          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed mb-3">
-            When you decode a public user ID, the tool also pulls the full-resolution avatar and banner from
-            Discord's CDN via the public Lanyard API. Nothing loads for private profiles, and no login is ever
-            requested — it only reads assets anyone can already see.
-          </p>
-          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
-            Re-crop a reference avatar in the
-            <a href="/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Avatar Cropper</a>
-            or build a matching header in the <a href="/tools/banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Banner Maker</a>.
-          </p>
-        </div>
-      </div>
-    </section>
+    <ToolDossier {...dossier} />
 
-    <section class="border-t border-[#E0DBD0] dark:border-[#263346] pt-12">
-      <h2 class="text-xl font-bold text-[#192538] dark:text-white tracking-tight mb-6">Frequently Asked Questions</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {faqItems.map((item) => (
-          <div class="card-panel p-5 rounded-[12px]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <ToolFaq items={faqItems} />
   </div>
 </Layout>

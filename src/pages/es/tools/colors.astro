@@ -1,7 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import ColorWorkspace from '../../../components/tools/ColorWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Color de Fondo de Discord | Códigos Hex y Paleta";
 const pageDescription = "Color de fondo de Discord: tema oscuro #313338, blurple #5865F2, colores de estado y más. Copia HEX, RGB, HSL con un clic, más un selector personalizado.";
@@ -16,73 +18,104 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 
 const faqItems = [
   { q: "¿De qué color es el fondo de Discord?", a: "En el tema oscuro actual, el fondo principal del chat es #313338, con una barra lateral un poco más oscura en #2B2D31 y el riel de servidores más oscuro en #1E1F22. El tema claro usa #FFFFFF para el área principal y #F2F3F5 para los paneles laterales. Puedes copiar cualquiera de estos códigos hex desde la paleta." },
-  { q: "¿Cuál es el código hex del blurple de Discord?", a: "El blurple de marca de Discord es #5865F2. El blurple anterior, más claro, usado antes del rediseño de 2021, es #7289DA. Un tono más oscuro para estados de botón presionado es #4752C4." },
-  { q: "¿Cuáles son los colores de estado de Discord?", a: "En línea es verde #23A55A, Ausente es ámbar #F0B232, No molestar es rojo #F23F43, Transmitiendo es morado #593695 y Desconectado es gris #80848E. Aparecen en el pequeño punto de presencia sobre el avatar." },
-  { q: "¿Cómo combino un color con el tema de Discord?", a: "Usa el selector personalizado para muestrear cualquier color y leer sus valores exactos HEX, RGB y HSL. Copia el valor en tu herramienta de diseño para que banners, emojis e iconos de rol encajen sobre el fondo oscuro #313338 o el claro #FFFFFF." }
+  { q: "¿Cuál es el código hex del blurple de Discord?", a: "El blurple de marca de Discord es #5865F2. El blurple anterior, más claro, usado antes del rediseño de 2021, es #7289DA, y un tono más oscuro para estados de botón presionado es #4752C4. Copia cualquiera desde las muestras de marca en HEX, RGB o HSL." },
+  { q: "¿Cuáles son los colores de estado de Discord?", a: "En línea es verde #23A55A, Ausente es ámbar #F0B232, No molestar es rojo #F23F43, Transmitiendo es morado #593695 y Desconectado o Invisible es gris #80848E. Aparecen en el pequeño punto de presencia sobre el avatar, y cada uno se copia con un clic." },
+  { q: "¿Cómo combino un color con el tema oscuro y claro de Discord?", a: "Usa el selector personalizado para muestrear cualquier color y leer sus valores exactos HEX, RGB y HSL, luego previsualízalo sobre el oscuro #313338 y el claro #FFFFFF. Revisar ambos temas asegura que banners, emojis e iconos de rol se lean bien sin importar el modo del miembro." },
+  { q: "¿Qué color debo usar para un rol o el acento de un embed de Discord?", a: "Los colores de rol y las barras laterales de los embeds toman un solo valor hex, así que elige uno con suficiente contraste sobre el fondo oscuro #313338 — el blurple de marca #5865F2 o un tono medio saturado se lee claro, mientras que los valores muy oscuros o muy claros se desvanecen. Muestrea y copia cualquier hex del selector." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Plano de Colores de Discord",
+  heading: "Los códigos hex exactos detrás de",
+  highlight: "la interfaz de Discord",
+  intro: "La interfaz de Discord se basa en un conjunto pequeño y fijo de valores hex — los grises de los temas oscuro y claro, el blurple de marca y los puntos de presencia. Conocer los códigos exactos hace que tu arte, roles y embeds encajen al ras con la interfaz nativa.",
+  steps: [
+    "Fondos del Tema Oscuro",
+    "Contraste del Tema Claro",
+    "Blurple de Marca",
+    "Colores de Estado y Conversión"
+  ],
+  cards: [
+    {
+      kicker: "JERARQUÍA DE SUPERFICIE // 01",
+      badge: "#313338 OSCURO",
+      badgeTone: "emerald" as const,
+      title: "Los tres grises del tema oscuro",
+      body: [
+        "La pregunta de color de Discord más buscada tiene una respuesta precisa. En el tema oscuro que usa la mayoría, el área principal del chat es #313338. Las barras laterales de canales y miembros van un tono más oscuro en #2B2D31, y el riel de servidores de la izquierda es el más oscuro en #1E1F22.",
+        "Esta jerarquía de tres pasos es por qué la profundidad se lee limpia en la app. Si diseñas un PNG transparente de emoji, sticker o icono de rol, previsualizarlo sobre #313338 te muestra exactamente cómo se verá en la mayoría de los servidores — el arte oscuro que se perdería en esa superficie se hace obvio antes de subirlo."
+      ]
+    },
+    {
+      kicker: "CONTRASTE DE TEMA // 02",
+      badge: "#FFFFFF CLARO",
+      badgeTone: "blue" as const,
+      title: "Por qué diseñas para ambos temas a la vez",
+      body: [
+        "El tema claro invierte la jerarquía: el área principal pasa a #FFFFFF con paneles laterales en #F2F3F5. Como un solo recurso se muestra en ambos temas, un emoji o icono que se ve perfecto en oscuro puede desaparecer en blanco — un glifo claro sobre fondo transparente es el fallo clásico.",
+        "Conviene comprobar que los detalles finos y los bordes aguantan tanto en blanco como sobre el fondo oscuro #313338. Un contorno sutil, un borde blanco tipo troquel o una forma con su propio relleno mantiene el arte legible en todos lados, sin importar el tema que haya elegido quien lo ve."
+      ]
+    },
+    {
+      kicker: "FIRMA DE MARCA // 03",
+      badge: "#5865F2 BLURPLE",
+      badgeTone: "amber" as const,
+      title: "El blurple, viejo y nuevo",
+      body: [
+        "El color de marca de Discord es el blurple #5865F2, adoptado en el rediseño de 2021; el blurple anterior, más claro, era #7289DA, y un #4752C4 más oscuro es común para estados de botón presionado. Igualar estos mantiene los gráficos personalizados y los acentos de embed consistentes con la interfaz nativa.",
+        "El blurple también es una elección segura y de alto contraste para colores de rol y botones porque se ajustó para leerse en ambos temas. Copia el valor exacto en vez de calcularlo a ojo — un blurple casi acertado se ve mal en cuanto queda junto al propio cromado de Discord."
+      ],
+      footer: "Blurple de marca #5865F2 (era #7289DA) — copia el valor exacto, no lo calcules a ojo."
+    },
+    {
+      kicker: "PRESENCIA Y SALIDA // 04",
+      badge: "HEX / RGB / HSL",
+      badgeTone: "purple" as const,
+      title: "Puntos de estado y el selector personalizado",
+      body: [
+        "Los puntos de presencia usan un conjunto fijo: verde en línea #23A55A, ámbar ausente #F0B232, rojo no molestar #F23F43, morado transmitiendo #593695 y gris desconectado #80848E. Igualar estos valores mantiene los gráficos temáticos de estado y los colores de rol consistentes con lo que los miembros ya reconocen.",
+        "Cada muestra copia su código hex con un clic, y el selector personalizado convierte cualquier color a HEX, RGB y HSL para tu herramienta de diseño. Muestrea un color una vez aquí y pega el valor exacto en Figma, Photoshop o tu CSS sin un segundo paso de conversión."
+      ],
+      footer: "Un clic copia HEX, RGB y HSL — muestrea una vez, pega donde sea."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/colors.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
-      <div class="flex items-center gap-2">
-        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
-        <span>/</span>
-        <span class="text-[#192538] dark:text-white font-semibold">Color y Hex</span>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Color y Hex</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Color de Fondo de Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Copia códigos hex del tema oscuro, claro, blurple y estados • Selector HEX / RGB / HSL personalizado</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Valores de referencia
+        </div>
       </div>
-      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
-    </nav>
-
-    <header class="mb-8">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
-        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
-        Valores de referencia
-      </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
-        Color de Fondo de Discord
-      </h1>
-      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
-        Copia los códigos hex del tema oscuro, el tema claro, el blurple y los estados de Discord, más un selector personalizado con <strong>HEX, RGB y HSL</strong>.
-      </p>
-    </header>
+    </div>
 
     <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
     <ColorWorkspace lang="es" />
 
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">¿De Qué Color Es el Fondo de Discord?</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          En el tema oscuro, el área principal del chat es <strong>#313338</strong>. Las barras laterales van un tono más oscuro en <strong>#2B2D31</strong> y el riel de servidores es el más oscuro en <strong>#1E1F22</strong>. El tema claro usa <strong>#FFFFFF</strong> con paneles en <strong>#F2F3F5</strong>. Previsualizar un PNG transparente sobre #313338 te muestra cómo se verá en la mayoría de los servidores.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Blurple de Marca y Colores de Estado</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          El color de marca de Discord es el blurple <strong>#5865F2</strong> (el anterior era <strong>#7289DA</strong>). Los puntos de presencia usan verde <strong>#23A55A</strong>, ámbar <strong>#F0B232</strong>, rojo <strong>#F23F43</strong> y gris <strong>#80848E</strong>. Cada muestra copia su código con un clic.
-        </p>
-      </article>
-    </div>
+    <ToolDossier {...dossier} />
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>

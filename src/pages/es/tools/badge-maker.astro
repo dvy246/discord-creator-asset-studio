@@ -1,7 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import BadgeMakerWorkspace from '../../../components/tools/BadgeMakerWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Creador de Logos Discord | Insignias de Texto";
 const pageDescription = "Creador de logos Discord: crea tu propia insignia con iniciales o un emoji sobre color o degradado, en círculo o cuadrado. PNG 512x512, en tu navegador.";
@@ -15,74 +17,105 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  { q: "¿Cómo hago un logo para mi servidor de Discord?", a: "Escribe las iniciales de tu servidor o elige un emoji, selecciona un color o degradado de fondo y una forma, y descarga el PNG de 512x512. Súbelo como icono en Ajustes del Servidor. Este creador genera tu propio arte original: no usa el logo ni las marcas de Discord." },
-  { q: "¿Es este el logo oficial de Discord?", a: "No. Es un creador de insignias independiente para tu propio icono de servidor o comunidad. No está afiliado ni respaldado por Discord y no reproduce el logo Clyde ni el wordmark. Conservas todos los derechos sobre la insignia de texto/emoji que generas." },
-  { q: "¿A qué tamaño se exporta la insignia?", a: "Cada insignia se exporta como PNG de 512x512, el tamaño recomendado para un icono de servidor de Discord y también válido para avatares. Las esquinas transparentes se conservan al elegir la forma de círculo o cuadrado redondeado." },
-  { q: "¿Puedo usar un emoji en vez de letras?", a: "Sí. Escribe o pega cualquier emoji en el campo de texto y se renderiza como arte a todo color centrado en la insignia. Puedes combinar iniciales cortas o usar un solo emoji, lo que se lea mejor en tamaños pequeños." }
+  { q: "¿Cómo hago gratis un logo para mi servidor de Discord?", a: "Escribe las iniciales de tu servidor o elige un emoji, selecciona un color o degradado de fondo y una forma, y descarga el PNG de 512x512. Súbelo como icono en Ajustes del Servidor > Resumen. Este creador genera tu propio arte original gratis en el navegador: no usa el logo ni las marcas de Discord." },
+  { q: "¿Es este el creador de logos oficial de Discord o está afiliado a Discord?", a: "No. Es un creador de insignias independiente para tu propio icono de servidor o comunidad. No está afiliado ni respaldado por Discord y no reproduce el logo Clyde ni el wordmark. Conservas todos los derechos sobre la insignia de texto o emoji que generas aquí." },
+  { q: "¿Qué tamaño debe tener el icono o logo de un servidor de Discord?", a: "El icono de un servidor de Discord debe ser un PNG cuadrado de 512x512 píxeles, el tamaño de subida recomendado, que Discord luego recorta en un cuadrado redondeado. Cada insignia aquí se exporta exactamente a 512x512, y las formas de círculo y cuadrado redondeado conservan las esquinas transparentes para asentarse limpias en la barra lateral oscura." },
+  { q: "¿Puedo usar un emoji en vez de letras en mi insignia de Discord?", a: "Sí. Escribe o pega cualquier emoji en el campo de texto y se renderiza como arte a todo color centrado en la insignia. Puedes combinar iniciales cortas o usar un solo emoji, lo que se lea mejor en tamaños pequeños en la lista de servidores, donde los iconos se reducen a unos 48 píxeles de ancho." },
+  { q: "¿Por qué mi icono de servidor de Discord se ve borroso o pixelado?", a: "Un icono borroso suele significar que la imagen original era menor de 512x512 y Discord la amplió, o que el detalle fino se perdió al reducirse al tamaño diminuto de la barra lateral. Exportar una insignia nítida de 512x512 con un lettermark en negrita o un solo emoji —en vez de una ilustración detallada— la mantiene nítida en todos lados." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Plano de Logos e Insignias",
+  heading: "Insignias de servidor que se leen a",
+  highlight: "48 píxeles de ancho",
+  intro: "Un icono de servidor se reduce a un círculo diminuto en la barra lateral, así que un lettermark limpio gana a una ilustración recargada siempre. Así se combinan las iniciales, el contraste, el recorte y el tamaño de exportación en una insignia que se mantiene legible.",
+  steps: [
+    "Lettermarks que se Leen Pequeños",
+    "Contraste de Color y Degradado",
+    "Recorte de Forma y Exportación 512px",
+    "Independiente y Sin Riesgo de Marca"
+  ],
+  cards: [
+    {
+      kicker: "MECÁNICA DE TIPOGRAFÍA // 01",
+      badge: "1–4 CARACTERES",
+      badgeTone: "emerald" as const,
+      title: "Por qué un lettermark gana a una ilustración detallada",
+      body: [
+        "En la lista de servidores tu icono se muestra a unos 48 píxeles de ancho. Las ilustraciones finas, las líneas delgadas y el texto pequeño se vuelven ilegibles a ese tamaño. Un lettermark —una a cuatro letras en negrita del nombre de tu comunidad— se mantiene legible porque no hay nada pequeño que perder.",
+        "Este creador centra tus iniciales en el lienzo para que nada importante quede cerca de los bordes, donde el recorte de cuadrado redondeado de Discord corta las esquinas. Manténlo en dos o tres caracteres para la lectura más fuerte; un solo glifo o emoji también sirve cuando la forma por sí sola es reconocible."
+      ]
+    },
+    {
+      kicker: "CIENCIA DEL COLOR // 02",
+      badge: "SÓLIDO / DEGRADADO",
+      badgeTone: "blue" as const,
+      title: "Contraste que sobrevive a la barra lateral oscura",
+      body: [
+        "La barra lateral de Discord es casi negra, así que una insignia oscura desaparece en ella. Elige un fondo —un color sólido o uno de los degradados predefinidos— lo bastante vivo o saturado para separarse de ese fondo oscuro, y mantén las letras con alto contraste sobre el relleno.",
+        "Los degradados aportan profundidad sin recargar: un diagonal de dos tonos se lee como una sola forma segura en tamaños pequeños, mientras un glifo claro sobre un degradado de tono medio mantiene las letras nítidas. Evita combinaciones de bajo contraste como gris sobre gris que se esfuman en cuanto el icono se reduce."
+      ]
+    },
+    {
+      kicker: "GEOMETRÍA DE EXPORTACIÓN // 03",
+      badge: "PNG 512 × 512",
+      badgeTone: "amber" as const,
+      title: "Recorte de forma y la exportación 512×512",
+      body: [
+        "Cada insignia se exporta como PNG de 512×512, el tamaño de icono de servidor recomendado por Discord, y el mismo archivo sirve como avatar. Elegir la forma de círculo o cuadrado redondeado conserva las esquinas transparentes para que la insignia asiente al ras sobre cualquier fondo en vez de mostrar un borde cuadrado duro.",
+        "Como Discord recorta los iconos de servidor en un cuadrado redondeado de todos modos, una composición centrada es la disposición segura: nada crítico se corta. Exporta al 512×512 completo en vez de ampliar un archivo más pequeño, así el icono se mantiene nítido cuando Discord lo reduce."
+      ],
+      footer: "El PNG 512×512 cumple la especificación de icono de Discord — nítido al recortarse en cuadrado redondeado."
+    },
+    {
+      kicker: "SEGURIDAD DE MARCA // 04",
+      badge: "SIN RIESGO DE MARCA",
+      badgeTone: "purple" as const,
+      title: "Arte original que es totalmente tuyo",
+      body: [
+        "Es un generador de insignias genérico: crea arte original de texto y color que te pertenece. No está afiliado ni respaldado por Discord y excluye a propósito el logo Clyde, el wordmark y las marcas de Discord, así usas lo que creas sin preocuparte por marcas registradas.",
+        "Todo se renderiza en tu navegador sin subida, cuenta ni marca de agua. Cuando quieras instalarlo, combínalo con el Creador de Icono de Servidor para ver el encuadre de cuadrado redondeado, o suelta el archivo directo en Ajustes del Servidor."
+      ],
+      footer: "Arte original, generado en el navegador — sin marcas de Discord, sin subidas, sin marca de agua."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/badge-maker.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
-      <div class="flex items-center gap-2">
-        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
-        <span>/</span>
-        <span class="text-[#192538] dark:text-white font-semibold">Creador de Logos</span>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Creador de Logos</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Creador de Logos Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Crea tu propia insignia de servidor con iniciales o un emoji • Degradados y formas • PNG 512×512</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
       </div>
-      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
-    </nav>
-
-    <header class="mb-8">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
-        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
-        100% en el navegador · Cero subidas
-      </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
-        Creador de Logos Discord
-      </h1>
-      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
-        Crea tu propia insignia de servidor con iniciales o un emoji sobre un color o degradado, en forma de círculo o cuadrado redondeado, y exporta un PNG de <strong>512×512</strong>. Todo el procesamiento ocurre localmente.
-      </p>
-    </header>
+    </div>
 
     <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
     <BadgeMakerWorkspace lang="es" />
 
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Crea tu Propio Logo de Servidor</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Un lettermark limpio —las iniciales de tu comunidad sobre un degradado— se lee al instante en la lista de servidores y escala sin perder nitidez. Escribe de una a cuatro letras o un emoji, elige color o degradado y forma, y exporta un PNG nítido de 512×512 listo para usar como icono o avatar.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Independiente y Sin Riesgo de Marca</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Es un generador genérico: crea arte original de texto y color que te pertenece. <strong>No está afiliado ni respaldado por Discord</strong> y no incluye el logo Clyde, el wordmark ni ninguna marca de Discord. Combínalo con el <a href="/es/tools/server-icon/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Creador de Icono de Servidor</a> para ver el encuadre.
-        </p>
-      </article>
-    </div>
+    <ToolDossier {...dossier} />
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>

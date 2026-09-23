@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import ServerIconWorkspace from '../../components/tools/ServerIconWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Server Icon Maker | 512x512 Crop";
 const pageDescription = "Free Discord server icon maker: frame artwork on an exact 512x512 canvas with a live rounded-square preview and PNG export. 100% in-browser, no uploads.";
@@ -19,41 +21,67 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Server Icon Maker", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "What size should a Discord server icon be?", a: "Discord recommends uploading a 512×512 pixel square, with 128×128 the practical minimum. That single image is scaled down everywhere the server appears, so starting at 512×512 keeps it crisp in the server list and invite embeds. This maker frames your art on an exact 512×512 canvas before you export." },
+  { q: "Why is my Discord server icon blurry?", a: "Blur usually means the source was smaller than 512×512 and Discord upscaled it, or a detailed logo got crushed when downscaled for the tiny server-list rail. Upload a sharp 512×512 PNG, keep the key shapes bold and centered, and avoid thin text. Exporting from this 512×512 canvas prevents soft, pixelated results." },
+  { q: "How do I make an animated Discord server icon?", a: "An animated GIF server icon unlocks only after your server reaches Boost Level 1. Once it does, upload a looping GIF directly in Server Settings → Overview. This tool exports a static 512×512 PNG, which works on every server; swap in a GIF later once the boost tier is active." },
+  { q: "How do I change my Discord server icon?", a: "Open Server Settings, choose Overview, click the icon thumbnail, and upload your 512×512 image — you need the Manage Server permission. The change applies instantly for everyone. Export your artwork here first so it lands at the recommended size and stays sharp instead of being resized on upload." },
+  { q: "Why does my server icon look cut off at the edges?", a: "Discord rounds every server icon and clips the corners — on the server list it appears as a rounded square that becomes a full circle when the server is active or hovered. Anything near an edge gets cut, so keep logos, faces, and text centered. The live preview shows this framing before you export." }
+];
+
+const dossier = {
+  eyebrow: "Server Icon Technical Blueprint",
+  heading: "Design server icons that stay",
+  highlight: "crisp everywhere",
+  intro: "A server icon is one small square that Discord reuses everywhere and then masks into a circle. Getting it right means exporting at the correct size, centering your subject inside the clipped area, and knowing which formats and boost tiers actually work. Here is the full blueprint.",
+  steps: [
+    "The 512×512 Canvas",
+    "Circle Mask & Safe Zone",
+    "Formats & File Limits",
+    "Boosts & Uploading"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "What size is a Discord server icon?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Discord recommends a 512x512 pixel square image for server icons. Discord downscales it for the server list and displays it as a rounded square, so keeping your subject centered on a 512x512 canvas gives the sharpest result at every size."
-      }
+      kicker: "CANVAS SIZING // 01",
+      badge: "512 × 512 PX",
+      badgeTone: "emerald" as const,
+      title: "Why 512×512 is the size to export",
+      body: [
+        "Discord recommends a 512×512 pixel square for server icons, and 128×128 is the practical floor. That one file is reused everywhere the server appears — the left server rail, invite embeds, the server header, and mobile — and Discord scales it down for each spot. Starting large means every downscaled copy stays crisp instead of soft.",
+        "This maker locks the canvas to an exact 1:1 ratio at 512×512, so there is no guesswork about dimensions or aspect. Pan and zoom your artwork to frame it, and the PNG you export is already at the recommended size, ready to drop straight into Server Settings without Discord resizing it on the way in."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "Can a Discord server icon be animated?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, but an animated GIF server icon requires the server to reach Boost Level 1. Until then, a static PNG or JPG is used. This maker exports a static 512x512 PNG; upload a GIF directly in Server Settings once your server has the boost tier."
-      }
+      kicker: "MASK GEOMETRY // 02",
+      badge: "CENTER-SAFE",
+      badgeTone: "blue" as const,
+      title: "The circle mask clips your corners",
+      body: [
+        "Discord does not show your square as-is. It rounds the icon and clips the corners — on the server list it reads as a rounded square, and it becomes a full circle when the server is selected or hovered. Whatever sits in the corners simply vanishes behind the mask.",
+        "The fix is composition: keep logos, faces, and text inside the central safe area with breathing room on all sides. The live preview renders both the large and small icon on Discord's actual dark sidebar color, so you can confirm nothing important is being trimmed before you commit to the export."
+      ],
+      footer: "Corners are clipped by the mask — keep every key detail centered."
     },
     {
-      "@type": "Question",
-      "name": "What shape is a Discord server icon?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Discord masks server icons as a rounded square (a squircle) in the server list, rounding further to a circle-like shape on hover. Because the corners are cropped, keep important detail away from the very edges. The live preview here shows the exact rounded-square framing."
-      }
+      kicker: "FORMAT & WEIGHT // 03",
+      badge: "PNG · JPG · GIF",
+      badgeTone: "amber" as const,
+      title: "Formats, transparency, and file size",
+      body: [
+        "Discord accepts PNG, JPG, and GIF for server icons. PNG is the best default: it keeps hard edges and text crisp and supports transparency, though Discord fills any transparent area behind the circle. JPG suits photographic art, and GIF is only needed when you want motion.",
+        "File size is rarely a problem here. The upload cap is 10 MB, and a clean 512×512 PNG is only a few dozen kilobytes — far below the limit. Because everything is rendered and exported in your browser, there are no uploads to a server and nothing about your image is stored or tracked."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "How do I change my Discord server icon?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Open Server Settings, go to Overview, click the icon circle, and upload your 512x512 image. You need the Manage Server permission. Export your icon here first so it lands at the recommended size and stays crisp."
-      }
+      kicker: "UPLOAD PROTOCOL // 04",
+      badge: "BOOST LVL 1 GIF",
+      badgeTone: "purple" as const,
+      title: "Animated icons and where to upload",
+      body: [
+        "A static icon works on every server, free of any requirement. An animated GIF icon is a perk that unlocks only when the server reaches Boost Level 1, so if the icon slot rejects your GIF, check the server's boost tier first. Until then, a static PNG is the reliable choice.",
+        "To set it, open Server Settings → Overview, click the icon, and upload — you need the Manage Server permission, and the change applies instantly for everyone. Export your static PNG here first so it arrives at the exact recommended size, then swap in a GIF later once the boost tier is live."
+      ],
+      footer: "Static PNG works anywhere; animated GIF needs Boost Level 1."
     }
   ]
 };
@@ -62,7 +90,7 @@ const faqSchema = {
 <Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/server-icon.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
@@ -88,39 +116,11 @@ const faqSchema = {
     <!-- Main Workspace Layout (shared component, EN + ES) -->
     <ServerIconWorkspace lang="en" />
 
-    <!-- Prose reference -->
-    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto space-y-6">
-        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">What Size Is a Discord Server Icon?</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord recommends a <strong>512×512 pixel</strong> square for server icons. That single image is scaled down everywhere it appears — the server list rail, invite embeds, the server header — so starting at 512×512 keeps it sharp at every size. This maker frames your artwork on an exact 512×512 canvas with pan and zoom, then exports a clean PNG ready to upload in Server Settings.
-        </p>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord displays the icon as a <strong>rounded square</strong> (a squircle) in the server list and rounds it further toward a circle on hover. Because the corners are trimmed by that mask, keep logos, faces, and text away from the very edges. The live preview above shows both the large and small rounded-square renderings on Discord's actual dark sidebar color so you can judge the framing before you export.
-        </p>
-        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">Animated Icons and Permissions</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          A static icon works on every server. An <strong>animated GIF</strong> server icon unlocks once the server reaches <strong>Boost Level 1</strong>. To change the icon you need the Manage Server permission: open Server Settings → Overview, click the icon, and upload your file. Need a personal avatar instead of a server icon? Use the <a href="/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">Avatar Cropper</a>, which applies Discord's circular profile mask. Everything here runs in your browser — no uploads, no tracking.
-        </p>
-      </div>
-    </section>
+    <!-- Sticky-scroll technical dossier (shared component) -->
+    <ToolDossier {...dossier} />
 
-    <!-- FAQ Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <!-- FAQ (shared component, single source of truth with JSON-LD) -->
+    <ToolFaq items={faqItems} />
 
   </div>
 </Layout>

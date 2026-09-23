@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
 import TimestampWorkspace from '../../components/tools/TimestampWorkspace.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Timestamp Generator | Copy Dynamic Codes";
 const pageDescription = "Free Discord timestamp generator: pick a date and copy the <t:UNIX:F> markup for all styles. Timestamps auto-adjust to each viewer's timezone. In-browser.";
@@ -19,41 +21,67 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Timestamp Generator", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "What is a Discord timestamp and how does the <t:UNIX:style> format work?", a: "A Discord timestamp is markup written as <t:UNIX:style>, where UNIX is a Unix epoch time in seconds and the style letter sets the display format. Discord replaces the code with a formatted, timezone-aware date that every reader sees in their own local clock." },
+  { q: "What are all the Discord timestamp format codes (t, T, d, D, f, F, R)?", a: "There are seven style letters: t (short time), T (long time with seconds), d (short date), D (long date), f (short date and time, the default), F (long date and time with weekday), and R (relative, like 'in 2 hours'). This generator outputs all seven for any date." },
+  { q: "How do I get the Unix timestamp for a Discord message?", a: "Pick the date and time you want in the generator above and it converts your selection to a Unix epoch value automatically, then wraps it in the full <t:UNIX:style> code. Copy the style you need and paste it straight into Discord — no manual epoch math required." },
+  { q: "Do Discord timestamps automatically adjust to each user's timezone?", a: "Yes. Discord renders the same code in each reader's local timezone, so a member in New York and one in Tokyo both see the correct moment in their own time. That makes timestamps ideal for scheduling events without listing several time zones side by side." },
+  { q: "How do I make a Discord countdown timer or relative timestamp?", a: "Use the relative style, <t:UNIX:R>. It renders as 'in 3 hours' or '2 days ago' and recalculates on its own as time passes, so an event code quietly counts down. Pick your target date above and copy the R-style output to drop a live countdown into any message." }
+];
+
+const dossier = {
+  eyebrow: "Timestamp Technical Blueprint",
+  heading: "Timestamps that adapt to every",
+  highlight: "reader's timezone",
+  intro: "Discord timestamps are more than a date — they are dynamic markup that re-renders in each viewer's local time and can even count down on their own. Here is how the syntax, styles, and timezone engine fit together.",
+  steps: [
+    "Timestamp Syntax",
+    "The Seven Style Codes",
+    "Timezone Auto-Conversion",
+    "Relative Countdowns & Events"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "What is a Discord timestamp?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A Discord timestamp is special markup in the form <t:UNIX:style> where UNIX is a Unix epoch time in seconds. Discord renders it as a formatted date or time that automatically converts to each viewer's own timezone, so everyone sees the moment in their local clock."
-      }
+      kicker: "SYNTAX ANATOMY // 01",
+      badge: "<t:UNIX:STYLE>",
+      badgeTone: "emerald" as const,
+      title: "The <t:UNIX:style> markup, decoded",
+      body: [
+        "Every Discord timestamp follows one pattern: an opening <t:, a Unix epoch time measured in seconds since 1 January 1970, a colon, an optional style letter, and a closing >. For example, <t:1735689600:F> points to a precise instant, and the F tells Discord to render it as a long date and time.",
+        "The epoch number is the same for everyone on Earth — it is the timezone-neutral anchor. The style letter is purely cosmetic. Because you never type a human date directly, there is no ambiguity about day-month order or AM/PM: you pick a moment above and the generator produces the exact code Discord expects."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "What are the Discord timestamp format codes?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "There are seven style letters: t (short time), T (long time), d (short date), D (long date), f (short date and time, the default), F (long date and time with weekday), and R (relative, like 'in 2 hours'). This generator outputs all seven for the date you pick."
-      }
+      kicker: "STYLE REGISTRY // 02",
+      badge: "7 STYLE LETTERS",
+      badgeTone: "blue" as const,
+      title: "All seven style codes and when to reach for each",
+      body: [
+        "Discord supports seven styles: t short time, T long time with seconds, d short date, D long date, f short date-and-time (the default when no letter is given), F long date-and-time including the weekday, and R relative. Each one reads the same underlying epoch but frames it differently.",
+        "Use D or F for one-off announcements where the full date matters, t for quick times inside a sentence, and R for anything that should feel live. The generator shows a preview of all seven at once, so you can copy the style that reads most naturally in your message with a single click."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "How do I use a Discord timestamp?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Pick a date and time above, copy the code you want (for example <t:1735689600:F>), and paste it into any Discord message, event description, or embed. Discord replaces the code with a live-updating, timezone-aware timestamp when the message is sent."
-      }
+      kicker: "TIMEZONE ENGINE // 03",
+      badge: "AUTO-LOCALIZED",
+      badgeTone: "amber" as const,
+      title: "Why every reader sees their own local time",
+      body: [
+        "The single biggest reason to use timestamps is timezone safety. Instead of writing 'the raid starts at 8 PM EST / 1 AM UTC / 10 AM JST', you post one <t:UNIX:F> code and Discord converts it to each member's device clock automatically. Nobody has to do the math, and nobody shows up an hour early.",
+        "This works because the epoch value is absolute. Discord's client reads your operating-system timezone at render time and formats the moment accordingly, so the exact same message is correct for a reader in Los Angeles, London, or Sydney."
+      ],
+      footer: "One code, correct in every timezone — no more listing EST / UTC / JST by hand."
     },
     {
-      "@type": "Question",
-      "name": "Do Discord timestamps update automatically?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Relative timestamps (style R) recalculate as time passes, so 'in 3 hours' becomes 'in 2 hours' on its own. All styles render in the reader's local timezone, which makes them ideal for scheduling events across regions without listing multiple time zones."
-      }
+      kicker: "DYNAMIC RENDERING // 04",
+      badge: "STYLE R COUNTDOWN",
+      badgeTone: "purple" as const,
+      title: "Live countdowns for events and scheduling",
+      body: [
+        "The relative style, <t:UNIX:R>, is the only one that changes after you send it. It renders as 'in 3 hours' before an event and flips to '2 hours ago' afterward, recalculating every time the message is viewed. That makes it perfect for event descriptions, giveaway end times, and scheduled maintenance notices.",
+        "Pair a fixed style with a relative one for the best of both — for example 'Starts <t:UNIX:F> (<t:UNIX:R>)' shows the exact local date and a self-updating countdown side by side. Everything is generated in your browser, so there is no account, upload, or tracking."
+      ],
+      footer: "Style R recalculates on every view — a countdown that maintains itself."
     }
   ]
 };
@@ -62,7 +90,7 @@ const faqSchema = {
 <Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/timestamp.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
@@ -73,7 +101,7 @@ const faqSchema = {
       </nav>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
             <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Timestamp</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Generator</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
           <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Pick a date, copy the markup for every style • Auto-adjusts to each viewer's timezone</p>
@@ -88,39 +116,11 @@ const faqSchema = {
     <!-- Main Workspace Layout (shared component, EN + ES) -->
     <TimestampWorkspace lang="en" />
 
-    <!-- Prose reference -->
-    <section class="py-12 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto space-y-6">
-        <h2 class="text-2xl font-bold text-[#192538] dark:text-white">How Discord Timestamps Work</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          A Discord timestamp is a small piece of markup written as <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">&lt;t:UNIX:style&gt;</code>. The UNIX part is the number of seconds since 1 January 1970, and the style letter controls the display format. The magic is that Discord renders the same code differently for every reader: someone in New York and someone in Tokyo both see the moment in their own local time, with no manual conversion.
-        </p>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          That makes timestamps perfect for scheduling. Instead of writing "the raid starts at 8 PM EST / 1 AM UTC / 10 AM JST", you post one <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">&lt;t:UNIX:F&gt;</code> code and everyone reads the correct local time. The relative style, <code class="font-mono text-[#3368A0] dark:text-[#66A3BF]">&lt;t:UNIX:R&gt;</code>, even counts down on its own — "in 3 hours" quietly becomes "in 2 hours" as the event approaches.
-        </p>
-        <h2 class="text-2xl font-bold text-[#192538] dark:text-white pt-2">The Seven Style Codes</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord supports seven style letters: <strong>t</strong> short time, <strong>T</strong> long time with seconds, <strong>d</strong> short date, <strong>D</strong> long date, <strong>f</strong> short date and time (the default when no style is given), <strong>F</strong> long date and time including the weekday, and <strong>R</strong> relative. The generator above shows a live preview of each so you can pick the one that reads best in your message, then copy it with a single click. Everything runs in your browser — no account, no upload, no tracking.
-        </p>
-      </div>
-    </section>
+    <!-- Sticky-scroll technical dossier (shared component) -->
+    <ToolDossier {...dossier} />
 
-    <!-- FAQ Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <!-- FAQ (shared component, single source of truth with JSON-LD) -->
+    <ToolFaq items={faqItems} />
 
   </div>
 </Layout>
