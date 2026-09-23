@@ -90,7 +90,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         id: 'understanding-discord-sticker-specifications',
         heading: '1. Discord Sticker Dimensions & Technical Rules',
-        content: `Learning <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">how to make a discord sticker</mark> is easy once you understand Discord's upload rules. Unlike custom emojis which can be rectangular, custom stickers must be an exact 1:1 square at 320×320 pixels.
+        content: `Learning <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">how to make a discord sticker</mark> is easy once you understand Discord's upload rules. Unlike <a href="/tools/emoji/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">custom emojis</a> which can be rectangular, custom stickers must be an exact 1:1 square at 320×320 pixels.
 
 Discord supports three sticker formats:
 - **Static PNG**: Transparent background graphics with clean edges.
@@ -131,8 +131,8 @@ Here are the four most common causes and how to fix them:
         heading: '3. Step-by-Step: <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">How to Make a Discord Sticker</mark>',
         content: `Follow these simple steps to make clean, sharp stickers:
 
-- **Step 1: Set Your Canvas**: Create a 320×320 pixel square canvas in Photoshop, Figma, or open our free in-browser Sticker Studio.
-- **Step 2: Transparent Background**: Place your artwork on a transparent layer. Add a 3px to 6px white or light outline around your subject so it stands out against both Discord dark mode (#313338) and light mode (#FFFFFF).
+- **Step 1: Set Your Canvas**: Create a 320×320 pixel square canvas in Photoshop, Figma, or open our free in-browser <a href="/tools/sticker/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Sticker Studio</a>.
+- **Step 2: Transparent Background**: Place your artwork on a transparent layer. Add a 3px to 6px white or light outline around your subject so it stands out against both Discord dark mode (<a href="/tools/colors/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">#313338</a>) and light mode (#FFFFFF).
 - **Step 3: Keep Safe Margins**: Keep key details inside an internal 16px safety margin (304×304 px) so nothing gets cut off when Discord rounds preview corners.
 - **Step 4: Export & Compress**: Export using an automated discord sticker size converter or compressor to keep the file under 512 KiB.`,
         callout: {
@@ -238,7 +238,7 @@ Anime styles remain a community favorite. Wide landscape shots work best here, i
       {
         id: 'understanding-banner-ratios-and-dimensions',
         heading: '2. Discord Banner Ratio & Canvas Sizes',
-        content: `Server banners and profile banners use two completely different shapes:
+        content: `Server banners and profile banners use two completely different shapes — and if you need the step-by-step upload flow, see our guide on <a href="/blog/how-to-change-discord-server-banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">how to change a Discord server banner</a>:
 
 1. **Server Banners (16:9 Widescreen Ratio)**:
    - Minimum size: 960 × 540 pixels.
@@ -262,7 +262,7 @@ Anime styles remain a community favorite. Wide landscape shots work best here, i
       {
         id: 'free-discord-banner-template-guidelines',
         heading: '3. Setting Up an Exact Discord Server Banner Template',
-        content: `When creating a discord server banner template in Figma, Photoshop, or Canva, setting up ruler guides first saves you time:
+        content: `When creating a <a href="/tools/banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">discord server banner template</a> in Figma, Photoshop, or Canva, setting up ruler guides first saves you time:
 
 - **Canvas Size**: Start with 1920×1080 px for high quality (or 960×540 px for smaller file sizes).
 - **Header Guide**: Draw a guide line 96 px down from the top (which matches the 48px mobile and desktop header bar). Keep all titles, logos, and character faces below this line.
@@ -333,7 +333,7 @@ Anime styles remain a community favorite. Wide landscape shots work best here, i
       {
         id: 'curated-discord-pfp-ideas',
         heading: '1. Popular <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">PFP Discord</mark> Styles',
-        content: `Your profile picture (PFP) is how friends recognize you in channels, direct messages, and voice calls. A good discord pfp shows off your personality, favorite games, or community style.
+        content: `Your profile picture (PFP) is how friends recognize you in channels, direct messages, and voice calls. A good <a href="/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">discord pfp</a> shows off your personality, favorite games, or community style.
 
 Here are some of the most popular avatar styles:
 
@@ -363,7 +363,7 @@ $$\\text{Corner Loss} = 1 - \\frac{\\pi}{4} \\approx 21.46\\%$$
 
 That means roughly 21.5% of your canvas disappears from the corners.
 
-On top of that, Discord places a colored status dot (green for online, yellow for idle, red for do not disturb, or gray for offline) over the bottom-right corner. Keep text and important details away from the corners so they do not get cut off or covered.`,
+On top of that, Discord places a <a href="/tools/colors/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">colored status dot</a> (green for online, yellow for idle, red for do not disturb, or gray for offline) over the bottom-right corner. Keep text and important details away from the corners so they do not get cut off or covered.`,
         table: {
           headers: ['Where It Shows', 'Rendered Size', 'Shape', 'Safe Zone Tip'],
           rows: [
@@ -377,7 +377,7 @@ On top of that, Discord places a colored status dot (green for online, yellow fo
       {
         id: 'animated-discord-gif-pfp-guide',
         heading: '3. Creating a Smooth Discord GIF PFP',
-        content: `If you have Discord Nitro, you can upload an animated discord gif pfp. Standard GIFs can sometimes look choppy or blurry, but three simple habits will keep your avatar looking clean:
+        content: `If you have Discord Nitro, you can upload an animated <a href="/tools/gif-maker/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">discord gif pfp</a>. Standard GIFs can sometimes look choppy or blurry, but three simple habits will keep your avatar looking clean:
 
 1. **Clean Loops**: Make the start and end frames line up so the animation plays in a smooth loop without jumping.
 2. **Start at 512×512 px**: Do not upload tiny 128×128 pixel files. High-resolution phone screens will stretch small files, making them look fuzzy.
@@ -432,14 +432,14 @@ On top of that, Discord places a colored status dot (green for online, yellow fo
       headline: 'Format & Compress Media Before Sharing',
       description: 'Resize large screenshots, strip camera metadata, and compress images under Discord 25 MB limit right in your browser.',
       buttonText: 'Open Image Studio',
-      href: '/',
+      href: '/tools/image-resizer/',
       badge: 'Free In-Browser Utility'
     },
     sections: [
       {
         id: 'desktop-and-web-spoiler-method',
         heading: '1. How to Spoiler Discord Images on Desktop & Web Browser',
-        content: `Discord lets you blur sensitive images behind a dark overlay so people only see them if they click to uncover them.
+        content: `Discord lets you <a href="/tools/spoiler/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">blur sensitive images</a> behind a dark overlay so people only see them if they click to uncover them.
 
 Here is the quickest way to do it on desktop:
 1. Drag and drop your image into the Discord chat box, or click the **+ (Plus)** button next to the message input and select **Upload a File**.
@@ -487,7 +487,7 @@ Here is the quickest way to do it on desktop:
 - **Discord Nitro Basic**: 50.0 MB max file size.
 - **Discord Nitro**: 500.0 MB max file size.
 
-If your photo or capture is larger than 25 MB, using a browser-based discord image compressor lets you resize or compress the file so it uploads quickly without needing a paid Nitro subscription.`
+If your photo or capture is larger than 25 MB, using a browser-based <a href="/tools/image-compressor/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">discord image compressor</a> lets you resize or compress the file so it uploads quickly without needing a paid Nitro subscription.`
       }
     ],
     faqs: [
@@ -545,7 +545,7 @@ If your photo or capture is larger than 25 MB, using a browser-based discord ima
       {
         id: 'server-boost-requirements-for-banners',
         heading: '1. Discord Server Banner Boost Level Requirements',
-        content: `Before looking at how to change server banner discord settings, remember that server banners require Discord Server Boosts. While server icons are free for every server, banners unlock through community boosts.
+        content: `Before looking at how to change server banner discord settings, remember that server banners require Discord Server Boosts. While <a href="/tools/server-icon/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">server icons</a> are free for every server, banners unlock through community boosts.
 
 There are two levels of server banner perks:
 1. **Static Server Banner (Boost Level 2)**:
@@ -574,7 +574,7 @@ There are two levels of server banner perks:
       {
         id: 'step-by-step-how-to-change-server-banner',
         heading: '2. Step-by-Step: <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">How to Change Discord Server Banner</mark> Settings',
-        content: `To upload or update your server banner on desktop:
+        content: `To upload or update your server banner on desktop (design it first in our <a href="/tools/banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord banner maker</a>):
 
 1. Open Discord and go to your server (make sure you have Administrator or "Manage Server" permissions).
 2. Click your **Server Name** at the very top of the channel sidebar to open the menu.
@@ -607,7 +607,7 @@ You still need **Manage Server** permission and at least **Boost Level 2** for t
       {
         id: 'designing-safe-zones-for-server-headers',
         heading: '4. Keeping Important Artwork Below the Top 48px Header',
-        content: `A common mistake is putting text or a logo right at the top of the canvas.
+        content: `A common mistake is putting text or a logo right at the top of the canvas. For layout inspiration before you upload, browse our <a href="/blog/discord-banner-ideas-templates/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord banner ideas and templates</a>.
 
 When members view your server:
 - The top **48 pixels** has a dark gradient overlay so the server name, notification bell, and dropdown arrow stay readable.
