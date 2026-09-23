@@ -130,6 +130,9 @@ const routeHasSpanish = hasSpanishAlternate !== undefined
 <meta property="og:image:alt" content={ogImageAlt} />
 <meta property="og:site_name" content="Discord Asset Studio" />
 <meta property="og:locale" content={isEs ? 'es_ES' : 'en_US'} />
+{!noindex && routeHasSpanish && (
+  <meta property="og:locale:alternate" content={isEs ? 'en_US' : 'es_ES'} />
+)}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
