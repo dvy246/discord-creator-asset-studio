@@ -134,6 +134,11 @@ const indexablePages = [
     primaryKeyword: 'discord username generator',
   },
   {
+    path: 'tools/bio-generator/index.html',
+    url: '/tools/bio-generator/',
+    primaryKeyword: 'discord bio template',
+  },
+  {
     path: 'guides/discord-sizes/index.html',
     url: '/guides/discord-sizes/',
     primaryKeyword: 'discord banner size',
@@ -277,6 +282,11 @@ const indexablePages = [
     path: 'es/tools/username-generator/index.html',
     url: '/es/tools/username-generator/',
     primaryKeyword: 'generador de nombres de usuario discord',
+  },
+  {
+    path: 'es/tools/bio-generator/index.html',
+    url: '/es/tools/bio-generator/',
+    primaryKeyword: 'generador de bio para discord',
   },
   // Asset library pages — gated for title/description length, unique title/desc,
   // single H1, canonical, alt text, and valid JSON-LD (no single-keyword coupling).

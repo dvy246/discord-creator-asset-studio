@@ -1,0 +1,476 @@
+---
+/**
+ * BioGeneratorWorkspace.astro — Discord "About Me" bio generator + templates.
+ *
+ * Builds Discord bio ideas from themed banks (aesthetic, cute, gaming, dark,
+ * minimal, motivational, funny, music): a Generate button assembles a divider
+ * + tagline + interests + closer, a curated template gallery offers ready
+ * copy-paste bios, and click-to-insert symbol / divider / kaomoji rows let you
+ * decorate an editable output box with a live 190-character counter (Discord's
+ * About Me limit). Copy, plus localStorage favorites. All client-side.
+ *
+ * Unlike the username handle, a Discord bio DOES allow Unicode symbols and
+ * emoji, so the decorative banks in ../../data/aesthetic-symbols are fair game.
+ * Language-neutral symbols come from that module; localized text banks live in
+ * BANKS below. Imported by EN (/tools/bio-generator/) and ES (/es/…) pages.
+ */
+import { DIVIDERS, SYMBOLS, KAOMOJI } from '../../data/aesthetic-symbols';
+interface Props { lang?: 'en' | 'es'; }
+const { lang = 'en' } = Astro.props;
+
+// Theme values are language-agnostic (drive the client generator); labels localized.
+const THEMES = [
+  { value: 'aesthetic', en: 'Aesthetic', es: 'Estético' },
+  { value: 'cute', en: 'Cute', es: 'Tierno' },
+  { value: 'gaming', en: 'Gaming', es: 'Gaming' },
+  { value: 'dark', en: 'Dark / edgy', es: 'Oscuro / edgy' },
+  { value: 'minimal', en: 'Minimal', es: 'Minimalista' },
+  { value: 'motivational', en: 'Motivational', es: 'Motivacional' },
+  { value: 'funny', en: 'Funny', es: 'Gracioso' },
+  { value: 'music', en: 'Music', es: 'Música' },
+];
+
+// Visible labels — server-rendered per locale.
+const t = {
+  en: {
+    themeLabel: 'Theme',
+    generate: 'Generate bio',
+    editorLabel: 'Your bio',
+    copy: 'Copy',
+    saveFav: 'Save',
+    templatesLabel: 'Bio templates — click to load',
+    insertLabel: 'Click a symbol, divider, or face to insert it',
+    tabDividers: 'Dividers',
+    tabSymbols: 'Symbols',
+    tabKaomoji: 'Faces',
+    favLabel: 'Saved bios',
+    favEmpty: 'Save a bio above to pin it here. Saved bios stay in this browser only.',
+    clearFav: 'Clear',
+    editorHint: "Edit freely, then copy. Discord's About Me allows up to 190 characters, including line breaks and emoji.",
+    rules: "A Discord bio (About Me) holds up to 190 characters and, unlike your username, allows emoji, symbols, and line breaks. These are copy-paste ideas — paste your favorite into Settings → Profiles → About Me.",
+    themes: Object.fromEntries(THEMES.map((m) => [m.value, m.en])),
+    links: [
+      { href: '/tools/fonts/', label: 'Font Generator' },
+      { href: '/tools/username-generator/', label: 'Username Generator' },
+      { href: '/tools/colored-text/', label: 'Colored Text' },
+    ],
+  },
+  es: {
+    themeLabel: 'Tema',
+    generate: 'Generar bio',
+    editorLabel: 'Tu bio',
+    copy: 'Copiar',
+    saveFav: 'Guardar',
+    templatesLabel: 'Plantillas de bio — haz clic para cargar',
+    insertLabel: 'Haz clic en un símbolo, separador o carita para insertarlo',
+    tabDividers: 'Separadores',
+    tabSymbols: 'Símbolos',
+    tabKaomoji: 'Caritas',
+    favLabel: 'Bios guardadas',
+    favEmpty: 'Guarda una bio de arriba para fijarla aquí. Las bios guardadas quedan solo en este navegador.',
+    clearFav: 'Borrar',
+    editorHint: 'Edita a tu gusto y copia. La sección Sobre mí de Discord admite hasta 190 caracteres, incluidos saltos de línea y emoji.',
+    rules: 'Una bio de Discord (Sobre mí) admite hasta 190 caracteres y, a diferencia del nombre de usuario, permite emoji, símbolos y saltos de línea. Estas son ideas para copiar y pegar — pega tu favorita en Ajustes → Perfiles → Sobre mí.',
+    themes: Object.fromEntries(THEMES.map((m) => [m.value, m.es])),
+    links: [
+      { href: '/es/tools/fonts/', label: 'Generador de Fuentes' },
+      { href: '/es/tools/username-generator/', label: 'Generador de Nombres' },
+      { href: '/es/tools/colored-text/', label: 'Texto de Colores' },
+    ],
+  },
+}[lang];
+
+// Runtime strings for the client script, passed via data-* on the root.
+const js = {
+  en: { copied: 'Copied!', copy: 'Copy', saved: 'Saved!', save: 'Save', favEmpty: "Save a bio above to pin it here. Saved bios stay in this browser only." },
+  es: { copied: '¡Copiado!', copy: 'Copiar', saved: '¡Guardado!', save: 'Guardar', favEmpty: 'Guarda una bio de arriba para fijarla aquí. Las bios guardadas quedan solo en este navegador.' },
+}[lang];
+
+// Localized text banks. Generator assembles: divider + tagline + interests + closer.
+// Templates are curated ready-to-paste bios. All kept well under 190 chars.
+const BANKS = {
+  en: {
+    taglines: {
+      aesthetic: ['lost in daydreams', 'made of moonlight', 'soft heart, quiet mind', 'chasing golden hours', 'a little stardust', 'here for the pretty things'],
+      cute: ['hi hi! resident softie', 'your local sweet bean', 'powered by snacks & naps', 'certified cuddle enthusiast', 'just a smol human', 'sprinkles on everything'],
+      gaming: ['grinding ranked, gg wp', 'built different, queue up', 'clutch or kick', 'respawning since day one', 'aim high, tilt never', 'one more game, always'],
+      dark: ['made of stardust & static', 'quiet mind, loud thoughts', 'roses have thorns', 'comfortably haunted', 'a storm in soft clothing', 'not lost, just wandering'],
+      minimal: ['keeping it simple', 'less, but better', 'making things on the internet', 'here, occasionally', 'work in progress', 'coffee then chaos'],
+      motivational: ['becoming my best self', '1% better every day', 'good vibes only', 'grow through it', 'dream big, start small', 'stay soft, stay strong'],
+      funny: ['professional overthinker', '99% snacks, 1% human', 'will trade memes for food', 'fluent in sarcasm', 'here to cause problems', 'certified menace'],
+      music: ['playlist architect', 'living in a bridge & chorus', 'volume always at 100', 'currently on repeat: ___', 'headphones in, world out', 'my personality is my aux'],
+    },
+    interests: {
+      aesthetic: ['art', 'music', 'midnight walks', 'poetry', 'film', 'plants', 'tea', 'sunsets'],
+      cute: ['plushies', 'boba', 'baking', 'stickers', 'kittens', 'pastels', 'naps', 'doodles'],
+      gaming: ['fps', 'ranked', 'co-op nights', 'speedruns', 'indie games', 'rpgs', 'clan wars', 'retro'],
+      dark: ['thunderstorms', 'old films', 'black coffee', 'vinyl', 'ghost stories', 'rain', 'ink', 'the void'],
+      minimal: ['design', 'code', 'reading', 'coffee', 'photography', 'walks', 'writing', 'travel'],
+      motivational: ['fitness', 'journaling', 'learning', 'early mornings', 'books', 'goals', 'growth', 'mindset'],
+      funny: ['memes', 'snacks', 'chaos', 'dad jokes', 'naps', 'gossip', 'shenanigans', 'vibes'],
+      music: ['indie', 'lofi', 'hyperpop', 'jazz', 'r&b', 'concerts', 'guitar', 'vinyl'],
+    },
+    closers: {
+      aesthetic: ['be soft, stay kind', 'stay dreamy', 'wander often'],
+      cute: ["dm's always open", 'be my friend?', 'stay sweet'],
+      gaming: ['add me & queue up', 'ez clap', 'see you in game'],
+      dark: ['handle with care', 'stay strange', 'into the dark'],
+      minimal: ['say hi', 'thanks for stopping by', 'more soon'],
+      motivational: ['keep going', 'you got this', 'onward & upward'],
+      funny: ['no thoughts, just vibes', 'blame the memes', 'you were warned'],
+      music: ['send me songs', 'aux is mine', 'press play'],
+    },
+    templates: {
+      aesthetic: [
+        '⋆｡°✩ lost in daydreams ✩°｡⋆\n˚ art · music · soft nights ˚\n♡ be kind, stay dreamy ♡',
+        '·˚ ༘ ┊͙ moonlit & quiet\n✧ collecting pretty moments ✧\n❥ dm to say hi',
+        '❀ golden hour enthusiast ❀\npoetry | film | tea\n˗ˏˋ stay soft ˎˊ˗',
+      ],
+      cute: [
+        "🍓 hi hi! resident softie\n˚ʚ♡ɞ˚ boba · plushies · naps\n✧ dm's always open ✧",
+        '( ˘ ³˘)♥ your local sweet bean\npowered by snacks & doodles\n♡ be my friend?',
+        '🌸 smol human, big heart\ncollecting cute things\n~ stay sweet ~',
+      ],
+      gaming: [
+        '🎮 grinding ranked · gg wp\n▸ fps · co-op · speedruns\n⚡ add me & queue up',
+        'clutch or kick 🕹\nbuilt different, tilt never\nsee you in game',
+        '▸ one more game, always\n▸ main: [role]\n▸ gg wp',
+      ],
+      dark: [
+        '☾ made of stardust & static ☽\n— storms · vinyl · black coffee —\n✝ handle with care',
+        '𓆩♡𓆪 comfortably haunted\nquiet mind, loud thoughts\ninto the dark',
+        'roses have thorns 🥀\nold films · rain · ink\nstay strange',
+      ],
+      minimal: [
+        '· designer\n· he/they\n· making things online',
+        'less, but better\ndesign — code — coffee\nsay hi',
+        'work in progress.\nreading, walking, writing.\nmore soon.',
+      ],
+      motivational: [
+        '⟢ becoming my best self ⟢\n✦ 1% better every day\n☀ keep going',
+        'dream big, start small\nfitness · books · growth\nyou got this',
+        'good vibes only ✷\ngrow through it\nonward & upward',
+      ],
+      funny: [
+        'professional overthinker 🤡\n99% snacks, 1% human\nwill trade memes for food',
+        'fluent in sarcasm\nhere to cause problems\nyou were warned',
+        'certified menace 😈\nno thoughts, just vibes\nblame the memes',
+      ],
+      music: [
+        '♫ playlist architect ♫\nindie · lofi · hyperpop\n🎧 on repeat: ___',
+        'volume always at 100\nheadphones in, world out\nsend me songs',
+        'my personality is my aux 🎶\njazz · r&b · concerts\npress play',
+      ],
+    },
+
+  },
+  es: {
+    taglines: {
+      aesthetic: ['perdido en sueños', 'hecho de luz de luna', 'corazón suave, mente tranquila', 'persiguiendo horas doradas', 'un poco de polvo estelar', 'aquí por lo bonito'],
+      cute: ['¡hola hola! blandito oficial', 'tu dulce local', 'a base de snacks y siestas', 'amante de los abrazos', 'solo un humano pequeño', 'brillo en todo'],
+      gaming: ['grindeando ranked, gg wp', 'nivel distinto, entra a la cola', 'clutch o kick', 'respawneando desde el día uno', 'apunta alto, nunca tilt', 'una partida más, siempre'],
+      dark: ['hecho de polvo estelar y estática', 'mente tranquila, pensamientos ruidosos', 'las rosas tienen espinas', 'cómodamente embrujado', 'una tormenta con ropa suave', 'no perdido, solo vagando'],
+      minimal: ['manteniéndolo simple', 'menos, pero mejor', 'creando cosas en internet', 'por aquí, a veces', 'trabajo en progreso', 'café y luego caos'],
+      motivational: ['siendo mi mejor versión', '1% mejor cada día', 'solo buenas vibras', 'crece a través de ello', 'sueña en grande, empieza pequeño', 'suave pero fuerte'],
+      funny: ['sobrepensador profesional', '99% snacks, 1% humano', 'cambio memes por comida', 'fluido en sarcasmo', 'aquí para causar problemas', 'amenaza certificada'],
+      music: ['arquitecto de playlists', 'viviendo en un puente y coro', 'volumen siempre al 100', 'en repeat: ___', 'audífonos puestos, mundo fuera', 'mi personalidad es mi aux'],
+    },
+    interests: {
+      aesthetic: ['arte', 'música', 'paseos nocturnos', 'poesía', 'cine', 'plantas', 'té', 'atardeceres'],
+      cute: ['peluches', 'boba', 'repostería', 'stickers', 'gatitos', 'pasteles', 'siestas', 'garabatos'],
+      gaming: ['fps', 'ranked', 'noches co-op', 'speedruns', 'juegos indie', 'rpgs', 'guerras de clan', 'retro'],
+      dark: ['tormentas', 'cine clásico', 'café negro', 'vinilos', 'historias de fantasmas', 'lluvia', 'tinta', 'el vacío'],
+      minimal: ['diseño', 'código', 'lectura', 'café', 'fotografía', 'paseos', 'escritura', 'viajes'],
+      motivational: ['fitness', 'journaling', 'aprender', 'mañanas temprano', 'libros', 'metas', 'crecimiento', 'mentalidad'],
+      funny: ['memes', 'snacks', 'caos', 'chistes malos', 'siestas', 'chismes', 'travesuras', 'vibras'],
+      music: ['indie', 'lofi', 'hyperpop', 'jazz', 'r&b', 'conciertos', 'guitarra', 'vinilos'],
+    },
+    closers: {
+      aesthetic: ['sé suave, sé amable', 'sigue soñando', 'vaga a menudo'],
+      cute: ['mis dms siempre abiertos', '¿me hablas?', 'quédate dulce'],
+      gaming: ['agrégame y entra a la cola', 'ez clap', 'nos vemos en el juego'],
+      dark: ['manéjame con cuidado', 'sé raro', 'hacia la oscuridad'],
+      minimal: ['saluda', 'gracias por pasar', 'pronto más'],
+      motivational: ['sigue adelante', 'tú puedes', 'hacia arriba'],
+      funny: ['sin pensamientos, solo vibras', 'culpa a los memes', 'te lo advertí'],
+      music: ['mándame canciones', 'el aux es mío', 'dale play'],
+    },
+    templates: {
+      aesthetic: [
+        '⋆｡°✩ perdido en sueños ✩°｡⋆\n˚ arte · música · noches suaves ˚\n♡ sé amable, sigue soñando ♡',
+        '·˚ ༘ ┊͙ tranquilo y a la luz de la luna\n✧ coleccionando momentos bonitos ✧\n❥ escríbeme',
+        '❀ amante de la hora dorada ❀\npoesía | cine | té\n˗ˏˋ sé suave ˎˊ˗',
+      ],
+      cute: [
+        '🍓 ¡hola hola! blandito oficial\n˚ʚ♡ɞ˚ boba · peluches · siestas\n✧ dms siempre abiertos ✧',
+        '( ˘ ³˘)♥ tu dulce local\na base de snacks y garabatos\n♡ ¿me hablas?',
+        '🌸 humano pequeño, gran corazón\ncoleccionando cosas tiernas\n~ quédate dulce ~',
+      ],
+      gaming: [
+        '🎮 grindeando ranked · gg wp\n▸ fps · co-op · speedruns\n⚡ agrégame y a la cola',
+        'clutch o kick 🕹\nnivel distinto, nunca tilt\nnos vemos en el juego',
+        '▸ una partida más, siempre\n▸ main: [rol]\n▸ gg wp',
+      ],
+      dark: [
+        '☾ hecho de polvo estelar y estática ☽\n— tormentas · vinilos · café negro —\n✝ manéjame con cuidado',
+        '𓆩♡𓆪 cómodamente embrujado\nmente tranquila, pensamientos ruidosos\nhacia la oscuridad',
+        'las rosas tienen espinas 🥀\ncine clásico · lluvia · tinta\nsé raro',
+      ],
+      minimal: [
+        '· diseñador\n· él/elle\n· creando cosas online',
+        'menos, pero mejor\ndiseño — código — café\nsaluda',
+        'trabajo en progreso.\nleyendo, caminando, escribiendo.\npronto más.',
+      ],
+      motivational: [
+        '⟢ siendo mi mejor versión ⟢\n✦ 1% mejor cada día\n☀ sigue adelante',
+        'sueña en grande, empieza pequeño\nfitness · libros · crecimiento\ntú puedes',
+        'solo buenas vibras ✷\ncrece a través de ello\nhacia arriba',
+      ],
+      funny: [
+        'sobrepensador profesional 🤡\n99% snacks, 1% humano\ncambio memes por comida',
+        'fluido en sarcasmo\naquí para causar problemas\nte lo advertí',
+        'amenaza certificada 😈\nsin pensamientos, solo vibras\nculpa a los memes',
+      ],
+      music: [
+        '♫ arquitecto de playlists ♫\nindie · lofi · hyperpop\n🎧 en repeat: ___',
+        'volumen siempre al 100\naudífonos puestos, mundo fuera\nmándame canciones',
+        'mi personalidad es mi aux 🎶\njazz · r&b · conciertos\ndale play',
+      ],
+    },
+  },
+}[lang];
+---
+<div
+  id="bg-workspace"
+  data-copied={js.copied}
+  data-copy={js.copy}
+  data-saved={js.saved}
+  data-save={js.save}
+  data-favempty={js.favEmpty}
+  class="mx-auto w-full max-w-4xl"
+>
+  <script type="application/json" id="bg-banks" set:html={JSON.stringify(BANKS)}></script>
+
+  <!-- Controls -->
+  <div class="rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] p-5 sm:p-6 shadow-sm">
+    <div class="flex flex-wrap items-end gap-4">
+      <div class="min-w-[180px] flex-1">
+        <label for="bg-theme" class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.themeLabel}</label>
+        <select id="bg-theme" class="w-full rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-4 py-3 text-sm font-semibold text-[#192538] dark:text-white outline-none focus:border-[#3368A0]">
+          {THEMES.map((m) => <option value={m.value}>{t.themes[m.value]}</option>)}
+        </select>
+      </div>
+      <button id="bg-generate" type="button" class="btn-primary rounded-[10px] px-5 py-3 text-sm font-semibold">{t.generate}</button>
+    </div>
+  </div>
+
+  <!-- Editor -->
+  <div class="mt-5 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] p-5 shadow-sm">
+    <div class="mb-2 flex items-center justify-between gap-3">
+      <label for="bg-editor" class="text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.editorLabel}</label>
+      <span id="bg-count" class="font-mono text-xs font-semibold text-[#6B7A90] dark:text-[#8494A7]">0 / 190</span>
+    </div>
+    <textarea id="bg-editor" rows="5" class="w-full resize-y rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-4 py-3 font-mono text-sm text-[#192538] dark:text-white outline-none focus:border-[#3368A0]"></textarea>
+    <div class="mt-3 flex flex-wrap gap-2">
+      <button id="bg-copy" type="button" class="btn-primary rounded-[10px] px-5 py-2.5 text-sm font-semibold">{t.copy}</button>
+      <button id="bg-save" type="button" class="btn-secondary rounded-[10px] px-4 py-2.5 text-xs font-semibold">{t.saveFav}</button>
+    </div>
+    <p class="mt-2 text-xs text-[#6B7A90] dark:text-[#8494A7]">{t.editorHint}</p>
+  </div>
+
+  <!-- Click-to-insert: dividers / symbols / faces -->
+  <div class="mt-5 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] p-5 shadow-sm">
+    <p class="mb-3 text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.insertLabel}</p>
+    <div class="mb-3 flex flex-wrap gap-2" role="tablist">
+      <button id="bg-tab-dividers" type="button" data-tab="dividers" class="bg-tab btn-secondary rounded-full px-4 py-1.5 text-xs font-semibold">{t.tabDividers}</button>
+      <button id="bg-tab-symbols" type="button" data-tab="symbols" class="bg-tab btn-secondary rounded-full px-4 py-1.5 text-xs font-semibold">{t.tabSymbols}</button>
+      <button id="bg-tab-kaomoji" type="button" data-tab="kaomoji" class="bg-tab btn-secondary rounded-full px-4 py-1.5 text-xs font-semibold">{t.tabKaomoji}</button>
+    </div>
+    <div id="bg-insert-grid" class="flex flex-wrap gap-2"></div>
+  </div>
+
+  <!-- Template gallery -->
+  <div class="mt-5">
+    <p class="mb-2 text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.templatesLabel}</p>
+    <div id="bg-templates" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"></div>
+  </div>
+
+  <!-- Favorites -->
+  <div class="mt-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] p-5 shadow-sm">
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <p class="text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">⭐ {t.favLabel}</p>
+      <button id="bg-clearfav" type="button" class="btn-secondary rounded-full px-3 py-1.5 text-xs font-semibold">{t.clearFav}</button>
+    </div>
+    <div id="bg-favorites" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"></div>
+    <p id="bg-fav-empty" class="text-xs text-[#6B7A90] dark:text-[#8494A7]">{t.favEmpty}</p>
+  </div>
+
+  <!-- About-Me rules note -->
+  <p class="mt-5 rounded-[10px] border border-[#C8DFDB] dark:border-[#263346] bg-[#F0F7F6] dark:bg-[#141A24] px-4 py-3 text-xs text-[#475569] dark:text-[#94A3B8]">
+    ℹ️ {t.rules}
+  </p>
+
+  <!-- Trailing internal links -->
+  <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+    {t.links.map((link) => (
+      <a href={link.href} class="font-semibold text-[#3368A0] dark:text-[#66A3BF] transition hover:underline">{link.label} →</a>
+    ))}
+  </div>
+</div>
+<script>
+  import { DIVIDERS, SYMBOLS, KAOMOJI } from '../../data/aesthetic-symbols';
+  const ws = document.getElementById('bg-workspace');
+  if (ws) {
+    const L = {
+      copied: ws.dataset.copied || 'Copied!',
+      copy: ws.dataset.copy || 'Copy',
+      saved: ws.dataset.saved || 'Saved!',
+      save: ws.dataset.save || 'Save',
+      favEmpty: ws.dataset.favempty || '',
+    };
+    let BANKS: any = {};
+    try { BANKS = JSON.parse(document.getElementById('bg-banks')?.textContent || '{}'); } catch {}
+    const themeSel = ws.querySelector('#bg-theme') as HTMLSelectElement;
+    const editor = ws.querySelector('#bg-editor') as HTMLTextAreaElement;
+    const countEl = ws.querySelector('#bg-count') as HTMLElement;
+    const genBtn = ws.querySelector('#bg-generate') as HTMLButtonElement;
+    const copyBtn = ws.querySelector('#bg-copy') as HTMLButtonElement;
+    const saveBtn = ws.querySelector('#bg-save') as HTMLButtonElement;
+    const insertGrid = ws.querySelector('#bg-insert-grid') as HTMLElement;
+    const templatesBox = ws.querySelector('#bg-templates') as HTMLElement;
+    const favBox = ws.querySelector('#bg-favorites') as HTMLElement;
+    const favEmpty = ws.querySelector('#bg-fav-empty') as HTMLElement;
+    const clearFavBtn = ws.querySelector('#bg-clearfav') as HTMLButtonElement;
+    const tabs = Array.from(ws.querySelectorAll('.bg-tab')) as HTMLButtonElement[];
+
+    const MAX = 190;
+    const FAV_KEY = 'dcas-bio-favorites';
+    const INSERTS: Record<string, string[]> = { dividers: DIVIDERS, symbols: SYMBOLS, kaomoji: KAOMOJI };
+    const clen = (s: string) => [...s].length;
+    const rand = (a: string[]) => a[Math.floor(Math.random() * a.length)];
+    async function copyText(text: string) {
+      try { await navigator.clipboard.writeText(text); }
+      catch {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch {}
+        document.body.removeChild(ta);
+      }
+    }
+    function updateCount() {
+      const n = clen(editor.value);
+      countEl.textContent = n + ' / ' + MAX;
+      countEl.classList.toggle('!text-[#ed4245]', n > MAX);
+      countEl.classList.toggle('text-[#6B7A90]', n <= MAX);
+    }
+    function insertAtCursor(text: string) {
+      const start = editor.selectionStart ?? editor.value.length;
+      const end = editor.selectionEnd ?? editor.value.length;
+      editor.value = editor.value.slice(0, start) + text + editor.value.slice(end);
+      const pos = start + text.length;
+      editor.focus(); editor.setSelectionRange(pos, pos);
+      updateCount();
+    }
+    // Assemble divider + tagline + interests + closer, trimmed to 190 code points.
+    function generate(theme: string) {
+      const tl = BANKS.taglines?.[theme] || [];
+      const ints = BANKS.interests?.[theme] || [];
+      const cls = BANKS.closers?.[theme] || [];
+      const picks = [...ints].sort(() => Math.random() - 0.5).slice(0, 3);
+      const lines: string[] = [];
+      lines.push(rand(DIVIDERS));
+      if (tl.length) lines.push(rand(tl));
+      if (picks.length) lines.push(picks.join(' · '));
+      if (cls.length) lines.push(rand(cls));
+      let bio = lines.join('\n');
+      while (clen(bio) > MAX && lines.length > 1) { lines.pop(); bio = lines.join('\n'); }
+      if (clen(bio) > MAX) bio = [...bio].slice(0, MAX).join('');
+      return bio;
+    }
+    function chip(char: string, onClick: () => void) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-3 py-2 font-mono text-sm text-[#192538] dark:text-white transition hover:border-[#3368A0] hover:text-[#3368A0] dark:hover:text-[#66A3BF]';
+      b.textContent = char;
+      b.addEventListener('click', onClick);
+      return b;
+    }
+    function setActiveTab(name: string) {
+      tabs.forEach((tb) => {
+        const on = tb.dataset.tab === name;
+        tb.classList.toggle('ring-2', on);
+        tb.classList.toggle('ring-[#FF84BA]', on);
+        tb.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    }
+    function renderInserts(name: string) {
+      insertGrid.innerHTML = '';
+      (INSERTS[name] || []).forEach((c) => insertGrid.appendChild(chip(c, () => insertAtCursor(c))));
+      setActiveTab(name);
+    }
+    function templateCard(text: string) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'whitespace-pre-line rounded-[12px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] p-4 text-left font-mono text-sm leading-relaxed text-[#192538] dark:text-white transition hover:border-[#3368A0]';
+      b.textContent = text;
+      b.addEventListener('click', () => { editor.value = text; updateCount(); editor.focus(); });
+      return b;
+    }
+    function renderTemplates(theme: string) {
+      templatesBox.innerHTML = '';
+      (BANKS.templates?.[theme] || []).forEach((tpl: string) => templatesBox.appendChild(templateCard(tpl)));
+    }
+    function loadFavs(): string[] {
+      try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); } catch { return []; }
+    }
+    function saveFavs(list: string[]) {
+      try { localStorage.setItem(FAV_KEY, JSON.stringify(list)); } catch {}
+    }
+    function favCard(text: string) {
+      const wrap = document.createElement('div');
+      wrap.className = 'relative whitespace-pre-line rounded-[12px] border border-[#C8DFDB] dark:border-[#263346] bg-[#F0F7F6] dark:bg-[#1B2330] p-4 pr-9 font-mono text-sm leading-relaxed text-[#192538] dark:text-white';
+      const load = document.createElement('button');
+      load.type = 'button'; load.className = 'block w-full text-left'; load.textContent = text;
+      load.addEventListener('click', () => { editor.value = text; updateCount(); editor.focus(); });
+      const x = document.createElement('button');
+      x.type = 'button'; x.className = 'absolute right-2 top-2 rounded-full px-1 text-[#6B7A90] transition hover:text-[#ed4245]'; x.textContent = '×'; x.setAttribute('aria-label', 'remove');
+      x.addEventListener('click', () => { const l = loadFavs().filter((v) => v !== text); saveFavs(l); renderFavs(); });
+      wrap.appendChild(load); wrap.appendChild(x);
+      return wrap;
+    }
+    function renderFavs() {
+      const list = loadFavs(); favBox.innerHTML = '';
+      if (!list.length) { favEmpty.style.display = ''; favEmpty.textContent = L.favEmpty; return; }
+      favEmpty.style.display = 'none';
+      list.forEach((v) => favBox.appendChild(favCard(v)));
+    }
+
+    genBtn.addEventListener('click', () => { editor.value = generate(themeSel.value); updateCount(); });
+    themeSel.addEventListener('change', () => renderTemplates(themeSel.value));
+    editor.addEventListener('input', updateCount);
+    tabs.forEach((tb) => tb.addEventListener('click', () => renderInserts(tb.dataset.tab || 'dividers')));
+    copyBtn.addEventListener('click', async () => {
+      if (!editor.value) return;
+      await copyText(editor.value);
+      copyBtn.textContent = L.copied;
+      setTimeout(() => { copyBtn.textContent = L.copy; }, 1200);
+    });
+    saveBtn.addEventListener('click', () => {
+      const v = editor.value.trim(); if (!v) return;
+      const list = loadFavs(); if (!list.includes(v)) list.unshift(v);
+      saveFavs(list); renderFavs();
+      saveBtn.textContent = L.saved;
+      setTimeout(() => { saveBtn.textContent = L.save; }, 1200);
+    });
+    clearFavBtn.addEventListener('click', () => { saveFavs([]); renderFavs(); });
+
+    editor.value = generate(themeSel.value);
+    updateCount();
+    renderInserts('dividers');
+    renderTemplates(themeSel.value);
+    renderFavs();
+  }
+</script>
+
+

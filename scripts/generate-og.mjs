@@ -539,6 +539,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/bio-generator.png',
+    config: {
+      title: 'DISCORD BIO', titleLine2: 'TEMPLATE GENERATOR',
+      subtitle: 'COPY-PASTE BIO IDEAS UNDER THE 190-CHARACTER LIMIT',
+      tagline1: 'AESTHETIC • CUTE • GAMING • MINIMAL • MOTIVATIONAL',
+      tagline2: 'SYMBOLS & DIVIDERS • 190 COUNTER • COPY & SAVE',
+      badge: 'THEMED TEMPLATES + WORD BANKS • NO LOGIN',
+      cards: [
+        { label: 'THEMES', desc: 'EIGHT STYLES' }, { label: 'LIMIT', desc: '190 CHARS' },
+        { label: 'SYMBOLS', desc: 'DIVIDERS' }, { label: 'COPY', desc: 'ONE CLICK' },
+        { label: 'SAVE', desc: 'FAVORITES' }
+      ]
+    }
+  },
+  {
     file: 'public/og/colors.png',
     config: {
       title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',

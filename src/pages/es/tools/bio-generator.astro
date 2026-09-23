@@ -1,0 +1,126 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import BioGeneratorWorkspace from '../../../components/tools/BioGeneratorWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+
+const pageTitle = "Generador de Bio para Discord | Plantillas";
+const pageDescription = "Generador de bio para Discord gratis con plantillas para copiar y pegar — diseños estéticos, tiernos y gaming en menos de 190 caracteres. Símbolos y favoritos.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/bio-generator/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/bio-generator/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Generador de Bio para Discord",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Generador de Bio", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cómo funciona este generador de bio para Discord?", a: "Elige un tema — estético, tierno, gaming, oscuro, minimalista, motivacional, gracioso o música — y pulsa Generar para armar una bio con un separador decorativo, un lema, una línea de intereses y un cierre. También puedes hacer clic en cualquier plantilla lista de la galería para cargarla en el editor y luego ajustar el texto. Un contador en vivo te mantiene bajo el límite de 190 caracteres de la sección Sobre mí, y las filas de símbolos, separadores y caritas decoran el texto. Todo se ejecuta en tu navegador." },
+  { q: "¿Cuál es el límite de caracteres de una bio de Discord?", a: "La bio de Discord — oficialmente el campo Sobre mí — admite hasta 190 caracteres y, a diferencia del nombre de usuario, permite emoji, símbolos Unicode y saltos de línea. Por eso las plantillas usan separadores como ⋆｡°✩ y líneas apiladas: todo se muestra dentro de Discord. El contador del editor cuenta por punto de código (como lo hace Discord) y se pone rojo si pasas de 190, para que recortes antes de pegar. El mensaje de estado corto bajo tu nombre es aparte — esta herramienta es para el Sobre mí más largo." },
+  { q: "¿Cómo hago una bio estética o tierna en Discord?", a: "Elige el tema Estético o Tierno y Genera varias veces — estético se apoya en lemas suaves y soñadores (perdido en sueños, hecho de luz de luna) con separadores delicados, mientras que tierno usa líneas juguetonas (blandito oficial, a base de snacks y siestas) y caritas kaomoji. Luego abre las pestañas Símbolos y Caritas para añadir ♡, ✧, 🌸 o (｡♥‿♥｡) justo donde está tu cursor. La meta es un diseño corto y estilizado que aún se lea con claridad — genera, carga una plantilla y edita hasta que sea tuya." },
+  { q: "¿Puedo copiar y pegar estas bios de Discord?", a: "Sí — cada plantilla y bio generada es texto plano con símbolos Unicode reales, hecho para copiar y pegar directamente en Discord sin necesidad de Nitro. Pulsa Copiar para tomar todo el editor, o haz clic en una tarjeta de plantilla para cargarla primero y editarla antes de copiar. Como los símbolos y saltos de línea son Unicode estándar, se pegan igual en escritorio y web; algunas versiones móviles antiguas pueden aplanar ciertos glifos decorativos, así que previsualiza en el dispositivo que más uses." },
+  { q: "¿Dónde pego mi bio de Discord?", a: "Abre Discord y ve a Ajustes → Perfiles → Sobre mí (Perfil de usuario en móvil). Pega ahí tu bio y guarda — el campo de 190 caracteres acepta los saltos de línea y el emoji de esta herramienta. Puedes tener una bio distinta para tu perfil principal y una por servidor si tienes Nitro. Marca con estrella las bios que te gusten para guardar una lista en tu navegador y pega tu favorita cuando quieras actualizar tu perfil." }
+];
+
+const dossier = {
+  eyebrow: "Plano del Generador de Bio",
+  heading: "De un cuadro vacío a una",
+  highlight: "bio para copiar y pegar",
+  intro: "Una buena bio de Discord es corta, estilizada y dice algo en 190 caracteres o menos. Esta herramienta te da dos caminos — generar una bio desde bancos de palabras temáticos o cargar una plantilla lista — y luego te deja decorarla con símbolos, separadores y caritas antes de copiar. Aquí verás qué cabe en una bio, cómo funcionan los temas y diseños, y cómo encajan el copiado y los favoritos.",
+  steps: [
+    "Reglas de la Bio",
+    "Temas e Ideas",
+    "Diseño y Símbolos",
+    "Copiar y Guardar"
+  ],
+  cards: [
+    {
+      kicker: "REGLAS DE LA BIO // 01",
+      badge: "190 CARACTERES, EMOJI PERMITIDO",
+      badgeTone: "blue" as const,
+      title: "Qué cabe de verdad en una bio de Discord",
+      body: [
+        "La bio Sobre mí admite hasta 190 caracteres — y, a diferencia del estricto nombre de usuario, acepta emoji, símbolos Unicode y saltos de línea. Eso es lo que hace posibles los diseños apilados y decorados: una fila separadora, un lema, algunos intereses, un cierre. El contador en vivo cuenta por punto de código como Discord, así que lo que ves es lo que cabrá.",
+        "Ten claro que el Sobre mí es distinto del mensaje de estado corto y de tu nombre visible. Esta herramienta arma el campo Sobre mí más largo, donde tienes espacio para unas líneas de personalidad. Recorta bien por debajo de 190 si quieres aire — las bios densas se leen peor que las cortas y seguras."
+      ]
+    },
+    {
+      kicker: "TEMAS E IDEAS // 02",
+      badge: "ESTÉTICO / TIERNO / GAMING",
+      badgeTone: "emerald" as const,
+      title: "Ocho temas, ideas de bio infinitas",
+      body: [
+        "Cada tema ajusta el rollo. Generar arma una bio con los lemas, intereses y cierres de ese tema, así que estético se siente soñador, gaming se lee competitivo, tierno queda suave y oscuro va melancólico — más minimalista, motivacional, gracioso y música. Cada clic baraja de nuevo, así que trátalo como lluvia de ideas: genera un puñado, quédate con la línea que te gusta y reescribe el resto.",
+        "La galería de plantillas bajo el editor muestra bios listas para pegar del tema seleccionado — un arranque más rápido si prefieres editar antes que construir desde cero. Cambia el desplegable de tema y la galería se actualiza. Carga una y hazla tuya."
+      ],
+      footer: "Ocho temas, barajados en cada clic — genera hasta dar con una línea."
+    },
+    {
+      kicker: "DISEÑO Y SÍMBOLOS // 03",
+      badge: "SEPARADORES / SÍMBOLOS / CARITAS",
+      badgeTone: "amber" as const,
+      title: "Arma un diseño de bio con separadores",
+      body: [
+        "El aspecto de una bio es sobre todo diseño: una línea separadora arriba, líneas cortas apiladas, un símbolo o dos de acento. Las pestañas Separadores, Símbolos y Caritas los insertan justo en tu cursor, para que enmarques un lema con ⋆｡°✩ o dejes un ♡ entre intereses sin buscar en un mapa de caracteres.",
+        "Los saltos de línea son tu herramienta principal de diseño — el editor es un cuadro real de varias líneas, así que pulsa Enter para apilar líneas y deja que los símbolos decoren. Como todo es Unicode estándar, el diseño que armas aquí es el que Discord muestra, sin Nitro."
+      ]
+    },
+    {
+      kicker: "COPIAR Y GUARDAR // 04",
+      badge: "COPIAR-PEGAR Y FAVORITOS",
+      badgeTone: "purple" as const,
+      title: "Copia, pega y guarda favoritos",
+      body: [
+        "Pulsa Copiar para tomar toda la bio y pégala en Discord en Ajustes → Perfiles → Sobre mí. Guardar fija la bio actual en Favoritos, que persisten en este navegador mediante almacenamiento local, así una lista de bios sobrevive a un refresco. Nada se sube — la generación, la edición y los favoritos nunca salen de tu dispositivo.",
+        "Como son bios para copiar y pegar en Unicode plano, funcionan igual en Discord de escritorio y web; algunos glifos decorativos pueden verse distintos en móviles antiguos, así que previsualiza en tu dispositivo principal antes de confirmar. Estiliza tu nombre y el chat por separado con nuestros generadores de Fuentes y Texto de Colores."
+      ],
+      footer: "Los favoritos viven en tu navegador; copiar y pegar funciona sin Nitro."
+    }
+  ]
+};
+---
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/bio-generator.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Ruta de navegación" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Generador de Bio</span>
+        </div>
+        <a href={enUrl} class="hover:text-[#3368A0] transition-colors" hreflang="en">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Generador de Bio para Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Genera una bio o carga una plantilla • diseños estéticos, tiernos y gaming • contador de 190 caracteres, copiar y pegar</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <BioGeneratorWorkspace lang="es" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
+
+  </div>
+</Layout>
