@@ -97,14 +97,19 @@ const howToSchema = JSON.parse(generateHowToSchema({
   <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
 
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-    <!-- Breadcrumb -->
-    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-4 font-mono">
-      <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
-      <span>/</span>
-      <a href="/guides/discord-sizes/" class="hover:text-[#3368A0] transition-colors">Size Guide</a>
-      <span>/</span>
-      <span class="text-[#192538] dark:text-white font-semibold">GIF Guide</span>
-    </nav>
+    <!-- Breadcrumb & Alternate Language -->
+    <div class="flex items-center justify-between gap-4 mb-4">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <a href="/guides/discord-sizes/" class="hover:text-[#3368A0] transition-colors">Size Guide</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">GIF Guide</span>
+      </nav>
+      <a href="/es/guides/discord-gif-guide/" class="text-xs font-mono text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold flex items-center gap-1 whitespace-nowrap">
+        🌐 Leer en Español
+      </a>
+    </div>
 
     <!-- Header Section -->
     <div class="mb-12">

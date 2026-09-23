@@ -229,7 +229,7 @@ export const ASSET_CATEGORIES: Record<AssetCategory, CategoryInfo> = {
     name: 'Cinematic & Atmosphere',
     shortName: 'Cinematic',
     slug: 'cinematic',
-    seoTitle: 'Cinematic Discord Banners & Atmospheric Profile Sets | Studio',
+    seoTitle: 'Cinematic Discord Banners & Atmospheric Profiles | Studio',
     metaDescription: 'High-production cinematic Discord banners with dramatic lighting, volumetric rain, anamorphic lens flares, and epic movie-scale horizons.',
     h1Title: 'Cinematic Discord Banners & Environmental Art',
     description: 'Anamorphic lens flares, stormy horizons, blade-runner rainfall, and vast desert mirages built with widescreen cinematic composition.',

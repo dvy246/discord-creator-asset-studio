@@ -1,8 +1,22 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '../utils/seo';
+
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/privacy/";
+const privacySchema = generateWebPageSchema({
+  name: 'Privacy Policy — Discord Creator Asset Studio',
+  description: 'How Discord Creator Asset Studio handles your media: 100% client-side processing, zero server uploads, and minimal local storage.',
+  url: pageUrl
+});
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Privacy", url: pageUrl }
+]);
 ---
 
 <Layout title="Privacy Policy | Discord Asset Studio" description="Read our client-side privacy disclosure: Discord Asset Studio processes all images locally in your browser with zero server uploads.">
+  <script type="application/ld+json" set:html={privacySchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-10">
       <span class="text-xs font-bold text-[#3368A0] uppercase tracking-wider">Zero-Server Guarantee</span>

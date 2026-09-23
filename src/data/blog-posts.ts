@@ -26,6 +26,8 @@ export interface BlogFAQ {
 export interface BlogPost {
   slug: string;
   title: string;
+  /** Natural-language H1 / schema headline, free of pipe separators and brand suffixes. */
+  heading: string;
   metaDescription: string;
   primaryKeyword: string;
   secondaryKeywords: string[];
@@ -49,12 +51,21 @@ export interface BlogPost {
   };
   sections: BlogSection[];
   faqs: BlogFAQ[];
+  /** Present only on procedural posts; drives HowTo JSON-LD. */
+  howToSteps?: { name: string; text: string }[];
 }
 
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'how-to-make-discord-stickers',
     title: 'How to Make a Discord Sticker | Avoid Asset Errors | Studio',
+    heading: 'How to Make a Discord Sticker',
+    howToSteps: [
+      { name: 'Resize to 320×320', text: 'Crop or scale your artwork to exactly 320×320 pixels — the only dimensions Discord accepts for custom stickers.' },
+      { name: 'Compress under 512 KiB', text: 'Export as PNG (or APNG for animation) and compress the file below the 512 KiB limit to avoid the "invalid asset" error.' },
+      { name: 'Open Server Settings → Stickers', text: 'In your server, open Server Settings, select the Stickers tab, and click Upload Sticker.' },
+      { name: 'Upload and name the sticker', text: 'Choose your 320×320 file, give the sticker a name and a related emoji, then save.' }
+    ],
     metaDescription: 'Complete guide on how to make a Discord sticker. Master 320x320 dimensions, 512 KiB limits, APNG compression, and resolve invalid asset errors instantly.',
     primaryKeyword: 'how to make a discord sticker',
     secondaryKeywords: [
@@ -179,6 +190,7 @@ Here is the exact upload path:
   {
     slug: 'discord-banner-ideas-templates',
     title: 'Discord Banner Ideas | Find Your Aesthetic | Asset Studio',
+    heading: 'Discord Banner Ideas & Templates',
     metaDescription: 'Explore creative Discord banner ideas and templates. Download 960x540 server and 680x240 profile banner layouts in red, blue, anime, and black themes.',
     primaryKeyword: 'discord banner ideas',
     secondaryKeywords: [
@@ -297,6 +309,7 @@ Anime styles remain a community favorite. Wide landscape shots work best here, i
   {
     slug: 'discord-pfp-ideas-anime-avatars',
     title: 'PFP Discord | Stand Out in Chat Feeds | Asset Studio',
+    heading: 'PFP Discord Ideas for Anime Avatars',
     metaDescription: 'Find the best anime PFP Discord ideas and avatars. Master circle mask geometry, GIF animations, and avoid status indicator badge clipping under 8 MB.',
     primaryKeyword: 'pfp discord',
     secondaryKeywords: [
@@ -406,6 +419,13 @@ On top of that, Discord places a <a href="/tools/colors/" class="text-[#3368A0] 
   {
     slug: 'how-to-put-spoiler-on-discord-image',
     title: 'How to Put a Spoiler on Discord Image | Hide Media | Studio',
+    heading: 'How to Put a Spoiler on Discord Images',
+    howToSteps: [
+      { name: 'Attach the image', text: 'In the Discord message box, attach the image you want to hide — but do not send it yet.' },
+      { name: 'Mark as spoiler on desktop', text: 'Hover over the attachment and click the eye / "Mark as spoiler" icon before sending.' },
+      { name: 'Mark as spoiler on mobile', text: 'On iOS or Android, tap the attached image and choose "Mark as Spoiler".' },
+      { name: 'Or use the SPOILER_ prefix', text: 'Rename the file so it begins with SPOILER_ and Discord blurs it automatically on upload.' }
+    ],
     metaDescription: 'Learn how to put a spoiler on Discord image files on desktop and mobile. Master SPOILER_ file naming tricks and size limits under 25 MB.',
     primaryKeyword: 'how to put a spoiler on discord image',
     secondaryKeywords: [
@@ -512,6 +532,13 @@ If your photo or capture is larger than 25 MB, using a browser-based <a href="/t
   {
     slug: 'how-to-change-discord-server-banner',
     title: 'How to Change Discord Server Banner | Boost Guide | Studio',
+    heading: 'How to Change Discord Server Banner (Step-by-Step)',
+    howToSteps: [
+      { name: 'Confirm Boost Level 2', text: 'A server banner requires Boost Level 2, so verify your server has reached the required boost tier first.' },
+      { name: 'Prepare a 960×540 image', text: 'Create a 16:9 banner at 960×540 pixels, keeping key artwork clear of the top 48px header overlap.' },
+      { name: 'Open Server Settings → Overview', text: 'On desktop, open Server Settings and select the Overview tab.' },
+      { name: 'Upload the banner', text: 'Under Server Banner Background, click to upload your image and save changes.' }
+    ],
     metaDescription: 'Step-by-step guide on how to change Discord server banner settings. Master 16:9 dimensions (960x540), Boost Level 2 & 3 rules, and header occlusion zones.',
     primaryKeyword: 'how to change discord server banner',
     secondaryKeywords: [

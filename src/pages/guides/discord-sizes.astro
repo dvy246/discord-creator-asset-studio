@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
-import { generateBreadcrumbSchema } from '../../utils/seo';
+import { generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Banner Size | Full Dimensions Guide | Asset Studio";
 const pageDescription = "Verified guide to Discord banner size, avatar dimensions, emoji limits, and sticker specs for 2026. Safe zones, Nitro limits, and boost tier requirements.";
@@ -36,6 +36,30 @@ const breadcrumbJson = generateBreadcrumbSchema([
   { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
   { name: "Size Guide", url: "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/" }
 ]);
+
+const faqItems = [
+  {
+    q: "What is the correct Discord banner size?",
+    a: "A Discord server banner is 960×540 (16:9), and a profile banner is a minimum of 680×240. Both accept PNG, JPG, or animated GIF files up to 10 MB. Server banners require Boost Level 2 or 3; profile banners require Discord Nitro."
+  },
+  {
+    q: "What size should a Discord PFP or avatar be?",
+    a: "The recommended Discord avatar (profile picture) size is 512×512 pixels at a 1:1 ratio, under 8 MB. Discord crops the square image into a circle, hiding about 21% of the corners, so keep faces and logos centered."
+  },
+  {
+    q: "Why does Discord reject my emoji when it says 256 KB?",
+    a: "Discord's real limit is 256 KiB (262,144 bytes), not 256 KB (256,000 bytes). A 257,000-byte file fails to upload even when your computer labels it \"256 KB\". Export at 128×128 and compress under 262,144 bytes to guarantee it uploads."
+  },
+  {
+    q: "What are the exact dimensions and file size for a Discord sticker?",
+    a: "A Discord sticker must be exactly 320×320 pixels and under 512 KiB (524,288 bytes). Static stickers use PNG; animated stickers require APNG (not GIF), with a maximum length of 5 seconds and 60 FPS or lower."
+  },
+  {
+    q: "What Boost level or Nitro tier do I need for banners and role icons?",
+    a: "Server banners need Server Boost Level 2 or 3, invite backgrounds need Level 1, and role icons need Level 2 plus the Manage Roles permission. Global profile banners and animated avatars require Discord Nitro."
+  }
+];
+const faqSchema = generateFaqSchema(faqItems, "en");
 ---
 
 <Layout 
@@ -45,6 +69,7 @@ const breadcrumbJson = generateBreadcrumbSchema([
 >
   <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
   <script type="application/ld+json" set:html={breadcrumbJson} />
+  <script type="application/ld+json" set:html={faqSchema} />
 
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
     <!-- Breadcrumb & Alternate Language -->
@@ -224,5 +249,20 @@ const breadcrumbJson = generateBreadcrumbSchema([
         </a>
       </div>
     </div>
+
+    <!-- FAQ -->
+    <section class="mt-16">
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">
+        Discord Size Frequently Asked Questions
+      </h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px]">
+            <h3 class="text-base font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
   </div>
 </Layout>

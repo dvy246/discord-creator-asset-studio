@@ -1,7 +1,7 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import SketchUnderline from '../../../components/SketchUnderline.astro';
-import { generateBreadcrumbSchema } from '../../../utils/seo';
+import { generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Tamaños de Discord (2026): Guía Oficial de Dimensiones";
 const pageDescription = "Guía completa y verificada de tamaños para Discord 2026. Dimensiones en píxeles, límites de peso y requisitos de Nitro y Boosts.";
@@ -36,15 +36,41 @@ const breadcrumbJson = generateBreadcrumbSchema([
   { name: "Inicio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
   { name: "Guía de Tamaños", url: "https://discord-creator-asset-studio.pages.dev/es/guides/discord-sizes/" }
 ]);
+
+const faqItems = [
+  {
+    q: "¿Cuál es el tamaño correcto del banner de Discord?",
+    a: "El banner de servidor de Discord es de 960×540 (16:9) y el banner de perfil tiene un mínimo de 680×240. Ambos admiten archivos PNG, JPG o GIF animado de hasta 10 MB. Los banners de servidor requieren Boost Nivel 2 o 3; los banners de perfil requieren Discord Nitro."
+  },
+  {
+    q: "¿Qué tamaño debe tener una foto de perfil o avatar de Discord?",
+    a: "El tamaño recomendado del avatar (foto de perfil) de Discord es de 512×512 píxeles en proporción 1:1, por debajo de 8 MB. Discord recorta la imagen cuadrada en un círculo y oculta cerca del 21% de las esquinas, así que mantén caras y logotipos centrados."
+  },
+  {
+    q: "¿Por qué Discord rechaza mi emoji si dice 256 KB?",
+    a: "El límite real de Discord es 256 KiB (262.144 bytes), no 256 KB (256.000 bytes). Un archivo de 257.000 bytes falla al subirse aunque tu ordenador lo etiquete como \"256 KB\". Exporta a 128×128 y comprime por debajo de 262.144 bytes."
+  },
+  {
+    q: "¿Cuáles son las dimensiones y el peso exactos de un sticker de Discord?",
+    a: "Un sticker de Discord debe medir exactamente 320×320 píxeles y pesar menos de 512 KiB (524.288 bytes). Los stickers estáticos usan PNG; los animados requieren APNG (no GIF), con una duración máxima de 5 segundos y 60 FPS o menos."
+  },
+  {
+    q: "¿Qué nivel de Boost o Nitro necesito para banners e iconos de rol?",
+    a: "Los banners de servidor necesitan Boost Nivel 2 o 3, los fondos de invitación Nivel 1 y los iconos de rol Nivel 2 más el permiso Gestionar Roles. Los banners de perfil globales y los avatares animados requieren Discord Nitro."
+  }
+];
+const faqSchema = generateFaqSchema(faqItems, "es");
 ---
 
-<Layout 
-  title={pageTitle} 
+<Layout
+  title={pageTitle}
   description={pageDescription}
   lang="es"
+  ogImage="https://discord-creator-asset-studio.pages.dev/og/guide-sizes.png"
 >
   <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
   <script type="application/ld+json" set:html={breadcrumbJson} />
+  <script type="application/ld+json" set:html={faqSchema} />
 
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
     <!-- Breadcrumb & Alternate Language -->
@@ -113,8 +139,129 @@ const breadcrumbJson = generateBreadcrumbSchema([
             <td class="py-4 px-5 text-xs text-[#475569]">PNG / APNG animado</td>
             <td class="py-4 px-5 text-xs font-medium text-[#475569]">Máx 5s y 60 FPS</td>
           </tr>
+          <tr class="hover:bg-[#FAF8F5]/80 transition-colors">
+            <td class="py-4 px-5 font-semibold text-[#192538]">Banner de Perfil por Servidor</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF]">Mín 600 × 240</td>
+            <td class="py-4 px-5 font-mono text-xs">10 MB</td>
+            <td class="py-4 px-5 text-xs text-[#475569]">PNG, JPG, GIF</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2 py-0.5 rounded bg-[#C8DFDB]/50 text-[#3368A0] dark:text-[#66A3BF] border border-[#66A3BF]/30 font-medium">Discord Nitro</span></td>
+          </tr>
+          <tr class="hover:bg-[#FAF8F5]/80 transition-colors">
+            <td class="py-4 px-5 font-semibold text-[#192538]">Avatar / Foto de Perfil</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF]">512 × 512 (1:1)</td>
+            <td class="py-4 px-5 font-mono text-xs">8 MB</td>
+            <td class="py-4 px-5 text-xs text-[#475569]">PNG, JPG, GIF</td>
+            <td class="py-4 px-5 text-xs font-medium text-[#475569]">Nitro para animado</td>
+          </tr>
+          <tr class="hover:bg-[#FAF8F5]/80 transition-colors">
+            <td class="py-4 px-5 font-semibold text-[#192538]">Icono de Rol</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF]">Exacto 64 × 64</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#DC2626] font-bold">256 KB</td>
+            <td class="py-4 px-5 text-xs text-[#475569]">PNG, JPG</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2 py-0.5 rounded bg-[#C8DFDB]/50 text-[#3368A0] dark:text-[#66A3BF] border border-[#66A3BF]/30 font-medium">Boost Nivel 2 + Gestionar Roles</span></td>
+          </tr>
+          <tr class="hover:bg-[#FAF8F5]/80 transition-colors">
+            <td class="py-4 px-5 font-semibold text-[#192538]">Fondo de Invitación del Servidor</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF]">Exacto 1920 × 1080</td>
+            <td class="py-4 px-5 font-mono text-xs">10 MB</td>
+            <td class="py-4 px-5 text-xs text-[#475569]">PNG, JPG (GIF no admitido)</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2 py-0.5 rounded bg-[#C8DFDB]/50 text-[#3368A0] dark:text-[#66A3BF] border border-[#66A3BF]/30 font-medium">Boost Nivel 1</span></td>
+          </tr>
         </tbody>
       </table>
     </div>
+
+    <!-- Guías Detalladas por Sección -->
+    <div class="space-y-8">
+      <div class="card-panel p-8 rounded-[14px]">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xl font-bold text-[#192538]">1. Zona Segura y Legibilidad del Banner del Servidor</h2>
+          <a href="https://support.discord.com/hc/en-us/articles/115001580171-Channel-Banners" target="_blank" rel="noopener noreferrer" class="text-xs text-[#3368A0] dark:text-[#66A3BF] hover:underline font-mono">Especificación Oficial &rarr;</a>
+        </div>
+        <p class="text-[#475569] text-sm leading-relaxed mb-4">
+          Discord coloca el título del servidor, la insignia de boost y el menú desplegable justo sobre los <strong>48 píxeles superiores</strong> del banner en las apps de escritorio. Al diseñar con las dimensiones oficiales (1920×1080 o 960×540) en la proporción 16:9, mantén el texto, los logotipos y las caras importantes por debajo de esa línea de 48px para que los botones no los tapen.
+        </p>
+        <a href="/es/tools/banner/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
+          Abrir el Estudio de Banners con superposición de zona segura →
+        </a>
+      </div>
+
+      <div class="card-panel p-8 rounded-[14px]">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xl font-bold text-[#192538]">2. El Límite de 256 KiB vs 256 KB en Emojis</h2>
+          <a href="https://support.discord.com/hc/en-us/articles/360036479811-Custom-Emojis" target="_blank" rel="noopener noreferrer" class="text-xs text-[#3368A0] dark:text-[#66A3BF] hover:underline font-mono">Especificación Oficial &rarr;</a>
+        </div>
+        <p class="text-[#475569] text-sm leading-relaxed mb-4">
+          El estándar oficial de emojis de Discord es 128×128 píxeles (que se muestra a 32×32 píxeles dentro del chat). Discord aplica un límite estricto de <strong>256 KiB (262.144 bytes)</strong>. Un archivo de 257.000 bytes fallará al subirse aunque tu ordenador lo etiquete como "256 KB". Nuestro estudio calcula la longitud exacta en bytes en memoria para garantizar que tu emoji se suba sin problemas.
+        </p>
+        <a href="/es/tools/emoji/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
+          Formatear y comprimir emojis a 256 KiB ahora →
+        </a>
+      </div>
+
+      <div class="card-panel p-8 rounded-[14px]">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xl font-bold text-[#192538]">3. Stickers Personalizados: APNG vs GIF</h2>
+          <a href="https://support.discord.com/hc/en-us/articles/4405269739799-Custom-Stickers-FAQ" target="_blank" rel="noopener noreferrer" class="text-xs text-[#3368A0] dark:text-[#66A3BF] hover:underline font-mono">Especificación Oficial &rarr;</a>
+        </div>
+        <p class="text-[#475569] text-sm leading-relaxed mb-4">
+          Los stickers personalizados deben medir <strong>exactamente 320×320 píxeles</strong> y pesar menos de <strong>512 KiB (524.288 bytes)</strong>. Para animaciones, Discord requiere APNG (PNG Animado) en lugar de GIF normal, con una duración máxima de 5 segundos y una tasa de 60 FPS o menos.
+        </p>
+        <a href="/es/tools/sticker/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
+          Formatear stickers a las especificaciones exactas de 320x320 →
+        </a>
+      </div>
+      <div class="card-panel p-8 rounded-[14px]">
+        <h2 class="text-xl font-bold text-[#192538] mb-3">4. Estándares de Avatar y Foto de Perfil</h2>
+        <p class="text-[#475569] text-sm leading-relaxed mb-4">
+          El tamaño recomendado de avatar y foto de perfil de Discord es de <strong>512×512 píxeles</strong>. Como Discord recorta tu imagen cuadrada en un círculo, se pierde alrededor del 21% del área de las esquinas. Mantén las caras, los logotipos y los detalles importantes centrados para que queden a la vista.
+        </p>
+        <a href="/es/tools/avatar/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
+          Recortar y previsualizar la foto de perfil en el Estudio de Avatar →
+        </a>
+      </div>
+
+      <div class="card-panel p-8 rounded-[14px]">
+        <h2 class="text-xl font-bold text-[#192538] mb-3">5. Iconos de Rol para Servidores con Boost Nivel 2</h2>
+        <p class="text-[#475569] text-sm leading-relaxed mb-4">
+          El tamaño oficial del icono de rol de Discord es de <strong>64×64 píxeles</strong> y menos de 256 KB. En el chat y las listas de miembros, Discord los reduce a 16×16 o 20×20 píxeles junto a los nombres. Subirlos requiere el Boost de Servidor Nivel 2 y el permiso 'Gestionar Roles'.
+        </p>
+        <a href="/es/tools/role-icon/" class="inline-flex items-center text-xs font-bold text-[#3368A0] hover:underline">
+          Formatear iconos de rol en el Estudio de Iconos de Rol →
+        </a>
+      </div>
+
+      <div class="card-panel p-8 rounded-[14px]">
+        <h2 class="text-xl font-bold text-[#192538] mb-3">6. Colores de la Interfaz y Temas de Fondo de Discord</h2>
+        <p class="text-[#475569] text-sm leading-relaxed mb-4">
+          La interfaz de Discord usa un tema Oscuro por defecto con un color de fondo <strong>#313338</strong> y un tema Claro opcional (#FFFFFF). Dar a los emojis, stickers e insignias de rol un contorno blanco o claro sutil garantiza que se mantengan nítidos y legibles sobre cualquier color de fondo de Discord.
+        </p>
+      </div>
+
+      <div class="card-panel p-8 rounded-[14px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#66A3BF]/30">
+        <h2 class="text-xl font-bold text-[#192538] dark:text-white mb-3">7. Crear GIFs Animados de Discord</h2>
+        <p class="text-[#475569] dark:text-[#CBD5E1] text-sm leading-relaxed mb-4">
+          ¿Quieres crear emojis animados, banners animados o fotos de perfil de Nitro? Consulta nuestra guía completa sobre límites de GIF, tasas de fotogramas y consejos de compresión de Discord.
+        </p>
+        <a href="/es/guides/discord-gif-guide/" class="btn-primary inline-flex items-center text-xs px-4 py-2 rounded-[8px] font-bold">
+          Leer la Guía de GIF de Discord &rarr;
+        </a>
+      </div>
+    </div>
+
+    <!-- Preguntas Frecuentes -->
+    <section class="mt-16">
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">
+        Preguntas Frecuentes sobre Tamaños de Discord
+      </h2>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <div class="card-panel p-6 rounded-[14px]">
+            <h3 class="text-base font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+            <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
   </div>
 </Layout>

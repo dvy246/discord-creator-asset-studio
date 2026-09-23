@@ -1,0 +1,276 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import SketchUnderline from '../../../components/SketchUnderline.astro';
+import { generateBreadcrumbSchema, generateHowToSchema } from '../../../utils/seo';
+
+const pageTitle = "Creador de GIF de Discord | Guía de Límites de Animación";
+const pageDescription = "Guía del creador de GIF de Discord: domina los límites de 256 KiB, tasas de fotogramas y compresión de paleta para banners, emojis y avatares animados.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/guides/discord-gif-guide/";
+
+const techArticleSchema = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": pageTitle,
+  "description": pageDescription,
+  "image": "https://discord-creator-asset-studio.pages.dev/og/guide-gif.png",
+  "inLanguage": "es",
+  "url": pageUrl,
+  "datePublished": "2026-01-01T00:00:00+00:00",
+  "dateModified": "2026-03-01T00:00:00+00:00",
+  "author": {
+    "@type": "Organization",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Discord Creator Asset Studio",
+    "url": "https://discord-creator-asset-studio.pages.dev/",
+    "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+  }
+};
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Inicio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Guía de Tamaños", url: "https://discord-creator-asset-studio.pages.dev/es/guides/discord-sizes/" },
+  { name: "Guía de GIF", url: pageUrl }
+]);
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "es",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Cuál es el límite oficial de tamaño de GIF de Discord para emojis y banners?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "El tamaño máximo de GIF de Discord depende de lo que subas: los emojis animados tienen un límite estricto de 256 KiB (262.144 bytes), mientras que los banners de servidor y de perfil animados admiten hasta 10,0 MB. Si un GIF de emoji supera 256 KiB aunque sea por un byte, Discord lo rechazará. Bajar la tasa de fotogramas a 20-24 FPS y reducir los colores a 64 o 128 en un compresor de GIF mantiene los archivos cómodamente por debajo del límite."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuáles son las dimensiones y requisitos de un banner de GIF animado de Discord?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Un banner de GIF animado de servidor usa una proporción 16:9 (960×540 o 1920×1080) y requiere Boost de Servidor Nivel 3 (14 boosts). Los banners de perfil usan 680×240 píxeles y requieren Discord Nitro. Ambos admiten archivos de hasta 10,0 MB."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo hacer un GIF de Discord a partir de un clip de vídeo o una animación existente?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Para hacer un GIF de Discord a partir de un clip de vídeo: recorta el clip a un bucle de 2 a 4 segundos, rediménsionalo con un redimensionador de GIF a las dimensiones correctas (128×128 para emojis, 680×240 para banners de perfil o 960×540 para banners de servidor), fija la tasa de fotogramas a 20-24 FPS y comprime los colores para que quede muy por debajo del límite de tamaño."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Por qué mi GIF de foto de perfil o avatar animado de Discord se ve borroso?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cuando subes una foto de perfil (PFP) en GIF de Discord, Discord recorta la imagen cuadrada en un círculo. Si la haces más pequeña de 512×512 píxeles, las pantallas de alta resolución de móviles y ordenadores la estiran y se ve borrosa. Exporta siempre tu PFP animada en GIF a 512×512 píxeles con el sujeto centrado."
+      }
+    }
+  ]
+};
+
+const howToSchema = JSON.parse(generateHowToSchema({
+  name: "Cómo hacer un GIF de Discord",
+  description: "Recorta, redimensiona y comprime un clip de vídeo o una animación en un GIF listo para Discord por debajo del límite de tamaño de archivo.",
+  url: pageUrl,
+  totalTime: "PT5M",
+  steps: [
+    { name: "Recorta el clip", text: "Corta tu vídeo o animación de origen a 2-4 segundos para mantener bajo el número de fotogramas." },
+    { name: "Redimensiona a las dimensiones objetivo", text: "Escala a 128×128 para emojis, 680×240 para banners de perfil o 960×540 para banners de servidor." },
+    { name: "Fija la tasa de fotogramas", text: "Ajusta a 24-30 FPS para banners o 20-25 FPS para emojis para reducir el peso del archivo." },
+    { name: "Cuantiza la paleta", text: "Limita los colores a 64 o 128 para comprimir el GIF por debajo del límite de 256 KiB o 10 MB de Discord." },
+    { name: "Verifica y exporta", text: "Confirma que el tamaño final en bytes está por debajo del límite y luego súbelo a Discord." }
+  ]
+}));
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/guide-gif.png">
+  <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+    <!-- Migas de pan e idioma alternativo -->
+    <div class="flex items-center justify-between gap-4 mb-4">
+      <nav aria-label="Migas de pan" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] font-mono">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Inicio</a>
+        <span>/</span>
+        <a href="/es/guides/discord-sizes/" class="hover:text-[#3368A0] transition-colors">Guía de Tamaños</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Guía de GIF</span>
+      </nav>
+      <a href="/guides/discord-gif-guide/" class="text-xs font-mono text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold flex items-center gap-1 whitespace-nowrap">
+        🌐 Read in English
+      </a>
+    </div>
+
+    <!-- Encabezado -->
+    <div class="mb-12">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4 shadow-xs">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        Actualizado para la Arquitectura GIF 2026
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-4">
+        <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Creador de GIF de Discord</mark> y <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Guía de Animación</span><SketchUnderline color="#66A3BF" /></span>
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-lg leading-relaxed max-w-3xl">
+        Una guía completa para creadores y administradores de servidores para dominar los GIF animados de Discord. Aprende los límites exactos de tamaño de archivo, proporciones, cuantización de paleta y optimización de tasa de fotogramas para banners, emojis y avatares.
+      </p>
+    </div>
+    <!-- Tabla de Referencia Rápida -->
+    <div class="overflow-x-auto rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24] shadow-sm mb-16">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-[#FAF8F5] dark:bg-[#1B2330] text-xs uppercase font-bold text-[#192538] dark:text-[#CBD5E1] border-b border-[#E0DBD0] dark:border-[#263346]">
+          <tr>
+            <th class="py-4 px-5">Asset Animado</th>
+            <th class="py-4 px-5">Dimensiones Objetivo</th>
+            <th class="py-4 px-5">Peso Máximo</th>
+            <th class="py-4 px-5">Tasa de Fotogramas</th>
+            <th class="py-4 px-5">Requisito</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#E0DBD0] dark:divide-[#263346] text-[#192538] dark:text-[#F0F4F8]">
+          <tr class="hover:bg-[#FAF8F5]/80 dark:hover:bg-[#1E2738] transition-colors">
+            <td class="py-4 px-5 font-bold">Emoji Personalizado Animado</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold">128 × 128 px</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#DC2626] font-bold">256 KiB máx</td>
+            <td class="py-4 px-5 text-xs text-[#475569] dark:text-[#CBD5E1]">20–30 FPS</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2.5 py-1 rounded-md bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-semibold">Discord Nitro</span></td>
+          </tr>
+          <tr class="hover:bg-[#FAF8F5]/80 dark:hover:bg-[#1E2738] transition-colors">
+            <td class="py-4 px-5 font-bold">Banner de Servidor Animado</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold">960 × 540 (16:9)</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#0D9488] font-bold">10,0 MB máx</td>
+            <td class="py-4 px-5 text-xs text-[#475569] dark:text-[#CBD5E1]">30–60 FPS</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2.5 py-1 rounded-md bg-[#D97706]/10 text-[#D97706] font-semibold">Boost Nivel 3</span></td>
+          </tr>
+          <tr class="hover:bg-[#FAF8F5]/80 dark:hover:bg-[#1E2738] transition-colors">
+            <td class="py-4 px-5 font-bold">Banner de Perfil Animado</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold">680 × 240 px</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#0D9488] font-bold">10,0 MB máx</td>
+            <td class="py-4 px-5 text-xs text-[#475569] dark:text-[#CBD5E1]">30–60 FPS</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2.5 py-1 rounded-md bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-semibold">Discord Nitro</span></td>
+          </tr>
+          <tr class="hover:bg-[#FAF8F5]/80 dark:hover:bg-[#1E2738] transition-colors">
+            <td class="py-4 px-5 font-bold">Avatar Animado (PFP en GIF)</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#3368A0] dark:text-[#66A3BF] font-bold">512 × 512 px</td>
+            <td class="py-4 px-5 font-mono text-xs text-[#0D9488] font-bold">10,0 MB máx</td>
+            <td class="py-4 px-5 text-xs text-[#475569] dark:text-[#CBD5E1]">30–60 FPS</td>
+            <td class="py-4 px-5 text-xs"><span class="px-2.5 py-1 rounded-md bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-semibold">Discord Nitro</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Guías Editoriales Principales -->
+    <div class="space-y-12 mb-16">
+      <!-- Sección 1: El límite de 256 KiB -->
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white mb-4">
+          1. El Límite de 256 KiB: Optimizar Emojis Animados de Discord
+        </h2>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          La parte más complicada de usar cualquier creador de GIF de Discord es mantener los archivos por debajo de los límites oficiales de <strong>tamaño de GIF de Discord</strong>, especialmente el estricto tope de 256 KiB en emojis personalizados. A diferencia de los banners o avatares que permiten hasta 10 MB, los emojis animados se cargan dentro de canales de chat rápidos, por lo que Discord los mantiene ligeros.
+        </p>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          Para que una animación quepa en 256 KiB (262.144 bytes), puedes usar nuestro <strong>compresor de GIF de Discord</strong> integrado con tres ajustes sencillos:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+          <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+            <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold block mb-1">Baja la Tasa de Fotogramas</span>
+            <p class="text-[#6B7A90] dark:text-[#8494A7]">Baja de 60 FPS a 20 o 24 FPS. Esto reduce a la mitad el número de fotogramas manteniendo la animación fluida al tamaño de chat.</p>
+          </div>
+          <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+            <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold block mb-1">Reduce los Colores</span>
+            <p class="text-[#6B7A90] dark:text-[#8494A7]">Limita los colores a 64 o 128 en lugar de 256. En iconos pequeños apenas notarás la diferencia, pero el peso baja drásticamente.</p>
+          </div>
+          <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
+            <span class="text-[#3368A0] dark:text-[#66A3BF] font-bold block mb-1">Tamaño Exacto del Lienzo</span>
+            <p class="text-[#6B7A90] dark:text-[#8494A7]">Diseña exactamente a 128×128 píxeles. No subas vídeos HD enormes esperando que Discord los reduzca sin que se vean borrosos.</p>
+          </div>
+        </div>
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <a href="/es/tools/emoji/" class="btn-primary text-xs px-4 py-2 rounded-[8px]">Abrir el Creador de Emojis &rarr;</a>
+          <a href="/es/guides/discord-sizes/" class="btn-secondary text-xs px-4 py-2 rounded-[8px]">Ver la Guía de Tamaños</a>
+        </div>
+      </section>
+
+      <!-- Sección 2: Banners animados -->
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white mb-4">
+          2. Diseñar Banners de Servidor y de Perfil Animados
+        </h2>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          Un <strong>banner de GIF de Discord</strong> animado hace que tu perfil o servidor destaque al instante. Aun así, es fácil recortarlos mal u olvidarse de los botones de Discord.
+        </p>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          <strong>Banners de Servidor (16:9 panorámico):</strong> Necesitan Boost de Servidor Nivel 3. El tamaño mínimo es 960×540 píxeles, aunque 1920×1080 se ve más nítido en pantallas modernas. Mantén texto, logotipos y caras por debajo de la franja superior de 48px para que el título del servidor y los menús no los tapen.
+        </p>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          <strong>Banners de Perfil (680×240 ancho):</strong> Necesitan Discord Nitro. Un error común es subir un vídeo 16:9 a un banner de perfil, lo que recorta el 40% de la parte superior e inferior. Usa nuestro <strong>redimensionador de GIF de Discord</strong> en el estudio de banners para encuadrar tu GIF a las dimensiones exactas de 680×240 antes de subirlo.
+        </p>
+        <div class="mt-6">
+          <a href="/es/tools/banner/" class="btn-primary text-xs px-4 py-2 rounded-[8px]">Formatear Banners en el Estudio &rarr;</a>
+        </div>
+      </section>
+
+      <!-- Sección 3: Avatares animados -->
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white mb-4">
+          3. Avatares Animados: Máscara Circular y Composición Centrada
+        </h2>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          Discord siempre muestra los avatares de usuario dentro de una máscara circular. Al crear una <strong>PFP en GIF de Discord</strong> (foto de perfil) animada, mantén el sujeto centrado para que las esquinas no se recorten.
+        </p>
+        <p class="text-sm sm:text-base text-[#475569] dark:text-[#CBD5E1] leading-relaxed mb-4">
+          Exporta tu avatar animado a 512×512 píxeles con un bucle limpio para que se reproduzca con fluidez cada vez que alguien vea tu perfil.
+        </p>
+        <div class="mt-4">
+          <a href="/es/tools/avatar/" class="btn-primary text-xs px-4 py-2 rounded-[8px]">Recortar PFP en el Estudio de Avatar &rarr;</a>
+        </div>
+      </section>
+    </div>
+    <!-- Preguntas Frecuentes -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">
+        Preguntas Frecuentes
+      </h2>
+      <div class="space-y-4">
+        {faqSchema.mainEntity.map((item) => (
+          <div class="card-panel p-6 rounded-[14px]">
+            <h3 class="text-base font-bold text-[#192538] dark:text-white mb-2">{item.name}</h3>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.acceptedAnswer.text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Hub Contextual de Herramientas -->
+    <section class="card-panel p-8 rounded-[16px] border border-[#E0DBD0] dark:border-[#263346] text-center">
+      <h2 class="text-xl sm:text-2xl font-extrabold text-[#192538] dark:text-white mb-3">
+        ¿Listo para optimizar tus assets de creador de Discord?
+      </h2>
+      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-xl mx-auto mb-6">
+        Todas las herramientas funcionan 100% localmente en tu navegador, sin subidas al servidor, con validación determinista y descargas instantáneas.
+      </p>
+      <div class="flex flex-wrap justify-center items-center gap-3">
+        <a href="/es/tools/gif-maker/" class="btn-primary text-xs px-4 py-2.5 rounded-[8px]">Creador de GIF (10MB)</a>
+        <a href="/es/tools/banner/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Estudio de Banners (960×540)</a>
+        <a href="/es/tools/emoji/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Estudio de Emojis (128×128)</a>
+        <a href="/es/tools/avatar/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Estudio de Avatar (512×512)</a>
+        <a href="/es/tools/sticker/" class="btn-secondary text-xs px-4 py-2.5 rounded-[8px]">Estudio de Stickers (320×320)</a>
+      </div>
+    </section>
+
+
+
+  </div>
+</Layout>
+

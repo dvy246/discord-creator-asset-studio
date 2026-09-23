@@ -4,15 +4,19 @@ import HomeContent from '../components/HomeContent.astro';
 import { generateItemListSchema } from '../utils/seo';
 import { homeFaqs } from '../data/home-i18n.ts';
 
-const pageTitle = "Discord Banner Maker - Free Creator Asset Studio";
-const pageDescription = "Free Discord banner maker for custom banners, GIFs and templates. Create, resize and export Discord-ready artwork directly in your browser.";
+const pageTitle = "Free Discord Creator Tools — Avatars, Banners & Emojis";
+const pageDescription = "Free browser-based Discord creator tools to make and resize avatars, banners, emojis, stickers and GIFs — no uploads, 100% private.";
 
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": "https://discord-creator-asset-studio.pages.dev/#website",
   "name": "Discord Creator Asset Studio",
+  "alternateName": "Discord Asset Studio",
   "url": "https://discord-creator-asset-studio.pages.dev/",
-  "description": pageDescription
+  "description": pageDescription,
+  "inLanguage": "en",
+  "publisher": { "@id": "https://discord-creator-asset-studio.pages.dev/#organization" }
 };
 
 // Organization entity is emitted site-wide by Layout.astro (shared @id).
@@ -30,7 +34,7 @@ const faqSchema = {
 };
 
 const itemListSchema = JSON.parse(generateItemListSchema([
-  { name: "Discord Banner Maker", url: "https://discord-creator-asset-studio.pages.dev/", description: "Design 960x540 server & profile banners with safe-zone overlays in your browser" },
+  { name: "Discord Creator Asset Studio", url: "https://discord-creator-asset-studio.pages.dev/", description: "Browser-based studio to make and resize Discord avatars, banners, emojis, stickers & GIFs — no uploads, 100% private" },
   { name: "Discord Emoji Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/emoji/", description: "Format custom emojis to 128x128 under 256 KiB" },
   { name: "Discord Sticker Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/sticker/", description: "Resize stickers to exact 320x320 under 512 KiB" },
   { name: "Discord Banner Maker", url: "https://discord-creator-asset-studio.pages.dev/tools/banner/", description: "Crop server & profile banners with safe-zone overlay" },

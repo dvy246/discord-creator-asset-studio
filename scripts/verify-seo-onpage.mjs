@@ -21,7 +21,7 @@ const indexablePages = [
   {
     path: 'index.html',
     url: '/',
-    primaryKeyword: 'discord banner maker',
+    primaryKeyword: 'discord creator tools',
   },
   {
     path: 'tools/banner/index.html',
