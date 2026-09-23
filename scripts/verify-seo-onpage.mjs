@@ -129,6 +129,11 @@ const indexablePages = [
     primaryKeyword: 'discord permission calculator',
   },
   {
+    path: 'tools/username-generator/index.html',
+    url: '/tools/username-generator/',
+    primaryKeyword: 'discord username generator',
+  },
+  {
     path: 'guides/discord-sizes/index.html',
     url: '/guides/discord-sizes/',
     primaryKeyword: 'discord banner size',
@@ -267,6 +272,11 @@ const indexablePages = [
     path: 'es/tools/permissions-calculator/index.html',
     url: '/es/tools/permissions-calculator/',
     primaryKeyword: 'calculadora de permisos discord',
+  },
+  {
+    path: 'es/tools/username-generator/index.html',
+    url: '/es/tools/username-generator/',
+    primaryKeyword: 'generador de nombres de usuario discord',
   },
   // Asset library pages — gated for title/description length, unique title/desc,
   // single H1, canonical, alt text, and valid JSON-LD (no single-keyword coupling).

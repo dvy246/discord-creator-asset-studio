@@ -1,0 +1,358 @@
+---
+/**
+ * UsernameGeneratorWorkspace.astro — Discord username idea generator.
+ *
+ * Generates batches of Discord-valid username IDEAS across style modes
+ * (pronounceable, word-combo, aesthetic, leetspeak, and themed banks) with an
+ * optional exact-length filter (3/4/5/6 letters or long). Click-to-copy chips,
+ * localStorage favorites, and copy-all. All generation is client-side and
+ * language-neutral (usernames are lowercase ASCII tokens); only UI labels are
+ * localized via `t`, runtime strings via data-* (`js`). Imported by EN
+ * (/tools/username-generator/) and ES (/es/tools/username-generator/) pages.
+ *
+ * Discord handle rules enforced by sanitize(): 2–32 chars, lowercase a-z 0-9
+ * plus `_` and `.`, no leading/trailing/consecutive periods. This tool suggests
+ * names — it cannot check live availability, which only Discord confirms.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+// Style modes — value is language-agnostic (drives the client generator);
+// label is localized. Themed values map to word banks in the script.
+const MODES = [
+  { value: 'pronounceable', en: 'Random / pronounceable', es: 'Aleatorio / pronunciable' },
+  { value: 'wordcombo', en: 'Word combo', es: 'Combinación de palabras' },
+  { value: 'aesthetic', en: 'Aesthetic', es: 'Estético' },
+  { value: 'leet', en: 'Leetspeak (l33t)', es: 'Leetspeak (l33t)' },
+  { value: 'gaming', en: 'Gaming', es: 'Gaming' },
+  { value: 'anime', en: 'Anime', es: 'Anime' },
+  { value: 'dark', en: 'Dark / edgy', es: 'Oscuro / edgy' },
+  { value: 'cute', en: 'Cute', es: 'Tierno' },
+  { value: 'cyber', en: 'Cyber', es: 'Cyber' }
+];
+const LENGTHS = [
+  { value: 'any', en: 'Any length', es: 'Cualquier largo' },
+  { value: '3', en: '3 letters', es: '3 letras' },
+  { value: '4', en: '4 letters', es: '4 letras' },
+  { value: '5', en: '5 letters', es: '5 letras' },
+  { value: '6', en: '6 letters', es: '6 letras' },
+  { value: 'long', en: 'Long (9+)', es: 'Largo (9+)' }
+];
+
+// Visible labels — server-rendered per locale.
+const t = {
+  en: {
+    modeLabel: 'Style',
+    lengthLabel: 'Length',
+    generate: 'Generate ideas',
+    copyAll: 'Copy all',
+    resultsLabel: 'Username ideas',
+    resultsHint: 'Click any name to copy it. Tap the star to save it to favorites.',
+    favLabel: 'Favorites',
+    favEmpty: 'Star a username above to pin it here. Favorites are saved in this browser only.',
+    clearFav: 'Clear',
+    rules: 'Discord usernames are 2–32 characters, lowercase, and may use letters, numbers, underscore (_) and period (.). These are name ideas — availability is confirmed only inside Discord when you change your username.',
+    modes: Object.fromEntries(MODES.map((m) => [m.value, m.en])),
+    lengths: Object.fromEntries(LENGTHS.map((l) => [l.value, l.en])),
+    links: [
+      { href: '/tools/fonts/', label: 'Font Generator' },
+      { href: '/tools/colored-text/', label: 'Colored Text' },
+      { href: '/tools/permissions-calculator/', label: 'Permission Calculator' }
+    ]
+  },
+  es: {
+    modeLabel: 'Estilo',
+    lengthLabel: 'Largo',
+    generate: 'Generar ideas',
+    copyAll: 'Copiar todo',
+    resultsLabel: 'Ideas de nombre de usuario',
+    resultsHint: 'Haz clic en cualquier nombre para copiarlo. Toca la estrella para guardarlo en favoritos.',
+    favLabel: 'Favoritos',
+    favEmpty: 'Marca con estrella un nombre de arriba para fijarlo aquí. Los favoritos se guardan solo en este navegador.',
+    clearFav: 'Borrar',
+    rules: 'Los nombres de usuario de Discord tienen de 2 a 32 caracteres, en minúsculas, y admiten letras, números, guion bajo (_) y punto (.). Estas son ideas de nombre — la disponibilidad solo se confirma dentro de Discord al cambiar tu nombre de usuario.',
+    modes: Object.fromEntries(MODES.map((m) => [m.value, m.es])),
+    lengths: Object.fromEntries(LENGTHS.map((l) => [l.value, l.es])),
+    links: [
+      { href: '/es/tools/fonts/', label: 'Generador de Fuentes' },
+      { href: '/es/tools/colored-text/', label: 'Texto de Colores' },
+      { href: '/es/tools/permissions-calculator/', label: 'Calculadora de Permisos' }
+    ]
+  }
+}[lang];
+
+// Runtime strings for the client script, passed via data-* on the root.
+const js = {
+  en: { copied: 'Copied!', copyAll: 'Copy all', allCopied: 'All copied!', favEmpty: 'Star a username above to pin it here. Favorites are saved in this browser only.' },
+  es: { copied: '¡Copiado!', copyAll: 'Copiar todo', allCopied: '¡Todo copiado!', favEmpty: 'Marca con estrella un nombre de arriba para fijarlo aquí. Los favoritos se guardan solo en este navegador.' }
+}[lang];
+---
+<div
+  id="ug-workspace"
+  data-copied={js.copied}
+  data-copyall={js.copyAll}
+  data-allcopied={js.allCopied}
+  data-favempty={js.favEmpty}
+  class="mx-auto w-full max-w-4xl"
+>
+  <!-- Controls -->
+  <div class="rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] p-5 sm:p-6 shadow-sm">
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label for="ug-mode" class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.modeLabel}</label>
+        <select id="ug-mode" class="w-full rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-4 py-3 text-sm font-semibold text-[#192538] dark:text-white outline-none focus:border-[#3368A0]">
+          {MODES.map((m) => <option value={m.value}>{t.modes[m.value]}</option>)}
+        </select>
+      </div>
+      <div>
+        <label for="ug-length" class="mb-1.5 block text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.lengthLabel}</label>
+        <select id="ug-length" class="w-full rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-4 py-3 text-sm font-semibold text-[#192538] dark:text-white outline-none focus:border-[#3368A0]">
+          {LENGTHS.map((l) => <option value={l.value}>{t.lengths[l.value]}</option>)}
+        </select>
+      </div>
+    </div>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <button id="ug-generate" type="button" class="btn-primary rounded-[10px] px-5 py-3 text-sm font-semibold">{t.generate}</button>
+      <button id="ug-copyall" type="button" class="btn-secondary rounded-[10px] px-4 py-3 text-xs font-semibold">{t.copyAll}</button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="mt-5">
+    <div class="mb-2 flex items-center justify-between gap-3">
+      <p class="text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.resultsLabel}</p>
+    </div>
+    <div id="ug-results" class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3"></div>
+    <p class="mt-2 text-xs text-[#6B7A90] dark:text-[#8494A7]">{t.resultsHint}</p>
+  </div>
+
+  <!-- Favorites -->
+  <div class="mt-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] p-5 shadow-sm">
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <p class="text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">⭐ {t.favLabel}</p>
+      <button id="ug-clearfav" type="button" class="btn-secondary rounded-full px-3 py-1.5 text-xs font-semibold">{t.clearFav}</button>
+    </div>
+    <div id="ug-favorites" class="flex flex-wrap gap-2"></div>
+    <p id="ug-fav-empty" class="text-xs text-[#6B7A90] dark:text-[#8494A7]">{t.favEmpty}</p>
+  </div>
+
+  <!-- Handle-rules note -->
+  <p class="mt-5 rounded-[10px] border border-[#C8DFDB] dark:border-[#263346] bg-[#F0F7F6] dark:bg-[#141A24] px-4 py-3 text-xs text-[#475569] dark:text-[#94A3B8]">
+    ℹ️ {t.rules}
+  </p>
+
+  <!-- Trailing internal links -->
+  <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+    {t.links.map((link) => (
+      <a href={link.href} class="font-semibold text-[#3368A0] dark:text-[#66A3BF] transition hover:underline">{link.label} →</a>
+    ))}
+  </div>
+</div>
+<script>
+  const ws = document.getElementById('ug-workspace');
+  if (ws) {
+    const L = {
+      copied: ws.dataset.copied || 'Copied!',
+      copyAll: ws.dataset.copyall || 'Copy all',
+      allCopied: ws.dataset.allcopied || 'All copied!',
+      favEmpty: ws.dataset.favempty || '',
+    };
+    const modeSel = ws.querySelector('#ug-mode') as HTMLSelectElement;
+    const lenSel = ws.querySelector('#ug-length') as HTMLSelectElement;
+    const results = ws.querySelector('#ug-results') as HTMLElement;
+    const favBox = ws.querySelector('#ug-favorites') as HTMLElement;
+    const favEmpty = ws.querySelector('#ug-fav-empty') as HTMLElement;
+    const genBtn = ws.querySelector('#ug-generate') as HTMLButtonElement;
+    const copyAllBtn = ws.querySelector('#ug-copyall') as HTMLButtonElement;
+    const clearFavBtn = ws.querySelector('#ug-clearfav') as HTMLButtonElement;
+
+    const FAV_KEY = 'dcas-username-favorites';
+    const BATCH = 12;
+    const CONS = 'bcdfghjklmnpqrstvw'.split('');
+    const VOW = 'aeiou'.split('');
+    const ADJ = ['swift','lunar','void','neon','crimson','shadow','frost','ember','silent','rapid','cosmic','pixel','turbo','hyper','mystic','rogue','solar','onyx','azure','vivid','feral','dusk','iron','jade','noble','plasma','quartz','raven','storm','wild','lone','arc','pale','grim'];
+    const NOUN = ['fox','wolf','byte','ghost','blade','nova','drake','pulse','comet','raven','wisp','vortex','specter','falcon','titan','oracle','phantom','glitch','saber','echo','ronin','cipher','crow','koi','moth','sage','fern','ash','lynx','hawk','reef','dune','vale'];
+    const AES = ['moon','star','cloud','petal','honey','dream','frost','dusk','haze','soft','glow','mist','bloom','velvet','lilac','opal','pearl','sage','snow','rain','milk','peach','plum','iris','wren','dove','fawn','birch','cove','fern','dew'];
+    const THEMES: Record<string, string[]> = {
+      gaming: ['frag','clutch','sniper','respawn','combo','loot','boss','quest','mana','crit','meta','buff','tank','rush','ace','pro','clan','raid','xp','ping'],
+      anime: ['senpai','kaze','yami','hikari','sora','tsuki','neko','kitsune','sakura','ronin','shiro','kuro','yuki','hoshi','rei','aki','ryu','kami','chibi','mecha'],
+      dark: ['void','wraith','grim','hex','crypt','raven','ash','dread','onyx','doom','vex','shade','venom','skull','reaper','abyss','gloom','fang','ghoul','mourn'],
+      cute: ['bun','mochi','boba','pudding','cookie','muffin','peachy','sprout','bubble','marsh','cocoa','waffle','jelly','pixie','sugar','maple','honey','cuddle','pumpkin','dango'],
+      cyber: ['byte','flux','node','synth','glitch','proxy','vapor','pixel','cyber','data','neon','matrix','laser','chrome','volt','pulse','grid','wire','hex','zero']
+    };
+    const rand = (a: string[]) => a[Math.floor(Math.random() * a.length)];
+    
+    function pronounceable(target: number | null) {
+      const len = target || (4 + Math.floor(Math.random() * 5));
+      let s = '';
+      let useC = Math.random() < 0.5;
+      while (s.length < len) { s += useC ? rand(CONS) : rand(VOW); useC = !useC; }
+      return s.slice(0, len);
+    }
+    function applyLeet(s: string) {
+      const map: Record<string, string> = { o: '0', e: '3', a: '4', i: '1', s: '5', t: '7' };
+      return s.split('').map((c) => (Math.random() < 0.5 && map[c] ? map[c] : c)).join('');
+    }
+    function wordCombo() {
+      const sep = Math.random() < 0.4 ? rand(['_', '.']) : '';
+      let base = rand(ADJ) + sep + rand(NOUN);
+      if (Math.random() < 0.45) base += Math.floor(Math.random() * 100);
+      return base;
+    }
+    function aestheticName() {
+      let a = rand(AES); let b = rand(AES);
+      while (b === a) b = rand(AES);
+      return a + rand(['.', '_', '']) + b;
+    }
+    function themedName(theme: string) {
+      const w = THEMES[theme];
+      const r = Math.random();
+      if (r < 0.34) { let a = rand(w), b = rand(w); while (b === a) b = rand(w); return a + rand(['_', '.', '']) + b; }
+      if (r < 0.67) return rand(w) + Math.floor(Math.random() * 1000);
+      return rand(ADJ) + rand(['_', '.', '']) + rand(w);
+    }
+    function makeOne(mode: string, target: number | null) {
+      if (mode === 'pronounceable') return pronounceable(target);
+      if (mode === 'wordcombo') return wordCombo();
+      if (mode === 'aesthetic') return aestheticName();
+      if (mode === 'leet') return applyLeet(wordCombo());
+      if (THEMES[mode]) return themedName(mode);
+      return pronounceable(target);
+    }
+    // Enforce Discord handle rules: lowercase a-z 0-9 _ . ; no leading/
+    // trailing/consecutive periods; length clamped by valid().
+    function sanitize(name: string) {
+      return name.toLowerCase().replace(/[^a-z0-9_.]/g, '').replace(/\.{2,}/g, '.').replace(/^\.+|\.+$/g, '');
+    }
+    const valid = (n: string) => n.length >= 2 && n.length <= 32;
+    function fitLength(name: string, target: number) {
+      if (name.length > target) return name.slice(0, target);
+      while (name.length < target) name += rand(VOW);
+      return name;
+    }
+    
+    function generate(mode: string, lengthOpt: string, count: number) {
+      const target = ['3', '4', '5', '6'].includes(lengthOpt) ? parseInt(lengthOpt) : null;
+      const out = new Set<string>();
+      let guard = 0;
+      while (out.size < count && guard < count * 60) {
+        guard++;
+        let name: string;
+        if (target && target <= 4) {
+          name = pronounceable(target);
+          if (mode === 'leet') name = applyLeet(name);
+        } else {
+          name = makeOne(mode, target);
+          if (target) name = fitLength(sanitize(name), target);
+          else if (lengthOpt === 'long' && name.length < 9) name = name + Math.floor(Math.random() * 9000 + 1000);
+        }
+        name = sanitize(name);
+        if (valid(name) && (!target || name.length === target)) out.add(name);
+      }
+      return [...out];
+    }
+
+    // ---- favorites (localStorage) ----
+    function loadFavs(): string[] {
+      try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); } catch { return []; }
+    }
+    function saveFavs(list: string[]) {
+      try { localStorage.setItem(FAV_KEY, JSON.stringify(list)); } catch {}
+    }
+    function isFav(name: string) { return loadFavs().includes(name); }
+    function toggleFav(name: string) {
+      const list = loadFavs();
+      const i = list.indexOf(name);
+      if (i >= 0) list.splice(i, 1); else list.push(name);
+      saveFavs(list);
+      renderFavs();
+    }
+
+    async function copyText(text: string) {
+      try { await navigator.clipboard.writeText(text); }
+      catch {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch {}
+        document.body.removeChild(ta);
+      }
+    }
+    
+    function starMarkup(star: HTMLElement, name: string) {
+      const f = isFav(name);
+      star.textContent = f ? '★' : '☆';
+      star.classList.toggle('text-[#EAB308]', f);
+      star.classList.toggle('text-[#6B7A90]', !f);
+    }
+    function resultChip(name: string) {
+      const wrap = document.createElement('div');
+      wrap.dataset.uname = name;
+      wrap.className = 'flex items-center justify-between gap-2 rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-3 py-2';
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.dataset.name = name;
+      btn.className = 'ug-copy min-w-0 flex-1 truncate text-left font-mono text-sm text-[#192538] dark:text-white transition hover:text-[#3368A0] dark:hover:text-[#66A3BF]';
+      btn.textContent = name;
+      btn.addEventListener('click', async () => {
+        await copyText(name);
+        btn.textContent = L.copied; btn.classList.add('!text-[#0D9488]');
+        setTimeout(() => { btn.textContent = name; btn.classList.remove('!text-[#0D9488]'); }, 1200);
+      });
+      const star = document.createElement('button');
+      star.type = 'button'; star.className = 'ug-star shrink-0 text-lg leading-none transition'; star.setAttribute('aria-label', 'favorite');
+      starMarkup(star, name);
+      star.addEventListener('click', () => { toggleFav(name); });
+      wrap.appendChild(btn); wrap.appendChild(star);
+      return wrap;
+    }
+    function renderResults(list: string[]) {
+      results.innerHTML = '';
+      list.forEach((n) => results.appendChild(resultChip(n)));
+    }
+    function refreshResultStars() {
+      results.querySelectorAll('.ug-star').forEach((s) => {
+        const name = (s.parentElement as HTMLElement).dataset.uname || '';
+        starMarkup(s as HTMLElement, name);
+      });
+    }
+    function favPill(name: string) {
+      const wrap = document.createElement('span');
+      wrap.className = 'inline-flex items-center gap-1.5 rounded-full border border-[#C8DFDB] dark:border-[#263346] bg-[#F0F7F6] dark:bg-[#1B2330] py-1 pl-3 pr-1.5';
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'font-mono text-sm text-[#192538] dark:text-white transition hover:text-[#3368A0]'; b.textContent = name;
+      b.addEventListener('click', async () => { await copyText(name); const o = b.textContent; b.textContent = L.copied; setTimeout(() => { b.textContent = o; }, 1000); });
+      const x = document.createElement('button');
+      x.type = 'button'; x.className = 'rounded-full px-1 text-[#6B7A90] transition hover:text-[#ed4245]'; x.textContent = '×'; x.setAttribute('aria-label', 'remove');
+      x.addEventListener('click', () => toggleFav(name));
+      wrap.appendChild(b); wrap.appendChild(x); return wrap;
+    }
+    function renderFavs() {
+      const list = loadFavs(); favBox.innerHTML = '';
+      if (!list.length) { favEmpty.style.display = ''; favEmpty.textContent = L.favEmpty; refreshResultStars(); return; }
+      favEmpty.style.display = 'none';
+      list.forEach((n) => favBox.appendChild(favPill(n)));
+      refreshResultStars();
+    }
+
+    genBtn.addEventListener('click', () => renderResults(generate(modeSel.value, lenSel.value, BATCH)));
+    copyAllBtn.addEventListener('click', async () => {
+      const names = Array.from(results.querySelectorAll('.ug-copy')).map((b) => (b as HTMLElement).dataset.name || '').filter(Boolean);
+      if (!names.length) return;
+      await copyText(names.join('\n'));
+      const o = copyAllBtn.textContent; copyAllBtn.textContent = L.allCopied;
+      setTimeout(() => { copyAllBtn.textContent = o; }, 1300);
+    });
+    clearFavBtn.addEventListener('click', () => { saveFavs([]); renderFavs(); });
+
+    renderResults(generate(modeSel.value, lenSel.value, BATCH));
+    renderFavs();
+  }
+</script>
+
+
+
+
+
+

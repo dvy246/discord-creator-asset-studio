@@ -1,0 +1,130 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import UsernameGeneratorWorkspace from '../../../components/tools/UsernameGeneratorWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+
+const pageTitle = "Generador de Nombres de Usuario Discord | Ideas";
+const pageDescription = "Generador de nombres de usuario Discord gratis: ideas pronunciables, estéticas y de 3-4 letras que cumplen las reglas de Discord. Copia y guarda favoritos.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/username-generator/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/username-generator/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Generador de Nombres de Usuario para Discord",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Generador de Nombres de Usuario", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cómo funciona este generador de nombres de usuario de Discord?", a: "Elige un estilo — aleatorio/pronunciable, combinación de palabras, estético, leetspeak, o un tema como gaming, anime, oscuro, tierno o cyber — escoge un largo y pulsa Generar para obtener un lote de doce ideas de nombre de usuario. Cada nombre se crea en tu navegador siguiendo las reglas de Discord (solo minúsculas, números, guion bajo y punto), así que nunca recibes una sugerencia que Discord rechace. Haz clic en cualquier idea para copiarla y marca con estrella las que te gusten para guardarlas en Favoritos." },
+  { q: "¿Cómo consigo nombres de usuario de 3 o 4 letras?", a: "Pon el desplegable de Largo en 3 letras o 4 letras y el generador cambia a patrones pronunciables de consonante-vocal, para que los nombres cortos se lean como nombres y no como ruido. Los handles realmente cortos tienen mucha demanda, así que muchos nombres de 3 y 4 letras ya están ocupados en Discord — trátalos como ideas para probar y genera varios lotes hasta encontrar uno libre al reclamarlo." },
+  { q: "¿Qué caracteres se permiten en un nombre de usuario de Discord?", a: "Un nombre de usuario de Discord tiene de 2 a 32 caracteres, siempre en minúsculas, y solo admite letras (a–z), números (0–9), un guion bajo (_) o un punto (.). Los puntos no pueden repetirse seguidos ni ir al principio o al final. Tu nombre de usuario es el @handle único; el nombre visible en los servidores es aparte, admite hasta 32 caracteres con espacios, mayúsculas y emoji. Esta herramienta genera nombres de usuario válidos — usa el nombre visible para estilos más elaborados." },
+  { q: "¿Cómo hago un nombre de usuario estético en Discord?", a: "Elige el estilo Estético. Combina raíces suaves y soñadoras (moon, petal, haze, velvet, opal) y las une con un punto o guion bajo para ese aspecto limpio en minúsculas que se entiende por un nombre estético — como moon.petal o velvet_haze. Como los nombres de usuario de Discord no admiten símbolos Unicode decorativos, reserva las fuentes y símbolos para tu nombre visible y tu biografía; nuestros generadores de Fuentes y Texto de Colores se encargan de eso." },
+  { q: "¿Puede esta herramienta comprobar si un nombre está disponible en Discord?", a: "No — y cualquier herramienta que afirme comprobar la disponibilidad en tiempo real está adivinando, porque Discord no ofrece una consulta pública. Este generador te da ideas garantizadas como válidas; la disponibilidad solo se confirma dentro de Discord, en Ajustes → Mi cuenta → Editar, al intentar guardar el nuevo nombre. Genera muchas opciones, marca tus favoritas y pruébalas ahí." }
+];
+
+const dossier = {
+  eyebrow: "Plano del Generador de Nombres",
+  heading: "De un campo vacío a",
+  highlight: "ideas de nombre de usuario",
+  intro: "Un buen nombre de usuario de Discord es corto, legible y — sobre todo — válido a la primera. Este generador crea nombres que ya cumplen las reglas de Discord, en el estilo que elijas. Aquí verás cómo funcionan esas reglas, qué hace cada estilo, por qué los nombres de 3 y 4 letras son tan difíciles de conseguir, y cómo encajan los favoritos y el copiado.",
+  steps: [
+    "Reglas del Handle",
+    "Estilos e Ideas",
+    "Nombres Cortos",
+    "Copiar y Guardar"
+  ],
+  cards: [
+    {
+      kicker: "REGLAS DEL HANDLE // 01",
+      badge: "USUARIO VS NOMBRE VISIBLE",
+      badgeTone: "blue" as const,
+      title: "Qué permite Discord en realidad",
+      body: [
+        "Discord tiene dos nombres distintos. El nombre de usuario es tu @handle único: 2–32 caracteres, siempre en minúsculas, y limitado a letras, números, un guion bajo y un punto (sin puntos al inicio, al final ni repetidos). El nombre visible es lo que la gente ve en un servidor — hasta 32 caracteres, con mayúsculas, espacios y emoji. Esta herramienta genera el estricto, el nombre de usuario, así que cada idea es algo que Discord aceptará.",
+        "Esa restricción es la razón de que no puedas tener un nombre como “✨Moon✨” — esos símbolos solo son legales en el nombre visible. Tener claros los dos te ahorra muchos intentos fallidos de guardar: elige aquí un handle limpio en minúsculas y luego estiliza tu nombre visible y tu biografía por separado con fuentes y símbolos."
+      ]
+    },
+    {
+      kicker: "ESTILOS E IDEAS // 02",
+      badge: "ALEATORIO / ESTÉTICO / TEMÁTICO",
+      badgeTone: "emerald" as const,
+      title: "Nueve formas de inspirar un nombre",
+      body: [
+        "Cada estilo ajusta cómo se construyen los nombres. Aleatorio/pronunciable alterna consonantes y vocales para que hasta una palabra inventada se pueda decir. Combinación de palabras une un adjetivo y un sustantivo (swiftfox, void_saber). Estético junta raíces suaves y soñadoras con un punto o guion bajo. Leetspeak cambia letras por dígitos parecidos. Los bancos temáticos — gaming, anime, oscuro, tierno, cyber — usan listas de palabras seleccionadas para que el rollo encaje con tu servidor o personaje.",
+        "Genera tantos lotes como quieras; cada clic da doce ideas nuevas. Como el conjunto es aleatorio, refrescar es el objetivo — ojea rápido, copia las que te encajen y marca el resto para más tarde. Trata la salida como una lluvia de ideas, no como una respuesta final."
+      ],
+      footer: "Nueve estilos, doce ideas por clic — refresca hasta dar con uno."
+    },
+    {
+      kicker: "NOMBRES CORTOS // 03",
+      badge: "HANDLES DE 3 Y 4 LETRAS",
+      badgeTone: "amber" as const,
+      title: "Por qué los nombres cortos son raros",
+      body: [
+        "Pon el largo en 3 o 4 letras y el generador usa patrones pronunciables de consonante-vocal, para que los nombres cortos parezcan intencionados y no aleatorios. El problema es la demanda: solo hay un número limitado de combinaciones de tres y cuatro letras, y Discord tiene cientos de millones de cuentas, así que la mayoría de los handles cortos memorables se reclamaron hace tiempo.",
+        "La jugada práctica es el volumen. Genera varios lotes, marca un puñado de candidatos cortos y pruébalos en Discord uno tras otro — gana el primero libre. Añadir un solo número o un punto (como k0re o ae.on) abre mucho más espacio manteniendo el nombre compacto."
+      ]
+    },
+    {
+      kicker: "COPIAR Y GUARDAR // 04",
+      badge: "FAVORITOS Y DISPONIBILIDAD",
+      badgeTone: "purple" as const,
+      title: "Haz una lista y reclámalo en Discord",
+      body: [
+        "Haz clic en cualquier idea para copiarla al instante; márcala con estrella para fijarla en Favoritos, que persisten en este navegador mediante almacenamiento local para que tu lista sobreviva a un refresco. Copiar todo toma el lote actual completo como una lista por líneas para pegar en tus notas. Nada se sube — la generación y tus favoritos nunca salen de tu dispositivo.",
+        "Un límite honesto: ninguna herramienta puede comprobar la disponibilidad de un nombre en Discord, porque Discord no tiene consulta pública. La disponibilidad solo se confirma al guardar el nombre en Ajustes → Mi cuenta. Así que haz aquí una lista generosa y luego ve a Discord a reclamar tu favorito."
+      ],
+      footer: "Los favoritos viven en tu navegador; la disponibilidad solo se confirma dentro de Discord."
+    }
+
+  ]
+};
+---
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/username-generator.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Ruta de navegación" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Generador de Nombres de Usuario</span>
+        </div>
+        <a href={enUrl} class="hover:text-[#3368A0] transition-colors" hreflang="en">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Generador de Nombres de Usuario Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Elige un estilo → doce ideas de nombre • Nombres de 3 y 4 letras • Copia y guarda favoritos</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <UsernameGeneratorWorkspace lang="es" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
+
+  </div>
+</Layout>
+
+
+

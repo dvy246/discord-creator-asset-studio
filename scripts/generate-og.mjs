@@ -524,6 +524,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/username-generator.png',
+    config: {
+      title: 'DISCORD USERNAME', titleLine2: 'GENERATOR',
+      subtitle: 'PICK A STYLE TO GET TWELVE VALID USERNAME IDEAS',
+      tagline1: 'PRONOUNCEABLE • AESTHETIC • THEMED • LEETSPEAK',
+      tagline2: '3 & 4-LETTER MODE • COPY & SAVE • 100% CLIENT-SIDE',
+      badge: 'USERNAME IDEAS THAT FOLLOW HANDLE RULES • NO LOGIN',
+      cards: [
+        { label: 'STYLES', desc: 'NINE MODES' }, { label: 'SHORT', desc: '3 & 4 LETTER' },
+        { label: 'RULES', desc: 'a-z 0-9 _ .' }, { label: 'COPY', desc: 'ONE CLICK' },
+        { label: 'SAVE', desc: 'FAVORITES' }
+      ]
+    }
+  },
+  {
     file: 'public/og/colors.png',
     config: {
       title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',

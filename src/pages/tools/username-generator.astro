@@ -1,0 +1,125 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import UsernameGeneratorWorkspace from '../../components/tools/UsernameGeneratorWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Username Generator | Ideas & 4-Letter Names";
+const pageDescription = "Free Discord username generator: pronounceable, aesthetic, and 4-letter username ideas that follow Discord's handle rules. Click to copy, save favorites, no login.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/username-generator/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Username Generator",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Username Generator", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "How does this Discord username generator work?", a: "Pick a style — random/pronounceable, word combo, aesthetic, leetspeak, or a theme like gaming, anime, dark, cute, or cyber — choose a length, and click Generate to get a batch of twelve Discord username ideas. Every name is built in your browser to follow Discord's handle rules automatically (lowercase letters, numbers, underscore, and period only), so you never get a suggestion Discord would reject. Click any idea to copy it, and star the ones you like to keep them in Favorites." },
+  { q: "How do I get 3-letter or 4-letter Discord usernames?", a: "Set the Length dropdown to 3 letters or 4 letters and the generator switches to pronounceable, consonant-vowel patterns so short names still read as names rather than random noise. Genuinely short handles are in high demand, so many exact 3 and 4-letter usernames are already taken on Discord — treat these as ideas to try, and generate several batches to find one that is still free when you go to claim it." },
+  { q: "What characters are allowed in a Discord username?", a: "A Discord username is 2 to 32 characters, always lowercase, and can only contain letters (a–z), numbers (0–9), a single underscore (_), or a period (.). Periods can't repeat back-to-back or sit at the start or end. Your username is the unique @handle; the display name shown in servers is separate, can be up to 32 characters, and allows spaces, capitals, and emoji. This tool generates valid usernames — use the display name for fancier styling." },
+  { q: "How do I make an aesthetic Discord username?", a: "Choose the Aesthetic style. It pairs soft, dreamy word roots (moon, petal, haze, velvet, opal) and joins them with a period or underscore for the clean lowercase look people mean by an aesthetic username — like moon.petal or velvet_haze. Because Discord usernames can't use fancy Unicode symbols, save the decorative fonts and symbols for your display name and bio; our Font Generator and Colored Text tools handle those." },
+  { q: "Can this tool check if a username is available on Discord?", a: "No — and any tool that claims to check Discord username availability in real time is guessing, because Discord doesn't expose a public lookup. This generator gives you ideas that are guaranteed to be valid; the only place availability is confirmed is inside Discord itself, under Settings → My Account → Edit, when you try to save the new username. Generate plenty of options, star your favorites, and try them there." }
+];
+
+const dossier = {
+  eyebrow: "Username Generator Blueprint",
+  heading: "From a blank field to",
+  highlight: "username ideas",
+  intro: "A good Discord username is short, readable, and — crucially — valid the first time you type it. This generator builds names that already obey Discord's handle rules, in the style you pick. Here is how the handle rules work, what each style does, why 3 and 4-letter names are so hard to claim, and how favorites and copying fit in.",
+  steps: [
+    "Handle Rules",
+    "Styles & Ideas",
+    "Short Names",
+    "Copy & Save"
+  ],
+  cards: [
+    {
+      kicker: "HANDLE RULES // 01",
+      badge: "USERNAME VS DISPLAY NAME",
+      badgeTone: "blue" as const,
+      title: "What Discord actually allows",
+      body: [
+        "Discord has two separate names. The username is your unique @handle: 2–32 characters, always lowercase, and limited to letters, numbers, a single underscore, and a period (with no leading, trailing, or doubled periods). The display name is what people see in a server — up to 32 characters, with capitals, spaces, and emoji allowed. This tool generates the strict one, the username, so every idea is something Discord will accept.",
+        "That constraint is why you can't have a username like “✨Moon✨” — those symbols are only legal in a display name. Keeping the two straight saves a lot of failed save attempts: pick a clean lowercase handle here, then style your display name and bio separately with fonts and symbols."
+      ]
+    },
+    {
+      kicker: "STYLES & IDEAS // 02",
+      badge: "RANDOM / AESTHETIC / THEMED",
+      badgeTone: "emerald" as const,
+      title: "Nine ways to spark a name",
+      body: [
+        "Each style tunes how names are built. Random/pronounceable alternates consonants and vowels so even a made-up word is sayable. Word combo pairs an adjective and a noun (swiftfox, void_saber). Aesthetic joins soft, dreamy roots with a period or underscore. Leetspeak swaps letters for lookalike digits. The theme banks — gaming, anime, dark, cute, cyber — pull from curated word lists so the vibe matches your server or persona.",
+        "Generate as many batches as you like; every click gives twelve fresh ideas. Because the pool is randomized, refreshing is the point — skim quickly, copy the ones that click, and star the rest for later. Treat the output as a brainstorm, not a final answer."
+      ],
+      footer: "Nine styles, twelve ideas per click — refresh until one clicks."
+    },
+    {
+      kicker: "SHORT NAMES // 03",
+      badge: "3 & 4-LETTER HANDLES",
+      badgeTone: "amber" as const,
+      title: "Why short usernames are rare",
+      body: [
+        "Set the length to 3 or 4 letters and the generator uses pronounceable consonant-vowel patterns, so short names still look intentional instead of random. The catch is demand: there are only so many three and four-letter combinations, and Discord has hundreds of millions of accounts, so most memorable short handles were claimed long ago.",
+        "The practical move is volume. Generate several batches, star a handful of short candidates, and try them in Discord back to back — the first free one wins. Adding a single number or a period (like k0re or ae.on) opens up far more room while keeping the name tight."
+      ]
+    },
+    {
+      kicker: "COPY & SAVE // 04",
+      badge: "FAVORITES & AVAILABILITY",
+      badgeTone: "purple" as const,
+      title: "Shortlist, then claim it in Discord",
+      body: [
+        "Click any idea to copy it instantly; star it to pin it to Favorites, which persist in this browser via local storage so your shortlist survives a refresh. Copy all grabs the whole current batch as a newline list to paste into notes. Nothing is uploaded — generation and your favorites never leave your device.",
+        "One honest limit: no tool can check Discord username availability, because Discord has no public lookup. Availability is confirmed only when you save the name under Settings → My Account. So shortlist generously here, then head to Discord to claim your favorite — our guide on changing your username walks through the exact steps."
+      ],
+      footer: "Favorites live in your browser; availability is confirmed only inside Discord."
+    }
+  ]
+};
+---
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/username-generator.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Username Generator</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Username</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Generator</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Pick a style → twelve username ideas • 3 & 4-letter names • Copy & save favorites</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <UsernameGeneratorWorkspace lang="en" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>
+
+

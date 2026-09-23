@@ -40,6 +40,7 @@ const ES_ROUTES = new Set([
   '/tools/embed-builder/',
   '/tools/snowflake/',
   '/tools/permissions-calculator/',
+  '/tools/username-generator/',
   '/guides/discord-sizes/',
 ]);
 const p = (path: string) => (lang === 'es' && ES_ROUTES.has(path) ? `/es${path}` : path);
@@ -94,6 +95,7 @@ const t = {
         { icon: '🗜️', href: '/tools/gif-compressor/', title: 'Discord GIF Compressor', desc: 'Shrink an existing animated GIF under the 256 KiB emoji cap or 10MB chat limit with scale, palette, and frame-skip controls.', cta: 'Compress GIF →' },
         { icon: '🔍', href: '/tools/snowflake/', title: 'Snowflake ID Decoder', desc: 'Decode any Discord user, message, or server ID into its exact creation date, worker & process IDs, and timestamp markup. Grabs public avatars & banners too.', cta: 'Decode ID →' },
         { icon: '🔐', href: '/tools/permissions-calculator/', title: 'Permission Calculator', desc: 'Tick the permissions a role or bot needs to get the exact permissions integer, decode any value back to checkboxes, and build the OAuth2 bot invite URL. Pure client-side math.', cta: 'Calculate →' },
+        { icon: '🎲', href: '/tools/username-generator/', title: 'Username Generator', desc: 'Generate Discord username ideas across nine styles — pronounceable, aesthetic, and themed — with a 3 & 4-letter mode, click-to-copy, and saved favorites. Every idea follows Discord’s handle rules.', cta: 'Generate →' },
       ],
     },
     sticky: {
@@ -206,6 +208,7 @@ const t = {
         { icon: '🗜️', href: '/tools/gif-compressor/', title: 'Compresor de GIF de Discord', desc: 'Reduce un GIF animado existente bajo el límite de 256 KiB para emojis o 10MB de chat con controles de escala, paleta y fotogramas.', cta: 'Comprimir GIF →' },
         { icon: '🔍', href: '/tools/snowflake/', title: 'Decodificador de Snowflake', desc: 'Decodifica cualquier ID de usuario, mensaje o servidor de Discord en su fecha de creación exacta, IDs de worker y proceso, y marcado de marca de tiempo. También extrae avatares y banners públicos.', cta: 'Decodificar ID →' },
         { icon: '🔐', href: '/tools/permissions-calculator/', title: 'Calculadora de Permisos', desc: 'Marca los permisos que necesita un rol o bot para obtener el entero exacto, decodifica cualquier valor a casillas y crea la URL de invitación OAuth2 del bot. Matemática en el navegador.', cta: 'Calcular →' },
+        { icon: '🎲', href: '/tools/username-generator/', title: 'Generador de Nombres', desc: 'Genera ideas de nombre de usuario de Discord en nueve estilos — pronunciable, estético y temático — con modo de 3 y 4 letras, copia con un clic y favoritos guardados. Cada idea cumple las reglas de Discord.', cta: 'Generar →' },
       ],
     },
     sticky: {
