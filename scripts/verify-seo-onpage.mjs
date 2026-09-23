@@ -124,6 +124,11 @@ const indexablePages = [
     primaryKeyword: 'discord snowflake',
   },
   {
+    path: 'tools/permissions-calculator/index.html',
+    url: '/tools/permissions-calculator/',
+    primaryKeyword: 'discord permission calculator',
+  },
+  {
     path: 'guides/discord-sizes/index.html',
     url: '/guides/discord-sizes/',
     primaryKeyword: 'discord banner size',
@@ -257,6 +262,11 @@ const indexablePages = [
     path: 'es/tools/snowflake/index.html',
     url: '/es/tools/snowflake/',
     primaryKeyword: 'snowflake discord',
+  },
+  {
+    path: 'es/tools/permissions-calculator/index.html',
+    url: '/es/tools/permissions-calculator/',
+    primaryKeyword: 'calculadora de permisos discord',
   },
   // Asset library pages — gated for title/description length, unique title/desc,
   // single H1, canonical, alt text, and valid JSON-LD (no single-keyword coupling).

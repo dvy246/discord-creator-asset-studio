@@ -509,6 +509,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/permissions-calculator.png',
+    config: {
+      title: 'DISCORD PERMISSION', titleLine2: 'CALCULATOR',
+      subtitle: 'TICK ROLE PERMISSIONS TO GET THE PERMISSIONS INTEGER',
+      tagline1: 'BIGINT BITFIELD • DECODE ANY VALUE • ADMIN MOD PRESETS',
+      tagline2: 'BUILD THE OAUTH2 BOT INVITE URL • 100% CLIENT-SIDE',
+      badge: 'ROLE & BOT PERMISSION INTEGERS • NO LOGIN',
+      cards: [
+        { label: 'BITFIELD', desc: 'BIGINT OR' }, { label: 'DECODE', desc: 'INT > BOXES' },
+        { label: 'PRESETS', desc: 'ADMIN / MOD' }, { label: 'INVITE', desc: 'OAUTH2 URL' },
+        { label: 'ADMIN', desc: 'BIT 3 • 8' }
+      ]
+    }
+  },
+  {
     file: 'public/og/colors.png',
     config: {
       title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',
