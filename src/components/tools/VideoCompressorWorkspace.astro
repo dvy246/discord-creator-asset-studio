@@ -3,12 +3,14 @@
  * VideoCompressorWorkspace.astro — Discord video compressor.
  *
  * Transcodes a video entirely in the browser with ffmpeg.wasm (single-thread
- * core, no SharedArrayBuffer / COOP-COEP). The ~32 MB core is self-hosted at
- * /ffmpeg/ and loaded lazily on first compress. Levers: target size, output
- * resolution, x264 CRF quality, and optional audio strip. Language-agnostic
- * logic on fixed element IDs; visible labels via `t`, runtime strings via
- * data-* (`js` → `L`). Imported by the EN (/tools/video-compressor/) and ES
- * (/es/tools/video-compressor/) pages.
+ * core, no SharedArrayBuffer / COOP-COEP). The ~32 MB core is loaded lazily on
+ * first compress from the jsDelivr CDN (pinned to @ffmpeg/core@0.12.10) — it
+ * exceeds Cloudflare Pages' 25 MiB per-file cap so it cannot be self-hosted.
+ * The user's video itself never leaves the browser; only the generic engine
+ * binary is fetched. Levers: target size, output resolution, x264 CRF quality,
+ * and optional audio strip. Language-agnostic logic on fixed element IDs;
+ * visible labels via `t`, runtime strings via data-* (`js` → `L`). Imported by
+ * the EN (/tools/video-compressor/) and ES (/es/tools/video-compressor/) pages.
  */
 interface Props {
   lang?: 'en' | 'es';
@@ -270,7 +272,10 @@ const js = {
   import { FFmpeg } from '@ffmpeg/ffmpeg';
   import { toBlobURL } from '@ffmpeg/util';
 
-  const CORE_BASE = '/ffmpeg';
+  // ffmpeg-core@0.12.10 is ~31 MiB — over Cloudflare Pages' 25 MiB per-file
+  // cap — so it is loaded from jsDelivr (version-pinned) rather than self-hosted.
+  // The user's video never leaves the browser; only this engine binary is fetched.
+  const CORE_BASE = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd';
   const MB = 1024 * 1024;
 
   let ffmpeg: FFmpeg | null = null;
