@@ -1,0 +1,128 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import FancyTextWorkspace from '../../components/tools/FancyTextWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Font Generator | Fancy Text & Fonts";
+const pageDescription = "Free Discord font generator: turn text into fancy Unicode fonts you can copy-paste into names, bios, and chat. Curated readable styles. In-browser.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/fonts/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Font Generator",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Font Generator", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "How do I make bold text in a Discord username?", a: "Type your name into the generator, then copy the bold style (𝐛𝐨𝐥𝐝) from the results. Paste it into Settings → Profile as your display name or server nickname — the @username handle won't accept it. Discord's own **bold** markdown only works inside messages, so this Unicode copy-paste is the only way to bold a name." },
+  { q: "Why do Discord fonts show up as boxes or squares?", a: "Those empty squares are called tofu, and they appear when the device showing your text has no glyph for that Unicode character. Older phones and outdated Discord clients are the usual culprits, and decorative styles like fraktur or upside-down box out most often. Stick to bold, italic, or monospace for the widest device compatibility." },
+  { q: "Are fancy Discord fonts against the ToS or bannable?", a: "No. Fancy fonts are just standard Unicode characters, the same kind behind emoji and accented letters, so using them does not violate Discord's Terms of Service and will not get you banned. The only real downside is readability — screen readers announce the glyphs as garbled symbols, so heavy use can frustrate other members." },
+  { q: "How do I get cursive or script text in Discord?", a: "Type your text into the generator and copy the script or cursive style (𝓼𝓬𝓻𝓲𝓹𝓽) from the list. Paste it into a nickname, bio, or message like any text — no Nitro needed. Cursive is one of the more decorative sets, so it may show as boxes on older devices; test it before using it widely." },
+  { q: "Do these fonts work in Discord nicknames and the About Me section?", a: "Yes. Because the output is plain Unicode rather than markdown, it works in server nicknames, your display name, and the About Me on your profile, plus role, server, and channel names. The one place it fails is the lowercase @username handle, which Discord limits to letters, numbers, underscores, and periods." },
+  { q: "Can I copy and paste these Discord fonts for free?", a: "Yes — every style here is a copy-and-paste Discord font built from plain Unicode, so it is completely free with no Nitro and nothing to download. Tap Copy on any style, including the aesthetic and cool decorative sets, and paste it straight into a nickname, bio, or message. Since Discord has no built-in font changer, this generator is the closest thing to one." }
+];
+
+const dossier = {
+  eyebrow: "Font Generator Blueprint",
+  heading: "From plain letters to",
+  highlight: "styled Unicode text",
+  intro: "A Discord font generator does not change any font — it swaps each letter for a look-alike Unicode character you copy and paste. Here is how the trick works, where the styled text lands, the range of styles on offer, and the readability trade-offs to weigh before you use it.",
+  steps: [
+    "The Unicode Trick",
+    "Where It Works",
+    "Style Range",
+    "Readability & Limits"
+  ],
+  cards: [
+    {
+      kicker: "THE UNICODE TRICK // 01",
+      badge: "NOT A REAL FONT",
+      badgeTone: "emerald" as const,
+      title: "It maps letters to styled codepoints",
+      body: [
+        "A fancy Discord font is not a font at all. Discord has no built-in font switcher, so this generator never changes how your text is rendered. Instead it maps each ordinary letter to a pre-existing Unicode codepoint that already looks bold, italic, script, or boxed. The letter b becomes 𝐛, an italic i becomes 𝑖, a cursive s becomes 𝓼 — each is its own distinct character baked into the Unicode standard, the same standard behind emoji and accented letters. Nothing is styled on the fly; the styled glyphs simply already exist.",
+        "That design is why the output is portable. Because every styled character is real Unicode text, copying it and pasting it works exactly like pasting any other letter — no Nitro, no bot, and no special permission required. Type once in the box above and every style updates at once; tap Copy on the one you want and it lands on your clipboard as plain characters. The catch is that the transformation is one-way at the glyph level: what you paste is a string of math or script symbols that happen to look like your word, not your original letters with a style flag attached."
+      ]
+    },
+    {
+      kicker: "WHERE IT WORKS // 02",
+      badge: "NAMES / BIOS / CHANNELS",
+      badgeTone: "blue" as const,
+      title: "It shows up where markdown can't",
+      body: [
+        "Because the output is plain Unicode rather than Discord markdown, it works in the many places markdown does not. Discord's own **bold** and *italic* only render inside messages — type them into a username and you just see the asterisks. Styled Unicode has no such limit. Paste it into your display name, a server nickname, role names, the server name itself, channel names, or the About Me on your profile, and the styling comes along because it is baked into the characters, not applied by a formatting engine.",
+        "It also works in ordinary chat messages, so you can mix a styled word into a normal sentence. The one field that rejects it is the lowercase @username handle, which Discord restricts to lowercase letters, numbers, underscores, and periods — that is the account tag, separate from your display name. Everywhere else that accepts free text is fair game. This is exactly why the Unicode trick exists: it is the only way to get bold or cursive letters into a nickname or bio, since Discord's markdown formatting is confined to the body of a message."
+      ]
+    },
+    {
+      kicker: "STYLE RANGE // 03",
+      badge: "10+ STYLES",
+      badgeTone: "amber" as const,
+      title: "Bold, script, monospace, and beyond",
+      body: [
+        "The generator covers the full spread of Unicode letterforms. You get bold (𝐛𝐨𝐥𝐝) and italic (𝑖𝑡𝑎𝑙𝑖𝑐) for clean emphasis, flowing script or cursive (𝓼𝓬𝓻𝓲𝓹𝓽) for a decorative signature look, and fixed-width monospace for a code-like feel. Beyond those sit the more ornamental sets: angular fraktur, outlined double-struck, circled letters, full-width characters with wide spacing, and even upside-down text that flips your string end over end. Each style is generated from the same input, so one line of typing gives you every option side by side.",
+        "Not every style is equal in practice, which is why the readable ones sit at the top. Bold, italic, and monospace change only the weight or shape of familiar letters, so they stay legible at a glance and render on nearly every device. The heavily decorative sets — fraktur, script, circled, upside-down — trade legibility for flair and are best saved for a short accent rather than a whole sentence. A good rule is to style one or two words, not an entire paragraph, so the effect reads as intentional design instead of noise."
+      ],
+      footer: "Readable styles — bold, italic, monospace — sit up top; decorative sets render best as a short accent."
+    },
+    {
+      kicker: "READABILITY & LIMITS // 04",
+      badge: "USE SPARINGLY",
+      badgeTone: "purple" as const,
+      title: "The trade-offs before you paste",
+      body: [
+        "Styled text carries real costs. Screen readers do not know these are meant to be letters; they announce each glyph by its formal Unicode name, so a cursive nickname is read aloud as a run of mathematical-symbol names instead of your actual word. Anyone relying on assistive technology hears garble. Older phones and outdated clients may lack the glyphs entirely and fall back to empty boxes — the little squares nicknamed tofu — so what looks stylish on your screen can render as □□□□ on someone else's. Discord search and mentions also treat these as distinct characters, so a fancy nickname can quietly drop out of results.",
+        "None of this will get you banned. Fancy Unicode text does not break Discord's Terms of Service — it is ordinary text, and using it is entirely allowed. The real limit is readability, not risk. Heavy use across a whole name or every message quickly becomes hard to read and can annoy the people you are talking to. Treat these styles as seasoning: a single bold word in a bio or one script accent in a nickname reads as personality, while a wall of decorative glyphs just gets in the way. Style with restraint and it lands."
+      ],
+      footer: "Not against Discord's ToS and won't get you banned — the only real cost is readability."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/fonts.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Font Generator</span>
+      </div>
+        <a href="/es/tools/fonts/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Font</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Generator</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Type once, copy any style • Readable fonts first • Works in names, bios &amp; chat</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <FancyTextWorkspace lang="en" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>

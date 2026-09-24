@@ -1,0 +1,127 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import ImageCompressorWorkspace from '../../components/tools/ImageCompressorWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Image Compressor | Shrink Under 10 MB";
+const pageDescription = "Free Discord image compressor: shrink PNG, JPG & WebP under Discord's 10 MB upload limit without resizing. 100% private in your browser, zero uploads.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/image-compressor/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Image Compressor",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Image Compressor", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "How do I compress an image for Discord?", a: "Drop your PNG, JPG, or WebP into the tool, choose a target size that matches your account's upload limit, and pick an output format. The image is redrawn on a browser canvas and re-encoded smaller; for JPEG or WebP you nudge the quality slider until it fits, then download the compressed file and attach it in Discord." },
+  { q: "What is the Discord image upload size limit?", a: "On a free Discord account the limit is 10 MB per file in chat. Nitro Basic raises it to 50 MB and full Nitro to 500 MB, while avatars and server icons have a separate 8 MB ceiling. The limit is per attachment, so one oversized image has to be compressed rather than split." },
+  { q: "How do I reduce a PNG file size without losing quality?", a: "PNG is already lossless, so a quality slider cannot shrink it. To make a PNG smaller without visible loss, reduce its color depth or its dimensions, or re-encode it as WebP, which supports transparency and lossless mode while producing a much smaller file. For flat graphics and logos those steps cut size with no quality drop you can see." },
+  { q: "JPEG vs PNG vs WebP — which is best for Discord?", a: "It depends on the image. Use PNG for transparency or crisp flat graphics that must stay lossless, and JPEG for photos you also share outside Discord. For most photos and screenshots posted in Discord, WebP wins: it renders natively in chat and packs the most detail into the fewest bytes, giving the best size-to-quality balance under the limit." },
+  { q: "Does compressing an image lower its resolution?", a: "No. Compression re-encodes the same pixels more efficiently, so the width and height stay exactly the same and the image looks just as sharp on a high-resolution display. Only resizing changes resolution. If you need an exact size like a 512×512 avatar, compress first, then use the studio's resize tool afterward." }
+];
+
+const dossier = {
+  eyebrow: "Image Compressor Blueprint",
+  heading: "From an oversized export to",
+  highlight: "a file Discord accepts",
+  intro: "Discord bounces any chat attachment over its free 10 MB limit. Instead of cropping detail away, this compressor re-encodes the same pixels into a smaller file — here is how the limit, the encoder, the format choice, and your privacy fit together, all in your browser.",
+  steps: [
+    "The 10 MB Limit",
+    "Lossy vs Lossless",
+    "Picking the Format",
+    "Local & Private"
+  ],
+  cards: [
+    {
+      kicker: "UPLOAD CAP // 01",
+      badge: "10 MB FREE TIER",
+      badgeTone: "emerald" as const,
+      title: "Why your PNG won't upload",
+      body: [
+        "Every free Discord account caps chat attachments at 10 MB per file. That sounds generous until you try to share a 4K screenshot, a lightly edited phone photo, or a detailed piece of art — any of which can sail past the ceiling and bounce back with a \"file too large\" message. High-resolution PNGs are the worst offenders: because PNG stores every pixel losslessly, a single full-screen capture can weigh 15, 20, even 30 MB before you have added a thing. The limit is per file, so splitting an upload does not help a single large image.",
+        "Compression fixes this by shrinking the byte size while leaving the picture usable. You point the tool at a target — Discord's free 10 MB, or a higher Nitro tier if you have one — and it re-encodes the image to land under that number. Nitro Basic raises the limit to 50 MB and full Nitro to 500 MB, but the free 10 MB is the wall most people hit. Because you compress to an exact target rather than guessing, the exported file clears the limit on the first upload instead of forcing you to try, fail, and shave it down by hand."
+      ]
+    },
+    {
+      kicker: "ENCODER SCIENCE // 02",
+      badge: "QUALITY SLIDER",
+      badgeTone: "blue" as const,
+      title: "Lossy versus lossless, explained",
+      body: [
+        "Under the hood the tool draws your image onto an HTML canvas and asks the browser to re-encode it. That single step is where the size drop happens, and how it happens depends on the format. JPEG and WebP are lossy: a quality slider lets you trade a little fine detail for a much smaller file, and at moderate settings the detail it discards is invisible to the eye. Drag the slider down and the encoder throws away high-frequency information most screens and viewers never resolve anyway, so the picture still looks clean while the byte count falls sharply.",
+        "PNG works differently. It is lossless, meaning it stores an exact copy of every pixel, so a quality slider has nothing to trade and the tool disables it for PNG output. You can still make a PNG smaller — by reducing its dimensions or its color depth — but you cannot dial quality the way you can with a lossy format. That is the core decision: lossy formats give you a smooth size-versus-quality knob, while lossless PNG guarantees a pixel-perfect result at the cost of a bigger file. Knowing which lever each format offers is what lets you hit the target without wrecking the image."
+      ]
+    },
+    {
+      kicker: "FORMAT CHOICE // 03",
+      badge: "PNG / JPEG / WEBP",
+      badgeTone: "amber" as const,
+      title: "Pick the right format for the job",
+      body: [
+        "Format choice matters as much as the quality setting, and it comes down to what the image contains. Reach for PNG when you need transparency or crisp flat graphics — logos, UI mockups, pixel art, anything with hard edges or an alpha channel that must stay razor-sharp. Choose JPEG for photographs when you want the broadest compatibility with other apps and platforms outside Discord. For photos and screenshots that live inside Discord, WebP is usually the smartest default: it holds photographic detail beautifully and Discord renders it natively in chat, so there is no compatibility penalty for the smaller file.",
+        "WebP earns its reputation on the size-to-quality trade: modern block prediction and entropy coding routinely make a WebP file noticeably smaller than a JPEG at the same visual quality, and far smaller than a PNG for photographic content. The practical rule is simple. If the image has transparency or must be lossless, pick PNG. If it is a photo headed somewhere beyond Discord, JPEG is the safe bet. For nearly everything else — photos, screenshots, and rich graphics posted in Discord — WebP gives you the best balance and the smallest file that still looks right, which is exactly what you want under a hard limit."
+      ],
+      footer: "PNG for transparency, JPEG for wide compatibility, WebP for the best size-to-quality balance in Discord."
+    },
+    {
+      kicker: "PRIVACY BY DESIGN // 04",
+      badge: "ZERO UPLOADS",
+      badgeTone: "purple" as const,
+      title: "Everything runs in your browser",
+      body: [
+        "Most online compressors upload your file to a server, process it there, and hand you back a download link — which means a copy of your image now lives on someone else's machine. This tool does none of that. It uses the browser's own canvas encoder, so your image is read, re-encoded, and saved entirely on your own device. Nothing is transmitted to a server, nothing is logged, and nothing is retained after you leave. There is no account to create and no queue to wait in; the work happens the instant you drop a file in, right there in the tab.",
+        "That local-only design makes the tool safe for the things you would never want to hand to a stranger's cloud: private screenshots, unreleased work assets, personal photos, client mockups under NDA. Because the image never leaves your browser, there is no upload to intercept, no server log to leak, and no retention policy to trust. When you close the tab, every trace of the file is gone from memory. You get the same convenience as an online service — drag in, compress, download — with none of the exposure that comes from sending your originals across the internet to be processed."
+      ],
+      footer: "Canvas re-encoding runs on your device — no uploads, no logs, nothing kept after you close the tab."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/image-compressor.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Image Compressor</span>
+      </div>
+        <a href="/es/tools/image-compressor/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Image</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Compressor</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Shrink PNG, JPG & WebP under Discord's upload limit • Original dimensions kept • 100% in-browser</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <ImageCompressorWorkspace lang="en" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>

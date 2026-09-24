@@ -1,0 +1,603 @@
+---
+/**
+ * BannerWorkspace.astro — shared interactive Discord banner maker.
+ *
+ * Server (960×540), Global Profile (680×240), Per-Server Profile (600×240)
+ * presets with top-48px safe-zone overlay, aesthetic gallery, and motion loops.
+ * Language-agnostic logic keyed off fixed element IDs. Visible labels vary via
+ * the `t` dict; the client script's user-facing strings — the three preset
+ * display names (set into the receipt + editor title), badge text, and the
+ * gallery "Apply" title — are passed through data-* attributes on the root and
+ * read into `L`. Imported by both EN (/tools/banner/) and ES (/es/tools/banner/)
+ * so Spanish users get the real tool, not a redirect.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    presetMode: 'Preset Mode:',
+    presetServer: 'Server Banner (960 × 540)',
+    presetGlobal: 'Global Profile Banner (680 × 240)',
+    presetServerProfile: 'Per-Server Profile Banner (600 × 240)',
+    calloutTitle: 'Looking for ready-to-use Discord Banners & Matching PFPs?',
+    calloutBadge: '110+ Free',
+    calloutDesc: 'Browse Anime, Gaming, Cyberpunk, and Dark aesthetic sets with safe-zone alignment & 1-click Discord profile theme colors.',
+    exploreLibrary: 'Explore Library',
+    dropTitle: 'Select or Drop Banner Artwork',
+    dropHint: 'PNG, JPG, WEBP, or GIF (Auto-cropped to active preset aspect ratio)',
+    browseDrop: 'Browse or Drop Files',
+    canvasSurface: 'Canvas Surface',
+    safeZoneToggle: 'Show Top 48px Safe Zone',
+    reset: 'Reset',
+    aestheticStudio: 'Aesthetic Studio',
+    curatedLabel: '1. Curated Anime, Gaming & Aesthetic Artwork',
+    oneClickApply: '1-Click Apply',
+    motionLabel: '2. Motion Loop Type',
+    motionStatic: 'Static',
+    motionKenBurns: 'Ken Burns (Pan)',
+    motionBreathing: 'Breathing (Pulse)',
+    safeZoneOverlayText: 'Top 48px Header Overlay Zone (Keep text below)',
+    avatar: 'Avatar',
+    username: 'Username',
+    exportBtn: 'Export Formatted Banner',
+    motionWarningLabel: 'Animated Export:',
+    motionWarningText: 'Discord Nitro required. File size must be under 10MB. Use our recommended export settings or a third-party GIF compressor if it exceeds limits.',
+    receiptTitle: 'Validation Receipt',
+    awaiting: 'Awaiting Media',
+    targetMode: 'Target Mode:',
+    serverBannerName: 'Server Banner',
+    outputDim: 'Output Dimensions:',
+    originalDim: 'Original Dimensions:',
+    binaryLimit: 'Binary Limit:',
+    binaryLimitVal: '10.0 MB Max',
+    safeZoneClearance: 'Safe Zone Clearance:',
+    safeZoneClearanceVal: 'Top 48px Overlay Active',
+    requirementTitle: 'Requirement Note',
+    requirementText: 'Server banners require Discord Boost Level 2. Animated banners require Boost Level 3. Global user profile banners require Discord Nitro.',
+    links: [
+      { icon: '📖', href: '/guides/discord-sizes/', label: 'Official Discord Banner Sizes Guide' },
+      { icon: '✨', href: '/guides/discord-gif-guide/', label: 'Animated Banner GIF Limits & Rules' },
+      { icon: '⚡', href: '/blog/how-to-change-discord-server-banner/', label: 'How to Change Your Discord Server Banner' },
+      { icon: '🖼️', href: '/blog/discord-banner-ideas-templates/', label: 'Discord Banner Ideas & Templates' }
+    ],
+    // script-set
+    presetServerName: 'Server Banner',
+    presetGlobalName: 'Global Profile Banner',
+    presetServerProfileName: 'Per-Server Profile Banner',
+    compliant: 'Compliant',
+    applyPrefix: 'Apply'
+  },
+  es: {
+    presetMode: 'Modo Preset:',
+    presetServer: 'Banner de Servidor (960 × 540)',
+    presetGlobal: 'Banner de Perfil Global (680 × 240)',
+    presetServerProfile: 'Banner de Perfil por Servidor (600 × 240)',
+    calloutTitle: '¿Buscas Banners de Discord y PFPs a juego listos para usar?',
+    calloutBadge: '110+ Gratis',
+    calloutDesc: 'Explora sets de estética Anime, Gaming, Cyberpunk y Dark con alineación de zona segura y colores de tema de perfil de Discord con un clic.',
+    exploreLibrary: 'Explorar Biblioteca',
+    dropTitle: 'Selecciona o Suelta el Arte del Banner',
+    dropHint: 'PNG, JPG, WEBP o GIF (recortado automáticamente a la relación del preset activo)',
+    browseDrop: 'Explorar o Soltar Archivos',
+    canvasSurface: 'Lienzo',
+    safeZoneToggle: 'Mostrar Zona Segura Superior de 48px',
+    reset: 'Reiniciar',
+    aestheticStudio: 'Estudio Estético',
+    curatedLabel: '1. Arte Curado Anime, Gaming y Estético',
+    oneClickApply: 'Aplicar con 1 Clic',
+    motionLabel: '2. Tipo de Bucle de Movimiento',
+    motionStatic: 'Estático',
+    motionKenBurns: 'Ken Burns (Paneo)',
+    motionBreathing: 'Respiración (Pulso)',
+    safeZoneOverlayText: 'Zona del Encabezado Superior de 48px (mantén el texto debajo)',
+    avatar: 'Avatar',
+    username: 'Usuario',
+    exportBtn: 'Exportar Banner Formateado',
+    motionWarningLabel: 'Exportación Animada:',
+    motionWarningText: 'Requiere Discord Nitro. El archivo debe pesar menos de 10MB. Usa nuestros ajustes de exportación recomendados o un compresor de GIF externo si supera el límite.',
+    receiptTitle: 'Recibo de Validación',
+    awaiting: 'Esperando Archivo',
+    targetMode: 'Modo Objetivo:',
+    serverBannerName: 'Banner de Servidor',
+    outputDim: 'Dimensiones de Salida:',
+    originalDim: 'Dimensiones Originales:',
+    binaryLimit: 'Límite Binario:',
+    binaryLimitVal: '10.0 MB Máx',
+    safeZoneClearance: 'Espacio de Zona Segura:',
+    safeZoneClearanceVal: 'Overlay Superior de 48px Activo',
+    requirementTitle: 'Nota de Requisitos',
+    requirementText: 'Los banners de servidor requieren Discord Boost Nivel 2. Los banners animados requieren Boost Nivel 3. Los banners de perfil de usuario global requieren Discord Nitro.',
+    links: [
+      { icon: '📖', href: '/es/guides/discord-sizes/', label: 'Guía Oficial de Tamaños de Banner de Discord' },
+      { icon: '✨', href: '/guides/discord-gif-guide/', label: 'Límites y Reglas de Banners GIF Animados' },
+      { icon: '⚡', href: '/blog/how-to-change-discord-server-banner/', label: 'Cómo Cambiar el Banner de tu Servidor de Discord' },
+      { icon: '🖼️', href: '/blog/discord-banner-ideas-templates/', label: 'Ideas y Plantillas de Banners de Discord' }
+    ],
+    // script-set
+    presetServerName: 'Banner de Servidor',
+    presetGlobalName: 'Banner de Perfil Global',
+    presetServerProfileName: 'Banner de Perfil por Servidor',
+    compliant: 'Conforme',
+    applyPrefix: 'Aplicar'
+  }
+}[lang];
+---
+
+<!-- Banner Preset Selector -->
+<div
+  id="banner-workspace"
+  class="card-panel rounded-[14px] p-4 mb-6 flex flex-wrap items-center gap-3"
+  data-preset-server={t.presetServerName}
+  data-preset-global={t.presetGlobalName}
+  data-preset-serverprofile={t.presetServerProfileName}
+  data-compliant={t.compliant}
+  data-awaiting={t.awaiting}
+  data-apply-prefix={t.applyPrefix}
+>
+  <span class="text-xs font-bold text-[#192538] uppercase tracking-wider mr-2">{t.presetMode}</span>
+  <button id="presetServerBanner" class="btn-primary text-xs px-3.5 py-2 rounded-[8px]">
+    {t.presetServer}
+  </button>
+  <button id="presetGlobalProfile" class="btn-secondary text-xs px-3.5 py-2 rounded-[8px]">
+    {t.presetGlobal}
+  </button>
+  <button id="presetServerProfile" class="btn-secondary text-xs px-3.5 py-2 rounded-[8px]">
+    {t.presetServerProfile}
+  </button>
+</div>
+
+<!-- Asset Library Quick Callout -->
+<div class="mb-8 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-[#FF84BA]/10 via-[#FFDF82]/10 to-[#99C2FF]/10 dark:from-[#FF84BA]/15 dark:via-[#FFDF82]/15 dark:to-[#99C2FF]/15 border border-[#FF84BA]/30 dark:border-[#FF84BA]/40 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+  <div class="flex items-center gap-3">
+    <span class="text-2xl">✨</span>
+    <div>
+      <div class="text-xs sm:text-sm font-bold text-[#192538] dark:text-[#FFEFE3] flex items-center gap-2">
+        <span>{t.calloutTitle}</span>
+        <span class="text-[10px] font-mono font-extrabold px-1.5 py-0.2 rounded-full bg-[#FF84BA] text-black">{t.calloutBadge}</span>
+      </div>
+      <p class="text-xs text-[#6B7A90] dark:text-[#99C2FF]">
+        {t.calloutDesc}
+      </p>
+    </div>
+  </div>
+  <a href="/assets/" class="shrink-0 btn-primary text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-xs hover:shadow-md transition-all font-bold">
+    <span>{t.exploreLibrary}</span>
+    <span>→</span>
+  </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+  <!-- Left Column: Upload & Canvas -->
+  <div class="lg:col-span-8 space-y-6">
+    <div id="dropzone" class="group relative overflow-hidden rounded-2xl border-2 border-dashed border-[#C8DFDB] dark:border-[#263454] hover:border-[#FF84BA] dark:hover:border-[#FF84BA] bg-white dark:bg-[#101626] p-8 text-center transition-all duration-300 cursor-pointer shadow-xs hover:shadow-xl select-none">
+      <!-- Ambient Glow / Border Beam -->
+      <div class="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#FF84BA]/15 via-transparent to-transparent"></div>
+
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
+
+      <!-- Icon Cluster (with stacked cards styling) -->
+      <div class="relative h-14 w-36 mx-auto mb-4 pointer-events-none">
+        <div class="absolute top-1/2 left-1/2 -translate-x-[78%] -translate-y-1/2 -rotate-8 w-12 h-12 rounded-xl bg-[#FAF8F5] dark:bg-[#182036] border border-[#E0DBD0] dark:border-[#263454] flex items-center justify-center text-xl shadow-xs group-hover:-translate-x-[114%] group-hover:-rotate-12 transition-transform duration-500 ease-out">
+          🖼️
+        </div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-xl bg-[#FF84BA]/15 border border-[#FF84BA]/40 text-[#FF84BA] flex items-center justify-center text-xl shadow-md group-hover:scale-115 transition-transform duration-500 ease-out">
+          ✨
+        </div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-[22%] -translate-y-1/2 rotate-8 w-12 h-12 rounded-xl bg-[#FAF8F5] dark:bg-[#182036] border border-[#E0DBD0] dark:border-[#263454] flex items-center justify-center text-xl shadow-xs group-hover:translate-x-[14%] group-hover:rotate-12 transition-transform duration-500 ease-out">
+          🎨
+        </div>
+      </div>
+
+      <div class="space-y-1 pointer-events-none relative z-10">
+        <p class="text-sm font-bold text-[#192538] dark:text-[#FFEFE3]">{t.dropTitle}</p>
+        <p class="text-xs text-[#6B7A90] dark:text-[#99C2FF]">{t.dropHint}</p>
+      </div>
+
+      <div class="inline-flex items-center gap-1.5 rounded-full border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#182036] px-3 py-1 text-xs text-[#6B7A90] dark:text-[#99C2FF] mt-4 pointer-events-none">
+        <svg class="w-3.5 h-3.5 text-[#FF84BA]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+        </svg>
+        <span>{t.browseDrop}</span>
+      </div>
+    </div>
+
+    <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]" id="editorTitle">{t.canvasSurface}</h2>
+        <div class="flex items-center gap-3">
+          <label class="flex items-center gap-1.5 text-xs text-[#475569] font-medium cursor-pointer">
+            <input type="checkbox" id="safeZoneToggle" checked class="rounded border-[#D8D3C8] text-[#3368A0]" />
+            {t.safeZoneToggle}
+          </label>
+          <button id="resetBtn" class="btn-secondary text-xs px-2.5 py-1 rounded-[6px]">
+            {t.reset}
+          </button>
+        </div>
+      </div>
+
+
+      <!-- Premium Motion & Aesthetics Studio -->
+      <div class="mb-6 p-4 rounded-xl bg-black/5 dark:bg-white/5 border border-[#E0DBD0] dark:border-gray-700">
+        <h3 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[#3368A0] animate-pulse"></span>
+          {t.aestheticStudio}
+        </h3>
+
+        <div class="space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs text-[#6B7A90] dark:text-[#99C2FF] font-semibold">{t.curatedLabel}</label>
+              <span class="text-[10px] font-mono text-[#FF84BA] font-bold">{t.oneClickApply}</span>
+            </div>
+            <div class="grid grid-cols-5 sm:grid-cols-10 gap-2" id="unsplash-gallery">
+              <!-- JS will populate this -->
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs text-[#6B7A90] font-semibold mb-2 block">{t.motionLabel}</label>
+            <div class="flex flex-wrap gap-2">
+              <button class="motion-btn btn-primary text-xs px-3 py-1.5 rounded-lg" data-motion="none">{t.motionStatic}</button>
+              <button class="motion-btn btn-secondary text-xs px-3 py-1.5 rounded-lg" data-motion="animate-slow-pan">{t.motionKenBurns}</button>
+              <button class="motion-btn btn-secondary text-xs px-3 py-1.5 rounded-lg" data-motion="animate-pulse">{t.motionBreathing}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative bg-[#FAF8F5] rounded-[10px] border border-[#E0DBD0] overflow-hidden mb-6 flex items-center justify-center p-4">
+        <div class="relative">
+          <canvas id="mainCanvas" class="max-w-full h-auto shadow-sm rounded-[6px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] [background-size:16px_16px]"></canvas>
+
+
+          <!-- Safe Zone Overlay Group -->
+          <div id="safeZoneOverlay" class="absolute top-0 left-0 right-0 h-[10%] bg-[#DC2626]/20 border-b-2 border-[#DC2626] pointer-events-none flex items-center justify-center">
+            <span class="text-[10px] font-mono font-bold text-white bg-[#192538]/85 px-2.5 py-0.5 rounded shadow-xs">
+              {t.safeZoneOverlayText}
+            </span>
+          </div>
+
+          <!-- Profile Safe Zone (Avatar + Username) -->
+          <div id="profileSafeZone" class="hidden absolute bottom-[-40px] left-6 right-0 h-[80px] pointer-events-none z-10 flex items-end">
+            <div class="w-[80px] h-[80px] rounded-full bg-black/60 border-4 border-[#313338] backdrop-blur-md flex items-center justify-center text-white/70 text-[10px] font-bold shadow-lg">{t.avatar}</div>
+            <div class="ml-4 mb-8 px-3 py-1 rounded bg-black/60 backdrop-blur-md text-white/70 text-xs font-bold shadow-lg">{t.username}</div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <button id="exportBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center shadow-sm">
+        {t.exportBtn}
+      </button>
+      <div id="motionWarning" class="hidden mt-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-amber-700 dark:text-amber-400 text-xs flex items-start gap-2">
+        <span>⚠️</span>
+        <p><strong>{t.motionWarningLabel}</strong> {t.motionWarningText}</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Right Column: Receipt & Requirements -->
+  <div class="lg:col-span-4 space-y-6">
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.receiptTitle}</h2>
+        <span id="receiptBadge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
+          {t.awaiting}
+        </span>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.targetMode}</span>
+          <span id="statTargetMode" class="font-bold text-[#192538]">{t.serverBannerName}</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.outputDim}</span>
+          <span id="statOutputDim" class="font-bold text-[#192538]">960 × 540 px</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.originalDim}</span>
+          <span id="statOriginalDim" class="text-[#192538]">-- × --</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.binaryLimit}</span>
+          <span class="text-[#0D9488] font-bold">{t.binaryLimitVal}</span>
+        </div>
+        <div class="flex justify-between py-1.5">
+          <span class="text-[#6B7A90]">{t.safeZoneClearance}</span>
+          <span class="text-[#0D9488] font-bold">{t.safeZoneClearanceVal}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-panel rounded-[14px] p-6">
+      <h3 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-2">{t.requirementTitle}</h3>
+      <p class="text-xs text-[#475569] leading-relaxed mb-3">
+        {t.requirementText}
+      </p>
+      <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-medium">
+        {t.links.map((link) => (
+          <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+            <span>{link.icon}</span> {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  interface BannerPreset {
+    name: string;
+    w: number;
+    h: number;
+    safeZoneRatio: number;
+  }
+
+  const ws = document.getElementById('banner-workspace');
+  const L = {
+    presetServer: ws?.dataset.presetServer || 'Server Banner',
+    presetGlobal: ws?.dataset.presetGlobal || 'Global Profile Banner',
+    presetServerProfile: ws?.dataset.presetServerprofile || 'Per-Server Profile Banner',
+    compliant: ws?.dataset.compliant || 'Compliant',
+    awaiting: ws?.dataset.awaiting || 'Awaiting Media',
+    applyPrefix: ws?.dataset.applyPrefix || 'Apply'
+  };
+
+  const PRESETS: Record<string, BannerPreset> = {
+    server: { name: L.presetServer, w: 960, h: 540, safeZoneRatio: 48 / 540 },
+    globalProfile: { name: L.presetGlobal, w: 680, h: 240, safeZoneRatio: 0 },
+    serverProfile: { name: L.presetServerProfile, w: 600, h: 240, safeZoneRatio: 0 },
+  };
+
+  let currentPresetKey = 'server';
+
+  const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+  const dropzone = document.getElementById('dropzone');
+  const editorPanel = document.getElementById('editorPanel');
+  const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
+  const safeZoneOverlay = document.getElementById('safeZoneOverlay');
+  const safeZoneToggle = document.getElementById('safeZoneToggle') as HTMLInputElement;
+  const resetBtn = document.getElementById('resetBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const editorTitle = document.getElementById('editorTitle');
+
+  const btnServer = document.getElementById('presetServerBanner');
+  const btnGlobal = document.getElementById('presetGlobalProfile');
+  const btnServerProfile = document.getElementById('presetServerProfile');
+
+  const statTargetMode = document.getElementById('statTargetMode');
+  const statOutputDim = document.getElementById('statOutputDim');
+  const statOriginalDim = document.getElementById('statOriginalDim');
+  const receiptBadge = document.getElementById('receiptBadge');
+
+  // Aesthetic Studio refs
+  const unsplashGallery = document.getElementById('unsplash-gallery');
+  const motionBtns = document.querySelectorAll('.motion-btn');
+  const motionWarning = document.getElementById('motionWarning');
+  const profileSafeZone = document.getElementById('profileSafeZone');
+
+  let currentBlob: Blob | null = null;
+  let currentObjectUrl: string | null = null;
+  let sourceImage: HTMLImageElement | null = null;
+
+  function cleanup() {
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+  }
+
+  function setPreset(key: string) {
+    currentPresetKey = key;
+    const p = PRESETS[key];
+    if (!p) return;
+
+    [btnServer, btnGlobal, btnServerProfile].forEach(b => {
+      b?.classList.remove('btn-primary');
+      b?.classList.add('btn-secondary');
+    });
+
+    if (key === 'server') btnServer?.classList.replace('btn-secondary', 'btn-primary');
+    if (key === 'globalProfile') btnGlobal?.classList.replace('btn-secondary', 'btn-primary');
+    if (key === 'serverProfile') btnServerProfile?.classList.replace('btn-secondary', 'btn-primary');
+
+    if (statTargetMode) statTargetMode.innerText = p.name;
+    if (statOutputDim) statOutputDim.innerText = `${p.w} × ${p.h} px`;
+    if (editorTitle) editorTitle.innerText = `${p.name} (${p.w} × ${p.h})`;
+
+
+    if (p.safeZoneRatio > 0 && safeZoneToggle.checked) {
+      safeZoneOverlay?.classList.remove('hidden');
+      profileSafeZone?.classList.add('hidden');
+      if (safeZoneOverlay) safeZoneOverlay.style.height = `${(p.safeZoneRatio * 100).toFixed(1)}%`;
+    } else if (p.safeZoneRatio === 0 && safeZoneToggle.checked) {
+      // Profile Banners
+      safeZoneOverlay?.classList.add('hidden');
+      profileSafeZone?.classList.remove('hidden');
+    } else {
+      safeZoneOverlay?.classList.add('hidden');
+      profileSafeZone?.classList.add('hidden');
+    }
+
+
+    if (sourceImage) {
+      renderCanvas(sourceImage);
+    }
+  }
+
+  btnServer?.addEventListener('click', () => setPreset('server'));
+  btnGlobal?.addEventListener('click', () => setPreset('globalProfile'));
+  btnServerProfile?.addEventListener('click', () => setPreset('serverProfile'));
+
+  safeZoneToggle?.addEventListener('change', () => {
+    const p = PRESETS[currentPresetKey];
+    if (p.safeZoneRatio > 0 && safeZoneToggle.checked) {
+      safeZoneOverlay?.classList.remove('hidden');
+      profileSafeZone?.classList.add('hidden');
+    } else if (p.safeZoneRatio === 0 && safeZoneToggle.checked) {
+      safeZoneOverlay?.classList.add('hidden');
+      profileSafeZone?.classList.remove('hidden');
+    } else {
+      safeZoneOverlay?.classList.add('hidden');
+      profileSafeZone?.classList.add('hidden');
+    }
+  });
+
+  fileInput?.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    handleFile(file);
+  });
+
+  dropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+
+  dropzone?.addEventListener('dragleave', () => {
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    const file = e.dataTransfer?.files?.[0];
+    if (!file) return;
+    handleFile(file);
+  });
+
+  function handleFile(file: File) {
+    cleanup();
+    currentObjectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      sourceImage = img;
+      if (statOriginalDim) statOriginalDim.innerText = `${img.width} × ${img.height} px`;
+      renderCanvas(img);
+      editorPanel?.classList.remove('hidden');
+    };
+    img.src = currentObjectUrl;
+  }
+
+  function renderCanvas(img: HTMLImageElement) {
+    const ctx = mainCanvas.getContext('2d');
+    if (!ctx) return;
+
+    const p = PRESETS[currentPresetKey];
+    mainCanvas.width = p.w;
+    mainCanvas.height = p.h;
+    ctx.clearRect(0, 0, p.w, p.h);
+
+    const targetRatio = p.w / p.h;
+    const imgRatio = img.width / img.height;
+
+    let sx = 0, sy = 0, sw = img.width, sh = img.height;
+
+    if (imgRatio > targetRatio) {
+      sw = img.height * targetRatio;
+      sx = (img.width - sw) / 2;
+    } else {
+      sh = img.width / targetRatio;
+      sy = (img.height - sh) / 2;
+    }
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, p.w, p.h);
+
+    mainCanvas.toBlob((blob) => {
+      if (!blob) return;
+      currentBlob = blob;
+      if (receiptBadge) {
+        receiptBadge.innerText = L.compliant;
+        receiptBadge.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
+      }
+    }, 'image/png');
+  }
+
+  resetBtn?.addEventListener('click', () => {
+    cleanup();
+    currentBlob = null;
+    sourceImage = null;
+    editorPanel?.classList.add('hidden');
+    if (statOriginalDim) statOriginalDim.innerText = '-- × --';
+    if (receiptBadge) {
+      receiptBadge.innerText = L.awaiting;
+      receiptBadge.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
+    }
+    fileInput.value = '';
+  });
+
+  exportBtn?.addEventListener('click', () => {
+    if (!currentBlob) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(currentBlob);
+    const p = PRESETS[currentPresetKey];
+    a.download = `discord-${currentPresetKey}-banner-${p.w}x${p.h}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  // Curated local showcase & background images
+  const aestheticImages = [
+    { url: '/assets/showcase/snow-ronin.jpg', title: 'Frost Ronin' },
+    { url: '/assets/showcase/ghibli-cats.jpg', title: 'Summer Cloudwatchers' },
+    { url: '/assets/showcase/golden-solitude.jpg', title: 'Golden Hour Solitude' },
+    { url: '/assets/showcase/euphoria-eyes.jpg', title: 'Obsidian Trance' },
+    { url: '/assets/showcase/batman-snow.jpg', title: 'Winter Vigilante' },
+    { url: '/assets/banners/anime-sunset.jpg', title: 'Anime Sunset' },
+    { url: '/assets/banners/cyberpunk-tokyo.jpg', title: 'Cyberpunk Tokyo' },
+    { url: '/assets/banners/gaming-arena.jpg', title: 'Gaming Arena' },
+    { url: '/assets/banners/dark-gothic.jpg', title: 'Dark Gothic' },
+    { url: '/assets/banners/aesthetic-pastel.jpg', title: 'Aesthetic Pastel' }
+  ];
+
+  let currentMotionClass = 'none';
+
+  if (unsplashGallery) {
+    aestheticImages.forEach(item => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.title = `${L.applyPrefix} ${item.title}`;
+      btn.className = 'h-11 sm:h-14 rounded-lg bg-cover bg-center border border-black/10 dark:border-white/10 hover:scale-105 hover:ring-2 hover:ring-[#FF84BA] transition-all cursor-pointer shadow-xs';
+      btn.style.backgroundImage = `url(${item.url})`;
+      btn.onclick = () => {
+        fetch(item.url).then(res => res.blob()).then(blob => {
+           const file = new File([blob], `${item.title.toLowerCase().replace(/\s+/g, '-')}.jpg`, { type: "image/jpeg" });
+           handleFile(file);
+        }).catch(err => {
+          console.error("Failed to load artwork:", err);
+        });
+      };
+      unsplashGallery.appendChild(btn);
+    });
+  }
+
+  motionBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      motionBtns.forEach(b => b.classList.replace('btn-primary', 'btn-secondary'));
+      btn.classList.replace('btn-secondary', 'btn-primary');
+
+      // Remove old motion
+      if (currentMotionClass !== 'none') {
+        mainCanvas.classList.remove(currentMotionClass);
+      }
+
+      currentMotionClass = (btn as HTMLElement).dataset.motion || 'none';
+
+      if (currentMotionClass !== 'none') {
+        mainCanvas.classList.add(currentMotionClass);
+        motionWarning?.classList.remove('hidden');
+      } else {
+        motionWarning?.classList.add('hidden');
+      }
+    });
+  });
+</script>

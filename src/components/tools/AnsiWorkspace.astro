@@ -1,0 +1,412 @@
+---
+/**
+ * AnsiWorkspace.astro — Discord ANSI colored-text generator.
+ *
+ * A WYSIWYG editor styled like a Discord code block: type text, select a run,
+ * and apply foreground / background / bold / underline. On every change it
+ * serializes the DOM to an ```ansi fenced block using SGR escape codes, with a
+ * one-click copy. Formatting stacks (re-select keeps building on the same run)
+ * and line breaks are preserved via per-text-node wrapping — no execCommand,
+ * no deps, no network. Language-agnostic logic on fixed element IDs; visible
+ * labels via `t`, runtime strings via data-* (`js` → `L`). Imported by the EN
+ * (/tools/colored-text/) and ES (/es/tools/colored-text/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+// Discord renders ANSI code blocks with the Solarized palette. `code` is the
+// SGR number Discord understands; `hex` is the on-screen preview color.
+const FG = [
+  { code: 30, hex: '#4f545c', key: 'gray' },
+  { code: 31, hex: '#dc322f', key: 'red' },
+  { code: 32, hex: '#859900', key: 'green' },
+  { code: 33, hex: '#b58900', key: 'gold' },
+  { code: 34, hex: '#268bd2', key: 'blue' },
+  { code: 35, hex: '#d33682', key: 'pink' },
+  { code: 36, hex: '#2aa198', key: 'cyan' },
+  { code: 37, hex: '#ffffff', key: 'white' }
+];
+const BG = [
+  { code: 40, hex: '#002b36', key: 'darkBlue' },
+  { code: 41, hex: '#cb4b16', key: 'orange' },
+  { code: 42, hex: '#586e75', key: 'slate' },
+  { code: 43, hex: '#657b83', key: 'steel' },
+  { code: 44, hex: '#839496', key: 'gray' },
+  { code: 45, hex: '#6c71c4', key: 'indigo' },
+  { code: 46, hex: '#93a1a1', key: 'silver' },
+  { code: 47, hex: '#fdf6e3', key: 'cream' }
+];
+
+const t = {
+  en: {
+    fgLabel: 'Text color',
+    bgLabel: 'Highlight',
+    boldBtn: 'Bold',
+    underlineBtn: 'Underline',
+    resetSelBtn: 'Clear format',
+    clearBtn: 'Reset all',
+    editorLabel: 'Type & style',
+    editorHint: 'Type below, select any part, then tap a color or style. Select again to stack.',
+    outputLabel: 'ANSI output (paste into Discord)',
+    copyBtn: 'Copy for Discord',
+    mobileNote: 'Renders on Discord desktop and web. Older mobile app versions may show it as plain text.',
+    starter: 'Your colored text',
+    links: [
+      { icon: '📝', href: '/tools/markdown/', label: 'Markdown Previewer (Live)' },
+      { icon: '🔤', href: '/tools/fonts/', label: 'Discord Font Generator (Fancy Text)' },
+      { icon: '🎨', href: '/tools/colors/', label: 'Discord Color & Hex Codes' },
+      { icon: '🙈', href: '/tools/spoiler/', label: 'Spoiler Maker (Text & Image)' }
+    ]
+  },
+  es: {
+    fgLabel: 'Color de texto',
+    bgLabel: 'Resaltado',
+    boldBtn: 'Negrita',
+    underlineBtn: 'Subrayado',
+    resetSelBtn: 'Quitar formato',
+    clearBtn: 'Reiniciar',
+    editorLabel: 'Escribe y aplica estilo',
+    editorHint: 'Escribe abajo, selecciona una parte y toca un color o estilo. Selecciona otra vez para combinar.',
+    outputLabel: 'Salida ANSI (pégala en Discord)',
+    copyBtn: 'Copiar para Discord',
+    mobileNote: 'Se ve en Discord de escritorio y web. Versiones antiguas de la app móvil pueden mostrarlo como texto plano.',
+    starter: 'Tu texto de colores',
+    links: [
+      { icon: '📝', href: '/es/tools/markdown/', label: 'Previsualizador de Markdown' },
+      { icon: '🔤', href: '/es/tools/fonts/', label: 'Generador de Fuentes Discord (Letras Bonitas)' },
+      { icon: '🎨', href: '/es/tools/colors/', label: 'Colores y Códigos Hex de Discord' },
+      { icon: '🙈', href: '/es/tools/spoiler/', label: 'Creador de Spoilers (Texto e Imagen)' }
+    ]
+  }
+}[lang];
+
+// Human-readable swatch names for tooltips/aria (visible-ish → keep in `t` land).
+const fgNames = {
+  en: { gray: 'Gray', red: 'Red', green: 'Green', gold: 'Gold', blue: 'Blue', pink: 'Pink', cyan: 'Cyan', white: 'White' },
+  es: { gray: 'Gris', red: 'Rojo', green: 'Verde', gold: 'Dorado', blue: 'Azul', pink: 'Rosa', cyan: 'Cian', white: 'Blanco' }
+}[lang];
+const bgNames = {
+  en: { darkBlue: 'Dark blue', orange: 'Orange', slate: 'Slate', steel: 'Steel', gray: 'Gray', indigo: 'Indigo', silver: 'Silver', cream: 'Cream' },
+  es: { darkBlue: 'Azul oscuro', orange: 'Naranja', slate: 'Pizarra', steel: 'Acero', gray: 'Gris', indigo: 'Índigo', silver: 'Plata', cream: 'Crema' }
+}[lang];
+
+const js = {
+  en: { copy: 'Copy for Discord', copied: 'Copied!', selectFirst: 'Select some text first' },
+  es: { copy: 'Copiar para Discord', copied: '¡Copiado!', selectFirst: 'Primero selecciona texto' }
+}[lang];
+---
+<div
+  id="ct-workspace"
+  class="space-y-6 mb-16"
+  data-copy={js.copy}
+  data-copied={js.copied}
+  data-select-first={js.selectFirst}
+>
+  <!-- Toolbar -->
+  <div class="card-panel rounded-[14px] p-4 sm:p-5 space-y-4">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+      <!-- Foreground swatches -->
+      <div class="flex items-center gap-2.5">
+        <span class="text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7] shrink-0">{t.fgLabel}</span>
+        <div class="flex flex-wrap gap-1.5">
+          {FG.map((c) => (
+            <button
+              type="button"
+              class="ct-fg w-6 h-6 rounded-[6px] border border-black/20 dark:border-white/20 hover:scale-110 transition-transform shadow-xs"
+              style={`background:${c.hex}`}
+              data-code={c.code}
+              data-hex={c.hex}
+              title={fgNames[c.key as keyof typeof fgNames]}
+              aria-label={`${t.fgLabel}: ${fgNames[c.key as keyof typeof fgNames]}`}
+            ></button>
+          ))}
+        </div>
+      </div>
+      <!-- Background swatches -->
+      <div class="flex items-center gap-2.5">
+        <span class="text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7] shrink-0">{t.bgLabel}</span>
+        <div class="flex flex-wrap gap-1.5">
+          {BG.map((c) => (
+            <button
+              type="button"
+              class="ct-bg w-6 h-6 rounded-[6px] border border-black/20 dark:border-white/20 hover:scale-110 transition-transform shadow-xs"
+              style={`background:${c.hex}`}
+              data-code={c.code}
+              data-hex={c.hex}
+              title={bgNames[c.key as keyof typeof bgNames]}
+              aria-label={`${t.bgLabel}: ${bgNames[c.key as keyof typeof bgNames]}`}
+            ></button>
+          ))}
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <button type="button" id="ct-bold" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px] font-bold">{t.boldBtn}</button>
+      <button type="button" id="ct-underline" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px] underline">{t.underlineBtn}</button>
+      <button type="button" id="ct-reset-sel" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">{t.resetSelBtn}</button>
+      <span class="flex-1"></span>
+      <button type="button" id="ct-clear" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">{t.clearBtn}</button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+    <!-- WYSIWYG editor (always dark, mirrors a Discord code block) -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.editorLabel}</h2>
+      </div>
+      <div
+        id="ct-editor"
+        contenteditable="true"
+        role="textbox"
+        aria-multiline="true"
+        aria-label={t.editorLabel}
+        spellcheck="false"
+        class="min-h-[180px] rounded-[12px] bg-[#2B2D31] text-[#DBDEE1] font-mono text-sm leading-relaxed px-4 py-3.5 whitespace-pre-wrap break-words focus:outline-none focus:ring-2 focus:ring-[#3368A0] border border-[#1E1F22] select-text"
+      >{t.starter}</div>
+      <p id="ct-hint" class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.editorHint}</p>
+    </div>
+
+    <!-- ANSI output -->
+    <div class="card-panel rounded-[14px] p-5 space-y-3">
+      <div class="flex items-center justify-between gap-2">
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.outputLabel}</h2>
+        <button type="button" id="ct-copy" class="btn-primary text-xs px-4 py-2 rounded-[8px] font-semibold shrink-0">{t.copyBtn}</button>
+      </div>
+      <pre id="ct-output" class="w-full min-h-[150px] max-h-[280px] overflow-auto text-xs rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#101622] text-[#192538] dark:text-[#DBDEE1] px-3.5 py-3 whitespace-pre-wrap break-words font-mono"></pre>
+      <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] flex items-start gap-1.5">
+        <span class="shrink-0">📱</span><span>{t.mobileNote}</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Related links -->
+  <div class="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium pt-1">
+    {t.links.map((link) => (
+      <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+        <span>{link.icon}</span> {link.label}
+      </a>
+    ))}
+  </div>
+</div>
+
+<!-- ANSI_WORKSPACE_SCRIPT -->
+<script>
+  const ws = document.getElementById('ct-workspace');
+  const L = {
+    copy: ws?.dataset.copy || 'Copy for Discord',
+    copied: ws?.dataset.copied || 'Copied!',
+    selectFirst: ws?.dataset.selectFirst || 'Select some text first'
+  };
+
+  const editor = document.getElementById('ct-editor') as HTMLElement;
+  const output = document.getElementById('ct-output') as HTMLElement;
+  const copyBtn = document.getElementById('ct-copy') as HTMLButtonElement;
+  const hint = document.getElementById('ct-hint');
+
+  type Fmt = { fg: string; bg: string; b: boolean; u: boolean };
+  const EMPTY: Fmt = { fg: '', bg: '', b: false, u: false };
+
+  // Preview hex per SGR code, so a serialized span can be re-styled visually.
+  const FG_HEX: Record<string, string> = { '30':'#4f545c','31':'#dc322f','32':'#859900','33':'#b58900','34':'#268bd2','35':'#d33682','36':'#2aa198','37':'#ffffff' };
+  const BG_HEX: Record<string, string> = { '40':'#002b36','41':'#cb4b16','42':'#586e75','43':'#657b83','44':'#839496','45':'#6c71c4','46':'#93a1a1','47':'#fdf6e3' };
+
+  function readFmt(span: HTMLElement | null): Fmt {
+    if (!span) return { ...EMPTY };
+    return {
+      fg: span.dataset.fg || '',
+      bg: span.dataset.bg || '',
+      b: span.dataset.b === '1',
+      u: span.dataset.u === '1'
+    };
+  }
+
+  function styleSpan(span: HTMLElement, f: Fmt) {
+    span.dataset.ansi = '1';
+    span.dataset.fg = f.fg;
+    span.dataset.bg = f.bg;
+    span.dataset.b = f.b ? '1' : '';
+    span.dataset.u = f.u ? '1' : '';
+    span.style.color = f.fg ? (FG_HEX[f.fg] || '') : '';
+    span.style.backgroundColor = f.bg ? (BG_HEX[f.bg] || '') : '';
+    span.style.fontWeight = f.b ? '700' : '';
+    span.style.textDecoration = f.u ? 'underline' : '';
+    span.style.borderRadius = f.bg ? '3px' : '';
+    span.style.padding = f.bg ? '0 2px' : '';
+  }
+
+  let hintTimer: number | undefined;
+  function flashHint() {
+    if (!hint) return;
+    const orig = hint.dataset.orig || hint.textContent || '';
+    hint.dataset.orig = orig;
+    hint.textContent = L.selectFirst;
+    hint.classList.add('!text-[#dc322f]', 'dark:!text-[#F87171]', 'font-semibold');
+    clearTimeout(hintTimer);
+    hintTimer = window.setTimeout(() => {
+      hint.textContent = orig;
+      hint.classList.remove('!text-[#dc322f]', 'dark:!text-[#F87171]', 'font-semibold');
+    }, 1600);
+  }
+  // <!-- ANSI_SCRIPT_PART2 -->
+  // Collect the text nodes intersecting a range, in document order.
+  function textNodesInRange(range: Range): Text[] {
+    const nodes: Text[] = [];
+    const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null);
+    let n = walker.nextNode();
+    while (n) {
+      if (range.intersectsNode(n) && (n.textContent || '').length) nodes.push(n as Text);
+      n = walker.nextNode();
+    }
+    return nodes;
+  }
+
+  function applyFormat(dim: 'fg' | 'bg' | 'b' | 'u' | 'reset', value?: string) {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) { flashHint(); return; }
+    const range = sel.getRangeAt(0);
+    if (!editor.contains(range.commonAncestorContainer)) { flashHint(); return; }
+    const nodes = textNodesInRange(range);
+    if (!nodes.length) { flashHint(); return; }
+
+    // Snapshot endpoints before any split mutates the live range.
+    const startC = range.startContainer, startO = range.startOffset;
+    const endC = range.endContainer, endO = range.endOffset;
+
+    const wrapped: HTMLElement[] = [];
+    nodes.forEach((node) => {
+      const start = node === startC ? startO : 0;
+      const end = node === endC ? endO : node.length;
+      if (start >= end) return;
+
+      // Isolate [start,end) as its own text node.
+      let target: Text = node;
+      if (start > 0) target = target.splitText(start);
+      if (end - start < target.length) target.splitText(end - start);
+
+      const parentSpan = target.parentElement && target.parentElement.dataset.ansi === '1'
+        ? target.parentElement : null;
+      const cur = readFmt(parentSpan);
+      let next: Fmt;
+      if (dim === 'reset') next = { ...EMPTY };
+      else if (dim === 'b') next = { ...cur, b: !cur.b };
+      else if (dim === 'u') next = { ...cur, u: !cur.u };
+      else if (dim === 'fg') next = { ...cur, fg: value || '' };
+      else next = { ...cur, bg: value || '' };
+
+      const isBlank = !next.fg && !next.bg && !next.b && !next.u;
+      if (parentSpan && parentSpan.childNodes.length === 1) {
+        if (isBlank) parentSpan.replaceWith(target);
+        else { styleSpan(parentSpan, next); wrapped.push(parentSpan); }
+      } else if (!isBlank) {
+        const span = document.createElement('span');
+        target.replaceWith(span);
+        span.appendChild(target);
+        styleSpan(span, next);
+        wrapped.push(span);
+      }
+    });
+
+    editor.normalize();
+    if (wrapped.length) {
+      const nr = document.createRange();
+      nr.setStartBefore(wrapped[0]);
+      nr.setEndAfter(wrapped[wrapped.length - 1]);
+      sel.removeAllRanges();
+      sel.addRange(nr);
+    }
+    updateOutput();
+  }
+  // <!-- ANSI_SCRIPT_PART3 -->
+  function fmtCodes(f: Fmt): number[] {
+    const codes: number[] = [];
+    if (f.b) codes.push(1);
+    if (f.u) codes.push(4);
+    if (f.fg) codes.push(parseInt(f.fg, 10));
+    if (f.bg) codes.push(parseInt(f.bg, 10));
+    return codes;
+  }
+
+  // Walk the editor, emitting text with SGR sequences; newlines preserved.
+  function serialize(): string {
+    let out = '';
+    let active = false;
+    const ESC = '[';
+
+    function emitText(text: string, f: Fmt) {
+      if (!text) return;
+      const codes = fmtCodes(f);
+      if (codes.length) { out += ESC + codes.join(';') + 'm' + text; active = true; }
+      else { if (active) { out += ESC + '0m'; active = false; } out += text; }
+    }
+    function newline() {
+      if (active) { out += ESC + '0m'; active = false; }
+      out += '\n';
+    }
+    function walk(node: Node, inherited: Fmt) {
+      node.childNodes.forEach((child) => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          emitText(child.textContent || '', inherited);
+        } else if (child.nodeName === 'BR') {
+          newline();
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          const el = child as HTMLElement;
+          const f = el.dataset.ansi === '1' ? readFmt(el) : inherited;
+          if ((el.nodeName === 'DIV' || el.nodeName === 'P') && out && !out.endsWith('\n')) newline();
+          walk(el, f);
+        }
+      });
+    }
+    walk(editor, { ...EMPTY });
+    if (active) out += ESC + '0m';
+    return out;
+  }
+
+  function updateOutput() {
+    output.textContent = '```ansi\n' + serialize() + '\n```';
+  }
+
+  // Prevent toolbar buttons from stealing the editor's selection on mousedown.
+  function keepSelection(el: Element | null) {
+    el?.addEventListener('mousedown', (e) => e.preventDefault());
+  }
+  document.querySelectorAll<HTMLButtonElement>('.ct-fg').forEach((b) => {
+    keepSelection(b);
+    b.addEventListener('click', () => applyFormat('fg', b.dataset.code));
+  });
+  document.querySelectorAll<HTMLButtonElement>('.ct-bg').forEach((b) => {
+    keepSelection(b);
+    b.addEventListener('click', () => applyFormat('bg', b.dataset.code));
+  });
+  const boldBtn = document.getElementById('ct-bold');
+  const underlineBtn = document.getElementById('ct-underline');
+  const resetSelBtn = document.getElementById('ct-reset-sel');
+  keepSelection(boldBtn); keepSelection(underlineBtn); keepSelection(resetSelBtn);
+  boldBtn?.addEventListener('click', () => applyFormat('b'));
+  underlineBtn?.addEventListener('click', () => applyFormat('u'));
+  resetSelBtn?.addEventListener('click', () => applyFormat('reset'));
+
+  document.getElementById('ct-clear')?.addEventListener('click', () => {
+    editor.textContent = '';
+    updateOutput();
+    editor.focus();
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    const text = output.textContent || '';
+    if (!text) return;
+    try { await navigator.clipboard.writeText(text); }
+    catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+    }
+    copyBtn.textContent = L.copied;
+    setTimeout(() => { copyBtn.textContent = L.copy; }, 1400);
+  });
+
+  editor.addEventListener('input', updateOutput);
+  updateOutput();
+</script>

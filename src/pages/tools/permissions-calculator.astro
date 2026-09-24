@@ -1,0 +1,126 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import PermissionsCalculatorWorkspace from '../../components/tools/PermissionsCalculatorWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Permission Calculator | Roles & Bots";
+const pageDescription = "Free Discord permission calculator: tick role permissions to get the integer, decode any permissions value, and build a bot invite URL. In-browser, no login.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/permissions-calculator/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Permission Calculator",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Permission Calculator", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "What is a Discord permission calculator and how do I use it?", a: "A Discord permission calculator turns the on/off permission checkboxes of a role into the single number Discord actually stores, called the permissions integer. Tick the permissions you want a role or bot to have and the calculator ORs their bit values together into one integer you can paste into a bot library, an API call, or a role configuration. It also runs in reverse — paste an existing integer and the matching boxes light up so you can audit what a role can already do." },
+  { q: "What is the Discord permissions integer and why is it so large?", a: "Every Discord permission is a single bit in a bitfield, and the permissions integer is those bits added together. Because Discord now has more than fifty distinct permissions, the flags run past bit 50, so a full-permission integer is a number with sixteen or more digits. That is why the value is computed with BigInt rather than a normal number — a standard 32-bit integer cannot hold flags above bit 30 without overflowing, which is a common source of wrong values in home-grown calculators." },
+  { q: "What does the Administrator permission actually do?", a: "Administrator is the master switch. A role with Administrator is granted every other permission automatically and, critically, bypasses all channel-level permission overrides — so a channel set to hide messages from everyone will still be fully visible to an admin. Its integer value is 8 (bit 3). Because it overrides everything, you should grant it only to roles you completely trust; for moderators, prefer an explicit set of permissions like Kick, Ban, and Manage Messages instead." },
+  { q: "How do I use the permissions integer in a bot invite link?", a: "A bot's invite (OAuth2 authorize) URL carries the requested permissions as a query parameter: https://discord.com/oauth2/authorize?client_id=YOUR_APP_ID&scope=bot&permissions=INTEGER. Paste your application's Client ID into the builder above, tick the permissions your bot needs, and it assembles the full URL with the correct integer. When a server owner opens that link, Discord pre-checks exactly those permissions on the bot's role, following the principle of least privilege." },
+  { q: "What is the difference between server permissions and channel overrides?", a: "Server (guild) permissions are the base set granted by a member's roles and apply everywhere. Channel overrides then add or remove specific permissions on a single channel or category, layering on top of the role permissions. This calculator produces the base role integer; the final access a member has in a given channel is that base combined with any allow/deny overrides on the channel — except for Administrator, which ignores overrides entirely." }
+];
+
+const dossier = {
+  eyebrow: "Permission Calculator Blueprint",
+  heading: "From checkboxes to a",
+  highlight: "permissions integer",
+  intro: "Discord stores a role's powers as one big number, not a list. This calculator turns the familiar permission checkboxes into that number and back again. Here is how the bitfield works, how presets speed up common roles, how the integer plugs into a bot invite, and why Administrator is in a class of its own.",
+  steps: [
+    "The Bitfield",
+    "Roles & Presets",
+    "Bot Invite URLs",
+    "Administrator & Overrides"
+  ],
+  cards: [
+    {
+      kicker: "THE BITFIELD // 01",
+      badge: "ONE NUMBER, MANY BITS",
+      badgeTone: "blue" as const,
+      title: "Each permission is a single bit",
+      body: [
+        "Discord does not store a role's powers as a checklist — it stores one integer. Every permission owns a fixed bit position: Create Invite is bit 0 (value 1), Kick Members is bit 1 (value 2), Ban Members is bit 2 (value 4), Administrator is bit 3 (value 8), and so on up past bit 50 today. A permission is granted when its bit is set to 1. To combine several, you take the bitwise OR of their values, which for non-overlapping bits is the same as adding them: Kick (2) plus Ban (4) plus Manage Messages (8192) gives the integer 8198.",
+        "That is exactly what the checkboxes above do. Tick a permission and its bit value is OR-ed into the running total shown in the output field; untick it and the bit clears. Because the flags now exceed what a 32-bit number can hold, the value is assembled with BigInt so nothing overflows at high bit positions. The reverse decoder reads a pasted integer bit by bit and re-checks the matching boxes, which makes it a fast way to audit a role or a mystery number from an API response."
+      ]
+    },
+    {
+      kicker: "ROLES & PRESETS // 02",
+      badge: "ADMIN / MOD / MEMBER",
+      badgeTone: "emerald" as const,
+      title: "Start from a sensible baseline",
+      body: [
+        "Most servers reuse the same handful of role shapes, so the presets load a vetted set of permissions in one click. Administrator is the single all-powerful switch. Moderator gathers the enforcement tools — Kick, Ban, Timeout, Manage Messages and Threads, plus Move, Mute, and Deafen in voice — without the god-mode of Administrator. Member is a friendly default for verified humans: talk, post, react, use external emoji, join voice, and create threads. Read-only strips things back to viewing channels and history.",
+        "Presets are a starting point, not a rule. After loading one, tick or untick individual permissions to fit your server, then copy the resulting integer. This mirrors Discord's own recommendation to give each role the least privilege it needs — start narrow, add deliberately, and keep dangerous permissions like Manage Server, Manage Roles, and Administrator on as few roles as possible."
+      ],
+      footer: "Presets load a trusted baseline; refine per-permission, then copy the integer."
+    },
+    {
+      kicker: "BOT INVITE URLS // 03",
+      badge: "OAUTH2 AUTHORIZE",
+      badgeTone: "amber" as const,
+      title: "The integer rides in the invite link",
+      body: [
+        "When you add a bot to a server, the permissions it requests are baked into its OAuth2 authorize URL as a permissions query parameter. The builder above takes your bot's Client ID (its Application ID from the Developer Portal) and the permissions you tick, then assembles the full link: discord.com/oauth2/authorize with client_id, a scope of bot plus applications.commands, and the calculated permissions integer. Share that link with a server owner and Discord pre-selects exactly those permissions on the bot's managed role.",
+        "Requesting only what the bot needs is both good security and good UX — server owners are far more likely to approve a bot asking for Send Messages and Embed Links than one demanding Administrator. If your bot only posts messages, the integer stays small and readable. You can always paste an existing bot's permission number into the decoder to see precisely what it asked for before you approve it."
+      ]
+    },
+    {
+      kicker: "ADMINISTRATOR & OVERRIDES // 04",
+      badge: "HANDLE WITH CARE",
+      badgeTone: "purple" as const,
+      title: "Why Administrator sits apart",
+      body: [
+        "Administrator (bit 3, value 8) is not just another permission — it is an override of the entire system. A role with it is treated as having every permission, and it ignores channel-level allow/deny overrides completely. A private channel that denies View Channel to everyone is still fully visible to an admin. That power is why the calculator flags it: granting Administrator to a public or self-assignable role is one of the most common ways a server gets compromised.",
+        "For everyone below the owner, prefer explicit permissions. A moderator does not need Administrator to remove rule-breakers; Kick, Ban, Timeout, and Manage Messages cover it while keeping them out of server settings and role management. Remember too that the integer this tool produces is the base role permission — the real access in any given channel is that base layered with the channel's own overrides, and only Administrator escapes that layering."
+      ],
+      footer: "Administrator grants everything and bypasses channel overrides — grant it sparingly."
+    }
+  ]
+};
+---
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/permissions-calculator.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Permission Calculator</span>
+      </div>
+        <a href="/es/tools/permissions-calculator/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Permission</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Calculator</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Tick permissions → live integer • Decode any value • Build a bot invite URL</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <PermissionsCalculatorWorkspace lang="en" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>

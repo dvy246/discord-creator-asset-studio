@@ -1,6 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import AvatarWorkspace from '../../../components/tools/AvatarWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Recortador de Avatar Discord | Circular 512×512";
 const pageDescription = "Recortador de avatar Discord: recorta fotos de perfil a 512×512 px con máscara circular. PNG, GIF y WebP. 100% en tu navegador, sin subidas.";
@@ -14,21 +17,75 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  { q: "¿Cuál es el tamaño recomendado para el avatar de Discord?", a: "Se recomienda 512×512 píxeles (relación 1:1). Discord recorta el avatar en círculo y permite subidas de hasta 8 MB." },
-  { q: "¿Qué formatos acepta Discord para avatares?", a: "PNG, JPEG, WebP y GIF animado. Los avatares animados GIF requieren una suscripción Nitro." },
-  { q: "¿Por qué mi avatar se ve borroso?", a: "Si lo creas por debajo de 512×512, las pantallas Retina lo amplían y pixelan. Exporta siempre a 512×512 con la composición centrada." }
+  { q: "¿Qué tamaño debe tener un avatar de Discord?", a: "Exporta tu avatar como una imagen cuadrada de 512×512 píxeles, o 1024×1024 para pantallas Retina más nítidas. Discord lo reduce a cada tamaño que necesita, desde miniaturas diminutas en el chat hasta tarjetas de perfil grandes. El mínimo técnico ronda los 128×128, pero se ve borroso, así que 512 es el punto ideal." },
+  { q: "¿Por qué se ve borrosa mi foto de perfil de Discord?", a: "La borrosidad suele indicar que el origen era demasiado pequeño. Si subes algo cercano a 128×128, las pantallas Retina lo amplían y los píxeles se difuminan. Vuelve a exportar el mismo arte a 512×512 o 1024×1024 desde un lienzo cuadrado 1:1, mantén el sujeto centrado y se verá nítido en todas partes." },
+  { q: "¿Qué formatos y tamaño máximo permite Discord para los avatares?", a: "Discord acepta PNG, JPG, WEBP y GIF para avatares, con un límite de subida de 8 MB. PNG es ideal para logos y arte plano, JPG para fotos y WEBP para un archivo más pequeño con calidad similar. También admite GIF animados, pero solo para suscriptores de Nitro." },
+  { q: "¿Cómo hago un avatar animado en Discord?", a: "Los avatares animados usan el formato GIF y requieren una suscripción a Discord Nitro para reproducirse en el chat y las tarjetas de perfil. Mantén el archivo por debajo del límite de 8 MB y créalo en un lienzo cuadrado 1:1 con el movimiento centrado, ya que el recorte circular sigue recortando las esquinas." },
+  { q: "¿Por qué se recortan las esquinas de mi avatar de Discord?", a: "Tu imagen es cuadrada, pero Discord la muestra dentro de un círculo, así que las cuatro esquinas siempre se recortan. Todo lo que esté cerca de un borde —texto, un logo, parte de una cara— puede desaparecer. Mantén centrada la parte importante y usa la vista previa circular en vivo para comprobarlo antes de exportar." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Plano Técnico del Avatar",
+  heading: "Diseña un avatar de Discord que se vea",
+  highlight: "nítido y centrado",
+  intro: "Los avatares de Discord se crean como un cuadrado pero se muestran como un círculo, y luego se reducen a una docena de tamaños en el chat, las listas de miembros y las tarjetas de perfil. Así encajan las dimensiones de origen, la resolución, el recorte circular y las reglas de formato.",
+  steps: [
+    "Origen Cuadrado 1:1",
+    "512px y Detalle Retina",
+    "El Recorte Circular",
+    "Formatos y GIF con Nitro"
+  ],
+  cards: [
+    {
+      kicker: "PLANO DEL LIENZO // 01",
+      badge: "CUADRADO 1:1",
+      badgeTone: "emerald" as const,
+      title: "Empieza desde un origen cuadrado 1:1",
+      body: [
+        "Cada avatar de Discord nace como un cuadrado perfecto, aunque se muestre dentro de un círculo. Crea tu arte en un lienzo 1:1 para que nada se deforme cuando Discord lo ajuste al marco circular, y para que lo que ves mientras editas coincida con lo que realmente se sube.",
+        "Exporta a 512×512 píxeles como base, o a 1024×1024 cuando quieras mayor nitidez en pantallas de alta densidad. Discord reducirá el tamaño desde ahí. El mínimo técnico ronda los 128×128, pero una imagen tan pequeña se ve borrosa al ampliarse, así que empieza en grande y deja que Discord la reduzca."
+      ]
+    },
+    {
+      kicker: "OFICIO DE RESOLUCIÓN // 02",
+      badge: "512 → 1024 PX",
+      badgeTone: "blue" as const,
+      title: "Por qué 512×512 o más se mantiene nítido",
+      body: [
+        "Discord muestra tu avatar en muchos tamaños: una miniatura pequeña junto a cada mensaje, una marca aún más pequeña en la lista de miembros y una versión grande en las tarjetas de perfil. En pantallas Retina y de alta densidad, cada una se dibuja al doble o triple de la densidad de píxeles que imaginas.",
+        "Subir a 512×512 —o 1024×1024 para el mejor resultado— le da a Discord detalle suficiente para reducir con limpieza en cada uno de esos tamaños. Si partes de algo cercano al mínimo de 128×128, el navegador tiene que inventar píxeles al ampliar, y eso es justo lo que produce una foto de perfil borrosa."
+      ]
+    },
+    {
+      kicker: "GEOMETRÍA DEL CÍRCULO // 03",
+      badge: "ESQUINAS RECORTADAS",
+      badgeTone: "amber" as const,
+      title: "La máscara circular recorta las esquinas",
+      body: [
+        "Discord siempre enmascara tu imagen cuadrada en un círculo, lo que significa que las cuatro esquinas nunca se muestran. Cualquier detalle cerca de un borde —una firma, una inicial, la parte superior de la cabeza de un personaje— puede quedar recortado en cuanto se aplica el círculo.",
+        "La solución es la composición: mantén el punto focal centrado y deja algo de aire alrededor de los bordes. La vista previa circular en vivo de esta herramienta muestra exactamente qué sobrevive al recorte antes de exportar, para que ajustes el encuadre hasta que nada importante toque las esquinas."
+      ],
+      footer: "Mantén el sujeto centrado: las esquinas quedan fuera del círculo y desaparecen."
+    },
+    {
+      kicker: "FORMATO Y NITRO // 04",
+      badge: "GIF REQUIERE NITRO",
+      badgeTone: "purple" as const,
+      title: "PNG, JPG, WEBP y GIF animado",
+      body: [
+        "Discord acepta avatares PNG, JPG, WEBP y GIF de hasta 8 MB. Usa PNG para logos y arte plano de alto contraste, JPG para retratos fotográficos y WEBP cuando quieras un archivo más pequeño con calidad similar. Todos se enmascaran con limpieza en el círculo siempre que el origen sea cuadrado.",
+        "Los avatares animados usan GIF y requieren una suscripción a Discord Nitro para reproducirse; sin Nitro se muestra el primer fotograma como imagen estática. Mantén las animaciones por debajo del tope de 8 MB y centradas. Todo en esta herramienta funciona por completo en tu navegador: sin subidas, sin cuenta y nada sale de tu dispositivo."
+      ],
+      footer: "100% en el navegador: tu imagen se recorta localmente y nunca se sube."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/avatar.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
     <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
@@ -72,45 +129,16 @@ const faqSchema = {
       </div>
     </div>
 
-    <div class="rounded-[16px] border-2 border-[#3368A0]/30 dark:border-[#66A3BF]/30 bg-gradient-to-br from-[#FAF8F5] to-[#C8DFDB]/20 dark:from-[#141A24] dark:to-[#202E42]/50 p-6 sm:p-8 text-center mb-8">
-      <span class="inline-block px-3 py-1 rounded-full bg-[#0D9488]/15 text-[#0D9488] font-bold text-xs font-mono mb-3">HERRAMIENTA INTERACTIVA</span>
-      <h2 class="text-xl sm:text-2xl font-extrabold text-[#192538] dark:text-white mb-2">Abrir el Estudio de Avatares</h2>
-      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-lg mx-auto mb-5">
-        La herramienta interactiva completa (recorte cuadrado con vista previa de máscara circular en vivo) está disponible en el estudio principal.
-      </p>
-      <a href={enUrl} class="btn-primary inline-block text-xs px-6 py-3 rounded-[10px] font-semibold shadow-sm">
-        Abrir Herramienta de Avatares →
-      </a>
-      <p class="text-[11px] text-[#6B7A90] mt-3">La herramienta funciona igual en todos los idiomas — tus archivos nunca salen de tu dispositivo.</p>
-    </div>
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <AvatarWorkspace lang="es" />
 
-    
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">La Máscara Circular</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord renderiza los avatares dentro de una máscara circular en el chat y los perfiles. Las esquinas se recortan, así que mantén el punto focal centrado dentro de la zona circular segura y evita colocar detalles importantes en las esquinas del lienzo.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Resolución para Pantallas Retina</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Crea siempre tus avatares a 512×512 píxeles. Las pantallas de alta densidad (2x/3x) amplían las imágenes de menor resolución y causan pixelación. Exporta con composición centrada y bordes limpios.
-        </p>
-      </article>
-    </div>
+    <!-- Dossier de desplazamiento (componente compartido) -->
+    <ToolDossier {...dossier} />
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <!-- FAQ (componente compartido, misma fuente que el JSON-LD) -->
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>
+
+
 

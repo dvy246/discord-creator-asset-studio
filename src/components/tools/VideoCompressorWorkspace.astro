@@ -1,0 +1,550 @@
+---
+/**
+ * VideoCompressorWorkspace.astro — Discord video compressor.
+ *
+ * Transcodes a video entirely in the browser with ffmpeg.wasm (single-thread
+ * core, no SharedArrayBuffer / COOP-COEP). The ~32 MB core is loaded lazily on
+ * first compress from the jsDelivr CDN (pinned to @ffmpeg/core@0.12.10) — it
+ * exceeds Cloudflare Pages' 25 MiB per-file cap so it cannot be self-hosted.
+ * The user's video itself never leaves the browser; only the generic engine
+ * binary is fetched. Levers: target size, output resolution, x264 CRF quality,
+ * and optional audio strip. Language-agnostic logic on fixed element IDs;
+ * visible labels via `t`, runtime strings via data-* (`js` → `L`). Imported by
+ * the EN (/tools/video-compressor/) and ES (/es/tools/video-compressor/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    dropTitle: 'Upload a video to compress',
+    dropHint: 'MP4, WebM, MOV & more • Transcoded entirely in your browser',
+    editorTitle: 'Compression Controls',
+    editorSub: 'Set a size target, resolution, and quality, then compress',
+    reset: 'Reset',
+    targetLabel: 'Target Limit',
+    targetFree: 'Free upload — 10 MB',
+    targetNitroBasic: 'Nitro Basic / Boost — 50 MB',
+    targetNitro: 'Nitro — 500 MB',
+    targetNone: 'No target (just shrink)',
+    resLabel: 'Resolution',
+    resOriginal: 'Keep original',
+    crfLabel: 'Quality',
+    crfHigh: 'Better quality',
+    crfLow: 'Smaller file',
+    audioLabel: 'Keep audio track',
+    compressBtn: 'Compress Video',
+    previewTitle: 'Compressed Preview',
+    previewBox: 'No video yet',
+    receiptTitle: 'Compression Receipt',
+    awaiting: 'Awaiting video',
+    origSize: 'Original Size:',
+    outSize: 'Compressed Size:',
+    saved: 'Space Saved:',
+    dims: 'Output Resolution:',
+    duration: 'Duration:',
+    downloadBtn: 'Download Compressed Video',
+    links: [
+      { icon: '📐', href: '/blog/discord-video-size-limit/', label: 'Discord Video Size Limit Guide' },
+      { icon: '🎞️', href: '/tools/gif-compressor/', label: 'Discord GIF Compressor' },
+      { icon: '🗜️', href: '/tools/image-compressor/', label: 'Discord Image Compressor' }
+    ]
+  },
+  es: {
+    dropTitle: 'Sube un video para comprimir',
+    dropHint: 'MP4, WebM, MOV y más • Transcodificado en tu navegador',
+    editorTitle: 'Controles de Compresión',
+    editorSub: 'Elige un objetivo de tamaño, resolución y calidad, luego comprime',
+    reset: 'Reiniciar',
+    targetLabel: 'Límite Objetivo',
+    targetFree: 'Subida gratis — 10 MB',
+    targetNitroBasic: 'Nitro Basic / Boost — 50 MB',
+    targetNitro: 'Nitro — 500 MB',
+    targetNone: 'Sin objetivo (solo reducir)',
+    resLabel: 'Resolución',
+    resOriginal: 'Mantener original',
+    crfLabel: 'Calidad',
+    crfHigh: 'Mejor calidad',
+    crfLow: 'Archivo más pequeño',
+    audioLabel: 'Conservar audio',
+    compressBtn: 'Comprimir Video',
+    previewTitle: 'Vista Previa Comprimida',
+    previewBox: 'Aún no hay video',
+    receiptTitle: 'Recibo de Compresión',
+    awaiting: 'Esperando video',
+    origSize: 'Tamaño Original:',
+    outSize: 'Tamaño Comprimido:',
+    saved: 'Espacio Ahorrado:',
+    dims: 'Resolución de Salida:',
+    duration: 'Duración:',
+    downloadBtn: 'Descargar Video Comprimido',
+    links: [
+      { icon: '📐', href: '/es/tools/gif-compressor/', label: 'Compresor de GIF de Discord' },
+      { icon: '🎞️', href: '/es/tools/image-compressor/', label: 'Compresor de Imágenes' },
+      { icon: '🗜️', href: '/es/tools/image-resizer/', label: 'Redimensionar Imágenes' }
+    ]
+  }
+}[lang];
+const js = {
+  en: {
+    invalidFile: 'Please choose a video file (MP4, WebM, MOV, MKV, etc.).',
+    tooLong: 'This video is over 10 minutes. Trim it first — long clips can exhaust browser memory.',
+    loadingEngine: 'Loading engine (~32 MB, first run only)…',
+    working: 'Compressing',
+    engineError: 'Could not load the compression engine. Refresh the page and try again.',
+    encodeError: 'Could not compress this video. Its codec may be unsupported — try a standard MP4 or WebM.',
+    biggerWarn: 'Result was larger than the source, so the original is kept. Try a lower resolution or quality.',
+    overTarget: 'Still over target. Drop the resolution or nudge quality toward “Smaller file”.',
+    downloadName: 'discord-compressed.mp4'
+  },
+  es: {
+    invalidFile: 'Elige un archivo de video (MP4, WebM, MOV, MKV, etc.).',
+    tooLong: 'Este video supera los 10 minutos. Recórtalo primero — los clips largos pueden agotar la memoria del navegador.',
+    loadingEngine: 'Cargando motor (~32 MB, solo la primera vez)…',
+    working: 'Comprimiendo',
+    engineError: 'No se pudo cargar el motor de compresión. Recarga la página e inténtalo de nuevo.',
+    encodeError: 'No se pudo comprimir este video. Su códec puede no ser compatible — prueba un MP4 o WebM estándar.',
+    biggerWarn: 'El resultado fue mayor que el original, así que se conserva el original. Prueba menor resolución o calidad.',
+    overTarget: 'Aún supera el objetivo. Baja la resolución o mueve la calidad hacia “Archivo más pequeño”.',
+    downloadName: 'discord-comprimido.mp4'
+  }
+}[lang];
+---
+
+<!-- TEMPLATE_MARKER -->
+
+<div
+  id="vc-root"
+  class="grid grid-cols-1 lg:grid-cols-12 gap-6"
+  data-lang={lang}
+  data-invalid={js.invalidFile}
+  data-toolong={js.tooLong}
+  data-loading={js.loadingEngine}
+  data-working={js.working}
+  data-engine-error={js.engineError}
+  data-encode-error={js.encodeError}
+  data-bigger={js.biggerWarn}
+  data-over={js.overTarget}
+  data-dlname={js.downloadName}
+>
+  <!-- LEFT: input + controls -->
+  <div class="lg:col-span-7 space-y-6">
+    <!-- Dropzone -->
+    <label
+      id="vc-drop"
+      for="vc-file"
+      class="group flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-white/15 bg-white/[0.02] px-6 py-14 text-center transition hover:border-[#5865F2]/60 hover:bg-[#5865F2]/[0.04] cursor-pointer"
+    >
+      <div class="text-4xl opacity-80" aria-hidden="true">🎬</div>
+      <div class="text-base font-semibold text-white">{t.dropTitle}</div>
+      <div class="text-sm text-white/50">{t.dropHint}</div>
+      <input id="vc-file" type="file" accept="video/*" class="sr-only" />
+    </label>
+
+    <!-- Editor (revealed after a file is chosen) -->
+    <div id="vc-editor" class="hidden space-y-5 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-lg font-semibold text-white">{t.editorTitle}</h3>
+          <p class="text-sm text-white/50">{t.editorSub}</p>
+        </div>
+        <button id="vc-reset" type="button" class="shrink-0 rounded-lg border border-white/15 px-3 py-1.5 text-sm text-white/70 transition hover:bg-white/10">{t.reset}</button>
+      </div>
+
+      <!-- Target -->
+      <div>
+        <label for="vc-target" class="mb-1.5 block text-sm font-medium text-white/80">{t.targetLabel}</label>
+        <select id="vc-target" class="w-full rounded-lg border border-white/15 bg-[#1E1F22] px-3 py-2 text-sm text-white focus:border-[#5865F2] focus:outline-none">
+          <option value="10">{t.targetFree}</option>
+          <option value="50">{t.targetNitroBasic}</option>
+          <option value="500">{t.targetNitro}</option>
+          <option value="0">{t.targetNone}</option>
+        </select>
+      </div>
+      <!-- CONTROLS_MARKER -->
+
+      <!-- Resolution -->
+      <div>
+        <label for="vc-res" class="mb-1.5 block text-sm font-medium text-white/80">{t.resLabel}</label>
+        <select id="vc-res" class="w-full rounded-lg border border-white/15 bg-[#1E1F22] px-3 py-2 text-sm text-white focus:border-[#5865F2] focus:outline-none">
+          <option value="0">{t.resOriginal}</option>
+          <option value="1080">1080p</option>
+          <option value="720" selected>720p</option>
+          <option value="480">480p</option>
+          <option value="360">360p</option>
+        </select>
+      </div>
+
+      <!-- Quality (CRF) -->
+      <div>
+        <div class="mb-1.5 flex items-center justify-between">
+          <label for="vc-crf" class="text-sm font-medium text-white/80">{t.crfLabel}</label>
+          <span id="vc-crf-val" class="rounded-md bg-white/10 px-2 py-0.5 text-xs font-semibold text-white/80">CRF 28</span>
+        </div>
+        <input id="vc-crf" type="range" min="18" max="34" step="1" value="28" class="w-full accent-[#5865F2]" />
+        <div class="mt-1 flex justify-between text-xs text-white/40">
+          <span>{t.crfHigh}</span>
+          <span>{t.crfLow}</span>
+        </div>
+      </div>
+
+      <!-- Keep audio -->
+      <label class="flex items-center gap-3 text-sm text-white/80">
+        <input id="vc-audio" type="checkbox" checked class="h-4 w-4 rounded border-white/20 bg-transparent accent-[#5865F2]" />
+        {t.audioLabel}
+      </label>
+
+      <!-- Compress + progress -->
+      <div class="space-y-3 pt-1">
+        <button id="vc-go" type="button" class="w-full rounded-xl bg-[#5865F2] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#4752c4] disabled:cursor-not-allowed disabled:opacity-50">{t.compressBtn}</button>
+        <div id="vc-progress-wrap" class="hidden">
+          <div class="h-2 w-full overflow-hidden rounded-full bg-white/10">
+            <div id="vc-progress-bar" class="h-full w-0 rounded-full bg-[#5865F2] transition-[width] duration-150"></div>
+          </div>
+          <p id="vc-progress-label" class="mt-1.5 text-center text-xs text-white/60"></p>
+        </div>
+        <p id="vc-error" class="hidden rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-200"></p>
+      </div>
+    </div>
+  </div>
+  <!-- RIGHT_MARKER -->
+
+  <!-- RIGHT: preview + receipt -->
+  <div class="lg:col-span-5 space-y-6">
+    <!-- Preview -->
+    <div class="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+      <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-white/50">{t.previewTitle}</h3>
+      <div id="vc-preview-box" class="flex aspect-video items-center justify-center rounded-xl border border-white/10 bg-black/30 text-sm text-white/40">
+        {t.previewBox}
+      </div>
+      <video id="vc-preview" class="hidden w-full rounded-xl" controls playsinline></video>
+    </div>
+
+    <!-- Receipt -->
+    <div class="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+      <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-white/50">{t.receiptTitle}</h3>
+      <div id="vc-receipt-empty" class="py-6 text-center text-sm text-white/40">{t.awaiting}</div>
+      <dl id="vc-receipt" class="hidden space-y-2.5 text-sm">
+        <div class="flex items-center justify-between">
+          <dt class="text-white/50">{t.origSize}</dt>
+          <dd id="vc-r-orig" class="font-medium text-white">—</dd>
+        </div>
+        <div class="flex items-center justify-between">
+          <dt class="text-white/50">{t.outSize}</dt>
+          <dd id="vc-r-out" class="font-medium text-white">—</dd>
+        </div>
+        <div class="flex items-center justify-between">
+          <dt class="text-white/50">{t.saved}</dt>
+          <dd id="vc-r-saved" class="font-semibold text-emerald-400">—</dd>
+        </div>
+        <div class="flex items-center justify-between">
+          <dt class="text-white/50">{t.dims}</dt>
+          <dd id="vc-r-dims" class="font-medium text-white">—</dd>
+        </div>
+        <div class="flex items-center justify-between">
+          <dt class="text-white/50">{t.duration}</dt>
+          <dd id="vc-r-dur" class="font-medium text-white">—</dd>
+        </div>
+      </dl>
+      <a id="vc-download" href="#" download class="mt-4 hidden w-full rounded-xl bg-emerald-500 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-emerald-600">{t.downloadBtn}</a>
+    </div>
+
+    <!-- Related links -->
+    <nav class="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+      <ul class="space-y-2 text-sm">
+        {t.links.map((l) => (
+          <li>
+            <a href={l.href} class="flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-white/70 transition hover:bg-white/5 hover:text-white">
+              <span aria-hidden="true">{l.icon}</span>
+              <span>{l.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</div>
+<!-- SCRIPT_MARKER -->
+
+<script>
+  import { FFmpeg } from '@ffmpeg/ffmpeg';
+  import { toBlobURL } from '@ffmpeg/util';
+
+  // ffmpeg-core@0.12.10 is ~31 MiB — over Cloudflare Pages' 25 MiB per-file
+  // cap — so it is loaded from jsDelivr (version-pinned) rather than self-hosted.
+  // The user's video never leaves the browser; only this engine binary is fetched.
+  const CORE_BASE = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd';
+  const MB = 1024 * 1024;
+
+  let ffmpeg: FFmpeg | null = null;
+  let engineReady = false;
+  let progressCb: ((r: { progress: number; time: number }) => void) | null = null;
+
+  function fmtBytes(n: number): string {
+    if (n >= MB) return (n / MB).toFixed(2) + ' MB';
+    if (n >= 1024) return (n / 1024).toFixed(0) + ' KB';
+    return n + ' B';
+  }
+  function fmtDur(s: number): string {
+    if (!isFinite(s) || s <= 0) return '—';
+    const m = Math.floor(s / 60);
+    const sec = Math.round(s % 60);
+    return m + ':' + String(sec).padStart(2, '0');
+  }
+
+  function probe(file: File): Promise<{ w: number; h: number; dur: number }> {
+    return new Promise((resolve) => {
+      const v = document.createElement('video');
+      v.preload = 'metadata';
+      v.muted = true;
+      const url = URL.createObjectURL(file);
+      v.onloadedmetadata = () => {
+        const out = { w: v.videoWidth, h: v.videoHeight, dur: v.duration };
+        URL.revokeObjectURL(url);
+        resolve(out);
+      };
+      v.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve({ w: 0, h: 0, dur: 0 });
+      };
+      v.src = url;
+    });
+  }
+
+  async function ensureEngine(onLog?: (m: string) => void): Promise<FFmpeg> {
+    if (ffmpeg && engineReady) return ffmpeg;
+    ffmpeg = new FFmpeg();
+    if (onLog) ffmpeg.on('log', ({ message }) => onLog(message));
+    ffmpeg.on('progress', (r) => progressCb && progressCb(r));
+    const coreURL = await toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, 'text/javascript');
+    const wasmURL = await toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, 'application/wasm');
+    await ffmpeg.load({ coreURL, wasmURL });
+    engineReady = true;
+    return ffmpeg;
+  }
+  // SCRIPT_INIT_MARKER
+
+  function init() {
+    const root = document.getElementById('vc-root') as HTMLElement | null;
+    if (!root || root.dataset.vcBound === '1') return;
+    root.dataset.vcBound = '1';
+
+    const L = {
+      invalid: root.dataset.invalid!,
+      tooLong: root.dataset.toolong!,
+      loading: root.dataset.loading!,
+      working: root.dataset.working!,
+      engineError: root.dataset.engineError!,
+      encodeError: root.dataset.encodeError!,
+      bigger: root.dataset.bigger!,
+      over: root.dataset.over!,
+      dlname: root.dataset.dlname!
+    };
+
+    const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+    const fileInput = $<HTMLInputElement>('vc-file');
+    const editor = $('vc-editor');
+    const resetBtn = $('vc-reset');
+    const targetSel = $<HTMLSelectElement>('vc-target');
+    const resSel = $<HTMLSelectElement>('vc-res');
+    const crf = $<HTMLInputElement>('vc-crf');
+    const crfVal = $('vc-crf-val');
+    const audio = $<HTMLInputElement>('vc-audio');
+    const goBtn = $<HTMLButtonElement>('vc-go');
+    const progWrap = $('vc-progress-wrap');
+    const progBar = $('vc-progress-bar');
+    const progLabel = $('vc-progress-label');
+    const errBox = $('vc-error');
+    const previewBox = $('vc-preview-box');
+    const preview = $<HTMLVideoElement>('vc-preview');
+    const receiptEmpty = $('vc-receipt-empty');
+    const receipt = $('vc-receipt');
+    const rOrig = $('vc-r-orig');
+    const rOut = $('vc-r-out');
+    const rSaved = $('vc-r-saved');
+    const rDims = $('vc-r-dims');
+    const rDur = $('vc-r-dur');
+    const dl = $<HTMLAnchorElement>('vc-download');
+    // SCRIPT_STATE_MARKER
+
+    let currentFile: File | null = null;
+    let meta = { w: 0, h: 0, dur: 0 };
+    let outUrl: string | null = null;
+    let busy = false;
+
+    function setError(msg: string | null) {
+      if (!msg) {
+        errBox.classList.add('hidden');
+        errBox.textContent = '';
+      } else {
+        errBox.classList.remove('hidden');
+        errBox.textContent = msg;
+      }
+    }
+
+    function setProgress(pct: number | null, label: string) {
+      if (pct === null) {
+        progWrap.classList.add('hidden');
+        return;
+      }
+      progWrap.classList.remove('hidden');
+      progBar.style.width = Math.max(0, Math.min(100, pct)) + '%';
+      progLabel.textContent = label;
+    }
+
+    function revokeOut() {
+      if (outUrl) {
+        URL.revokeObjectURL(outUrl);
+        outUrl = null;
+      }
+    }
+
+    function resetAll() {
+      currentFile = null;
+      meta = { w: 0, h: 0, dur: 0 };
+      revokeOut();
+      fileInput.value = '';
+      editor.classList.add('hidden');
+      setError(null);
+      setProgress(null, '');
+      preview.classList.add('hidden');
+      preview.removeAttribute('src');
+      previewBox.classList.remove('hidden');
+      receipt.classList.add('hidden');
+      dl.classList.add('hidden');
+      receiptEmpty.classList.remove('hidden');
+    }
+
+    async function applyFile(file: File) {
+      if (!file.type.startsWith('video/') && !/\.(mp4|webm|mov|mkv|avi|m4v)$/i.test(file.name)) {
+        setError(L.invalid);
+        return;
+      }
+      setError(null);
+      currentFile = file;
+      meta = await probe(file);
+      if (meta.dur > 600) {
+        setError(L.tooLong);
+      }
+      editor.classList.remove('hidden');
+      receiptEmpty.classList.add('hidden');
+      receipt.classList.remove('hidden');
+      rOrig.textContent = fmtBytes(file.size);
+      rOut.textContent = '—';
+      rSaved.textContent = '—';
+      rDims.textContent = meta.w ? `${meta.w}×${meta.h}` : '—';
+      rDur.textContent = fmtDur(meta.dur);
+      dl.classList.add('hidden');
+    }
+    // SCRIPT_COMPRESS_MARKER
+
+    async function compress() {
+      if (!currentFile || busy) return;
+      busy = true;
+      goBtn.disabled = true;
+      setError(null);
+      revokeOut();
+      progressCb = ({ progress }) => {
+        const p = Math.max(0, Math.min(100, Math.round((progress || 0) * 100)));
+        setProgress(p, `${L.working} ${p}%`);
+      };
+      const ext = (/\.(webm|mkv|mov|avi|m4v|mp4)$/i.exec(currentFile.name)?.[0] || '.mp4').toLowerCase();
+      const inName = 'input' + ext;
+      const outName = 'output.mp4';
+      let ow = meta.w;
+      let oh = meta.h;
+      try {
+        if (!engineReady) setProgress(8, L.loading);
+        const ff = await ensureEngine();
+        setProgress(0, `${L.working} 0%`);
+        const buf = new Uint8Array(await currentFile.arrayBuffer());
+        await ff.writeFile(inName, buf);
+
+        const res = parseInt(resSel.value, 10);
+        const args = ['-i', inName];
+        let vf: string | null = null;
+        if (res > 0 && meta.h > 0 && meta.h > res) {
+          oh = res % 2 ? res + 1 : res;
+          ow = Math.round((meta.w * oh) / meta.h);
+          if (ow % 2) ow += 1;
+          vf = `scale=${ow}:${oh}`;
+        } else if (res > 0 && meta.h === 0) {
+          vf = `scale=-2:${res}`;
+        }
+        if (vf) args.push('-vf', vf);
+        args.push('-c:v', 'libx264', '-preset', 'veryfast', '-crf', crf.value, '-pix_fmt', 'yuv420p');
+        if (audio.checked) args.push('-c:a', 'aac', '-b:a', '128k');
+        else args.push('-an');
+        args.push('-movflags', '+faststart', outName);
+
+        await ff.exec(args);
+        const data = (await ff.readFile(outName)) as Uint8Array;
+        const blob = new Blob([data], { type: 'video/mp4' });
+        ff.deleteFile(inName).catch(() => {});
+        ff.deleteFile(outName).catch(() => {});
+        // SCRIPT_RESULT_MARKER
+        const outSize = blob.size;
+        outUrl = URL.createObjectURL(blob);
+        preview.src = outUrl;
+        preview.classList.remove('hidden');
+        previewBox.classList.add('hidden');
+        dl.href = outUrl;
+        dl.download = L.dlname;
+        dl.classList.remove('hidden');
+
+        rOut.textContent = fmtBytes(outSize);
+        if (ow && oh) rDims.textContent = `${ow}×${oh}`;
+        const savedBytes = currentFile.size - outSize;
+        const savedPct = currentFile.size ? Math.round((savedBytes / currentFile.size) * 100) : 0;
+        rSaved.textContent = savedPct > 0 ? `${savedPct}% (${fmtBytes(savedBytes)})` : '0%';
+
+        setProgress(100, `${L.working} 100%`);
+        const tgt = parseInt(targetSel.value, 10);
+        if (outSize >= currentFile.size) setError(L.bigger);
+        else if (tgt > 0 && outSize > tgt * MB) setError(L.over);
+        setTimeout(() => setProgress(null, ''), 1500);
+      } catch (e) {
+        console.error('[video-compressor]', e);
+        setError(L.encodeError);
+        setProgress(null, '');
+      } finally {
+        busy = false;
+        goBtn.disabled = false;
+      }
+    }
+    // SCRIPT_LISTENERS_MARKER
+    fileInput.addEventListener('change', () => {
+      const f = fileInput.files?.[0];
+      if (f) applyFile(f);
+    });
+
+    const drop = document.getElementById('vc-drop')!;
+    ['dragenter', 'dragover'].forEach((ev) =>
+      drop.addEventListener(ev, (e) => {
+        e.preventDefault();
+        drop.classList.add('border-[#5865F2]/60', 'bg-[#5865F2]/[0.04]');
+      })
+    );
+    ['dragleave', 'drop'].forEach((ev) =>
+      drop.addEventListener(ev, (e) => {
+        e.preventDefault();
+        drop.classList.remove('border-[#5865F2]/60', 'bg-[#5865F2]/[0.04]');
+      })
+    );
+    drop.addEventListener('drop', (e) => {
+      const f = (e as DragEvent).dataTransfer?.files?.[0];
+      if (f) applyFile(f);
+    });
+
+    resetBtn.addEventListener('click', resetAll);
+    crf.addEventListener('input', () => {
+      crfVal.textContent = 'CRF ' + crf.value;
+    });
+    goBtn.addEventListener('click', compress);
+  }
+
+  init();
+  document.addEventListener('astro:after-swap', init);
+</script>

@@ -1,0 +1,26 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "astro-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "--port", "4325"],
+      "port": 4325,
+      "url": "http://localhost:4325"
+    },
+    {
+      "name": "astro-preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview", "--", "--port", "4326"],
+      "port": 4326,
+      "url": "http://localhost:4326"
+    },
+    {
+      "name": "astro-preview-pc",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4327", "--directory", "dist"],
+      "port": 4327,
+      "url": "http://localhost:4327"
+    }
+  ]
+}

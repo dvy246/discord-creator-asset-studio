@@ -1,0 +1,127 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import EmbedWorkspace from '../../components/tools/EmbedWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Embed Builder | Live Webhook Preview";
+const pageDescription = "Free Discord embed builder with live preview and copy-ready webhook JSON. Design rich embeds—author, fields, images, footer—then send to a webhook.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/embed-builder/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Embed Builder",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Embed Builder", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "What is a Discord embed?", a: "An embed is the rich, colored card a bot or webhook can post instead of plain text — with a title, description, colored side bar, fields, thumbnail, image, and footer. This builder gives you a visual form and a live preview, then outputs the exact JSON a webhook or bot expects." },
+  { q: "How do I get a Discord webhook URL?", a: "In your Discord server open Server Settings → Integrations → Webhooks → New Webhook, pick a channel, and click Copy Webhook URL. You need the Manage Webhooks permission. Paste that URL into the Send box here to post your embed straight to that channel." },
+  { q: "Is my webhook URL stored anywhere?", a: "No. The webhook URL is held only in the page's memory while the tab is open. It is never written to localStorage, never included in the copied JSON, and never sent anywhere except directly to Discord when you click Send. Close the tab and it is gone." },
+  { q: "Can I use this embed JSON with a bot like discord.js or discord.py?", a: "Yes. Click Copy JSON and drop the embeds array into any bot library — discord.js, discord.py, or a raw REST call. The color is emitted as the decimal integer Discord expects, and empty fields are omitted so the payload stays valid." },
+  { q: "What are the Discord embed limits (character count and field count)?", a: "Discord caps a single embed at 256 characters for the title, 4096 for the description, 25 fields (256-char name, 1024-char value each), 2048 for the footer, and 6000 characters total across one message's embeds. This builder mirrors the live preview so you can spot when a long description would overflow before you send." }
+];
+
+const dossier = {
+  eyebrow: "Embed Builder Blueprint",
+  heading: "From a visual form to",
+  highlight: "valid webhook JSON",
+  intro: "A Discord embed is a structured card with strict fields and limits, posted by a webhook or bot as JSON. Here is how the anatomy, the live preview, the JSON output, and the send step fit together — all in your browser.",
+  steps: [
+    "Embed Anatomy",
+    "Live Visual Preview",
+    "Webhook JSON Output",
+    "Send & Privacy"
+  ],
+  cards: [
+    {
+      kicker: "STRUCTURE MAP // 01",
+      badge: "TITLE / FIELDS / IMAGE",
+      badgeTone: "emerald" as const,
+      title: "Every part of a rich embed card",
+      body: [
+        "An embed is the rich, colored card a bot or webhook posts instead of plain text. It has a colored side bar, an author row with icon, a title and description, up to 25 inline or stacked fields, a small thumbnail, a large image, and a footer with timestamp.",
+        "This builder exposes each of those as a simple form control, so you compose the card without hand-writing a single brace. Fields you leave blank are dropped from the output, which keeps the payload valid and avoids the empty-object errors that break a webhook post."
+      ]
+    },
+    {
+      kicker: "WYSIWYG PREVIEW // 02",
+      badge: "LIVE ON KEYSTROKE",
+      badgeTone: "blue" as const,
+      title: "See it exactly as your server will",
+      body: [
+        "The preview on the right redraws on every keystroke, matching Discord's own spacing, colors, and truncation. What you see is what your channel sees — including how a long title wraps and where the side bar color lands.",
+        "Because the preview mirrors Discord's real limits, you catch overflow before you post: a description past 4096 characters or a 26th field shows up here first. No round-trip to a test channel, no deleted messages cleaning up after a failed send."
+      ]
+    },
+    {
+      kicker: "PAYLOAD OUTPUT // 03",
+      badge: "COPY JSON",
+      badgeTone: "amber" as const,
+      title: "The JSON a webhook or bot expects",
+      body: [
+        "The Webhook JSON panel always mirrors your embed as a valid payload. Copy it into discord.js, discord.py, or a raw REST call — the color is emitted as the decimal integer Discord expects, not a hex string, and empty parts are dropped so the payload never breaks.",
+        "This makes the tool a fast scaffold for bot developers: design visually, copy the embeds array, and paste it straight into your command handler. The output stays in sync with the preview, so the card you approved is the card your code sends."
+      ],
+      footer: "Color emitted as the decimal integer Discord expects — paste straight into discord.js or discord.py."
+    },
+    {
+      kicker: "DELIVERY & TRUST // 04",
+      badge: "URL NEVER STORED",
+      badgeTone: "purple" as const,
+      title: "Send to a channel without leaking the URL",
+      body: [
+        "To post right now, paste a webhook URL into the Send box and click once — the embed lands in that channel. The webhook URL is held in the page's memory only while the tab is open.",
+        "It is never written to storage, never included in the copied JSON, and never sent anywhere except directly to Discord's API on the send you trigger. Everything else runs locally with no account and no logging, so designing an embed leaks nothing."
+      ],
+      footer: "Webhook URL lives in tab memory only — never stored, never in the copied JSON."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/embed-builder.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Embed Builder</span>
+      </div>
+        <a href="/es/tools/embed-builder/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Embed</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Builder</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Design rich embeds • Live preview • Copy webhook JSON or send it</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <EmbedWorkspace lang="en" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>

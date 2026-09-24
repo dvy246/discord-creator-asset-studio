@@ -1,0 +1,422 @@
+---
+/**
+ * FancyTextWorkspace.astro — Discord fancy text / Unicode font generator.
+ *
+ * Turns typed text into styled Unicode look-alikes (not real fonts) across a
+ * curated set of readable-first styles, each with one-click copy and a
+ * "renders where?" hint. Pure JS charmap transforms, no deps, no network.
+ * Language-agnostic logic on fixed element IDs; visible labels via `t`,
+ * runtime strings via data-* (`js` → `L`). Imported by the EN (/tools/fonts/)
+ * and ES (/es/tools/fonts/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+// Style rows rendered statically; the client fills each preview + wires copy.
+// `works` drives the badge set: nick=nickname/display name, user=@username handle, bio=About Me.
+const STYLES = [
+  { id: 'sansBold', tier: 'readable', works: { nick: true, user: false, bio: true } },
+  { id: 'sansItalic', tier: 'readable', works: { nick: true, user: false, bio: true } },
+  { id: 'sansBoldItalic', tier: 'readable', works: { nick: true, user: false, bio: true } },
+  { id: 'smallCaps', tier: 'readable', works: { nick: true, user: false, bio: true } },
+  { id: 'monospace', tier: 'readable', works: { nick: true, user: false, bio: true } },
+  { id: 'serifBold', tier: 'readable', works: { nick: true, user: false, bio: true } },
+  { id: 'serifItalic', tier: 'readable', works: { nick: true, user: false, bio: true } },
+  { id: 'doubleStruck', tier: 'readable', works: { nick: true, user: false, bio: true } },
+  { id: 'fraktur', tier: 'decorative', works: { nick: true, user: false, bio: true } },
+  { id: 'frakturBold', tier: 'decorative', works: { nick: true, user: false, bio: true } },
+  { id: 'script', tier: 'decorative', works: { nick: true, user: false, bio: true } },
+  { id: 'scriptBold', tier: 'decorative', works: { nick: true, user: false, bio: true } },
+  { id: 'bubble', tier: 'decorative', works: { nick: true, user: false, bio: true } },
+  { id: 'squared', tier: 'decorative', works: { nick: true, user: false, bio: true } },
+  { id: 'fullwidth', tier: 'decorative', works: { nick: true, user: false, bio: true } },
+  { id: 'strikethrough', tier: 'decorative', works: { nick: true, user: false, bio: true } },
+  { id: 'underline', tier: 'decorative', works: { nick: true, user: false, bio: true } },
+  { id: 'upsideDown', tier: 'decorative', works: { nick: true, user: false, bio: true } }
+];
+
+const t = {
+  en: {
+    inputLabel: 'Type your text',
+    placeholder: 'Type something…',
+    clearBtn: 'Clear',
+    tierReadable: 'Readable styles',
+    tierReadableSub: 'Clean, high-legibility — safe for names and bios.',
+    tierDecorative: 'Decorative styles',
+    tierDecorativeSub: 'Bolder look. May show boxes on older devices.',
+    favLabel: 'Favorites',
+    favEmpty: 'Tap the ☆ on any style to pin it here.',
+    copy: 'Copy',
+    badgeNick: 'Nickname',
+    badgeUser: 'Username',
+    badgeBio: 'About Me',
+    styleNames: {
+      sansBold: 'Sans Bold', sansItalic: 'Sans Italic', sansBoldItalic: 'Bold Italic',
+      smallCaps: 'Small Caps', monospace: 'Monospace', serifBold: 'Serif Bold',
+      serifItalic: 'Serif Italic', doubleStruck: 'Double-Struck', fraktur: 'Fraktur',
+      frakturBold: 'Fraktur Bold', script: 'Script', scriptBold: 'Script Bold',
+      bubble: 'Bubble', squared: 'Squared', fullwidth: 'Full Width',
+      strikethrough: 'Strikethrough', underline: 'Underline', upsideDown: 'Upside Down'
+    },
+    links: [
+      { icon: '📝', href: '/tools/markdown/', label: 'Markdown Previewer (Live)' },
+      { icon: '🌈', href: '/tools/colored-text/', label: 'Colored Text Generator (ANSI)' },
+      { icon: '😀', href: '/tools/emoji-copy-paste/', label: 'Emoji Copy & Paste Board' },
+      { icon: '🎨', href: '/tools/colors/', label: 'Discord Color & Hex Codes' },
+      { icon: '🙈', href: '/tools/spoiler/', label: 'Spoiler Maker (Text & Image)' }
+    ]
+  },
+  es: {
+    inputLabel: 'Escribe tu texto',
+    placeholder: 'Escribe algo…',
+    clearBtn: 'Borrar',
+    tierReadable: 'Estilos legibles',
+    tierReadableSub: 'Limpios y muy legibles — seguros para nombres y biografías.',
+    tierDecorative: 'Estilos decorativos',
+    tierDecorativeSub: 'Aspecto más llamativo. Pueden verse recuadros en dispositivos antiguos.',
+    favLabel: 'Favoritos',
+    favEmpty: 'Toca la ☆ de cualquier estilo para fijarlo aquí.',
+    copy: 'Copiar',
+    badgeNick: 'Apodo',
+    badgeUser: 'Usuario',
+    badgeBio: 'Sobre mí',
+    styleNames: {
+      sansBold: 'Sans Negrita', sansItalic: 'Sans Cursiva', sansBoldItalic: 'Negrita Cursiva',
+      smallCaps: 'Versalitas', monospace: 'Monoespaciada', serifBold: 'Serif Negrita',
+      serifItalic: 'Serif Cursiva', doubleStruck: 'Doble Trazo', fraktur: 'Fraktur',
+      frakturBold: 'Fraktur Negrita', script: 'Manuscrita', scriptBold: 'Manuscrita Negrita',
+      bubble: 'Burbuja', squared: 'Cuadrada', fullwidth: 'Ancho Completo',
+      strikethrough: 'Tachado', underline: 'Subrayado', upsideDown: 'Al Revés'
+    },
+    links: [
+      { icon: '📝', href: '/es/tools/markdown/', label: 'Previsualizador de Markdown' },
+      { icon: '🌈', href: '/es/tools/colored-text/', label: 'Texto de Colores (ANSI)' },
+      { icon: '😀', href: '/es/tools/emoji-copy-paste/', label: 'Copiar y Pegar Emojis' },
+      { icon: '🎨', href: '/es/tools/colors/', label: 'Colores y Códigos Hex de Discord' },
+      { icon: '🙈', href: '/es/tools/spoiler/', label: 'Creador de Spoilers (Texto e Imagen)' }
+    ]
+  }
+}[lang];
+
+const js = {
+  en: { copied: 'Copied!', copy: 'Copy', empty: 'Type above to preview' },
+  es: { copied: '¡Copiado!', copy: 'Copiar', empty: 'Escribe arriba para previsualizar' }
+}[lang];
+
+const readable = STYLES.filter((s) => s.tier === 'readable');
+const decorative = STYLES.filter((s) => s.tier === 'decorative');
+---
+
+<div
+  id="ft-workspace"
+  class="space-y-8 mb-16"
+  data-copied={js.copied}
+  data-copy={js.copy}
+  data-empty={js.empty}
+>
+  <!-- Sticky input -->
+  <div class="sticky top-2 z-20">
+    <div class="card-panel rounded-[14px] p-4 sm:p-5 shadow-sm backdrop-blur">
+      <label for="ft-input" class="block text-sm font-bold text-[#192538] dark:text-white mb-2">{t.inputLabel}</label>
+      <div class="flex items-stretch gap-2">
+        <input
+          type="text"
+          id="ft-input"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder={t.placeholder}
+          class="flex-1 min-w-0 text-base rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3.5 py-2.5 focus:border-[#3368A0] focus:outline-none"
+        />
+        <button type="button" id="ft-clear" class="btn-secondary px-4 py-2.5 rounded-[10px] text-xs font-semibold shrink-0">{t.clearBtn}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Favorites (populated from localStorage) -->
+  <section id="ft-fav-section" class="hidden">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="text-[#EAB308]">★</span>
+      <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.favLabel}</h2>
+    </div>
+    <div id="ft-fav-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+  </section>
+
+  <!-- Readable tier -->
+  <section>
+    <div class="mb-3">
+      <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.tierReadable}</h2>
+      <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mt-0.5">{t.tierReadableSub}</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {readable.map((s) => (
+        <div class="ft-card card-panel rounded-[12px] p-4 flex flex-col gap-2.5" data-style={s.id}>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[10px] font-mono uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.styleNames[s.id as keyof typeof t.styleNames]}</span>
+            <button type="button" class="ft-fav text-lg leading-none text-[#C8CFD8] dark:text-[#3A4658] hover:text-[#EAB308] transition-colors" aria-label="Favorite" data-style={s.id}>☆</button>
+          </div>
+          <div class="ft-preview text-lg text-[#192538] dark:text-white break-words min-h-[1.75rem] select-all"></div>
+          <div class="flex items-center justify-between gap-2 pt-1">
+            <div class="flex flex-wrap gap-1">
+              {s.works.nick && <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#DCFCE7] dark:bg-[#14342A] text-[#166534] dark:text-[#4ADE80]">✓ {t.badgeNick}</span>}
+              {s.works.bio && <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#DCFCE7] dark:bg-[#14342A] text-[#166534] dark:text-[#4ADE80]">✓ {t.badgeBio}</span>}
+              {!s.works.user && <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#FEE2E2] dark:bg-[#3A1A1A] text-[#991B1B] dark:text-[#F87171]">✗ {t.badgeUser}</span>}
+            </div>
+            <button type="button" class="ft-copy btn-secondary text-xs px-3 py-1.5 rounded-[6px] shrink-0" data-style={s.id}>{t.copy}</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Decorative tier -->
+  <section>
+    <div class="mb-3">
+      <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.tierDecorative}</h2>
+      <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mt-0.5">{t.tierDecorativeSub}</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {decorative.map((s) => (
+        <div class="ft-card card-panel rounded-[12px] p-4 flex flex-col gap-2.5" data-style={s.id}>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[10px] font-mono uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.styleNames[s.id as keyof typeof t.styleNames]}</span>
+            <button type="button" class="ft-fav text-lg leading-none text-[#C8CFD8] dark:text-[#3A4658] hover:text-[#EAB308] transition-colors" aria-label="Favorite" data-style={s.id}>☆</button>
+          </div>
+          <div class="ft-preview text-lg text-[#192538] dark:text-white break-words min-h-[1.75rem] select-all"></div>
+          <div class="flex items-center justify-between gap-2 pt-1">
+            <div class="flex flex-wrap gap-1">
+              {s.works.nick && <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#DCFCE7] dark:bg-[#14342A] text-[#166534] dark:text-[#4ADE80]">✓ {t.badgeNick}</span>}
+              {s.works.bio && <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#DCFCE7] dark:bg-[#14342A] text-[#166534] dark:text-[#4ADE80]">✓ {t.badgeBio}</span>}
+              {!s.works.user && <span class="text-[10px] px-1.5 py-0.5 rounded bg-[#FEE2E2] dark:bg-[#3A1A1A] text-[#991B1B] dark:text-[#F87171]">✗ {t.badgeUser}</span>}
+            </div>
+            <button type="button" class="ft-copy btn-secondary text-xs px-3 py-1.5 rounded-[6px] shrink-0" data-style={s.id}>{t.copy}</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <div class="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium pt-2">
+    {t.links.map((link) => (
+      <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+        <span>{link.icon}</span> {link.label}
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  const ws = document.getElementById('ft-workspace');
+  const L = {
+    copied: ws?.dataset.copied || 'Copied!',
+    copy: ws?.dataset.copy || 'Copy',
+    empty: ws?.dataset.empty || 'Type above to preview'
+  };
+
+  const FAV_KEY = 'ft-favorites-v1';
+  const input = document.getElementById('ft-input') as HTMLInputElement;
+  const clearBtn = document.getElementById('ft-clear');
+  const favSection = document.getElementById('ft-fav-section');
+  const favList = document.getElementById('ft-fav-list');
+
+  // --- Unicode transform tables -------------------------------------------
+  // Offset-mappable alphabets (contiguous in Unicode): map a-z, A-Z, 0-9.
+  const OFFSET_MAPS: Record<string, { upper?: number; lower?: number; digit?: number }> = {
+    sansBold:       { upper: 0x1D5D4, lower: 0x1D5EE, digit: 0x1D7EC },
+    sansItalic:     { upper: 0x1D608, lower: 0x1D622 },
+    sansBoldItalic: { upper: 0x1D63C, lower: 0x1D656 },
+    serifBold:      { upper: 0x1D400, lower: 0x1D41A, digit: 0x1D7CE },
+    serifItalic:    { upper: 0x1D434, lower: 0x1D44E },
+    script:         { upper: 0x1D49C, lower: 0x1D4B6 },
+    scriptBold:     { upper: 0x1D4D0, lower: 0x1D4EA },
+    fraktur:        { upper: 0x1D504, lower: 0x1D51E },
+    frakturBold:    { upper: 0x1D56C, lower: 0x1D586 },
+    doubleStruck:   { upper: 0x1D538, lower: 0x1D552, digit: 0x1D7D8 },
+    monospace:      { upper: 0x1D670, lower: 0x1D68A, digit: 0x1D7F6 },
+    bubble:         { upper: 0x24B6, lower: 0x24D0 },
+    squared:        { upper: 0x1F130 },
+    fullwidth:      { upper: 0xFF21, lower: 0xFF41, digit: 0xFF10 }
+  };
+
+  // Some Mathematical Alphanumeric ranges have "holes" filled by BMP letters.
+  const EXCEPTIONS: Record<string, Record<string, string>> = {
+    script: { B: 'ℬ', E: 'ℰ', F: 'ℱ', H: 'ℋ', I: 'ℐ', L: 'ℒ', M: 'ℳ', R: 'ℛ', e: 'ℯ', g: 'ℊ', o: 'ℴ' },
+    fraktur: { C: 'ℭ', H: 'ℌ', I: 'ℑ', R: 'ℜ', Z: 'ℨ' },
+    doubleStruck: { C: 'ℂ', H: 'ℍ', N: 'ℕ', P: 'ℙ', Q: 'ℚ', R: 'ℝ', Z: 'ℤ' }
+  };
+
+  const SMALL_CAPS: Record<string, string> = {
+    a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ', f: 'ꜰ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ',
+    k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ', p: 'ᴘ', q: 'ǫ', r: 'ʀ', s: 'ѕ', t: 'ᴛ',
+    u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', x: 'x', y: 'ʏ', z: 'ᴢ'
+  };
+
+  const UPSIDE_DOWN: Record<string, string> = {
+    a: 'ɐ', b: 'q', c: 'ɔ', d: 'p', e: 'ǝ', f: 'ɟ', g: 'ƃ', h: 'ɥ', i: 'ᴉ', j: 'ɾ',
+    k: 'ʞ', l: 'l', m: 'ɯ', n: 'u', o: 'o', p: 'd', q: 'b', r: 'ɹ', s: 's', t: 'ʇ',
+    u: 'n', v: 'ʌ', w: 'ʍ', x: 'x', y: 'ʎ', z: 'z',
+    A: '∀', B: 'ᗺ', C: 'Ɔ', D: 'ᗡ', E: 'Ǝ', F: 'Ⅎ', G: 'פ', H: 'H', I: 'I', J: 'ſ',
+    K: 'ʞ', L: '˥', M: 'W', N: 'N', O: 'O', P: 'Ԁ', Q: 'Ό', R: 'ᴚ', S: 'S', T: '⊥',
+    U: '∩', V: 'Λ', W: 'M', X: 'X', Y: '⅄', Z: 'Z',
+    '1': 'Ɩ', '2': 'ᄅ', '3': 'Ɛ', '4': 'ㄣ', '5': 'ϛ', '6': '9', '7': 'ㄥ', '8': '8', '9': '6', '0': '0',
+    '.': '˙', ',': "'", '?': '¿', '!': '¡', '"': ',,', "'": ',', '(': ')', ')': '(', '[': ']', ']': '[', '{': '}', '}': '{', '<': '>', '>': '<', '_': '‾', '&': '⅋'
+  };
+
+  function fromCodePoint(base: number, index: number): string {
+    return String.fromCodePoint(base + index);
+  }
+
+  function transform(styleId: string, text: string): string {
+    if (!text) return '';
+    if (styleId === 'smallCaps') {
+      return [...text].map((ch) => SMALL_CAPS[ch.toLowerCase()] || ch).join('');
+    }
+    if (styleId === 'upsideDown') {
+      return [...text].reverse().map((ch) => UPSIDE_DOWN[ch] || ch).join('');
+    }
+    if (styleId === 'strikethrough') {
+      return [...text].map((ch) => ch + '̶').join('');
+    }
+    if (styleId === 'underline') {
+      return [...text].map((ch) => ch + '̲').join('');
+    }
+    const map = OFFSET_MAPS[styleId];
+    if (!map) return text;
+    const exc = EXCEPTIONS[styleId] || {};
+    return [...text].map((ch) => {
+      if (exc[ch]) return exc[ch];
+      const code = ch.codePointAt(0)!;
+      if (map.upper !== undefined && ch >= 'A' && ch <= 'Z') {
+        // Bubble/squared cover only A-Z; lowercase falls back to uppercase glyph or itself.
+        return fromCodePoint(map.upper, code - 65);
+      }
+      if (ch >= 'a' && ch <= 'z') {
+        if (map.lower !== undefined) return fromCodePoint(map.lower, code - 97);
+        if (map.upper !== undefined && (styleId === 'bubble' || styleId === 'squared' || styleId === 'fullwidth')) {
+          // Uppercase-only enclosed alphabets: reuse uppercase glyph for lowercase input.
+          return fromCodePoint(map.upper, code - 97);
+        }
+        return ch;
+      }
+      if (map.digit !== undefined && ch >= '0' && ch <= '9') {
+        return fromCodePoint(map.digit, code - 48);
+      }
+      return ch;
+    }).join('');
+  }
+
+  // --- Clipboard -----------------------------------------------------------
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  }
+
+  function flashCopy(btn: HTMLButtonElement) {
+    const original = btn.textContent || L.copy;
+    btn.textContent = L.copied;
+    btn.classList.add('!bg-[#0D9488]', '!text-white', '!border-[#0D9488]');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('!bg-[#0D9488]', '!text-white', '!border-[#0D9488]');
+    }, 1200);
+  }
+
+  // --- Favorites -----------------------------------------------------------
+  function getFavs(): string[] {
+    try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); } catch { return []; }
+  }
+  function setFavs(list: string[]) {
+    try { localStorage.setItem(FAV_KEY, JSON.stringify(list)); } catch {}
+  }
+
+  function renderStars() {
+    const favs = getFavs();
+    document.querySelectorAll<HTMLButtonElement>('.ft-fav').forEach((star) => {
+      const id = star.dataset.style || '';
+      const on = favs.includes(id);
+      star.textContent = on ? '★' : '☆';
+      star.classList.toggle('text-[#EAB308]', on);
+      star.classList.toggle('text-[#C8CFD8]', !on);
+      star.classList.toggle('dark:text-[#3A4658]', !on);
+    });
+  }
+
+  function renderFavList() {
+    if (!favList || !favSection) return;
+    const favs = getFavs();
+    if (favs.length === 0) { favSection.classList.add('hidden'); favList.innerHTML = ''; return; }
+    favSection.classList.remove('hidden');
+    const val = input.value;
+    favList.innerHTML = '';
+    favs.forEach((id) => {
+      const src = document.querySelector<HTMLElement>(`.ft-card[data-style="${id}"]`);
+      const name = src?.querySelector('span')?.textContent || id;
+      const preview = val ? transform(id, val) : L.empty;
+      const card = document.createElement('div');
+      card.className = 'card-panel rounded-[12px] p-4 flex items-center justify-between gap-3';
+      card.innerHTML = `
+        <div class="min-w-0">
+          <span class="block text-[10px] font-mono uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">${name}</span>
+          <span class="block text-lg text-[#192538] dark:text-white break-words select-all">${preview}</span>
+        </div>
+        <button type="button" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px] shrink-0" data-fav-copy="${id}">${L.copy}</button>`;
+      favList.appendChild(card);
+    });
+    favList.querySelectorAll<HTMLButtonElement>('[data-fav-copy]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.favCopy || '';
+        copyText(transform(id, input.value));
+        flashCopy(btn);
+      });
+    });
+  }
+
+  // --- Live update ---------------------------------------------------------
+  function updatePreviews() {
+    const val = input.value;
+    document.querySelectorAll<HTMLElement>('.ft-card').forEach((card) => {
+      const id = card.dataset.style || '';
+      const prev = card.querySelector<HTMLElement>('.ft-preview');
+      if (prev) prev.textContent = val ? transform(id, val) : L.empty;
+    });
+    renderFavList();
+  }
+
+  // Wire copy + favorite buttons.
+  document.querySelectorAll<HTMLButtonElement>('.ft-copy').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.style || '';
+      copyText(transform(id, input.value));
+      flashCopy(btn);
+    });
+  });
+  document.querySelectorAll<HTMLButtonElement>('.ft-fav').forEach((star) => {
+    star.addEventListener('click', () => {
+      const id = star.dataset.style || '';
+      const favs = getFavs();
+      const idx = favs.indexOf(id);
+      if (idx >= 0) favs.splice(idx, 1); else favs.push(id);
+      setFavs(favs);
+      renderStars();
+      renderFavList();
+    });
+  });
+
+  input?.addEventListener('input', updatePreviews);
+  clearBtn?.addEventListener('click', () => { input.value = ''; input.focus(); updatePreviews(); });
+
+  // Init
+  input.value = lang_default();
+  function lang_default() { return document.documentElement.lang === 'es' ? 'Tu Nombre' : 'Your Name'; }
+  renderStars();
+  updatePreviews();
+</script>

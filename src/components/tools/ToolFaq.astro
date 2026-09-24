@@ -1,0 +1,28 @@
+---
+/**
+ * Shared FAQ accordion. Renders a unified {q,a}[] shape so every tool page
+ * (EN + ES) uses one markup. Pair with generateFaqSchema(items) for JSON-LD.
+ */
+export interface Props {
+  items: { q: string; a: string }[];
+  heading?: string;
+}
+
+const { items, heading = 'Frequently Asked Questions' } = Astro.props;
+---
+
+<section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] dark:text-white tracking-tight mb-8 text-center">
+      {heading}
+    </h2>
+    <div class="space-y-4">
+      {items.map((item) => (
+        <div class="card-panel p-6 rounded-[14px]">
+          <h3 class="text-base font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

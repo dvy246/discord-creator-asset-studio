@@ -1,8 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
-import SketchCircle from '../../components/SketchCircle.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import StickerWorkspace from '../../components/tools/StickerWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Sticker Maker | Exact 320x320 Resize | Asset Studio";
 const pageDescription = "Format custom stickers with our Discord sticker maker. Resize PNG, APNG, and GIF assets to exact 320x320 pixels under 512 KiB. 100% private in-browser.";
@@ -19,41 +21,67 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Sticker Studio", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "What size does a Discord sticker need to be?", a: "Every custom Discord sticker must be exactly 320×320 pixels — a perfect square. Anything even slightly off, like 319×320, or larger, like 640×640, triggers an 'invalid asset' error. In chat, Discord scales the sticker down to roughly 160×160, so make sure your key detail still reads clearly at that smaller display size." },
+  { q: "How do I add custom stickers to my Discord server?", a: "Open your server, go to Server Settings → Stickers, and click Upload. Drop in a 320×320 PNG (or APNG for animation) under 512 KiB, then give the sticker a name and a related emoji. You'll need the Manage Expressions permission, and your server must have a free sticker slot available." },
+  { q: "Why won't my Discord sticker upload or why do I see an invalid asset error?", a: "The three usual culprits are wrong dimensions, oversized files, and the wrong format. The image must be exactly 320×320 pixels, stay under 512 KiB, and be a PNG or APNG — GIFs are rejected. Also confirm your server still has an open sticker slot. This tool checks size and dimensions before you upload." },
+  { q: "How many sticker slots does a Discord server have?", a: "A server starts with 5 custom sticker slots. Server Boost expands the cap by tier: Boost Level 1 raises it to 15 slots, Level 2 to 30, and Level 3 to 60. If the server loses boosts and drops a level, stickers over the new limit are disabled until it regains that tier." },
+  { q: "Can I use a GIF for a Discord sticker, or does it have to be PNG or APNG?", a: "Static stickers use PNG and animated stickers use APNG; standard GIFs are not accepted. APNG carries full 24-bit color and smooth transparency, so it looks far cleaner than a 256-color GIF. A transparent background is recommended for a die-cut look. Lottie (.json) stickers exist too, but only for select partnered or verified servers." }
+];
+
+const dossier = {
+  eyebrow: "Sticker Technical Blueprint",
+  heading: "Custom stickers sized to Discord's",
+  highlight: "exact 320×320 spec",
+  intro: "Custom stickers follow tighter rules than emojis: a strict 320×320 square, a 512 KiB file ceiling, PNG or APNG only, and a slot count that grows with Server Boost. Here is how each requirement fits together before you upload.",
+  steps: [
+    "The Exact 320×320 Square",
+    "PNG & APNG Formats",
+    "The 512 KiB File Cap",
+    "Sticker Slots & Server Boost"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "What are the exact Discord sticker dimensions required for custom stickers?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Custom Discord stickers must be exactly 320x320 pixels. Unlike emojis, which can be any rectangular shape, a sticker that is even one pixel off (like 319x320) will trigger a Discord sticker invalid asset error. Our Discord sticker resizer centers your artwork and fits it into an exact 320x320 canvas automatically."
-      }
+      kicker: "GEOMETRIC REQUIREMENT // 01",
+      badge: "STRICT 320×320 PX",
+      badgeTone: "emerald" as const,
+      title: "Exactly 320×320 pixels, no exceptions",
+      body: [
+        "Discord emojis can be any rectangular shape, but custom stickers are strict: every sticker must measure exactly 320×320 pixels. If your image is even a pixel off — say 319×320 — or oversized at 640×640, Discord rejects the upload with an 'invalid asset' error before it ever reaches your server.",
+        "In desktop and mobile chat, Discord scales that square down to roughly 160×160, so fine detail needs to read at half size. Our resizer lets you pan, zoom, and frame a photo or illustration, then exports a pixel-perfect 320×320 PNG — no cropping surprises and no manual canvas math."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "How to make a Discord sticker and keep file size under 512 KiB?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "If you want to know how to make a Discord sticker from photo or art: upload a transparent PNG or APNG, frame it in our 320x320 canvas, and keep the file under 512 KiB (524,288 bytes). Our built-in Discord sticker compressor checks the exact byte count in real time so your upload never gets rejected."
-      }
+      kicker: "FORMAT ARCHITECTURE // 02",
+      badge: "PNG / APNG",
+      badgeTone: "blue" as const,
+      title: "PNG for static, APNG for animated",
+      body: [
+        "Static stickers upload as PNG; animated stickers must be APNG (Animated PNG). A transparent background is strongly recommended so your art reads as a die-cut shape instead of sitting inside a visible box. Standard GIF files are not accepted for custom stickers — Discord blocks them at upload.",
+        "GIF is capped at 256 colors with hard-edged transparency, which leaves jagged fringes; APNG carries full 24-bit color and smooth alpha across every frame, so gradients and soft edges stay clean. Lottie (.json) vector stickers also exist, but only a limited set of partnered or verified servers can use them."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "Can I use standard GIF animations for Discord stickers?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No, Discord does not allow standard GIF files for custom stickers. Animated stickers must be APNG (Animated PNG) or Lottie files. APNG is much cleaner than GIF because it supports smooth transparent edges and millions of colors instead of being limited to 256 colors."
-      }
+      kicker: "BINARY CAP // 03",
+      badge: "512 KIB MAX",
+      badgeTone: "amber" as const,
+      title: "Staying under the 512 KiB limit",
+      body: [
+        "Every sticker also has to clear Discord's file-size ceiling: keep the exported file under 512 KiB — exactly 524,288 bytes. That sounds generous, but high-detail photographs and multi-frame APNG animations climb past the cap quickly, and an oversized file is rejected just like a wrong dimension.",
+        "The built-in compressor strips hidden bloat — camera EXIF tags, color profiles, and editor metadata — then optimizes the PNG so it slips under 512 KiB without visibly touching your pixels. Because everything runs in your browser, nothing is uploaded to a server while you experiment."
+      ],
+      footer: "Lossless cleanup: strips metadata to keep pixels sharp while landing under 512 KiB."
     },
     {
-      "@type": "Question",
-      "name": "What are the frame rate and duration limits for animated Discord stickers?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Animated APNG stickers must be 5 seconds or shorter and run at 60 frames per second or lower. If an animation is longer than 5 seconds or exceeds 60 FPS, Discord will not play it in chat."
-      }
+      kicker: "SLOT ECONOMY // 04",
+      badge: "5 → 60 SLOTS",
+      badgeTone: "purple" as const,
+      title: "Sticker slots scale with Server Boost",
+      body: [
+        "A new server ships with 5 custom sticker slots. Server Boost raises that cap in tiers: Level 1 lifts you to 15 slots, Level 2 to 30, and Level 3 to 60. If a server loses boosts and drops a tier, stickers beyond the new limit are disabled until you re-boost.",
+        "To add one, open Server Settings → Stickers, click Upload, drop in your 320×320 PNG or APNG, and give it a name plus a related emoji. You'll need the Manage Expressions permission. Frame and export your file here first so it clears every check before you ever open that panel."
+      ],
+      footer: "Zero server uploads · In-browser 320×320 canvas alignment."
     }
   ]
 };
@@ -63,14 +91,17 @@ const faqSchema = {
   <!-- Inject Schemas -->
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
-      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
         <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
         <span class="text-[#192538] dark:text-white font-semibold">Sticker Studio</span>
+      </div>
+        <a href="/es/tools/sticker/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
       </nav>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -86,909 +117,14 @@ const faqSchema = {
       </div>
     </div>
 
-    <!-- Main Workspace Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
-      <!-- Left Column: Upload & Canvas Controls (7 cols) -->
-      <div class="lg:col-span-7 space-y-6">
-        <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] dark:bg-[#141A24] p-8 text-center transition-all cursor-pointer relative shadow-xs">
-          <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/apng" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
-          <div class="space-y-3 pointer-events-none">
-            <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center mx-auto text-xl font-bold">
-              🏷️
-            </div>
-            <div>
-              <p class="text-sm font-bold text-[#192538] dark:text-white">Upload photo or artwork for Discord Sticker</p>
-              <p class="text-xs text-[#6B7A90] dark:text-[#8494A7] mt-1">PNG, JPG, WebP, or APNG • Interactive photo pan, zoom & die-cut vinyl borders</p>
-            </div>
-          </div>
-          <div class="mt-4 pt-4 border-t border-[#E0DBD0]/60 dark:border-[#263346]/60 flex items-center justify-center gap-2">
-            <button type="button" id="demoPhotoBtn" class="text-xs px-3.5 py-1.5 rounded-lg bg-[#FAF8F5] dark:bg-[#1E2738] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:border-[#3368A0] transition-colors flex items-center gap-1.5 pointer-events-auto">
-              <span>✨</span> Try with Demo Photo
-            </button>
-          </div>
-        </div>
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <StickerWorkspace lang="en" />
 
-        <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden space-y-5">
-          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
-            <div>
-              <h2 class="text-sm font-bold text-[#192538] dark:text-white">Photo-to-Sticker Studio (320 × 320)</h2>
-              <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">Drag to reposition • Scroll or use slider to zoom</p>
-            </div>
-            <button id="resetBtn" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">
-              Reset
-            </button>
-          </div>
+    <!-- Sticky-scroll technical dossier (shared component) -->
+    <ToolDossier {...dossier} />
 
-          <!-- Live Canvas Surface with Grab Cursor -->
-          <div class="relative flex flex-col items-center justify-center p-6 bg-[#FAF8F5] dark:bg-[#101622] rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] overflow-hidden">
-            <canvas id="mainCanvas" width="320" height="320" class="max-w-[260px] max-h-[260px] sm:max-w-[300px] sm:max-h-[300px] shadow-md rounded-[10px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] dark:bg-[repeating-conic-gradient(#1A2230_0%_25%,#121824_0%_50%)] [background-size:16px_16px] cursor-grab active:cursor-grabbing transition-shadow select-none touch-none"></canvas>
-            
-            <div class="mt-3 flex items-center gap-2 text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-mono">
-              <svg class="w-3.5 h-3.5 text-[#3368A0] dark:text-[#66A3BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
-              </svg>
-              <span>Click & drag inside canvas to position photo</span>
-            </div>
-          </div>
-
-          <!-- Photo-to-Sticker Control Toolkit -->
-          <div class="space-y-4 pt-1">
-            <!-- Zoom & Pan Quick Tools -->
-            <div>
-              <div class="flex items-center justify-between text-xs font-semibold text-[#192538] dark:text-white mb-2">
-                <span class="flex items-center gap-1.5">
-                  <span>🔍</span> Photo Zoom
-                </span>
-                <span id="zoomValue" class="font-mono text-[11px] text-[#3368A0] dark:text-[#66A3BF]">100%</span>
-              </div>
-              <div class="flex items-center gap-2 sm:gap-3">
-                <button type="button" id="zoomOutBtn" class="btn-secondary text-xs px-2.5 py-1 rounded" aria-label="Zoom out">-</button>
-                <input type="range" id="zoomSlider" min="0.3" max="3.0" step="0.05" value="1.0" class="flex-1 accent-[#3368A0] h-1.5 bg-[#E0DBD0] dark:bg-[#263346] rounded-lg cursor-pointer" />
-                <button type="button" id="zoomInBtn" class="btn-secondary text-xs px-2.5 py-1 rounded" aria-label="Zoom in">+</button>
-                <button type="button" id="fitBtn" class="text-[11px] px-2 py-1 rounded border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] text-[#475569] dark:text-[#CBD5E1] font-mono">Fit</button>
-                <button type="button" id="fillBtn" class="text-[11px] px-2 py-1 rounded border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] text-[#475569] dark:text-[#CBD5E1] font-mono">Fill</button>
-                <button type="button" id="centerBtn" class="text-[11px] px-2 py-1 rounded border border-[#E0DBD0] dark:border-[#263346] hover:border-[#3368A0] text-[#475569] dark:text-[#CBD5E1] font-mono">Center</button>
-              </div>
-            </div>
-
-            <!-- Shape Mask Presets -->
-            <div>
-              <div class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5">
-                <span>✂️</span> Cutout Shape
-              </div>
-              <div class="grid grid-cols-3 gap-2">
-                <button type="button" id="shapeSquareBtn" class="shape-btn px-3 py-2 rounded-lg border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center gap-1.5 transition-all">
-                  <span class="w-3.5 h-3.5 border-2 border-current"></span>
-                  <span>Square (Full)</span>
-                </button>
-                <button type="button" id="shapeRoundedBtn" class="shape-btn px-3 py-2 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] flex items-center justify-center gap-1.5 transition-all">
-                  <span class="w-3.5 h-3.5 border-2 border-current rounded-md"></span>
-                  <span>Rounded</span>
-                </button>
-                <button type="button" id="shapeCircleBtn" class="shape-btn px-3 py-2 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] flex items-center justify-center gap-1.5 transition-all">
-                  <span class="w-3.5 h-3.5 border-2 border-current rounded-full"></span>
-                  <span>Circle Cutout</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Die-Cut Vinyl White Border (Dossier Section 04 signature feature) -->
-            <div>
-              <div class="flex items-center justify-between text-xs font-semibold text-[#192538] dark:text-white mb-2">
-                <span class="flex items-center gap-1.5">
-                  <span>🏷️</span> Die-Cut Vinyl Sticker Border
-                </span>
-                <span class="text-[10px] text-[#0D9488] font-mono font-semibold">Dossier Spec 04</span>
-              </div>
-              <div class="grid grid-cols-4 gap-2 text-xs">
-                <button type="button" id="borderNoneBtn" class="border-opt-btn px-2.5 py-1.5 rounded-lg border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] font-bold text-[#3368A0] dark:text-[#66A3BF] transition-all">
-                  None
-                </button>
-                <button type="button" id="borderThinBtn" class="border-opt-btn px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all">
-                  Thin (6px)
-                </button>
-                <button type="button" id="borderStdBtn" class="border-opt-btn px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all">
-                  Classic (10px)
-                </button>
-                <button type="button" id="borderThickBtn" class="border-opt-btn px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all">
-                  Chunky (16px)
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button id="exportBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2 shadow-sm">
-            <span>Download Discord Sticker (320×320 PNG)</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Right Column: Previews & Receipt (5 cols) -->
-      <div class="lg:col-span-5 space-y-6">
-        <!-- 160x160 Desktop Chat Preview -->
-        <div class="card-panel rounded-[14px] p-6">
-          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">Desktop Chat Preview (160px)</h2>
-            <div class="flex items-center gap-1 bg-[#FAF8F5] p-1 rounded-[6px] border border-[#E0DBD0]">
-              <button id="themeDarkBtn" class="text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium">Dark</button>
-              <button id="themeLightBtn" class="text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium">Light</button>
-            </div>
-          </div>
-
-          <div id="previewSurface" class="p-4 rounded-[10px] bg-[#313338] text-white transition-colors">
-            <div class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-full bg-[#5865f2] flex items-center justify-center font-bold text-xs flex-shrink-0">
-                User
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-baseline gap-2 mb-2">
-                  <span class="text-xs font-semibold">Sticker Sender</span>
-                  <span class="text-[10px] text-[#949ba4]">Today at 5:00 PM</span>
-                </div>
-                <!-- 160x160 preview box -->
-                <div class="w-[160px] h-[160px] flex items-center justify-center bg-transparent rounded border border-dashed border-[#4e5058]/40">
-                  <img id="chatPreviewImg" class="w-[160px] h-[160px] object-contain hidden" alt="Sticker Chat Preview" />
-                  <span id="chatPreviewPlaceholder" class="text-xs text-[#949ba4] font-mono">160 × 160 px</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Receipt -->
-        <div class="card-panel rounded-[14px] p-6">
-          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">Validation Receipt</h2>
-            <span id="receiptBadge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
-              Awaiting Media
-            </span>
-          </div>
-
-          <div class="space-y-3 font-mono text-xs">
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Target Dimensions:</span>
-              <span class="font-bold text-[#192538]">Exact 320 × 320 px</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Original Dimensions:</span>
-              <span id="statDimensions" class="text-[#192538]">-- × --</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Binary Limit:</span>
-              <span class="text-[#0D9488] font-bold">512 KiB (524,288 bytes)</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Measured Byte Size:</span>
-              <span id="statBytes" class="text-[#192538]">-- KiB</span>
-            </div>
-            <div class="flex justify-between py-1.5">
-              <span class="text-[#6B7A90]">Format Compliance:</span>
-              <span id="statFormat" class="text-[#192538]">PNG / APNG</span>
-            </div>
-          </div>
-
-          <div id="receiptAlert" class="mt-4 hidden p-3 rounded-[8px] text-xs"></div>
-
-          <div class="mt-4 pt-3 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-medium">
-            <a href="/guides/discord-sizes/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
-              <span>📖</span> Official Discord Sticker Sizes & Rules Guide
-            </a>
-            <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
-              <span>✨</span> Animated APNG & GIF Sticker Guide
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Text-Locking Sticky Stacking Technical Dossier (600+ Words) -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-        
-        <!-- Left Column: Pinned Progress Timeline (5 cols) -->
-        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
-            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
-            <span>Sticker Technical Blueprint</span>
-          </div>
-
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Creating custom <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Discord stickers</span><SketchUnderline color="#66A3BF" /></span> that fit.
-          </h2>
-
-          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
-            Discord stickers work differently from emojis. They must be an exact 320×320 square, they get double the file size limit (512 KiB), and animated stickers must use modern APNG instead of old GIF files.
-          </p>
-
-          <!-- Step Timeline -->
-          <div class="relative pl-6 space-y-5 select-none pt-2">
-            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
-            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
-              <span class="text-xs sm:text-sm">01 / Exact 320×320 Square Size</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
-              <span class="text-xs sm:text-sm">02 / APNG Format for Animations</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
-              <span class="text-xs sm:text-sm">03 / The 512 KiB File Limit</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
-              <span class="text-xs sm:text-sm">04 / White Die-Cut Vinyl Borders</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Column: Stacking Sticky Dossier Cards (7 cols) -->
-        <div class="lg:col-span-7 relative pb-16 space-y-12">
-          
-          <!-- Card 1 -->
-          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">GEOMETRIC REQUIREMENT // 01</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">STRICT 320 × 320 PX</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Exact 320x320 Dimensions Are Required
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Discord emojis can be rectangular, but custom stickers are strict: they must measure exactly 320×320 pixels. If an image is even a couple pixels off (like 320×318) or oversized like 640×640, Discord will immediately display a Discord sticker invalid asset error and reject your upload.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                In desktop chat, Discord displays stickers at 160×160 pixels. As a dedicated Discord sticker resizer, our studio lets you pan, zoom, and frame your artwork or photo, ensuring your exported PNG lands at the exact 320×320 dimensions Discord requires.
-              </p>
-              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
-                <div>
-                  <span class="text-[#6B7A90]">Required Resolution:</span>
-                  <span class="text-[#0D9488] font-bold ml-1">Exactly 320 × 320 px</span>
-                </div>
-                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">1:1 Fixed Square</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">ANIMATION ARCHITECTURE // 02</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">APNG MANDATED</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Why Discord Requires APNG Instead of GIF
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Many creators try uploading standard animated GIF files as server stickers, only to see them fail. Discord does not allow GIF stickers because old GIF files are limited to 256 colors and lack smooth transparency, leaving jagged edges around your art.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Instead, Discord animated stickers must be saved as APNG (Animated PNG) or Lottie. APNG retains rich 24-bit color and smooth transparent edges across every frame. Keep two limits in mind: animations must be 5 seconds or shorter, and run at 60 FPS or lower.
-              </p>
-              <div class="grid grid-cols-2 gap-3 text-xs font-mono">
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Max Duration:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">5.0 Seconds</span>
-                </div>
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Max Frame Rate:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">60 FPS Cap</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">BINARY CAP // 03</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">524,288 BYTES MAX</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Staying Under the 512 KiB Limit
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Stickers have double the file limit of emojis: 512 KiB (exactly 524,288 bytes). Even with more headroom, high-detail photos or multi-frame animations can push past that boundary if you aren't careful.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Our built-in Discord sticker compressor strips out hidden bloat like camera EXIF data and software editing tags. This reduces file sizes by up to 40% without touching visible image quality, making sure your sticker is accepted on the first upload.
-              </p>
-              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
-                <span class="text-[#0D9488] font-bold">✓ Lossless Optimization:</span>
-                <span>Strips unneeded metadata to preserve maximum pixel quality within 512 KiB.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="sticky-step-wrapper sticky top-36 z-40">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">AESTHETIC CRAFT // 04</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">DIE-CUT CONTOUR</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                White Vinyl Borders for Dark and Light Modes
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Stickers appear large in chat conversations. The most popular community stickers use a clean white die-cut vinyl border (4 to 10 pixels wide) paired with a soft drop shadow.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                That outline does more than look good: it guarantees contrast. Whether your community members chat in Discord Dark Theme, Light Theme, or custom Nitro gradients, a solid white border prevents dark silhouettes and dark text from blending into the background.
-              </p>
-              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span>Zero Server Uploads • In-Browser 320x320 Canvas Alignment</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Comprehensive FAQ Accordion Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <!-- FAQ (shared component, single source of truth with JSON-LD) -->
+    <ToolFaq items={faqItems} />
 
   </div>
-
-  <script>
-    const MAX_STICKER_BYTES = 512 * 1024; // 524,288 bytes
-
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    const dropzone = document.getElementById('dropzone');
-    const demoPhotoBtn = document.getElementById('demoPhotoBtn');
-    const editorPanel = document.getElementById('editorPanel');
-    const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
-    const resetBtn = document.getElementById('resetBtn');
-    const exportBtn = document.getElementById('exportBtn');
-    const chatPreviewImg = document.getElementById('chatPreviewImg') as HTMLImageElement;
-    const chatPreviewPlaceholder = document.getElementById('chatPreviewPlaceholder');
-    const previewSurface = document.getElementById('previewSurface');
-    const themeDarkBtn = document.getElementById('themeDarkBtn');
-    const themeLightBtn = document.getElementById('themeLightBtn');
-
-    // Controls
-    const zoomSlider = document.getElementById('zoomSlider') as HTMLInputElement;
-    const zoomValue = document.getElementById('zoomValue');
-    const zoomInBtn = document.getElementById('zoomInBtn');
-    const zoomOutBtn = document.getElementById('zoomOutBtn');
-    const fitBtn = document.getElementById('fitBtn');
-    const fillBtn = document.getElementById('fillBtn');
-    const centerBtn = document.getElementById('centerBtn');
-
-    // Shapes & Borders
-    const shapeSquareBtn = document.getElementById('shapeSquareBtn');
-    const shapeRoundedBtn = document.getElementById('shapeRoundedBtn');
-    const shapeCircleBtn = document.getElementById('shapeCircleBtn');
-    const borderNoneBtn = document.getElementById('borderNoneBtn');
-    const borderThinBtn = document.getElementById('borderThinBtn');
-    const borderStdBtn = document.getElementById('borderStdBtn');
-    const borderThickBtn = document.getElementById('borderThickBtn');
-
-    const statDimensions = document.getElementById('statDimensions');
-    const statBytes = document.getElementById('statBytes');
-    const statFormat = document.getElementById('statFormat');
-    const receiptBadge = document.getElementById('receiptBadge');
-    const receiptAlert = document.getElementById('receiptAlert');
-
-    // State
-    let currentBlob: Blob | null = null;
-    let currentObjectUrl: string | null = null;
-    let sourceImage: HTMLImageElement | null = null;
-    let originalFileName = 'discord-sticker';
-
-    let panX = 0;
-    let panY = 0;
-    let zoom = 1.0;
-    let shape: 'square' | 'rounded' | 'circle' = 'square';
-    let borderWidth = 0;
-
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let startPanX = 0;
-    let startPanY = 0;
-    let blobUpdateTimer: ReturnType<typeof setTimeout> | null = null;
-
-    const DEMO_STICKER_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%233B82F6"/><stop offset="100%" stop-color="%238B5CF6"/></linearGradient><linearGradient id="fur" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="%23FCD34D"/><stop offset="100%" stop-color="%23F59E0B"/></linearGradient><linearGradient id="shades" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="%23EC4899"/><stop offset="100%" stop-color="%2306B6D4"/></linearGradient></defs><rect width="600" height="600" fill="url(%23bg)"/><polygon points="170,220 220,110 270,200" fill="%23D97706"/><polygon points="190,210 220,135 255,195" fill="%23F472B6"/><polygon points="430,220 380,110 330,200" fill="%23D97706"/><polygon points="410,210 380,135 345,195" fill="%23F472B6"/><ellipse cx="300" cy="310" rx="140" ry="120" fill="url(%23fur)"/><ellipse cx="210" cy="330" rx="20" ry="12" fill="%23FB7185" opacity="0.6"/><ellipse cx="390" cy="330" rx="20" ry="12" fill="%23FB7185" opacity="0.6"/><path d="M 180,270 Q 230,260 280,270 L 280,310 Q 230,325 180,305 Z" fill="url(%23shades)"/><path d="M 320,270 Q 370,260 420,270 L 420,305 Q 370,325 320,310 Z" fill="url(%23shades)"/><rect x="278" y="278" width="44" height="8" rx="4" fill="%231E293B"/><polygon points="300,335 292,345 308,345" fill="%231E293B"/><path d="M 292,345 Q 280,360 270,352" stroke="%231E293B" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M 308,345 Q 320,360 330,352" stroke="%231E293B" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M 155,300 A 150 150 0 0 1 445,300" stroke="%2310B981" stroke-width="20" fill="none" stroke-linecap="round"/><rect x="140" y="270" width="28" height="65" rx="12" fill="%23059669"/><rect x="432" y="270" width="28" height="65" rx="12" fill="%23059669"/><circle cx="154" cy="302" r="6" fill="%23A7F3D0"/><circle cx="446" cy="302" r="6" fill="%23A7F3D0"/><circle cx="120" cy="140" r="8" fill="%23FDE047"/><circle cx="470" cy="160" r="12" fill="%23FDE047"/><circle cx="490" cy="460" r="10" fill="%2338BDF8"/><circle cx="110" cy="440" r="10" fill="%23F472B6"/></svg>`;
-
-    function cleanup() {
-      if (currentObjectUrl) {
-        URL.revokeObjectURL(currentObjectUrl);
-        currentObjectUrl = null;
-      }
-    }
-
-    fileInput?.addEventListener('change', (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      handleFile(file);
-    });
-
-    dropzone?.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
-    });
-
-    dropzone?.addEventListener('dragleave', () => {
-      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
-    });
-
-    dropzone?.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
-      const file = e.dataTransfer?.files?.[0];
-      if (!file) return;
-      handleFile(file);
-    });
-
-    demoPhotoBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      loadDemoPhoto();
-    });
-
-    function loadDemoPhoto() {
-      cleanup();
-      const img = new Image();
-      img.onload = () => {
-        sourceImage = img;
-        originalFileName = 'cyber-mascot-sticker';
-        panX = 0;
-        panY = 0;
-        zoom = 1.0;
-        shape = 'circle';
-        borderWidth = 10;
-        syncControlsUI();
-        renderStickerCanvas();
-        scheduleBlobUpdate();
-      };
-      img.src = DEMO_STICKER_SVG;
-    }
-
-    function handleFile(file: File) {
-      if (!file.type.startsWith('image/')) {
-        alert('Please upload a valid image file (PNG, JPG, WebP, or APNG).');
-        return;
-      }
-
-      cleanup();
-      originalFileName = file.name.replace(/\.[^/.]+$/, '');
-      currentObjectUrl = URL.createObjectURL(file);
-      const img = new Image();
-      img.onload = () => {
-        sourceImage = img;
-        panX = 0;
-        panY = 0;
-        zoom = 1.0;
-        shape = 'square';
-        borderWidth = 0;
-        syncControlsUI();
-        renderStickerCanvas();
-        scheduleBlobUpdate();
-      };
-      img.src = currentObjectUrl;
-    }
-
-    function renderStickerCanvas() {
-      const ctx = mainCanvas.getContext('2d');
-      if (!ctx || !sourceImage) return;
-
-      const targetSize = 320;
-      mainCanvas.width = targetSize;
-      mainCanvas.height = targetSize;
-      ctx.clearRect(0, 0, targetSize, targetSize);
-
-      ctx.save();
-
-      const pad = borderWidth > 0 ? borderWidth : 0;
-      const size = targetSize - pad * 2;
-
-      // 1. Clip shape & paint white backing for die-cut stickers
-      if (shape === 'circle') {
-        ctx.beginPath();
-        ctx.arc(160, 160, 160 - pad, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fill();
-        ctx.clip();
-      } else if (shape === 'rounded') {
-        ctx.beginPath();
-        ctx.roundRect(pad, pad, size, size, 36);
-        ctx.closePath();
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fill();
-        ctx.clip();
-      } else if (borderWidth > 0) {
-        ctx.beginPath();
-        ctx.roundRect(pad, pad, size, size, 10);
-        ctx.closePath();
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fill();
-        ctx.clip();
-      }
-
-      // 2. Draw scaled & panned photo
-      const baseScale = Math.min(targetSize / sourceImage.width, targetSize / sourceImage.height);
-      const currentScale = baseScale * zoom;
-      const w = sourceImage.width * currentScale;
-      const h = sourceImage.height * currentScale;
-      const x = (targetSize - w) / 2 + panX;
-      const y = (targetSize - h) / 2 + panY;
-
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(sourceImage, x, y, w, h);
-      ctx.restore();
-
-      // 3. Draw Vinyl White Die-Cut Border if active
-      if (borderWidth > 0) {
-        ctx.save();
-        ctx.lineWidth = borderWidth;
-        ctx.strokeStyle = '#FFFFFF';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.28)';
-        ctx.shadowBlur = 8;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 2;
-
-        if (shape === 'circle') {
-          ctx.beginPath();
-          ctx.arc(160, 160, 160 - borderWidth / 2, 0, Math.PI * 2);
-          ctx.stroke();
-        } else if (shape === 'rounded') {
-          ctx.beginPath();
-          ctx.roundRect(borderWidth / 2, borderWidth / 2, targetSize - borderWidth, targetSize - borderWidth, 36);
-          ctx.stroke();
-        } else {
-          ctx.beginPath();
-          ctx.roundRect(borderWidth / 2, borderWidth / 2, targetSize - borderWidth, targetSize - borderWidth, 12);
-          ctx.stroke();
-        }
-        ctx.restore();
-      }
-    }
-
-    function scheduleBlobUpdate() {
-      if (blobUpdateTimer) clearTimeout(blobUpdateTimer);
-      blobUpdateTimer = setTimeout(() => {
-        updateExportBlob();
-      }, 60);
-    }
-
-    function updateExportBlob() {
-      if (!sourceImage) return;
-
-      mainCanvas.toBlob((blob) => {
-        if (!blob) return;
-        currentBlob = blob;
-        cleanup();
-        currentObjectUrl = URL.createObjectURL(blob);
-
-        chatPreviewImg.src = currentObjectUrl;
-        chatPreviewImg.classList.remove('hidden');
-        chatPreviewPlaceholder?.classList.add('hidden');
-
-        editorPanel?.classList.remove('hidden');
-
-        const bytes = blob.size;
-        const kib = (bytes / 1024).toFixed(1);
-        statDimensions!.innerText = `${sourceImage!.width}×${sourceImage!.height} → 320×320`;
-        statBytes!.innerText = `${kib} KiB (${bytes.toLocaleString()} bytes)`;
-        statFormat!.innerText = blob.type.replace('image/', '').toUpperCase();
-
-        if (bytes <= MAX_STICKER_BYTES) {
-          receiptBadge!.innerText = 'Compliant';
-          receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
-          receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#C8DFDB]/40 text-[#0D9488] border border-[#0D9488]/30 block font-medium';
-          receiptAlert!.innerText = '✓ Pass: Exactly 320x320 px and under 512 KiB limit.';
-        } else {
-          receiptBadge!.innerText = 'Exceeds Cap';
-          receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 px-2.5 py-0.5 rounded font-bold';
-          receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 block font-medium';
-          receiptAlert!.innerText = `⚠ Warning: File size (${kib} KiB) exceeds Discord's 512 KiB cap.`;
-        }
-      }, 'image/png');
-    }
-
-    // Pointer Dragging for Pan
-    mainCanvas.addEventListener('mousedown', (e) => {
-      if (!sourceImage) return;
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      startPanX = panX;
-      startPanY = panY;
-    });
-
-    window.addEventListener('mousemove', (e) => {
-      if (!isDragging || !sourceImage) return;
-      const rect = mainCanvas.getBoundingClientRect();
-      const scale = 320 / rect.width;
-      panX = startPanX + (e.clientX - startX) * scale;
-      panY = startPanY + (e.clientY - startY) * scale;
-      renderStickerCanvas();
-    });
-
-    window.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        scheduleBlobUpdate();
-      }
-    });
-
-    // Touch Support for Mobile
-    mainCanvas.addEventListener('touchstart', (e) => {
-      if (!sourceImage || !e.touches.length) return;
-      isDragging = true;
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      startPanX = panX;
-      startPanY = panY;
-    }, { passive: true });
-
-    window.addEventListener('touchmove', (e) => {
-      if (!isDragging || !sourceImage || !e.touches.length) return;
-      const rect = mainCanvas.getBoundingClientRect();
-      const scale = 320 / rect.width;
-      panX = startPanX + (e.touches[0].clientX - startX) * scale;
-      panY = startPanY + (e.touches[0].clientY - startY) * scale;
-      renderStickerCanvas();
-    }, { passive: true });
-
-    window.addEventListener('touchend', () => {
-      if (isDragging) {
-        isDragging = false;
-        scheduleBlobUpdate();
-      }
-    });
-
-    // Mouse Wheel Zoom
-    mainCanvas.addEventListener('wheel', (e) => {
-      if (!sourceImage) return;
-      e.preventDefault();
-      const delta = e.deltaY < 0 ? 0.08 : -0.08;
-      applyZoom(Math.min(3.0, Math.max(0.3, zoom + delta)));
-    }, { passive: false });
-
-    function applyZoom(newZoom: number) {
-      zoom = Math.round(newZoom * 100) / 100;
-      zoomSlider.value = zoom.toString();
-      zoomValue!.innerText = `${Math.round(zoom * 100)}%`;
-      renderStickerCanvas();
-      scheduleBlobUpdate();
-    }
-
-    zoomSlider?.addEventListener('input', () => {
-      applyZoom(parseFloat(zoomSlider.value));
-    });
-
-    zoomInBtn?.addEventListener('click', () => {
-      applyZoom(Math.min(3.0, zoom + 0.15));
-    });
-
-    zoomOutBtn?.addEventListener('click', () => {
-      applyZoom(Math.max(0.3, zoom - 0.15));
-    });
-
-    fitBtn?.addEventListener('click', () => {
-      panX = 0;
-      panY = 0;
-      applyZoom(1.0);
-    });
-
-    fillBtn?.addEventListener('click', () => {
-      if (!sourceImage) return;
-      panX = 0;
-      panY = 0;
-      const minScale = Math.min(320 / sourceImage.width, 320 / sourceImage.height);
-      const maxScale = Math.max(320 / sourceImage.width, 320 / sourceImage.height);
-      const fillFactor = maxScale / minScale;
-      applyZoom(Math.min(3.0, fillFactor));
-    });
-
-    centerBtn?.addEventListener('click', () => {
-      panX = 0;
-      panY = 0;
-      renderStickerCanvas();
-      scheduleBlobUpdate();
-    });
-
-    function setShape(newShape: 'square' | 'rounded' | 'circle') {
-      shape = newShape;
-      syncControlsUI();
-      renderStickerCanvas();
-      scheduleBlobUpdate();
-    }
-
-    shapeSquareBtn?.addEventListener('click', () => setShape('square'));
-    shapeRoundedBtn?.addEventListener('click', () => setShape('rounded'));
-    shapeCircleBtn?.addEventListener('click', () => setShape('circle'));
-
-    function setBorder(width: number) {
-      borderWidth = width;
-      syncControlsUI();
-      renderStickerCanvas();
-      scheduleBlobUpdate();
-    }
-
-    borderNoneBtn?.addEventListener('click', () => setBorder(0));
-    borderThinBtn?.addEventListener('click', () => setBorder(6));
-    borderStdBtn?.addEventListener('click', () => setBorder(10));
-    borderThickBtn?.addEventListener('click', () => setBorder(16));
-
-    function syncControlsUI() {
-      zoomSlider.value = zoom.toString();
-      zoomValue!.innerText = `${Math.round(zoom * 100)}%`;
-
-      // Shapes
-      const shapeBtns = [
-        { el: shapeSquareBtn, key: 'square' },
-        { el: shapeRoundedBtn, key: 'rounded' },
-        { el: shapeCircleBtn, key: 'circle' }
-      ];
-      shapeBtns.forEach(({ el, key }) => {
-        if (!el) return;
-        if (shape === key) {
-          el.className = 'shape-btn px-3 py-2 rounded-lg border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center gap-1.5 transition-all';
-        } else {
-          el.className = 'shape-btn px-3 py-2 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] flex items-center justify-center gap-1.5 transition-all';
-        }
-      });
-
-      // Borders
-      const borderBtns = [
-        { el: borderNoneBtn, w: 0 },
-        { el: borderThinBtn, w: 6 },
-        { el: borderStdBtn, w: 10 },
-        { el: borderThickBtn, w: 16 }
-      ];
-      borderBtns.forEach(({ el, w }) => {
-        if (!el) return;
-        if (borderWidth === w) {
-          el.className = 'border-opt-btn px-2.5 py-1.5 rounded-lg border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] font-bold text-[#3368A0] dark:text-[#66A3BF] transition-all';
-        } else {
-          el.className = 'border-opt-btn px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all';
-        }
-      });
-    }
-
-    resetBtn?.addEventListener('click', () => {
-      cleanup();
-      currentBlob = null;
-      sourceImage = null;
-      panX = 0;
-      panY = 0;
-      zoom = 1.0;
-      shape = 'square';
-      borderWidth = 0;
-      editorPanel?.classList.add('hidden');
-      chatPreviewImg?.classList.add('hidden');
-      chatPreviewPlaceholder?.classList.remove('hidden');
-      statDimensions!.innerText = '-- × --';
-      statBytes!.innerText = '-- KiB';
-      statFormat!.innerText = 'PNG / APNG';
-      receiptBadge!.innerText = 'Awaiting Media';
-      receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
-      receiptAlert?.classList.add('hidden');
-      fileInput.value = '';
-    });
-
-    exportBtn?.addEventListener('click', () => {
-      if (!currentBlob || !currentObjectUrl) return;
-
-      if (currentBlob.size > MAX_STICKER_BYTES) {
-        alert(`Cannot export: Final encoded Blob (${(currentBlob.size / 1024).toFixed(1)} KiB) exceeds the 512 KiB Discord limit.`);
-        return;
-      }
-
-      const a = document.createElement('a');
-      a.href = currentObjectUrl;
-      a.download = `${originalFileName}-discord-sticker-320x320.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    });
-
-    themeDarkBtn?.addEventListener('click', () => {
-      previewSurface!.className = 'p-4 rounded-[10px] bg-[#313338] text-white transition-colors';
-      themeDarkBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
-      themeLightBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
-    });
-
-    themeLightBtn?.addEventListener('click', () => {
-      previewSurface!.className = 'p-4 rounded-[10px] bg-[#ffffff] text-[#313338] transition-colors border border-[#e3e5e8]';
-      themeLightBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
-      themeDarkBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
-    });
-
-    // Sticky Scroll Stacking & Observer Script
-    function setupScrollLocking() {
-      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
-      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
-      const progressBar = document.getElementById('scroll-progress-line');
-
-      if (!cardWrappers.length) return;
-
-      function updateCardStack() {
-        let activeIndex = 0;
-
-        cardWrappers.forEach((wrapper, index) => {
-          const rect = wrapper.getBoundingClientRect();
-          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
-          const isLocked = rect.top <= stickyTop + 8;
-
-          if (isLocked) {
-            activeIndex = index;
-          }
-
-          const nextCard = cardWrappers[index + 1];
-          if (nextCard) {
-            const nextRect = nextCard.getBoundingClientRect();
-            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
-            const transitionDist = 180;
-            
-            if (nextRect.top < nextStickyTop + transitionDist) {
-              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
-              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
-              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
-            } else {
-              wrapper.style.transform = 'scale(1)';
-              wrapper.style.filter = 'brightness(1)';
-            }
-          }
-        });
-
-        stepIndicators.forEach((ind, i) => {
-          const dot = ind.querySelector('.step-dot');
-          if (i <= activeIndex) {
-            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.add('border-current', 'scale-110');
-            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          } else {
-            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.add('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.remove('border-current', 'scale-110');
-            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          }
-        });
-
-        if (progressBar) {
-          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
-          progressBar.style.height = `${pct}%`;
-        }
-      }
-
-      window.addEventListener('scroll', updateCardStack, { passive: true });
-      updateCardStack();
-    }
-
-    setupScrollLocking();
-    document.addEventListener('astro:after-swap', setupScrollLocking);
-  </script>
 </Layout>

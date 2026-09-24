@@ -1,6 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+import BannerWorkspace from '../../../components/tools/BannerWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
 
 const pageTitle = "Creador de Banners Discord | Zona Segura 48px";
 const pageDescription = "Creador de banners Discord: 960×540 servidor y 680×240 perfil con zona segura de 48px marcada. Reglas de Nitro y Boost. 100% en tu navegador.";
@@ -14,23 +17,78 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  { q: "¿Cuál es el tamaño del banner de servidor de Discord?", a: "Discord recomienda un mínimo de 960×540 píxeles con relación 16:9 (o 1920×1080 para mayor nitidez). Requiere Boost Nivel 2 para banners estáticos." },
-  { q: "¿Cuántos boosts necesito para un banner de servidor?", a: "Necesitas Boost Nivel 2 (7 boosts) para banners estáticos y Nivel 3 (14 boosts) para banners animados GIF." },
-  { q: "¿Qué tamaño tiene el banner de perfil de Discord?", a: "El banner de perfil global es de 680×240 píxeles (relación 17:6) y requiere una suscripción Nitro." }
+  { q: "¿Cuál es el tamaño del banner de servidor de Discord y las dimensiones exactas?", a: "El mínimo para un banner de servidor es 960×540 píxeles, una relación panorámica 16:9. Para texto nítido en pantallas Retina de alta densidad recomendamos exportar a 1920×1080. Los banners de servidor requieren Boost Nivel 2 para versiones estáticas." },
+  { q: "¿Cómo cambio el banner de mi servidor de Discord?", a: "Abre Discord, ve a Ajustes del Servidor > Información General > Fondo del Banner del Servidor y sube tu gráfico. Los banners estáticos necesitan Boost Nivel 2 (7 boosts) y los banners animados en GIF requieren Boost Nivel 3 (14 boosts)." },
+  { q: "¿Por qué es crítica la zona segura superior de 48px en los banners?", a: "En escritorio y navegador, Discord superpone el nombre del servidor, el menú desplegable y las insignias de boost sobre los 48 píxeles superiores del banner. Si colocas texto, logos o caras en esa franja, los controles los taparán. La superposición de zona segura te ayuda a mantener lo importante por debajo." },
+  { q: "¿Cuántos boosts necesito para un banner de servidor o animado?", a: "Los banners estáticos de servidor se desbloquean con Boost Nivel 2, que requiere 7 boosts. Los banners animados en GIF necesitan Boost Nivel 3, es decir 14 boosts. Si el servidor pierde boosts y baja de nivel, Discord oculta el banner hasta recuperarlo." },
+  { q: "¿Qué tamaño tiene el banner de perfil de Discord y necesito Nitro?", a: "El banner de perfil global mide 680×240 píxeles (relación ~5:2) y las tarjetas de perfil por servidor 600×240. Los banners de perfil estáticos requieren Nitro Basic o Nitro estándar, y los animados requieren Nitro completo." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Plano Técnico del Banner",
+  heading: "Diseña banners de Discord que",
+  highlight: "encajan perfecto",
+  intro: "Los banners de servidor y las tarjetas de perfil usan formas completamente distintas. Además, en escritorio Discord coloca menús sobre el borde superior. Así mantienes tu arte y tu texto nítidos en todas partes.",
+  steps: [
+    "Ratios Servidor vs Perfil",
+    "Zona Segura de 48px",
+    "Resolución Retina Nítida",
+    "Boosts de Servidor y Nitro"
+  ],
+  cards: [
+    {
+      kicker: "MATEMÁTICA DE RATIOS // 01",
+      badge: "16:9 VS 5:2",
+      badgeTone: "emerald" as const,
+      title: "Banners de servidor (16:9) vs perfiles (5:2)",
+      body: [
+        "Un error común es usar el mismo recorte para las cabeceras de servidor y para los banners de perfil. Tienen formas muy distintas: los banners de servidor usan una relación panorámica 16:9 (mínimo 960×540 px) y se extienden por la parte superior de los canales.",
+        "Los banners de perfil, en cambio, son anchos y estrechos. Los perfiles globales miden 680×240 píxeles y las tarjetas por servidor 600×240 (unos 5:2). Si pegas un banner 16:9 en tu perfil, Discord recorta casi el 40% superior e inferior. Este creador te da el lienzo exacto para ambos formatos."
+      ]
+    },
+    {
+      kicker: "SUPERPOSICIÓN DE INTERFAZ // 02",
+      badge: "OCLUSIÓN 48PX",
+      badgeTone: "blue" as const,
+      title: "La zona segura de 48px: proteger la tipografía",
+      body: [
+        "En las apps de escritorio y en el navegador, Discord coloca el nombre del servidor, el menú desplegable y las insignias de boost justo sobre el borde superior del banner, con una sombra oscura sutil para que el texto siga siendo legible.",
+        "Esta interfaz cubre aproximadamente los 48 píxeles superiores (o 96 en pantallas Retina). Si pones el título del servidor, un logo o la cara de un personaje en esa franja, los botones lo taparán. Mostramos una superposición roja de zona segura mientras editas para que coloques lo importante donde nada lo bloquee."
+      ],
+      footer: "Protección de zona segura: la superposición evita colisiones con la navegación del servidor."
+    },
+    {
+      kicker: "OFICIO DE RESOLUCIÓN // 03",
+      badge: "1920×1080 RETINA",
+      badgeTone: "amber" as const,
+      title: "Escalado Retina 2x y contraste del fondo",
+      body: [
+        "El mínimo oficial de Discord es 960×540 píxeles. Eso funcionaba bien hace años, pero en pantallas Retina de MacBook, monitores 1440p y smartphones modernos, una imagen de 960px se estira y puede verse borrosa o poco definida.",
+        "Recomendamos exportar a 1920×1080 píxeles (la misma forma 16:9). A 1080p tu arte se mantiene nítido en pantallas de alta densidad. Como Discord permite archivos de hasta 10 MB, un PNG o GIF limpio a 1080p se sube sin problemas ni pérdida de nitidez."
+      ],
+      footer: "Master recomendado: 1920×1080 px (16:9 Retina), con tope de 10 MB."
+    },
+    {
+      kicker: "PROTOCOLOS DE PERMISO // 04",
+      badge: "BOOST NIVEL 2 Y 3",
+      badgeTone: "purple" as const,
+      title: "Niveles de Boost y verificación de Nitro",
+      body: [
+        "Antes de exportar tu arte, confirma que tu servidor ha desbloqueado las ventajas correctas. Los banners estáticos de servidor se activan con Boost Nivel 2 (7 boosts) y los banners GIF animados requieren Boost Nivel 3 (14 boosts). Si el servidor pierde boosts y cae por debajo de ese nivel, Discord oculta el banner hasta recuperarlo.",
+        "Para los perfiles de usuario, los banners estáticos necesitan Nitro Basic o Nitro estándar, mientras que los animados requieren Nitro completo. Todo se procesa en tu navegador, así que puedes probar y recortar tus diseños antes de subirlos a Discord."
+      ],
+      footer: "Cero subidas al servidor · Alineación geométrica 16:9 y 5:2 en el navegador."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/banner.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
     <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
       <div class="flex items-center gap-2">
         <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
@@ -72,45 +130,13 @@ const faqSchema = {
       </div>
     </div>
 
-    <div class="rounded-[16px] border-2 border-[#3368A0]/30 dark:border-[#66A3BF]/30 bg-gradient-to-br from-[#FAF8F5] to-[#C8DFDB]/20 dark:from-[#141A24] dark:to-[#202E42]/50 p-6 sm:p-8 text-center mb-8">
-      <span class="inline-block px-3 py-1 rounded-full bg-[#0D9488]/15 text-[#0D9488] font-bold text-xs font-mono mb-3">HERRAMIENTA INTERACTIVA</span>
-      <h2 class="text-xl sm:text-2xl font-extrabold text-[#192538] dark:text-white mb-2">Abrir el Estudio de Banners</h2>
-      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-lg mx-auto mb-5">
-        La herramienta interactiva completa (recorte 16:9 y 5:2 con la zona segura marcada) está disponible en el estudio principal.
-      </p>
-      <a href={enUrl} class="btn-primary inline-block text-xs px-6 py-3 rounded-[10px] font-semibold shadow-sm">
-        Abrir Herramienta de Banners →
-      </a>
-      <p class="text-[11px] text-[#6B7A90] mt-3">La herramienta funciona igual en todos los idiomas — tus archivos nunca salen de tu dispositivo.</p>
-    </div>
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <BannerWorkspace lang="es" />
 
-    
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">La Zona Segura Superior de 48px</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Los clientes de Discord superponen el título del servidor y los controles de navegación sobre los 48 píxeles superiores del banner en escritorio. Coloca siempre los elementos focales y el texto por debajo de esa zona para evitar que queden tapados.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Banners de Servidor vs. de Perfil</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Los banners de servidor usan relación 16:9 (960×540 o 1920×1080) y requieren Boost Nivel 2 (estático) o Nivel 3 (animado). Los banners de perfil usan un formato panorámico 680×240 y requieren Nitro.
-        </p>
-      </article>
-    </div>
+    <!-- Dossier de desplazamiento (componente compartido) -->
+    <ToolDossier {...dossier} />
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <!-- FAQ (componente compartido, misma fuente que el JSON-LD) -->
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>
-

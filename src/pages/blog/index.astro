@@ -13,6 +13,8 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Blog", url: pageUrl }
 ]);
 
+const SITE = "https://discord-creator-asset-studio.pages.dev";
+
 const collectionSchema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -20,11 +22,21 @@ const collectionSchema = {
   "description": pageDescription,
   "url": pageUrl,
   "inLanguage": "en",
-  "publisher": {
-    "@type": "Organization",
+  "isPartOf": {
+    "@type": "WebSite",
+    "@id": SITE + "/#website",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/",
-    "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+    "url": SITE + "/"
+  },
+  "publisher": { "@id": SITE + "/#organization" },
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": BLOG_POSTS.map((post, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "url": `${SITE}/blog/${post.slug}/`,
+      "name": post.heading
+    }))
   }
 };
 ---
@@ -133,7 +145,7 @@ const collectionSchema = {
 
             <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors mb-3 leading-snug">
               <a href={`/blog/${post.slug}/`} class="focus:outline-hidden">
-                {post.title}
+                {post.heading}
               </a>
             </h2>
 

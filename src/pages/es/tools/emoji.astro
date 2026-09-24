@@ -1,6 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import EmojiWorkspace from '../../../components/tools/EmojiWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Creador de Emojis Discord | Comprimir a 256 KiB";
 const pageDescription = "Creador de emojis Discord: redimensiona y comprime a 128×128 px por debajo de 256 KiB con vista previa de chat 32×32. 100% en tu navegador, sin subidas.";
@@ -19,38 +22,78 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  {
-    q: "¿Por qué Discord rechaza emojis que miden menos de 256 KB en mi ordenador?",
-    a: "Discord impone un límite binario estricto de 256 KiB, exactamente 262.144 bytes. Los sistemas operativos muestran tamaños en unidades decimales (1 KB = 1.000 bytes). Una imagen que aparece como 256 KB en tu gestor de archivos puede contener 262.500 bytes y superar el techo binario de Discord. Nuestra herramienta mide el recuento exacto de bytes antes de exportar."
-  },
-  {
-    q: "¿Cuál es el tamaño oficial de emoji de Discord?",
-    a: "El tamaño oficial es 128×128 píxeles (relación 1:1) con un máximo de 256 KiB. Aunque el chat renderiza emojis a 32×32, crear a 128×128 garantiza nitidez en pantallas Retina 2x y 3x."
-  },
-  {
-    q: "¿Qué formatos acepta Discord para emojis estáticos y animados?",
-    a: "Los emojis estáticos aceptan PNG, JPEG y WebP. Los emojis animados requieren el formato GIF y deben permanecer bajo el mismo límite de 256 KiB."
-  }
+  { q: "¿Qué tamaño debe tener un emoji de Discord y por qué subir a 128×128 si el chat lo muestra a 32px?", a: "Sube los emojis personalizados a 128×128 píxeles, un cuadrado 1:1. Discord los reduce a unos 32×32 en el chat y a unos 48×48 cuando se envían solos, pero crearlos a 128×128 los mantiene nítidos en pantallas de alta densidad de móvil y escritorio. Mantén el archivo por debajo de 256 KiB. Esta herramienta redimensiona a 128×128 automáticamente." },
+  { q: "¿Por qué mi emoji de Discord se ve borroso o pixelado en el chat?", a: "El chat reduce tu imagen de 128×128 a unos 32 píxeles, así que los trazos finos, el texto pequeño y los degradados suaves se convierten en manchas. Diseña con una silueta audaz, colores sólidos y un trazo de al menos 2 píxeles a escala de 128px. Un fondo transparente limpio también evita los halos blancos en modo oscuro." },
+  { q: "¿Cuántas ranuras de emoji tiene un servidor de Discord?", a: "Cada servidor empieza con 50 ranuras de emoji personalizado. Los niveles de Server Boost elevan el tope: el Nivel 1 sube a 100 ranuras, el Nivel 2 a 150 y el Nivel 3 a 250. Si el servidor pierde boosts y baja de nivel, los emojis que superen el nuevo límite se desactivan hasta que liberes ranuras o recuperes el nivel." },
+  { q: "¿Los emojis animados necesitan Discord Nitro?", a: "Los emojis animados deben ser archivos GIF bajo el mismo límite de 256 KiB. Según las reglas de Discord, publicar un emoji animado requiere Nitro, y usar cualquier emoji personalizado fuera del servidor que lo aloja también requiere Nitro. Los emojis estáticos, en cambio, funcionan para todos dentro de su servidor de origen sin suscripción." },
+  { q: "¿Por qué Discord rechaza un emoji que en mi ordenador aparece por debajo de 256 KB?", a: "Tu sistema operativo muestra el tamaño en kilobytes decimales (1 KB = 1.000 bytes), pero Discord aplica kibibytes binarios (1 KiB = 1.024 bytes), un techo duro de 262.144 bytes. Un archivo etiquetado como '256 KB' puede contener 262.800 bytes y ser rechazado. Esta herramienta mide el recuento exacto de bytes antes de exportar." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({
-    "@type": "Question",
-    "name": f.q,
-    "acceptedAnswer": { "@type": "Answer", "text": f.a }
-  }))
+const dossier = {
+  eyebrow: "Plano Técnico del Emoji",
+  heading: "Emojis personalizados que se ven nítidos a",
+  highlight: "32 píxeles",
+  intro: "Un emoji personalizado se crea a 128×128 pero vive a unos 32 píxeles en el chat, bajo un límite estricto de 256 KiB. Así encajan el límite de tamaño, la reducción de escala, la transparencia y las reglas de ranuras y Nitro de Discord.",
+  steps: [
+    "El Tope de 256 KiB",
+    "Escala 128px → 32px",
+    "Bordes Transparentes y Formatos",
+    "Ranuras, Nitro y Nombres"
+  ],
+  cards: [
+    {
+      kicker: "MATEMÁTICA DE TAMAÑO // 01",
+      badge: "262.144 BYTES",
+      badgeTone: "emerald" as const,
+      title: "El techo de 256 KiB frente a los kilobytes decimales",
+      body: [
+        "La razón más común por la que Discord rechaza un emoji personalizado es un desajuste de tamaño. Windows y macOS muestran los tamaños en kilobytes decimales, donde 1 KB equivale a 1.000 bytes, pero Discord mide en kibibytes binarios, donde 1 KiB equivale a 1.024 bytes. Eso fija un techo duro de exactamente 262.144 bytes.",
+        "Una imagen que tu escritorio etiqueta como '256 KB' puede contener 262.800 bytes, y Discord comprueba la longitud real en bytes y la rechaza al instante. Esta herramienta mide el tamaño codificado antes de exportar, así corriges un archivo demasiado grande aquí en lugar de adivinar tras una subida fallida."
+      ],
+      footer: "Techo real de subida: 262.144 bytes — comprobado antes de exportar."
+    },
+    {
+      kicker: "ESCALADO DE PANTALLA // 02",
+      badge: "128px → 32px",
+      badgeTone: "blue" as const,
+      title: "Por qué se crean a 128px pero se ven a 32px",
+      body: [
+        "Subes a 128×128 píxeles, pero Discord renderiza los emojis en línea a unos 32×32 en el chat, y a unos 48×48 cuando se envía uno solo como emote grande. Reducir tanto descarta cerca de tres cuartas partes de tu cuadrícula de píxeles, así que se pierde cualquier detalle delicado.",
+        "Los trazos finos de un píxel, las letras pequeñas y los degradados suaves que se ven nítidos a tamaño completo se vuelven manchas borrosas cuando el chat los comprime. Prioriza una silueta audaz, rellenos sólidos y un contraste fuerte para que el emote se lea de un vistazo. La vista previa en vivo a 32px de aquí muestra exactamente cómo quedará antes de confirmar."
+      ]
+    },
+    {
+      kicker: "BORDES LIMPIOS // 03",
+      badge: "PNG · GIF · TRANSPARENTE",
+      badgeTone: "amber" as const,
+      title: "PNG transparentes y elegir el formato correcto",
+      body: [
+        "Los emojis estáticos pueden ser PNG, JPG o GIF, pero un PNG transparente es la opción más segura. Los miembros leen el chat en modo oscuro (#313338), modo claro y temas personalizados, así que un emoji fijado sobre una caja sólida o semitransparente muestra un feo halo en los fondos oscuros.",
+        "Mantener un canal alfa limpio de 32 bits permite que el mismo emote se asiente con naturalidad en cualquier tema. Para el movimiento, usa un GIF y mantenlo ligero: recortar fotogramas y reducir la paleta de colores suele ser lo que devuelve una animación por debajo del tope de 256 KiB. Esta herramienta previsualiza tu arte en claro y oscuro antes de exportar."
+      ],
+      footer: "Verificación en dos temas: sin halo blanco en fondo oscuro #313338 ni claro."
+    },
+    {
+      kicker: "RANURAS Y PERMISOS // 04",
+      badge: "50 → 250 RANURAS",
+      badgeTone: "purple" as const,
+      title: "Ranuras, reglas de Nitro y nombres de emoji",
+      body: [
+        "Antes de exportar, ten claro dónde vivirá el emote. Un servidor empieza con 50 ranuras de emoji y el Boosting eleva el tope a 100, 150 o 250 en los Niveles 1, 2 y 3. Los nombres deben tener de 2 a 32 caracteres, usando solo letras, números y guiones bajos, y necesitas el permiso Gestionar Expresiones para añadir uno.",
+        "Nitro rige el uso, no la subida: los miembros necesitan Nitro para publicar emojis animados y para usar cualquier emoji personalizado fuera de su servidor de origen. Todo aquí funciona por completo en tu navegador —tu imagen nunca sale de tu dispositivo— así que puedes ajustar, previsualizar y exportar en privado, y luego añadir el archivo en los Ajustes del Servidor de Discord."
+      ],
+      footer: "100% en el navegador · nada se sube hasta que lo añades en Discord."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/emoji.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
     <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
       <div class="flex items-center gap-2">
         <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
@@ -92,45 +135,13 @@ const faqSchema = {
       </div>
     </div>
 
-    <div class="rounded-[16px] border-2 border-[#3368A0]/30 dark:border-[#66A3BF]/30 bg-gradient-to-br from-[#FAF8F5] to-[#C8DFDB]/20 dark:from-[#141A24] dark:to-[#202E42]/50 p-6 sm:p-8 text-center mb-8">
-      <span class="inline-block px-3 py-1 rounded-full bg-[#0D9488]/15 text-[#0D9488] font-bold text-xs font-mono mb-3">HERRAMIENTA INTERACTIVA</span>
-      <h2 class="text-xl sm:text-2xl font-extrabold text-[#192538] dark:text-white mb-2">Abrir el Estudio de Emojis</h2>
-      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-lg mx-auto mb-5">
-        La herramienta interactiva completa (recorte, compresión y vista previa de chat en vivo) está disponible en el estudio principal.
-      </p>
-      <a href={enUrl} class="btn-primary inline-block text-xs px-6 py-3 rounded-[10px] font-semibold shadow-sm">
-        Abrir Herramienta de Emojis →
-      </a>
-      <p class="text-[11px] text-[#6B7A90] mt-3">La herramienta funciona igual en todos los idiomas — tus archivos nunca salen de tu dispositivo.</p>
-    </div>
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <EmojiWorkspace lang="es" />
 
-    
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">El Límite Binario de 256 KiB</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          El fallo más común al subir emojis es la discrepancia entre la medición decimal del sistema operativo y la asignación binaria de Discord. macOS y Windows calculan 1 KB = 1.000 bytes; Discord aplica el estándar IEC donde 1 KiB = 1.024 bytes, con un techo duro de 262.144 bytes. Un archivo mostrado como "256 KB" puede registrar 262.800 bytes en disco y ser rechazado.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Reducción a 32px y Legibilidad</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          El chat renderiza emojis a 32×32 píxeles CSS. Al reducir de 128px a 32px, el 75% de la cuadrícula se interpola. Para máximo impacto, usa siluetas audaces, expresiones exageradas y bloques de color sólidos con un trazo mínimo de 2 píxeles a escala de creación de 128px.
-        </p>
-      </article>
-    </div>
+    <!-- Dossier de desplazamiento (componente compartido) -->
+    <ToolDossier {...dossier} />
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <!-- FAQ (componente compartido, misma fuente que el JSON-LD) -->
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>
-

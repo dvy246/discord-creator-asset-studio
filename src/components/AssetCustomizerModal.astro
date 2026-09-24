@@ -106,8 +106,18 @@
           </div>
 
           <!-- Canvas Preview Container -->
-          <div class="relative w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-xl border border-[#E0DBD0] dark:border-[#263454] bg-black flex items-center justify-center select-none" id="preview-viewport-box">
-            
+          <div class="relative w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-xl border border-[#E0DBD0] dark:border-[#263454] bg-black flex items-center justify-center select-none cursor-grab" id="preview-viewport-box">
+
+            <!-- Direct-canvas interaction hint + magnetic snap guides + live file-size badge -->
+            <div id="canvas-snap-guide-v" class="absolute top-0 bottom-0 left-1/2 w-px bg-[#99C2FF]/80 opacity-0 transition-opacity z-30 pointer-events-none"></div>
+            <div id="canvas-snap-guide-h" class="absolute left-0 right-0 top-1/2 h-px bg-[#99C2FF]/80 opacity-0 transition-opacity z-30 pointer-events-none"></div>
+            <div class="absolute top-1.5 right-1.5 z-40 pointer-events-none flex items-center gap-1.5">
+              <span id="canvas-filesize-badge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-black/60 text-[#0D9488] border border-[#0D9488]/40 backdrop-blur-xs">✓ &lt;10MB Nitro</span>
+            </div>
+            <div id="canvas-interaction-hint" class="absolute bottom-1.5 left-1.5 z-40 pointer-events-none text-[9px] font-mono text-white/70 bg-black/50 px-2 py-0.5 rounded-md backdrop-blur-xs">
+              Drag to reframe · Scroll / pinch to zoom · Double-click to reset · ⌘Z / ⌘Y · ⌘S
+            </div>
+
             <!-- Generative Rendering Stage -->
             <div
               id="stage-element"
@@ -188,6 +198,8 @@
                     <div class="relative -mt-10 mb-1 w-16 h-16 rounded-full border-4 border-[#232428] dark:border-[#111214] shadow-xl overflow-hidden flex items-center justify-center text-2xl transition-all duration-300" id="mockup-avatar-circle" style="background: linear-gradient(135deg, #0D0814 0%, #FF84BA 100%);">
                       <img id="mockup-avatar-img" class="w-full h-full object-cover hidden" alt="Mockup Avatar" />
                       <span id="mockup-avatar-icon">✨</span>
+                      <!-- Nitro Avatar Decoration Overlay -->
+                      <div id="mockup-avatar-decoration" class="avatar-decoration-layer absolute inset-0 pointer-events-none z-20 hidden"></div>
                       <!-- Online Status Dot -->
                       <div id="mockup-status-dot" class="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#22C55E] border-2 border-[#232428] dark:border-[#111214] flex items-center justify-center transition-colors"></div>
                     </div>
@@ -210,6 +222,12 @@
                   <div class="mb-2.5 px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2 text-[11px]">
                     <span>💬</span>
                     <span id="mockup-status-text" class="text-white/90 font-medium truncate">crafting Discord visuals</span>
+                  </div>
+
+                  <!-- About Me (Discord Markdown Bio) -->
+                  <div id="mockup-bio-wrap" class="mb-2.5 hidden">
+                    <div class="text-[9px] font-bold uppercase tracking-wider text-white/50 mb-1">About Me</div>
+                    <div id="mockup-bio-text" class="text-[11px] leading-relaxed text-white/85 break-words whitespace-pre-wrap"></div>
                   </div>
 
                   <!-- Seamless Theme Color Matching Box -->
@@ -272,6 +290,8 @@
                   <div class="relative -mt-9 w-18 h-18 rounded-full border-4 border-[#232428] dark:border-[#111214] shadow-2xl overflow-hidden flex items-center justify-center text-3xl transition-all duration-300" id="docked-avatar-circle" style="background: linear-gradient(135deg, #0D0814 0%, #FF84BA 100%);">
                     <img id="docked-avatar-img" class="w-full h-full object-cover hidden" alt="Avatar" />
                     <span id="docked-avatar-icon">✨</span>
+                    <!-- Nitro Avatar Decoration Overlay -->
+                    <div id="docked-avatar-decoration" class="avatar-decoration-layer absolute inset-0 pointer-events-none z-20 hidden"></div>
                     <!-- Status Indicator Dot -->
                     <div
                       id="docked-status-indicator"
@@ -301,6 +321,12 @@
                   <span id="docked-status-text" class="text-white/90 font-medium truncate">crafting Discord visuals</span>
                 </div>
 
+                <!-- About Me (Discord Markdown Bio) -->
+                <div id="docked-bio-wrap" class="mb-2 hidden">
+                  <div class="text-[9px] font-bold uppercase tracking-wider text-white/50 mb-1">About Me</div>
+                  <div id="docked-bio-text" class="text-[11px] leading-relaxed text-white/85 break-words whitespace-pre-wrap"></div>
+                </div>
+
                 <!-- Matching Theme Hex Pill -->
                 <div class="p-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono flex items-center justify-between gap-2">
                   <div class="flex items-center gap-1.5">
@@ -325,7 +351,7 @@
         <div class="mt-4 p-3 rounded-xl bg-white dark:bg-[#161F2E] border border-[#E0DBD0] dark:border-[#263454] flex flex-wrap items-center justify-between gap-3 text-xs shadow-2xs">
           <div class="flex items-center gap-2">
             <span class="w-4 h-4 rounded-full border border-white/50 shadow-xs" id="customizer-profile-hex-dot" style="background-color: #0D0814;"></span>
-            <span class="font-semibold text-[#192538] dark:text-[#FFEFE3]">Discord Profile Theme Color:</span>
+            <span class="font-semibold text-[#192538] dark:text-[#FFEFE3]">Discord Profile Theme Color <span class="text-[10px] font-mono text-[#0D9488]" id="theme-automatch-note"></span>:</span>
             <code id="customizer-profile-hex-code" class="font-mono font-bold text-[#FF84BA]">#0D0814</code>
           </div>
           <button
@@ -337,7 +363,7 @@
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
-            <span id="copy-hex-label">Copy Hex Code</span>
+            <span id="copy-hex-label">Copy Discord Nitro Theme Hex</span>
           </button>
         </div>
       </div>
@@ -364,7 +390,7 @@
                   type="range"
                   id="slider-zoom"
                   min="0.8"
-                  max="2.5"
+                  max="3.0"
                   step="0.1"
                   value="1.0"
                   class="w-full accent-[#FF84BA] cursor-pointer"
@@ -677,6 +703,43 @@
                   </button>
                 </div>
               </div>
+
+              <!-- Free Nitro Avatar Decorations Selector -->
+              <div>
+                <label for="select-avatar-decoration" class="block text-[11px] font-semibold text-[#6B7A90] dark:text-[#99C2FF] mb-1.5">
+                  Free Avatar Decoration Overlay
+                </label>
+                <select
+                  id="select-avatar-decoration"
+                  class="w-full px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-xs font-medium text-[#192538] dark:text-[#FFEFE3] focus:outline-none focus:border-[#FF84BA] cursor-pointer"
+                >
+                  <option value="none">None (No Decoration)</option>
+                  <option value="sakura">🌸 Sakura Blossom Wreath</option>
+                  <option value="cyber">🔷 Cyber Glitch Rings</option>
+                  <option value="catears">🐱 Neon Cat Ears</option>
+                  <option value="flames">🔥 Spirit Flames</option>
+                  <option value="celestial">👑 Celestial Crown</option>
+                </select>
+                <p class="text-[10px] text-[#6B7A90] dark:text-[#8494A7] mt-1">Live preview 2026 Discord avatar decorations on your profile picture.</p>
+              </div>
+
+              <!-- About Me — Discord Markdown Bio -->
+              <div>
+                <label for="input-profile-bio" class="block text-[11px] font-semibold text-[#6B7A90] dark:text-[#99C2FF] mb-1">
+                  About Me Bio (Discord Markdown)
+                </label>
+                <textarea
+                  id="input-profile-bio"
+                  rows="3"
+                  maxlength="190"
+                  placeholder="**bold**, *italic*, __underline__, ~~strike~~, `code`, &lt;t:1700000000:R&gt;"
+                  class="w-full px-2.5 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-xs font-medium text-[#192538] dark:text-[#FFEFE3] focus:outline-none focus:border-[#FF84BA] resize-none"
+                ></textarea>
+                <div class="flex items-center justify-between text-[10px] text-[#6B7A90] dark:text-[#8494A7] mt-1">
+                  <span>Live Discord markdown preview in popout</span>
+                  <span id="bio-char-count" class="font-mono">0/190</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -789,9 +852,9 @@
           <!-- Cross-tool helpers -->
           <div class="pt-2 flex items-center justify-center gap-2 text-[11px] font-mono text-[#6B7A90] dark:text-[#8494A7]">
             <span>Create from scratch:</span>
-            <a href="/tools/role-icon" class="hover:text-[#FF84BA] underline transition-colors">Role Icon Studio</a>
+            <a href="/tools/role-icon/" class="hover:text-[#FF84BA] underline transition-colors">Role Icon Studio</a>
             <span>•</span>
-            <a href="/tools/sticker" class="hover:text-[#FF84BA] underline transition-colors">Sticker Maker</a>
+            <a href="/tools/sticker/" class="hover:text-[#FF84BA] underline transition-colors">Sticker Maker</a>
           </div>
         </div>
 
@@ -800,6 +863,37 @@
 
   </div>
 </div>
+
+<style>
+  /* Nitro avatar decoration overlays — self-contained, no external PNGs */
+  .avatar-decoration-layer { border-radius: 9999px; }
+  .avatar-decoration-layer.deco-sakura {
+    box-shadow: inset 0 0 0 2px rgba(255, 150, 190, 0.9), 0 0 10px rgba(255, 132, 186, 0.6);
+    background:
+      radial-gradient(circle at 50% -6%, #FFB7D5 0 8%, transparent 9%),
+      radial-gradient(circle at 106% 50%, #FF9EC6 0 8%, transparent 9%),
+      radial-gradient(circle at 50% 106%, #FFC2DB 0 8%, transparent 9%),
+      radial-gradient(circle at -6% 50%, #FF9EC6 0 8%, transparent 9%);
+  }
+  .avatar-decoration-layer.deco-cyber {
+    box-shadow: inset 0 0 0 2px rgba(0, 240, 255, 0.9), 0 0 12px rgba(0, 240, 255, 0.7);
+    border: 1px dashed rgba(255, 0, 127, 0.8);
+  }
+  .avatar-decoration-layer.deco-catears { box-shadow: 0 0 10px rgba(153, 194, 255, 0.5); }
+  .avatar-decoration-layer.deco-flames {
+    box-shadow: inset 0 0 0 2px rgba(255, 120, 30, 0.85), 0 0 14px rgba(255, 90, 0, 0.7);
+  }
+  .avatar-decoration-layer.deco-celestial {
+    box-shadow: inset 0 0 0 2px rgba(255, 223, 130, 0.95), 0 0 12px rgba(255, 215, 90, 0.7);
+  }
+  .avatar-decoration-emoji {
+    position: absolute; top: -34%; left: 50%; transform: translateX(-50%);
+    font-size: 0.9rem; line-height: 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+  }
+  #input-profile-bio::placeholder { opacity: 0.55; }
+  .bio-code { background: rgba(255,255,255,0.12); padding: 0 3px; border-radius: 3px; font-family: ui-monospace, monospace; font-size: 0.9em; }
+  .bio-ts { color: #99C2FF; background: rgba(153,194,255,0.14); padding: 0 4px; border-radius: 4px; }
+</style>
 
 <script>
   // Interactive Customizer Client Controller
@@ -2632,7 +2726,7 @@
         navigator.clipboard.writeText(currentPresetData.themeHex);
         if (copyHexLabel) {
           copyHexLabel.textContent = 'Copied Hex!';
-          setTimeout(() => { copyHexLabel.textContent = 'Copy Hex Code'; }, 1500);
+          setTimeout(() => { copyHexLabel.textContent = 'Copy Discord Nitro Theme Hex'; }, 1500);
         }
       }
     });
@@ -2975,6 +3069,398 @@
         navigator.clipboard.writeText(currentPresetData.themeHex);
       }
     });
+
+    // ============================================================
+    // STUDIO ELEVATION: direct canvas, zoom, keys, decorations,
+    // markdown bio, auto theme matcher, live file-size indicator
+    // ============================================================
+    const viewportBox = document.getElementById('preview-viewport-box');
+    const snapGuideV = document.getElementById('canvas-snap-guide-v');
+    const snapGuideH = document.getElementById('canvas-snap-guide-h');
+    const fileSizeBadge = document.getElementById('canvas-filesize-badge');
+    const stageBgImageEl = document.getElementById('stage-bg-image') as HTMLImageElement | null;
+    const themeAutoMatchNote = document.getElementById('theme-automatch-note');
+
+    const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+    const SNAP_THRESHOLD = 3; // focal % window that magnetically snaps to center
+
+    // ---- Direct-canvas drag-to-reframe with magnetic center snap ----
+    let isDragging = false;
+    let spaceHeld = false;
+    let dragStartX = 0, dragStartY = 0, dragStartFX = 50, dragStartFY = 50;
+    const activePointers = new Map<number, { x: number; y: number }>();
+    let pinchStartDist = 0, pinchStartZoom = 1;
+
+    function showSnapGuides(showX: boolean, showY: boolean) {
+      if (snapGuideV) snapGuideV.style.opacity = showX ? '1' : '0';
+      if (snapGuideH) snapGuideH.style.opacity = showY ? '1' : '0';
+    }
+
+    function pointerDist() {
+      const pts = Array.from(activePointers.values());
+      if (pts.length < 2) return 0;
+      return Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    }
+
+    viewportBox?.addEventListener('pointerdown', (e) => {
+      const pe = e as PointerEvent;
+      if ((e.target as HTMLElement).closest('button, a, input, select, textarea')) return;
+      activePointers.set(pe.pointerId, { x: pe.clientX, y: pe.clientY });
+
+      if (activePointers.size === 2) {
+        pinchStartDist = pointerDist();
+        pinchStartZoom = parseFloat(sliderZoom?.value || '1.0');
+        isDragging = false;
+        return;
+      }
+
+      isDragging = true;
+      dragStartX = pe.clientX;
+      dragStartY = pe.clientY;
+      dragStartFX = parseFloat(sliderFocalX?.value || '50');
+      dragStartFY = parseFloat(sliderFocalY?.value || '50');
+      viewportBox.style.cursor = 'grabbing';
+      try { viewportBox.setPointerCapture(pe.pointerId); } catch {}
+    });
+
+    viewportBox?.addEventListener('pointermove', (e) => {
+      const pe = e as PointerEvent;
+      if (activePointers.has(pe.pointerId)) activePointers.set(pe.pointerId, { x: pe.clientX, y: pe.clientY });
+
+      // Pinch-zoom (two pointers)
+      if (activePointers.size === 2 && pinchStartDist > 0) {
+        const ratio = pointerDist() / pinchStartDist;
+        const z = clamp(pinchStartZoom * ratio, 0.8, 3.0);
+        if (sliderZoom) { sliderZoom.value = z.toFixed(2); applyFocalZoom(); }
+        return;
+      }
+
+      if (!isDragging) return;
+      const rect = viewportBox.getBoundingClientRect();
+      const dxPct = ((pe.clientX - dragStartX) / rect.width) * 100;
+      const dyPct = ((pe.clientY - dragStartY) / rect.height) * 100;
+      // Drag right => reveal left => focal X decreases (inverse framing)
+      let nfx = clamp(dragStartFX - dxPct, 10, 90);
+      let nfy = clamp(dragStartFY - dyPct, 10, 90);
+
+      const snapX = Math.abs(nfx - 50) < SNAP_THRESHOLD;
+      const snapY = Math.abs(nfy - 50) < SNAP_THRESHOLD;
+      if (snapX) nfx = 50;
+      if (snapY) nfy = 50;
+      showSnapGuides(snapX, snapY);
+
+      if (sliderFocalX) sliderFocalX.value = String(Math.round(nfx));
+      if (sliderFocalY) sliderFocalY.value = String(Math.round(nfy));
+      applyFocalZoom();
+    });
+
+    function endDrag(pe: PointerEvent) {
+      activePointers.delete(pe.pointerId);
+      if (activePointers.size < 2) pinchStartDist = 0;
+      if (isDragging) { isDragging = false; showSnapGuides(false, false); pushHistory(); }
+      if (viewportBox) viewportBox.style.cursor = spaceHeld ? 'grab' : 'grab';
+    }
+    viewportBox?.addEventListener('pointerup', (e) => endDrag(e as PointerEvent));
+    viewportBox?.addEventListener('pointercancel', (e) => endDrag(e as PointerEvent));
+    viewportBox?.addEventListener('pointerleave', (e) => { if (isDragging) endDrag(e as PointerEvent); });
+
+    // ---- Wheel / trackpad zoom (0.8x – 3.0x) ----
+    viewportBox?.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const cur = parseFloat(sliderZoom?.value || '1.0');
+      const next = clamp(cur - Math.sign(e.deltaY) * 0.1, 0.8, 3.0);
+      if (sliderZoom) { sliderZoom.value = next.toFixed(1); applyFocalZoom(); }
+    }, { passive: false });
+
+    // ---- Double-click center reset ----
+    viewportBox?.addEventListener('dblclick', () => {
+      if (sliderZoom) sliderZoom.value = '1.0';
+      if (sliderFocalX) sliderFocalX.value = '50';
+      if (sliderFocalY) sliderFocalY.value = '50';
+      applyFocalZoom();
+      pushHistory();
+    });
+
+    // ============ Undo / Redo history of control state ============
+    interface StudioSnapshot {
+      hue: string; sat: string; bright: string; contrast: string;
+      zoom: string; fx: string; fy: string; speed: string; motion: string;
+      text: string; name: string; handle: string; status: string;
+      presence: string; bio: string; deco: string; badges: string[];
+    }
+    let historyStack: StudioSnapshot[] = [];
+    let historyIndex = -1;
+    let restoringHistory = false;
+    const selectAvatarDecoration = document.getElementById('select-avatar-decoration') as HTMLSelectElement | null;
+    const inputProfileBio = document.getElementById('input-profile-bio') as HTMLTextAreaElement | null;
+
+    function snapshotState(): StudioSnapshot {
+      return {
+        hue: sliderHue?.value || '0', sat: sliderSat?.value || '100',
+        bright: sliderBrightness?.value || '100', contrast: sliderContrast?.value || '100',
+        zoom: sliderZoom?.value || '1.0', fx: sliderFocalX?.value || '50', fy: sliderFocalY?.value || '50',
+        speed: sliderSpeed?.value || '1.0', motion: selectMotionStyle?.value || 'auto',
+        text: inputOverlayText?.value || '', name: inputProfileDisplayName?.value || '',
+        handle: inputProfileHandle?.value || '', status: inputProfileStatus?.value || '',
+        presence: currentPresence, bio: inputProfileBio?.value || '',
+        deco: selectAvatarDecoration?.value || 'none', badges: Array.from(activeBadges)
+      };
+    }
+
+    function pushHistory() {
+      if (restoringHistory) return;
+      const snap = snapshotState();
+      // Drop redo tail
+      historyStack = historyStack.slice(0, historyIndex + 1);
+      historyStack.push(snap);
+      if (historyStack.length > 60) historyStack.shift();
+      historyIndex = historyStack.length - 1;
+    }
+
+    function applySnapshot(s: StudioSnapshot) {
+      restoringHistory = true;
+      if (sliderHue) sliderHue.value = s.hue;
+      if (sliderSat) sliderSat.value = s.sat;
+      if (sliderBrightness) sliderBrightness.value = s.bright;
+      if (sliderContrast) sliderContrast.value = s.contrast;
+      if (sliderZoom) sliderZoom.value = s.zoom;
+      if (sliderFocalX) sliderFocalX.value = s.fx;
+      if (sliderFocalY) sliderFocalY.value = s.fy;
+      if (sliderSpeed) sliderSpeed.value = s.speed;
+      if (selectMotionStyle) selectMotionStyle.value = s.motion;
+      if (inputOverlayText) inputOverlayText.value = s.text;
+      if (inputProfileDisplayName) inputProfileDisplayName.value = s.name;
+      if (inputProfileHandle) inputProfileHandle.value = s.handle;
+      if (inputProfileStatus) inputProfileStatus.value = s.status;
+      if (inputProfileBio) inputProfileBio.value = s.bio;
+      if (selectAvatarDecoration) selectAvatarDecoration.value = s.deco;
+      currentPresence = s.presence as any;
+      activeBadges = new Set(s.badges);
+
+      applyFilters();
+      applyFocalZoom();
+      const speedVal = document.getElementById('speed-val-text');
+      if (speedVal) speedVal.textContent = `${s.speed}x`;
+      inputOverlayText?.dispatchEvent(new Event('input'));
+      inputProfileDisplayName?.dispatchEvent(new Event('input'));
+      inputProfileHandle?.dispatchEvent(new Event('input'));
+      inputProfileStatus?.dispatchEvent(new Event('input'));
+      inputProfileBio?.dispatchEvent(new Event('input'));
+      selectAvatarDecoration?.dispatchEvent(new Event('change'));
+      // Sync presence + badge UI
+      statusPresencePills.forEach(p => {
+        const isSel = p.getAttribute('data-status') === s.presence;
+        p.className = isSel
+          ? 'status-presence-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all bg-white dark:bg-[#1E293B] text-[#FF84BA] font-bold shadow-xs border border-[#E0DBD0] dark:border-[#263454]'
+          : 'status-presence-pill py-1 px-1 rounded-lg text-center cursor-pointer transition-all text-[#6B7A90] dark:text-[#99C2FF] hover:text-[#192538] dark:hover:text-white';
+      });
+      const pcol: Record<string, string> = { online: '#23A55A', idle: '#F0B232', dnd: '#F23F43', invisible: '#80848E' };
+      if (dockedStatusIndicator) dockedStatusIndicator.style.backgroundColor = pcol[s.presence] || '#23A55A';
+      if (mockupStatusDot) mockupStatusDot.style.backgroundColor = pcol[s.presence] || '#23A55A';
+      profileBadgePills.forEach(p => {
+        const b = p.getAttribute('data-badge') || '';
+        const on = activeBadges.has(b);
+        p.className = on
+          ? 'profile-badge-pill active py-1 px-1.5 rounded-lg border border-[#FF84BA] bg-[#FF84BA]/15 text-[#FF84BA] text-[11px] font-bold cursor-pointer transition-all flex items-center justify-center gap-1'
+          : 'profile-badge-pill py-1 px-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#101626] text-[#6B7A90] dark:text-[#99C2FF] text-[11px] font-bold cursor-pointer transition-all flex items-center justify-center gap-1';
+      });
+      renderBadges();
+      restoringHistory = false;
+    }
+
+    function undo() {
+      if (historyIndex <= 0) return;
+      historyIndex--;
+      applySnapshot(historyStack[historyIndex]);
+    }
+    function redo() {
+      if (historyIndex >= historyStack.length - 1) return;
+      historyIndex++;
+      applySnapshot(historyStack[historyIndex]);
+    }
+
+    // Push history on control commits
+    [sliderHue, sliderSat, sliderBrightness, sliderContrast, sliderSpeed].forEach(s => s?.addEventListener('change', pushHistory));
+    selectMotionStyle?.addEventListener('change', pushHistory);
+    [inputProfileDisplayName, inputProfileHandle, inputProfileStatus].forEach(i => i?.addEventListener('change', pushHistory));
+
+    // ============ Global keybindings (modal-scoped) ============
+    document.addEventListener('keydown', (e) => {
+      if (modal.classList.contains('hidden')) return;
+      if (e.code === 'Space' && !(e.target as HTMLElement).matches('input, textarea, select')) {
+        spaceHeld = true;
+        if (viewportBox) viewportBox.style.cursor = 'grab';
+        e.preventDefault();
+      }
+      const meta = e.metaKey || e.ctrlKey;
+      if (meta && e.key.toLowerCase() === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
+      else if ((meta && e.key.toLowerCase() === 'y') || (meta && e.shiftKey && e.key.toLowerCase() === 'z')) { e.preventDefault(); redo(); }
+      else if (meta && e.key.toLowerCase() === 's') { e.preventDefault(); (exportBannerBtn as HTMLElement | null)?.click(); }
+    });
+    document.addEventListener('keyup', (e) => {
+      if (e.code === 'Space') { spaceHeld = false; if (viewportBox && !isDragging) viewportBox.style.cursor = 'grab'; }
+    });
+
+    // ============ Nitro avatar decorations ============
+    const decoData: Record<string, { cls: string; emoji: string }> = {
+      none: { cls: '', emoji: '' },
+      sakura: { cls: 'deco-sakura', emoji: '🌸' },
+      cyber: { cls: 'deco-cyber', emoji: '🔷' },
+      catears: { cls: 'deco-catears', emoji: '🐱' },
+      flames: { cls: 'deco-flames', emoji: '🔥' },
+      celestial: { cls: 'deco-celestial', emoji: '👑' }
+    };
+    function renderDecoration(el: HTMLElement | null, key: string) {
+      if (!el) return;
+      const d = decoData[key] || decoData.none;
+      el.className = 'avatar-decoration-layer absolute inset-0 pointer-events-none z-20';
+      if (key === 'none') { el.classList.add('hidden'); el.innerHTML = ''; return; }
+      el.classList.add(d.cls);
+      el.innerHTML = d.emoji ? `<span class="avatar-decoration-emoji">${d.emoji}</span>` : '';
+    }
+    selectAvatarDecoration?.addEventListener('change', () => {
+      const key = selectAvatarDecoration.value;
+      renderDecoration(document.getElementById('docked-avatar-decoration'), key);
+      renderDecoration(document.getElementById('mockup-avatar-decoration'), key);
+      if (!restoringHistory) pushHistory();
+    });
+
+    // ============ Discord markdown bio ============
+    function escapeHtml(str: string) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function renderDiscordMarkdown(raw: string) {
+      let s = escapeHtml(raw);
+      // Discord relative timestamps <t:unix:R> (and other flags)
+      s = s.replace(/&lt;t:(\d+)(?::[tTdDfFR])?&gt;/g, (_m, ts) => {
+        const then = parseInt(ts, 10) * 1000;
+        const diff = Math.round((then - Date.now()) / 1000);
+        const abs = Math.abs(diff);
+        let label = 'now';
+        const units: [number, string][] = [[86400, 'day'], [3600, 'hour'], [60, 'minute'], [1, 'second']];
+        for (const [sec, name] of units) {
+          if (abs >= sec) { const n = Math.round(abs / sec); label = diff < 0 ? `${n} ${name}${n !== 1 ? 's' : ''} ago` : `in ${n} ${name}${n !== 1 ? 's' : ''}`; break; }
+        }
+        return `<span class="bio-ts">${label}</span>`;
+      });
+      s = s.replace(/`([^`]+)`/g, '<code class="bio-code">$1</code>');
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      s = s.replace(/__([^_]+)__/g, '<u>$1</u>');
+      s = s.replace(/~~([^~]+)~~/g, '<s>$1</s>');
+      s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      return s;
+    }
+    const dockedBioWrap = document.getElementById('docked-bio-wrap');
+    const dockedBioText = document.getElementById('docked-bio-text');
+    const mockupBioWrap = document.getElementById('mockup-bio-wrap');
+    const mockupBioText = document.getElementById('mockup-bio-text');
+    const bioCharCount = document.getElementById('bio-char-count');
+    inputProfileBio?.addEventListener('input', () => {
+      const raw = inputProfileBio.value;
+      if (bioCharCount) bioCharCount.textContent = `${raw.length}/190`;
+      const html = renderDiscordMarkdown(raw);
+      const has = raw.trim().length > 0;
+      if (dockedBioText) dockedBioText.innerHTML = html;
+      if (mockupBioText) mockupBioText.innerHTML = html;
+      dockedBioWrap?.classList.toggle('hidden', !has);
+      mockupBioWrap?.classList.toggle('hidden', !has);
+    });
+    inputProfileBio?.addEventListener('change', pushHistory);
+
+    // ============ Auto theme matcher (client-side canvas sampling) ============
+    function updateAllThemeHex(themeHex: string, accentHex: string, glowHex: string, matched: boolean) {
+      if (currentPresetData) {
+        currentPresetData.themeHex = themeHex;
+        currentPresetData.accentHex = accentHex;
+        currentPresetData.glowHex = glowHex;
+      }
+      if (hexDot) hexDot.style.backgroundColor = themeHex;
+      if (hexCode) hexCode.textContent = themeHex;
+      if (dockedThemeDot) dockedThemeDot.style.backgroundColor = themeHex;
+      if (dockedHexText) dockedHexText.textContent = themeHex;
+      if (mockupThemeDot) mockupThemeDot.style.backgroundColor = themeHex;
+      if (mockupHexText) mockupHexText.textContent = themeHex;
+      if (dockedDiscordCard) dockedDiscordCard.style.backgroundColor = themeHex;
+      if (mockupOuter) mockupOuter.style.backgroundColor = themeHex;
+      if (themeAutoMatchNote) themeAutoMatchNote.textContent = matched ? '(auto-matched from artwork)' : '';
+    }
+    function rgbToHex(r: number, g: number, b: number) {
+      return '#' + [r, g, b].map(v => clamp(Math.round(v), 0, 255).toString(16).padStart(2, '0')).join('').toUpperCase();
+    }
+    function sampleThemeFromImage(img: HTMLImageElement) {
+      try {
+        const c = document.createElement('canvas');
+        c.width = 32; c.height = 32;
+        const cx = c.getContext('2d', { willReadFrequently: true });
+        if (!cx) return;
+        cx.drawImage(img, 0, 0, 32, 32);
+        const data = cx.getImageData(0, 0, 32, 32).data;
+        let rSum = 0, gSum = 0, bSum = 0, n = 0;
+        let accR = 0, accG = 0, accB = 0, bestSat = -1;
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
+          if (a < 128) continue;
+          rSum += r; gSum += g; bSum += b; n++;
+          const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+          const sat = mx === 0 ? 0 : (mx - mn) / mx;
+          if (sat > bestSat) { bestSat = sat; accR = r; accG = g; accB = b; }
+        }
+        if (!n) return;
+        // Dominant = darkened average (Discord profile theme background is deep)
+        const themeHex = rgbToHex(rSum / n * 0.55, gSum / n * 0.55, bSum / n * 0.55);
+        const accentHex = rgbToHex(accR, accG, accB);
+        const glowHex = rgbToHex(clamp(accR * 1.1, 0, 255), clamp(accG * 1.1, 0, 255), clamp(accB * 1.1, 0, 255));
+        updateAllThemeHex(themeHex, accentHex, glowHex, true);
+      } catch { /* cross-origin taint — silently skip */ }
+    }
+    stageBgImageEl?.addEventListener('load', () => {
+      if (stageBgImageEl.src && !stageBgImageEl.classList.contains('hidden')) sampleThemeFromImage(stageBgImageEl);
+    });
+
+    // ============ Live file-size indicator ============
+    function bytesToLabel(bytes: number) {
+      if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + 'MB';
+      return Math.round(bytes / 1024) + 'KB';
+    }
+    function updateFileSizeBadge() {
+      if (!fileSizeBadge) return;
+      // Contextual target limit per active format
+      const limits: Record<string, { label: string; max: number }> = {
+        webp: { label: '10MB Nitro', max: 10485760 },
+        gif: { label: '10MB', max: 10485760 },
+        mp4: { label: '10MB', max: 10485760 },
+        pfp: { label: '10MB', max: 10485760 },
+        png: { label: '10MB', max: 10485760 }
+      };
+      const lim = limits[selectedFormat] || limits.webp;
+      fileSizeBadge.textContent = `✓ <${lim.label}`;
+    }
+    formatPills.forEach(p => p.addEventListener('click', updateFileSizeBadge));
+
+    // Measure a real PNG snapshot of the current stage for an accurate size read
+    function measureStageSize() {
+      if (!fileSizeBadge || !stageBgImageEl || stageBgImageEl.classList.contains('hidden')) return;
+      const c = document.createElement('canvas');
+      c.width = 960; c.height = 540;
+      const cx = c.getContext('2d');
+      if (!cx) return;
+      const zoom = parseFloat(sliderZoom?.value || '1.0');
+      const fx = parseFloat(sliderFocalX?.value || '50') / 100;
+      const fy = parseFloat(sliderFocalY?.value || '50') / 100;
+      const dw = 960 * zoom, dh = 540 * zoom;
+      try { cx.drawImage(stageBgImageEl, (960 - dw) * fx, (540 - dh) * fy, dw, dh); } catch { return; }
+      c.toBlob((blob) => {
+        if (!blob || !fileSizeBadge) return;
+        const over = blob.size > 10485760;
+        fileSizeBadge.textContent = `${over ? '⚠' : '✓'} ${bytesToLabel(blob.size)} / 10MB`;
+        fileSizeBadge.className = `text-[10px] font-mono font-bold px-2 py-0.5 rounded-full backdrop-blur-xs border ${over ? 'bg-black/60 text-[#F23F43] border-[#F23F43]/40' : 'bg-black/60 text-[#0D9488] border-[#0D9488]/40'}`;
+      }, 'image/png');
+    }
+    [sliderZoom, sliderFocalX, sliderFocalY].forEach(s => s?.addEventListener('change', measureStageSize));
+    stageBgImageEl?.addEventListener('load', measureStageSize);
+
+    // Seed initial history state
+    pushHistory();
   }
 
   // Setup on page load and on client route transition

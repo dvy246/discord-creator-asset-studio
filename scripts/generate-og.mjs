@@ -330,6 +330,318 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/image-compressor.png',
+    config: {
+      title: 'DISCORD IMAGE', titleLine2: 'COMPRESSOR',
+      subtitle: 'SHRINK PNG JPG & WEBP UNDER THE 10 MB DISCORD UPLOAD LIMIT',
+      tagline1: 'ITERATIVE QUALITY STEP-DOWN • ORIGINAL DIMENSIONS KEPT',
+      tagline2: '100% PRIVATE IN-BROWSER PROCESSING • ZERO UPLOADS',
+      cards: [
+        { label: 'FREE', desc: '10 MB' }, { label: 'NITRO', desc: 'UP TO 500 MB' },
+        { label: 'FORMATS', desc: 'WEBP JPG PNG' }, { label: 'RESIZE', desc: 'NONE — KEPT' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/gif-compressor.png',
+    config: {
+      title: 'DISCORD GIF', titleLine2: 'COMPRESSOR',
+      subtitle: 'SHRINK ANIMATED GIFS UNDER 256 KIB OR 10 MB LIMITS',
+      tagline1: 'SCALE • PALETTE REDUCTION • FRAME-SKIP CONTROLS',
+      tagline2: 'IN-BROWSER DECODE & RE-ENCODE • ZERO UPLOADS',
+      badge: 'ANIMATED GIF COMPRESSION • CLIENT-SIDE',
+      cards: [
+        { label: 'EMOJI', desc: '256 KIB' }, { label: 'CHAT', desc: '10 MB' },
+        { label: 'COLORS', desc: '16-256' }, { label: 'FRAMES', desc: 'SKIP' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/video-compressor.png',
+    config: {
+      title: 'DISCORD VIDEO', titleLine2: 'COMPRESSOR',
+      subtitle: 'SHRINK MP4, WEBM & MOV UNDER 10 MB / 50 MB / 500 MB LIMITS',
+      tagline1: 'RESOLUTION • H.264 QUALITY (CRF) • AUDIO STRIP',
+      tagline2: 'IN-BROWSER FFMPEG WASM TRANSCODE • ZERO UPLOADS',
+      badge: 'VIDEO COMPRESSION • CLIENT-SIDE',
+      cards: [
+        { label: 'FREE', desc: '10 MB' }, { label: 'BOOST', desc: '50 MB' },
+        { label: 'NITRO', desc: '500 MB' }, { label: 'CODEC', desc: 'H.264' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/fake-message-maker.png',
+    config: {
+      title: 'DISCORD FAKE', titleLine2: 'MESSAGE MAKER',
+      subtitle: 'BUILD A FICTIONAL DISCORD CHAT SCREENSHOT FOR MEMES & ROLEPLAY',
+      tagline1: 'NAMES • NAME COLORS • AVATARS • BOT TAGS • DARK / LIGHT',
+      tagline2: 'FICTIONAL WATERMARK ON • CANVAS PNG • ZERO UPLOADS',
+      badge: 'FAKE CHAT MOCKUP • CLIENT-SIDE',
+      cards: [
+        { label: 'MARK', desc: 'FICTIONAL' }, { label: 'THEME', desc: 'DARK / LIGHT' },
+        { label: 'EXPORT', desc: 'PNG 2X' }, { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/gif-maker.png',
+    config: {
+      title: 'DISCORD GIF', titleLine2: 'MAKER',
+      subtitle: 'CONVERT MP4 & WEBM TO ANIMATED GIFS UNDER 10 MB NITRO',
+      tagline1: 'PROFILE 600X240 • SERVER 960X540 • AVATAR 512 • EMOJI 128',
+      tagline2: 'IN-BROWSER GIFENC ENCODE • ZERO UPLOADS',
+      badge: 'VIDEO TO DISCORD GIF • CLIENT-SIDE',
+      cards: [
+        { label: 'BANNER', desc: '10 MB' }, { label: 'EMOJI', desc: '256 KIB' },
+        { label: 'FPS', desc: '12-30' }, { label: 'SOURCE', desc: 'MP4 WEBM GIF' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/badge-maker.png',
+    config: {
+      title: 'DISCORD LOGO', titleLine2: 'BADGE MAKER',
+      subtitle: 'BUILD YOUR OWN SERVER BADGE FROM INITIALS OR AN EMOJI',
+      tagline1: 'SOLID & GRADIENT FILLS • CIRCLE ROUNDED SQUARE',
+      tagline2: 'TRADEMARK-SAFE • NOT AFFILIATED WITH DISCORD',
+      badge: 'ORIGINAL 512X512 BADGES • ZERO UPLOADS',
+      cards: [
+        { label: 'SIZE', desc: '512X512 PX' }, { label: 'FILL', desc: 'SOLID GRADIENT' },
+        { label: 'SHAPE', desc: '3 OPTIONS' }, { label: 'CONTENT', desc: 'TEXT EMOJI' },
+        { label: 'SAFE', desc: 'NO LOGOS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/server-icon.png',
+    config: {
+      title: 'DISCORD SERVER', titleLine2: 'ICON MAKER',
+      subtitle: 'FRAME ARTWORK ON AN EXACT 512X512 SERVER ICON CANVAS',
+      tagline1: 'PAN & ZOOM • ROUNDED-SQUARE LIVE PREVIEW',
+      tagline2: 'ANIMATED GIF NEEDS BOOST L1 • 100% IN-BROWSER',
+      badge: 'EXACT 512X512 SERVER ICON • ZERO UPLOADS',
+      cards: [
+        { label: 'SIZE', desc: '512X512 PX' }, { label: 'SHAPE', desc: 'ROUNDED SQ' },
+        { label: 'ANIMATED', desc: 'BOOST L1' }, { label: 'PREVIEW', desc: 'LIVE' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/emoji-copy-paste.png',
+    config: {
+      title: 'DISCORD EMOJI', titleLine2: 'COPY & PASTE',
+      subtitle: 'CLICK ANY UNICODE EMOJI OR KAOMOJI TO COPY IT INSTANTLY',
+      tagline1: 'SMILEYS HEARTS SYMBOLS ANIMALS FOOD TEXT FACES',
+      tagline2: 'WORKS WITHOUT NITRO • 100% CLIENT-SIDE',
+      badge: 'ONE-CLICK UNICODE EMOJI BOARD',
+      cards: [
+        { label: 'SMILEYS', desc: '40+' }, { label: 'HEARTS', desc: '20+' },
+        { label: 'SYMBOLS', desc: 'REACTIONS' }, { label: 'KAOMOJI', desc: 'TEXT FACES' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/timestamp.png',
+    config: {
+      title: 'DISCORD TIMESTAMP', titleLine2: 'GENERATOR',
+      subtitle: 'DYNAMIC TIME CODES THAT ADJUST TO EACH VIEWER TIMEZONE',
+      tagline1: 'SEVEN STYLES T T D D F F R • LIVE PREVIEW',
+      tagline2: 'COPY MARKUP INSTANTLY • 100% CLIENT-SIDE',
+      badge: 'TIMEZONE-AWARE DISCORD TIMESTAMPS',
+      cards: [
+        { label: 'STYLES', desc: '7 CODES' }, { label: 'RELATIVE', desc: 'AUTO COUNT' },
+        { label: 'TIMEZONE', desc: 'PER VIEWER' }, { label: 'PREVIEW', desc: 'LIVE' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/fonts.png',
+    config: {
+      title: 'DISCORD FONT', titleLine2: 'GENERATOR',
+      subtitle: 'TURN TEXT INTO FANCY UNICODE FONTS YOU CAN COPY AND PASTE',
+      tagline1: 'BOLD ITALIC SCRIPT FRAKTUR SMALL CAPS • 18 STYLES',
+      tagline2: 'READABLE STYLES FIRST • 100% CLIENT-SIDE',
+      badge: 'FANCY TEXT FOR NAMES BIOS AND CHAT',
+      cards: [
+        { label: 'STYLES', desc: '18+' }, { label: 'READABLE', desc: 'FIRST' },
+        { label: 'FAVORITES', desc: 'SAVED' }, { label: 'NO NITRO', desc: 'NEEDED' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/colored-text.png',
+    config: {
+      title: 'DISCORD COLORED', titleLine2: 'TEXT GENERATOR',
+      subtitle: 'STYLE WORDS WITH ANSI COLORS AND COPY A READY CODE BLOCK',
+      tagline1: 'RED GREEN GOLD BLUE PINK CYAN • BOLD & UNDERLINE',
+      tagline2: 'LIVE ANSI PREVIEW • 100% CLIENT-SIDE',
+      badge: 'PASTE INTO ANY CHANNEL OR DM',
+      cards: [
+        { label: 'COLORS', desc: '8 FG / 8 BG' }, { label: 'STYLES', desc: 'BOLD + U' },
+        { label: 'PREVIEW', desc: 'LIVE' }, { label: 'NO NITRO', desc: 'NEEDED' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/markdown.png',
+    config: {
+      title: 'DISCORD MARKDOWN', titleLine2: 'PREVIEWER',
+      subtitle: 'FORMAT YOUR MESSAGE AND SEE THE LIVE CHAT PREVIEW',
+      tagline1: 'BOLD ITALIC UNDERLINE • SPOILERS • QUOTES • LISTS',
+      tagline2: 'CODE BLOCKS & HEADERS • 100% CLIENT-SIDE',
+      badge: 'COPY THE MARKDOWN AND PASTE INTO DISCORD',
+      cards: [
+        { label: 'STYLES', desc: 'B I U S' }, { label: 'SPOILERS', desc: '|| ||' },
+        { label: 'PREVIEW', desc: 'LIVE' }, { label: 'NO NITRO', desc: 'NEEDED' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/embed-builder.png',
+    config: {
+      title: 'DISCORD EMBED', titleLine2: 'BUILDER',
+      subtitle: 'DESIGN A RICH EMBED AND SEE THE LIVE PREVIEW',
+      tagline1: 'AUTHOR • TITLE • FIELDS • IMAGES • FOOTER',
+      tagline2: 'COPY WEBHOOK JSON OR SEND IT • 100% CLIENT-SIDE',
+      badge: 'WEBHOOK URL STAYS IN YOUR BROWSER — NEVER STORED',
+      cards: [
+        { label: 'PREVIEW', desc: 'LIVE' }, { label: 'JSON', desc: 'VALID' },
+        { label: 'WEBHOOK', desc: 'SEND' }, { label: 'FIELDS', desc: 'INLINE' },
+        { label: 'PRIVATE', desc: 'IN-MEMORY' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/snowflake.png',
+    config: {
+      title: 'DISCORD SNOWFLAKE', titleLine2: 'DECODER',
+      subtitle: 'TURN ANY ID INTO ITS EXACT CREATION DATE',
+      tagline1: 'TIMESTAMP • WORKER ID • PROCESS ID • INCREMENT',
+      tagline2: 'PURE CLIENT-SIDE MATH • NO API • NO LOGIN',
+      badge: 'USER, MESSAGE, CHANNEL & SERVER IDS',
+      cards: [
+        { label: 'CREATED', desc: 'UTC+LOCAL' }, { label: 'AGE', desc: 'RELATIVE' },
+        { label: 'MARKUP', desc: '<t:…:F>' }, { label: 'ANATOMY', desc: '64-BIT' },
+        { label: 'PROFILE', desc: 'ASSETS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/permissions-calculator.png',
+    config: {
+      title: 'DISCORD PERMISSION', titleLine2: 'CALCULATOR',
+      subtitle: 'TICK ROLE PERMISSIONS TO GET THE PERMISSIONS INTEGER',
+      tagline1: 'BIGINT BITFIELD • DECODE ANY VALUE • ADMIN MOD PRESETS',
+      tagline2: 'BUILD THE OAUTH2 BOT INVITE URL • 100% CLIENT-SIDE',
+      badge: 'ROLE & BOT PERMISSION INTEGERS • NO LOGIN',
+      cards: [
+        { label: 'BITFIELD', desc: 'BIGINT OR' }, { label: 'DECODE', desc: 'INT > BOXES' },
+        { label: 'PRESETS', desc: 'ADMIN / MOD' }, { label: 'INVITE', desc: 'OAUTH2 URL' },
+        { label: 'ADMIN', desc: 'BIT 3 • 8' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/username-generator.png',
+    config: {
+      title: 'DISCORD USERNAME', titleLine2: 'GENERATOR',
+      subtitle: 'PICK A STYLE TO GET TWELVE VALID USERNAME IDEAS',
+      tagline1: 'PRONOUNCEABLE • AESTHETIC • THEMED • LEETSPEAK',
+      tagline2: '3 & 4-LETTER MODE • COPY & SAVE • 100% CLIENT-SIDE',
+      badge: 'USERNAME IDEAS THAT FOLLOW HANDLE RULES • NO LOGIN',
+      cards: [
+        { label: 'STYLES', desc: 'NINE MODES' }, { label: 'SHORT', desc: '3 & 4 LETTER' },
+        { label: 'RULES', desc: 'a-z 0-9 _ .' }, { label: 'COPY', desc: 'ONE CLICK' },
+        { label: 'SAVE', desc: 'FAVORITES' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/bio-generator.png',
+    config: {
+      title: 'DISCORD BIO', titleLine2: 'TEMPLATE GENERATOR',
+      subtitle: 'COPY-PASTE BIO IDEAS UNDER THE 190-CHARACTER LIMIT',
+      tagline1: 'AESTHETIC • CUTE • GAMING • MINIMAL • MOTIVATIONAL',
+      tagline2: 'SYMBOLS & DIVIDERS • 190 COUNTER • COPY & SAVE',
+      badge: 'THEMED TEMPLATES + WORD BANKS • NO LOGIN',
+      cards: [
+        { label: 'THEMES', desc: 'EIGHT STYLES' }, { label: 'LIMIT', desc: '190 CHARS' },
+        { label: 'SYMBOLS', desc: 'DIVIDERS' }, { label: 'COPY', desc: 'ONE CLICK' },
+        { label: 'SAVE', desc: 'FAVORITES' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/text-formatting.png',
+    config: {
+      title: 'DISCORD TEXT', titleLine2: 'FORMATTING GENERATOR',
+      subtitle: 'TYPE ONCE — COPY EVERY MARKDOWN STYLE FOR CHAT',
+      tagline1: 'BOLD • ITALIC • UNDERLINE • STRIKETHROUGH • SPOILER',
+      tagline2: 'HEADERS • SUBTEXT • CODE • QUOTES • LIVE PREVIEW',
+      badge: 'NATIVE DISCORD MARKDOWN • NO NITRO • NO LOGIN',
+      cards: [
+        { label: 'BOLD', desc: '**TEXT**' }, { label: 'SPOILER', desc: '||HIDE||' },
+        { label: 'HEADER', desc: '# BIGGER' }, { label: 'SUBTEXT', desc: '-# SMALLER' },
+        { label: 'COPY', desc: 'ONE CLICK' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/colors.png',
+    config: {
+      title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',
+      subtitle: 'BACKGROUND, BLURPLE & STATUS HEX CODES YOU CAN COPY',
+      tagline1: 'DARK 313338 • BLURPLE 5865F2 • ONLINE 23A55A',
+      tagline2: 'HEX RGB HSL PICKER • 100% CLIENT-SIDE',
+      badge: 'REFERENCE COLOR VALUES • CLICK TO COPY',
+      cards: [
+        { label: 'DARK BG', desc: '313338' }, { label: 'BLURPLE', desc: '5865F2' },
+        { label: 'ONLINE', desc: '23A55A' }, { label: 'PICKER', desc: 'HEX RGB HSL' },
+        { label: 'COPY', desc: '1 CLICK' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/spoiler.png',
+    config: {
+      title: 'DISCORD SPOILER', titleLine2: 'TAG MAKER',
+      subtitle: 'HIDE TEXT WITH || || OR BLUR IMAGES WITH SPOILER PREFIX',
+      tagline1: 'TEXT SPOILER TAGS • SPOILER_ IMAGE FILENAME PREFIX',
+      tagline2: 'DESKTOP & MOBILE • 100% PRIVATE IN-BROWSER',
+      badge: 'TEXT & IMAGE SPOILER TAGS • ZERO UPLOADS',
+      cards: [
+        { label: 'TEXT', desc: '|| || MARKUP' }, { label: 'IMAGE', desc: 'SPOILER_ PREFIX' },
+        { label: 'PER-LINE', desc: 'TOGGLE' }, { label: 'PREVIEW', desc: 'LIVE BLUR' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
+    file: 'public/og/image-resizer.png',
+    config: {
+      title: 'DISCORD IMAGE', titleLine2: 'RESIZER',
+      subtitle: 'SCALE TO EXACT DISCORD SIZES WITH ONE-CLICK PRESETS',
+      tagline1: 'AVATAR 512 • STICKER 320 • EMOJI 128 • BANNER 960X540',
+      tagline2: 'FIT FILL STRETCH MODES • 100% PRIVATE IN-BROWSER',
+      cards: [
+        { label: 'AVATAR', desc: '512X512' }, { label: 'STICKER', desc: '320X320' },
+        { label: 'EMOJI', desc: '128X128' }, { label: 'BANNER', desc: '960X540' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/role-icon.png',
     config: {
       title: 'DISCORD ROLE', titleLine2: 'ICON MAKER',
@@ -380,7 +692,11 @@ const BLOG = [
   { file: 'public/og/blog-banners.png', title: 'DISCORD BANNER', titleLine2: 'IDEAS', subtitle: 'SERVER & PROFILE BANNER TEMPLATES BY AESTHETIC' },
   { file: 'public/og/blog-pfp.png', title: 'DISCORD PFP', titleLine2: 'IDEAS', subtitle: 'ANIME AVATARS & PROFILE PICTURE INSPIRATION' },
   { file: 'public/og/blog-spoiler.png', title: 'DISCORD IMAGE', titleLine2: 'SPOILER', subtitle: 'HIDE SENSITIVE MEDIA ON DESKTOP & MOBILE' },
-  { file: 'public/og/blog-server-banner.png', title: 'CHANGE SERVER', titleLine2: 'BANNER', subtitle: 'BOOST TIER REQUIREMENTS & STEP-BY-STEP GUIDE' }
+  { file: 'public/og/blog-server-banner.png', title: 'CHANGE SERVER', titleLine2: 'BANNER', subtitle: 'BOOST TIER REQUIREMENTS & STEP-BY-STEP GUIDE' },
+  { file: 'public/og/blog-change-username.png', title: 'CHANGE YOUR', titleLine2: 'DISCORD USERNAME', subtitle: 'NEW @HANDLE RULES • DESKTOP & MOBILE • LIMITS FIXED' },
+  { file: 'public/og/blog-text-formatting-guide.png', title: 'DISCORD TEXT', titleLine2: 'FORMATTING GUIDE', subtitle: 'BOLD • STRIKETHROUGH • SPOILER • BIG & SMALL TEXT' },
+  { file: 'public/og/blog-discord-font.png', title: 'WHAT FONT DOES', titleLine2: 'DISCORD USE', subtitle: 'GG SANS EXPLAINED • THE CUSTOM TYPEFACE SINCE 2022' },
+  { file: 'public/og/blog-video-size-limit.png', title: 'DISCORD VIDEO', titleLine2: 'SIZE LIMIT', subtitle: '10 MB FREE • 50 MB NITRO BASIC • 500 MB NITRO' }
 ];
 
 for (const b of BLOG) {

@@ -74,12 +74,14 @@ test('E2E SEO: All generated HTML pages have valid titles, meta descriptions, an
 });
 
 test('E2E SEO: Hreflang tags are strictly validated and avoid broken 404 clusters', () => {
-  // Routes with Spanish alternates: index, guides/discord-sizes, and all 5 tools
+  // Routes with Spanish alternates: index, both guides, and all 5 tools
   const routesWithSpanish = [
     'index.html',
     'guides/discord-sizes/index.html',
+    'guides/discord-gif-guide/index.html',
     'es/index.html',
     'es/guides/discord-sizes/index.html',
+    'es/guides/discord-gif-guide/index.html',
     'tools/emoji/index.html',
     'tools/sticker/index.html',
     'tools/banner/index.html',
@@ -127,7 +129,6 @@ test('E2E SEO: Hreflang tags are strictly validated and avoid broken 404 cluster
 
   // Routes WITHOUT Spanish alternates must NOT emit hreflang="es" pointing to a 404
   const routesWithoutSpanish = [
-    'guides/discord-gif-guide/index.html',
     'about/index.html',
     'contact/index.html',
     'privacy/index.html',

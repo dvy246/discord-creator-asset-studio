@@ -1,8 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
-import SketchCircle from '../../components/SketchCircle.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import AvatarWorkspace from '../../components/tools/AvatarWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Avatar | Live Circle Mask Preview | Asset Studio";
 const pageDescription = "Crop and preview your Discord avatar with a live circular mask. Format square 512x512 profile pictures and server icons. 100% private in-browser tool.";
@@ -19,58 +21,86 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Avatar Studio", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "What size should a Discord avatar be?", a: "Export your avatar as a square 512×512 pixel image, or 1024×1024 for extra-crisp Retina displays. Discord downscales it to every size it needs, from tiny chat thumbnails to large profile popouts. The technical minimum is around 128×128, but that looks soft, so 512 is the practical sweet spot." },
+  { q: "Why is my Discord profile picture blurry?", a: "Blurriness usually means the source image was too small. If you upload something near 128×128, high-density Retina screens enlarge it and the pixels smear. Re-export the same artwork at 512×512 or 1024×1024 from a square 1:1 canvas, keep the subject centered, and it will stay sharp everywhere Discord shows it." },
+  { q: "What file formats and maximum size does Discord allow for avatars?", a: "Discord accepts PNG, JPG, WEBP, and GIF for avatars, with an upload limit of 8 MB. PNG is best for logos and flat art, JPG for photos, and WEBP for a smaller file at similar quality. Animated GIFs are supported too, but only for Nitro subscribers." },
+  { q: "How do I make an animated Discord avatar?", a: "Animated avatars use the GIF format and require a Discord Nitro subscription to play in chat and profile popouts. Keep the file under the 8 MB limit and build it on a square 1:1 canvas with the motion centered, since the circular crop still clips the corners." },
+  { q: "Why do the corners of my Discord avatar get cut off?", a: "Your upload is square, but Discord displays it inside a circle, so the four corners are always clipped. Anything near an edge — text, a logo, part of a face — can disappear. Keep the important part of your image centered, and use the live circle preview to check the framing before exporting." }
+];
+
+const dossier = {
+  eyebrow: "Avatar Technical Blueprint",
+  heading: "Design a Discord avatar that stays",
+  highlight: "crisp and centered",
+  intro: "Discord avatars are authored as a square but displayed as a circle, then downscaled to a dozen sizes across chat, member lists, and profile popouts. Here is how the source dimensions, resolution, circular crop, and format rules fit together.",
+  steps: [
+    "The Square 1:1 Source",
+    "512px & Retina Detail",
+    "The Circular Crop",
+    "Formats & Nitro GIFs"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "What is the recommended Discord avatar size and Discord profile picture size?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The best Discord avatar size and Discord profile picture size is 512x512 pixels (a 1:1 square). Making your image 512x512 keeps your Discord profile pictures sharp when people open your full profile, browse member lists, or view chat on high-resolution screens."
-      }
+      kicker: "CANVAS BLUEPRINT // 01",
+      badge: "1:1 SQUARE",
+      badgeTone: "emerald" as const,
+      title: "Start from a square 1:1 source",
+      body: [
+        "Every Discord avatar begins life as a perfect square, even though it is shown inside a circle. Author your artwork on a 1:1 canvas so nothing is stretched when Discord fits it to the circular frame, and so what you see while editing matches what actually uploads.",
+        "Export at 512×512 pixels as your baseline, or 1024×1024 when you want extra sharpness on high-density screens. Discord will downscale from there. The technical floor is roughly 128×128, but images that small look soft the moment they are enlarged, so start bigger and let Discord shrink it."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "How much of the image is lost when Discord crops square avatars into circles?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "When Discord turns your square picture into a circle, it cuts off just over 21% of the image from the four corners. Any details or logos near the outer edges get trimmed away, so it helps to keep important artwork centered."
-      }
+      kicker: "RESOLUTION CRAFT // 02",
+      badge: "512 → 1024 PX",
+      badgeTone: "blue" as const,
+      title: "Why 512×512 or larger stays crisp",
+      body: [
+        "Discord renders your avatar at many sizes: a small thumbnail beside each message, an even smaller mark in the member list, and a large version in profile popouts. On Retina and other high-density displays, every one of those is drawn at two or three times the pixel density you might expect.",
+        "Uploading at 512×512 — or 1024×1024 for the sharpest result — gives Discord enough detail to scale down cleanly at each of those sizes. Start from something near the 128×128 minimum and the browser has to invent pixels when it scales up, which is exactly what produces a blurry, mushy profile picture."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "What is the maximum file size for Discord avatars?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Discord allows avatar files up to 8.0 MB (8,388,608 bytes). You can upload PNG, JPEG, WebP, or animated GIF formats."
-      }
+      kicker: "CIRCLE GEOMETRY // 03",
+      badge: "CORNERS CLIPPED",
+      badgeTone: "amber" as const,
+      title: "The circular mask clips your corners",
+      body: [
+        "Discord always masks your square upload into a circle, which means the four corners of the image are simply never shown. Any detail that lives near an edge — a signature, an initial, the top of a character's head — can be quietly trimmed away once the crop is applied.",
+        "The fix is composition: keep your focal point centered and leave a little breathing room around the edges. The live circular preview in this tool shows exactly what survives the crop before you export, so you can nudge the framing until nothing important touches the corners."
+      ],
+      footer: "Keep the subject centered — the corners fall outside the circle and disappear."
     },
     {
-      "@type": "Question",
-      "name": "Does an animated Discord animated avatar require Nitro?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Static avatars are completely free for everyone, but an animated Discord animated avatar (GIF) requires Discord Nitro or Nitro Basic to move in chat and profile popouts."
-      }
+      kicker: "FORMAT & NITRO // 04",
+      badge: "GIF NEEDS NITRO",
+      badgeTone: "purple" as const,
+      title: "PNG, JPG, WEBP, and animated GIF",
+      body: [
+        "Discord accepts PNG, JPG, WEBP, and GIF avatars up to 8 MB. Reach for PNG on logos and flat, high-contrast art, JPG for photographic portraits, and WEBP when you want a smaller file at comparable quality. Any of them masks cleanly into the circle as long as the source is square.",
+        "Animated avatars use GIF and require a Discord Nitro subscription to play; without Nitro the first frame is shown as a static image. Keep animations under the 8 MB cap and centered. Everything in this tool runs entirely in your browser — no uploads, no account, and nothing leaves your device."
+      ],
+      footer: "100% in-browser — your image is cropped locally and never uploaded."
     }
   ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/avatar.png">
-  <!-- Inject Schemas -->
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
-      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
         <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
         <span class="text-[#192538] dark:text-white font-semibold">Avatar Studio</span>
+      </div>
+        <a href="/es/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
       </nav>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -106,429 +136,17 @@ const faqSchema = {
       </a>
     </div>
 
-    <!-- Main Workspace Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
-      <div class="lg:col-span-7 space-y-6">
-        <div id="dropzone" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs">
-          <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
-          <div class="space-y-2 pointer-events-none">
-            <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 text-[#3368A0] flex items-center justify-center mx-auto text-xl font-bold">
-              👤
-            </div>
-            <p class="text-sm font-bold text-[#192538]">Select profile picture artwork</p>
-            <p class="text-xs text-[#6B7A90]">PNG, JPG, WebP, or GIF (Centered on 512x512 canvas)</p>
-          </div>
-        </div>
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <AvatarWorkspace lang="en" />
 
-        <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden">
-          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">512 × 512 Canvas</h2>
-            <button id="resetBtn" class="btn-secondary text-xs px-2.5 py-1 rounded-[6px]">
-              Reset
-            </button>
-          </div>
+    <!-- Sticky-scroll technical dossier (shared component) -->
+    <ToolDossier {...dossier} />
 
-          <div class="flex items-center justify-center p-6 bg-[#FAF8F5] rounded-[10px] border border-[#E0DBD0] overflow-hidden mb-6">
-            <canvas id="mainCanvas" width="512" height="512" class="max-w-[256px] max-h-[256px] shadow-sm rounded-[10px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] [background-size:16px_16px]"></canvas>
-          </div>
-
-          <button id="exportBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold shadow-sm">
-            Export Verified Avatar (512x512)
-          </button>
-        </div>
-      </div>
-
-      <div class="lg:col-span-5 space-y-6">
-        <!-- Live Circular Mask Preview -->
-        <div class="card-panel rounded-[14px] p-6">
-          <h2 class="text-sm font-bold text-[#192538] pb-3 border-b border-[#E0DBD0] mb-4">Discord Circular Mask Preview</h2>
-          <div class="p-6 rounded-[10px] bg-[#313338] flex flex-col items-center justify-center">
-            <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-[#5865f2] bg-[#1e1f22] flex items-center justify-center relative shadow-lg">
-              <img id="circlePreviewImg" class="w-full h-full object-cover hidden" alt="Avatar Circle Mask Preview" />
-              <span id="circlePlaceholder" class="text-xs text-[#949ba4] font-mono">Circle</span>
-              <!-- Online status ring -->
-              <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#23A55A] border-2 border-[#313338]"></div>
-            </div>
-            <span class="text-xs font-semibold text-white mt-3">Live Profile Viewport</span>
-            <span class="text-[10px] text-[#949ba4]">Circular mask with bottom-right status indicator clearance</span>
-          </div>
-        </div>
-
-        <div class="card-panel rounded-[14px] p-6">
-          <h2 class="text-sm font-bold text-[#192538] pb-3 border-b border-[#E0DBD0] mb-4">Specification Receipt</h2>
-          <div class="space-y-3 text-xs font-mono">
-            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Output Resolution:</span>
-              <span class="text-[#192538] font-bold">512 × 512 px</span>
-            </div>
-            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Original Resolution:</span>
-              <span id="statDimensions" class="text-[#192538] font-bold">-- × --</span>
-            </div>
-            <div class="flex items-center justify-between p-2.5 rounded-[8px] bg-[#FAF8F5] border border-[#E0DBD0]">
-              <span class="text-[#6B7A90]">Max File Size:</span>
-              <span class="text-[#0D9488] font-bold">8.0 MB</span>
-            </div>
-            <div class="pt-2 border-t border-[#E0DBD0] text-[11px] text-[#6B7A90] font-sans">
-              <strong>Requirement:</strong> Static avatars are free. Animated avatars (.gif) require an active Discord Nitro subscription.
-            </div>
-            <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-sans font-medium">
-              <a href="/guides/discord-sizes/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
-                <span>📖</span> Discord Avatar Dimensions & Size Cheat Sheet
-              </a>
-              <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
-                <span>✨</span> Animated Discord GIF Avatar Guide
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Text-Locking Sticky Stacking Technical Dossier (600+ Words) -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-        
-        <!-- Left Column: Pinned Progress Timeline (5 cols) -->
-        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
-            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
-            <span>Avatar Technical Blueprint</span>
-          </div>
-
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Designing a <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Discord avatar</span><SketchUnderline color="#66A3BF" /></span> that stands out.
-          </h2>
-
-          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
-            Discord crops your square image into a circle and places an online status dot right over the bottom-right corner. Here is how to position your art so nothing gets cut off.
-          </p>
-
-          <!-- Step Timeline -->
-          <div class="relative pl-6 space-y-5 select-none pt-2">
-            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
-            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
-              <span class="text-xs sm:text-sm">01 / The 512×512 Standard</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
-              <span class="text-xs sm:text-sm">02 / The Circular Crop</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
-              <span class="text-xs sm:text-sm">03 / The Status Indicator Dot</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
-              <span class="text-xs sm:text-sm">04 / Animated GIFs & Nitro</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Column: Stacking Sticky Dossier Cards (7 cols) -->
-        <div class="lg:col-span-7 relative pb-16 space-y-12">
-          
-          <!-- Card 1 -->
-          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">CANVAS BLUEPRINT // 01</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">512 × 512 MASTER</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                The 512x512 Master: Crisp on Every Screen
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Discord shows your profile picture at different sizes depending on where someone is looking. In messages, it is 40×40 pixels; in the member sidebar, it shrinks to 32×32; and in profile popouts, it scales up to 128×128 or larger on mobile Retina displays.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Creating your Discord avatar at 512×512 pixels guarantees it looks sharp everywhere. Scaling down from 512px keeps clean lines and rich detail without the blurry pixelation of smaller images.
-              </p>
-              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
-                <div>
-                  <span class="text-[#6B7A90]">Master Authoring Canvas:</span>
-                  <span class="text-[#0D9488] font-bold ml-1">512 × 512 px (1:1 Ratio)</span>
-                </div>
-                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">Lossless Scaling</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">GEOMETRY PHYSICS // 02</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">21.46% CORNER LOSS</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Circle Mask: Why Corners Get Cut Off
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Discord always clips your square upload into a circle. Mathematically, cutting a square into a circle trims away 21.46% of the total image area from the four corners.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                If you put text, initials, or character details right near the edges, Discord will slice them off. Our live circle preview shows you exactly how your picture will look in the app before you export, helping you keep the main subject centered.
-              </p>
-              <div class="grid grid-cols-2 gap-3 text-xs font-mono">
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Corner Area Clipped:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">21.46% of Canvas</span>
-                </div>
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Recommended Safe Radius:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">220 px from Center</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">UI OCCLUSION // 03</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">BOTTOM-RIGHT BADGE</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Status Badge: Keeping the Bottom-Right Free
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Everywhere your avatar appears in Discord, a colored status dot sits directly over the bottom-right corner (showing online, idle, do not disturb, or streaming).
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                This dot covers about a quarter of that bottom-right area. If an artist places a signature, character chin, or small prop in that corner, the status dot covers it up. Keeping your focal point dead center or slightly toward the left makes sure the status badge never hides anything important.
-              </p>
-              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
-                <span class="text-[#0D9488] font-bold">✓ Status Zone Clear:</span>
-                <span>Our live preview simulates the bottom-right status pill to ensure zero subject blockage.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="sticky-step-wrapper sticky top-36 z-40">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">NITRO SPECIFICATION // 04</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">ANIMATED GIF & DECORATION</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Animated Nitro Avatars & Avatar Decorations
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                With Discord Nitro, you can upload an animated Discord avatar in GIF format up to 8.0 MB. Discord plays the animation in your profile popout and loops it when someone hovers over your message.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                If you or your members also use Discord's Avatar Decorations, keep in mind those decorative frames sit over the outer 10% of the circle. Keeping faces and text centered ensures any equipped frame won't cover up your art.
-              </p>
-              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span>Zero Server Uploads • In-Browser 512x512 Canvas Cropping</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Comprehensive FAQ Accordion Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <!-- FAQ (shared component, single source of truth with JSON-LD) -->
+    <ToolFaq items={faqItems} />
 
   </div>
-
-  <script>
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    const editorPanel = document.getElementById('editorPanel');
-    const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
-    const resetBtn = document.getElementById('resetBtn');
-    const exportBtn = document.getElementById('exportBtn');
-    const circlePreviewImg = document.getElementById('circlePreviewImg') as HTMLImageElement;
-    const circlePlaceholder = document.getElementById('circlePlaceholder');
-    const dropzone = document.getElementById('dropzone');
-    const statDimensions = document.getElementById('statDimensions');
-
-    let currentBlob: Blob | null = null;
-    let currentObjectUrl: string | null = null;
-
-    function cleanup() {
-      if (currentObjectUrl) {
-        URL.revokeObjectURL(currentObjectUrl);
-        currentObjectUrl = null;
-      }
-    }
-
-    fileInput?.addEventListener('change', (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      handleFile(file);
-    });
-
-    dropzone?.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
-    });
-
-    dropzone?.addEventListener('dragleave', () => {
-      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
-    });
-
-    dropzone?.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
-      const file = e.dataTransfer?.files?.[0];
-      if (!file) return;
-      handleFile(file);
-    });
-
-    function handleFile(file: File) {
-      cleanup();
-      currentObjectUrl = URL.createObjectURL(file);
-      const img = new Image();
-      img.onload = () => {
-        if (statDimensions) statDimensions.innerText = `${img.width} × ${img.height} px`;
-        renderCanvas(img);
-        editorPanel?.classList.remove('hidden');
-      };
-      img.src = currentObjectUrl;
-    }
-
-    function renderCanvas(img: HTMLImageElement) {
-      const ctx = mainCanvas.getContext('2d');
-      if (!ctx) return;
-
-      const size = 512;
-      mainCanvas.width = size;
-      mainCanvas.height = size;
-      ctx.clearRect(0, 0, size, size);
-
-      const minDim = Math.min(img.width, img.height);
-      const sx = (img.width - minDim) / 2;
-      const sy = (img.height - minDim) / 2;
-
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
-
-      mainCanvas.toBlob((blob) => {
-        if (!blob) return;
-        currentBlob = blob;
-        const url = URL.createObjectURL(blob);
-        if (circlePreviewImg) {
-          circlePreviewImg.src = url;
-          circlePreviewImg.classList.remove('hidden');
-        }
-        circlePlaceholder?.classList.add('hidden');
-      }, 'image/png');
-    }
-
-    resetBtn?.addEventListener('click', () => {
-      cleanup();
-      currentBlob = null;
-      editorPanel?.classList.add('hidden');
-      if (circlePreviewImg) circlePreviewImg.classList.add('hidden');
-      circlePlaceholder?.classList.remove('hidden');
-      if (statDimensions) statDimensions.innerText = '-- × --';
-      fileInput.value = '';
-    });
-
-    exportBtn?.addEventListener('click', () => {
-      if (!currentBlob) return;
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(currentBlob);
-      a.download = 'discord-avatar-512x512.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    });
-
-    // Sticky Scroll Stacking & Observer Script
-    function setupScrollLocking() {
-      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
-      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
-      const progressBar = document.getElementById('scroll-progress-line');
-
-      if (!cardWrappers.length) return;
-
-      function updateCardStack() {
-        let activeIndex = 0;
-
-        cardWrappers.forEach((wrapper, index) => {
-          const rect = wrapper.getBoundingClientRect();
-          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
-          const isLocked = rect.top <= stickyTop + 8;
-
-          if (isLocked) {
-            activeIndex = index;
-          }
-
-          const nextCard = cardWrappers[index + 1];
-          if (nextCard) {
-            const nextRect = nextCard.getBoundingClientRect();
-            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
-            const transitionDist = 180;
-            
-            if (nextRect.top < nextStickyTop + transitionDist) {
-              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
-              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
-              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
-            } else {
-              wrapper.style.transform = 'scale(1)';
-              wrapper.style.filter = 'brightness(1)';
-            }
-          }
-        });
-
-        stepIndicators.forEach((ind, i) => {
-          const dot = ind.querySelector('.step-dot');
-          if (i <= activeIndex) {
-            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.add('border-current', 'scale-110');
-            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          } else {
-            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.add('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.remove('border-current', 'scale-110');
-            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          }
-        });
-
-        if (progressBar) {
-          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
-          progressBar.style.height = `${pct}%`;
-        }
-      }
-
-      window.addEventListener('scroll', updateCardStack, { passive: true });
-      updateCardStack();
-    }
-
-    setupScrollLocking();
-    document.addEventListener('astro:after-swap', setupScrollLocking);
-  </script>
 </Layout>
+
+
+

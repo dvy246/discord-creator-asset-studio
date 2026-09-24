@@ -1,0 +1,121 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import VideoCompressorWorkspace from '../../../components/tools/VideoCompressorWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+
+const pageTitle = "Comprimir Video Discord | Reduce el Tamaño de Video";
+const pageDescription = "Comprimir video Discord: reduce MP4, WebM y MOV bajo el límite de 10 MB (o 50/500 MB Nitro) en tu navegador. Nada se sube, sin pérdida notable de calidad.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/video-compressor/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/video-compressor/";
+
+const appSchema = generateSoftwareApplicationSchema("Compresor de Video para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Comprimir Video", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cómo comprimo un video para Discord?", a: "Suelta tu clip, elige el objetivo de tamaño al que apuntas (10 MB gratis, 50 MB con Boost o 500 MB con Nitro), selecciona una resolución de salida y ajusta el control de calidad. La herramienta recodifica el video a MP4 H.264 dentro de tu navegador y muestra el tamaño final frente a tu objetivo, para que bajes la resolución o la calidad un punto y repitas hasta que quepa." },
+  { q: "¿Cuál es el límite de subida de video en Discord?", a: "Una cuenta gratuita puede subir archivos de hasta 10 MB. Nitro Basic y el Boost de servidor Nivel 2 lo suben a 50 MB, el Boost Nivel 3 a 100 MB, y Nitro completo eleva tu límite personal a 500 MB. Un video por encima del límite que te corresponde se rechaza antes de publicarse, y por eso la mayoría de las grabaciones de móvil necesitan comprimirse primero." },
+  { q: "¿Por qué mi video no se sube a Discord?", a: "La razón habitual es el tamaño: cuando un clip supera tu límite de subida, Discord lo bloquea con un error en vez de encogerlo por ti. El video de móvil moderno es grande — un minuto en 4K puede pasar de 100 MB — así que rebasa el límite gratuito de 10 MB casi al instante. Bajar la resolución a 720p y reducir la calidad aquí suele dejarlo por debajo del tope." },
+  { q: "¿Comprimir un video pierde calidad?", a: "Algo, pero tú controlas cuánto. El control de calidad se corresponde con el valor CRF de H.264: números más bajos conservan más detalle con un archivo mayor, números más altos encogen más con un ablandamiento más visible. Un CRF de 23 a 28 es un buen rango para clips de chat. Bajar la resolución ahorra la mayoría de los bytes con la menor pérdida perceptible." },
+  { q: "¿Qué formato de video es mejor para Discord?", a: "MP4 con video H.264 y audio AAC, que es justo lo que produce esta herramienta. Se reproduce en línea en todos los clientes de Discord — escritorio, web, iOS y Android — sin complementos. WebM y MOV también funcionan en muchos sitios, pero MP4 H.264 es la opción universal más segura, así que el compresor lo estandariza sin importar lo que subas." },
+  { q: "¿Se sube mi video a un servidor para comprimirlo?", a: "No. La compresión ocurre por completo en tu navegador mediante ffmpeg compilado a WebAssembly. El motor se descarga una vez (unos 32 MB) y luego transcodifica tu clip en local — el video nunca se envía a un servidor, ni se pone en cola en la nube, ni se vincula a ninguna cuenta. Cierra la pestaña y desaparece de la memoria. Eso lo hace seguro para grabaciones privadas." }
+];
+const dossier = {
+  eyebrow: "Plano del Compresor de Video",
+  heading: "De un clip que supera el límite a",
+  highlight: "un video que se publica en Discord",
+  intro: "Un video que supera el límite de subida de Discord se bloquea antes de publicarse. Así encajan el tope de tamaño, el proceso de transcodificación en el navegador, las tres palancas de tamaño y el modelo de privacidad sin subidas para dejar tu clip por debajo del tope.",
+  steps: [
+    "El Límite de Subida",
+    "Cómo Funciona la Transcodificación",
+    "Las Palancas de Tamaño",
+    "Local y Privado"
+  ],
+  cards: [
+    {
+      kicker: "TOPE DE TAMAÑO // 01",
+      badge: "10 MB GRATIS / 50 BOOST / 500 NITRO",
+      badgeTone: "emerald" as const,
+      title: "Por qué se bloquea un video grande",
+      body: [
+        "El límite de subida por defecto de Discord es de 10 MB para una cuenta gratuita. Nitro Basic y el Boost de servidor Nivel 2 lo elevan a 50 MB, el Boost Nivel 3 a 100 MB para todos los miembros del servidor, y una suscripción Nitro completa sube tu límite personal a 500 MB. El video moderno llena ese espacio muy rápido: un móvil grabando en 1080p o 4K produce decenas de megabytes por minuto, así que una grabación sin tocar rebasa el límite gratuito de 10 MB casi de inmediato.",
+        "Cuando un clip queda por encima del límite que te corresponde, Discord no lo encoge en silencio — la subida se rechaza con un error antes de publicarse. En cualquier caso, el video que tus amigos esperaban nunca aparece. Esta herramienta te deja elegir el objetivo exacto en bytes al que apuntas y recodifica hasta que la salida queda por debajo, así te saltas el muro de la subida fallida y publicas un clip que se reproduce en línea al primer intento."
+      ]
+    },
+    {
+      kicker: "EL PROCESO // 02",
+      badge: "DECODIFICAR / TRANSCODIFICAR / RECODIFICAR",
+      badgeTone: "blue" as const,
+      title: "Decodificar, transcodificar, recodificar",
+      body: [
+        "Comprimir un video es una transcodificación completa, no un solo control deslizante. El archivo se decodifica de nuevo en fotogramas en bruto, esos fotogramas se escalan opcionalmente a una resolución menor, y luego el codificador H.264 los recomprime a la calidad que elijas mientras el audio se recodifica a AAC o se descarta. Toda la cadena corre sobre ffmpeg — el mismo motor detrás de la mayoría de herramientas de video de escritorio — compilado a WebAssembly para ejecutarse dentro de la página y no en un servidor.",
+        "Como el codificador reconstruye el archivo a partir de los fotogramas decodificados cada vez, cada pasada es una codificación realmente nueva y no una copia con pérdida apilada sobre otra. Por eso bajar la resolución o mover el control de calidad y repetir nunca acumula el daño. También explica por qué unos clips encogen mucho más que otros: una grabación de pantalla estática se comprime muchísimo, mientras que el material rápido, granulado y de mucho movimiento retiene más detalle y necesita una resolución menor para dar con un objetivo agresivo."
+      ]
+    },
+    {
+      kicker: "LOS CONTROLES // 03",
+      badge: "RESOLUCIÓN / CALIDAD / AUDIO",
+      badgeTone: "amber" as const,
+      title: "Tres palancas para dar con un objetivo en bytes",
+      body: [
+        "Tres controles deciden el tamaño final, y se suman. La resolución es lo de mayor efecto porque quita píxeles de todos los fotogramas a la vez — pasar de 1080p a 720p deja los datos aproximadamente a la mitad antes de aplicar cualquier otro ajuste. El control de calidad se corresponde con el CRF de H.264: muévelo hacia mejor calidad para más detalle y un archivo mayor, o hacia archivo más pequeño para encoger más. Quitar la pista de audio ahorra unos megabytes más cuando el clip no necesita sonido.",
+        "La mezcla adecuada depende del clip y del objetivo que hayas elegido. Para el límite gratuito de 10 MB, 720p con un CRF medio resuelve la mayoría de grabaciones de móvil; para un objetivo estricto en material largo o de mucho movimiento, baja a 480p e inclina el control hacia archivo más pequeño. Un indicador de tamaño muestra la salida final frente a tu objetivo tras cada pasada, así afinas hacia el tope en lugar de adivinar — y como cada pasada recodifica desde el origen, reintentar nunca degrada la calidad."
+      ],
+      footer: "La resolución recorta la mayoría de los bytes; la calidad y el quitar audio afinan el resto para quedar bajo tu objetivo."
+    },
+    {
+      kicker: "MODELO DE PRIVACIDAD // 04",
+      badge: "NADA SE SUBE",
+      badgeTone: "purple" as const,
+      title: "Cada fotograma se queda en tu dispositivo",
+      body: [
+        "Toda la transcodificación ocurre dentro de tu navegador. Tu video se lee en local, ffmpeg-en-WebAssembly lo recodifica en la página, y el MP4 terminado se te devuelve directamente como una descarga. En ningún momento el clip se envía a un servidor, se pone en cola en un trabajo en la nube ni se escribe en ninguna cuenta — no hay nada en lo que iniciar sesión ni un paso de subida que esperar. Eso hace que la herramienta sea segura para grabaciones de pantalla privadas, clips sin publicar y cualquier cosa que preferirías no entregar a un tercero.",
+        "El precio de esa privacidad es una descarga única del motor de unos 32 MB la primera vez que comprimes, tras la cual todo es local y rápido. La velocidad de procesamiento depende de tu propio dispositivo y no de una cola de servidor, y los clips muy largos o en 4K están limitados por la memoria disponible de tu navegador — recorta primero una grabación larga si se atasca. Cierra la pestaña y todo rastro del video desaparece de la memoria, porque un registro de servidor, un bucket temporal o un historial de procesamiento nunca formaron parte del camino."
+      ],
+      footer: "Leído en local y recodificado por ffmpeg-en-WebAssembly — el video nunca sale de tu dispositivo."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/video-compressor.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Comprimir Video</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Comprimir Video Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Reduce MP4, WebM y MOV por debajo del límite de <strong>10 MB</strong> gratis (o <strong>50/500 MB</strong> con Nitro) con controles de resolución, calidad y audio. Todo el procesamiento ocurre localmente.</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          100% en el navegador · Cero subidas
+        </div>
+      </div>
+    </div>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <VideoCompressorWorkspace lang="es" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
+  </div>
+</Layout>

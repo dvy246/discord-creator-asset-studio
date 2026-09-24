@@ -1,9 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SketchUnderline from '../components/SketchUnderline.astro';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '../utils/seo';
+
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/terms/";
+const termsSchema = generateWebPageSchema({
+  name: 'Terms of Service — Discord Creator Asset Studio',
+  description: 'Terms of service and usage guidelines for Discord Creator Asset Studio: an open, client-side creator utility.',
+  url: pageUrl
+});
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Terms", url: pageUrl }
+]);
 ---
 
 <Layout title="Terms of Service | Discord Asset Studio" description="Terms of service and usage guidelines for Discord Asset Studio: an open, client-side creator utility.">
+  <script type="application/ld+json" set:html={termsSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-10">
       <span class="text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Legal Notice</span>

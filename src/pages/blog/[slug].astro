@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
-import { generateBreadcrumbSchema, generateBlogPostingSchema } from '../../utils/seo';
+import { generateBreadcrumbSchema, generateBlogPostingSchema, generateHowToSchema } from '../../utils/seo';
 import { BLOG_POSTS, type BlogPost } from '../../data/blog-posts';
 
 export function getStaticPaths() {
@@ -24,16 +24,32 @@ const ogImageMap: Record<string, string> = {
   'discord-banner-ideas-templates': 'https://discord-creator-asset-studio.pages.dev/og/blog-banners.png',
   'discord-pfp-ideas-anime-avatars': 'https://discord-creator-asset-studio.pages.dev/og/blog-pfp.png',
   'how-to-put-spoiler-on-discord-image': 'https://discord-creator-asset-studio.pages.dev/og/blog-spoiler.png',
-  'how-to-change-discord-server-banner': 'https://discord-creator-asset-studio.pages.dev/og/blog-server-banner.png'
+  'how-to-change-discord-server-banner': 'https://discord-creator-asset-studio.pages.dev/og/blog-server-banner.png',
+  'how-to-change-discord-username': 'https://discord-creator-asset-studio.pages.dev/og/blog-change-username.png',
+  'discord-text-formatting-guide': 'https://discord-creator-asset-studio.pages.dev/og/blog-text-formatting-guide.png',
+  'what-font-does-discord-use': 'https://discord-creator-asset-studio.pages.dev/og/blog-discord-font.png',
+  'discord-video-size-limit': 'https://discord-creator-asset-studio.pages.dev/og/blog-video-size-limit.png'
 };
 const pageOgImage = ogImageMap[post.slug];
 
-const techArticleSchema = JSON.parse(generateBlogPostingSchema(post));
+const blogPostingSchema = JSON.parse(generateBlogPostingSchema({ ...post, image: pageOgImage }));
+
+// HowTo JSON-LD for procedural posts (rich-result eligible). Emitted only when
+// the post declares ordered steps, so listicle posts stay BlogPosting-only.
+const howToSchema = post.howToSteps
+  ? JSON.parse(generateHowToSchema({
+      name: post.heading,
+      description: post.metaDescription,
+      url: pageUrl,
+      image: pageOgImage,
+      steps: post.howToSteps
+    }))
+  : null;
 
 const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
   { name: "Blog", url: "https://discord-creator-asset-studio.pages.dev/blog/" },
-  { name: post.title, url: pageUrl }
+  { name: post.heading, url: pageUrl }
 ]);
 
 const faqSchema = {
@@ -53,7 +69,8 @@ const otherPosts = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
 ---
 
 <Layout title={post.title} description={post.metaDescription} ogImage={pageOgImage}>
-  <script type="application/ld+json" set:html={JSON.stringify(techArticleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
+  {howToSchema && <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />}
   <script type="application/ld+json" set:html={breadcrumbSchema} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
@@ -64,7 +81,7 @@ const otherPosts = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
       <span>/</span>
       <a href="/blog/" class="hover:text-[#3368A0] transition-colors">Blog</a>
       <span>/</span>
-      <span class="text-[#192538] dark:text-white font-semibold truncate max-w-[200px] sm:max-w-md">{post.title}</span>
+      <span class="text-[#192538] dark:text-white font-semibold truncate max-w-[200px] sm:max-w-md">{post.heading}</span>
     </nav>
 
     <!-- Blog Header Navbar -->
@@ -125,7 +142,7 @@ const otherPosts = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
       </div>
 
       <h1 class="text-3xl sm:text-5xl font-extrabold text-[#192538] dark:text-white tracking-tight leading-[1.15] mb-4">
-        {post.title}
+        {post.heading}
       </h1>
 
       <p class="text-[#475569] dark:text-[#CBD5E1] text-base sm:text-lg leading-relaxed">
@@ -340,7 +357,7 @@ const otherPosts = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
                     {op.category}
                   </span>
                   <div class="text-xs font-bold text-[#192538] dark:text-white group-hover:text-[#3368A0] dark:group-hover:text-[#66A3BF] transition-colors leading-snug mb-2">
-                    {op.title}
+                    {op.heading}
                   </div>
                 </div>
                 <span class="text-[11px] font-semibold text-[#6B7A90] dark:text-[#8494A7] flex items-center gap-1 mt-2">

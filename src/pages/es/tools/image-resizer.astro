@@ -1,0 +1,121 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ImageResizerWorkspace from '../../../components/tools/ImageResizerWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+
+const pageTitle = "Redimensionar Imágenes Discord | Tamaños Exactos";
+const pageDescription = "Redimensionar imágenes Discord al tamaño exacto: avatar 512x512, sticker 320x320, emoji 128x128 o banner 960x540. En tu navegador, sin subidas.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/image-resizer/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/image-resizer/";
+
+const appSchema = generateSoftwareApplicationSchema("Redimensionador de Imágenes para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Redimensionar Imágenes", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Qué tamaño tiene en píxeles la foto de perfil de Discord?", a: "La foto de perfil, o avatar, de Discord se muestra a 128×128 píxeles y siempre es cuadrada. Sube una imagen cuadrada de al menos 128 píxeles por lado; un cuadrado mayor como 256 o 512 también sirve y se mantiene nítido cuando Discord lo reduce. Evita imágenes no cuadradas, porque Discord las recortará para ajustarlas al círculo." },
+  { q: "¿Cómo redimensiono una imagen para un icono de servidor de Discord?", a: "Ajusta la herramienta a 512×512, el tamaño que Discord usa para los iconos de servidor. Si tu origen no es cuadrado, recórtalo a un cuadrado primero para que el icono no se distorsione ni quede con bordes, y luego expórtalo. Como el icono también se muestra dentro de un círculo en algunos sitios, mantén lo importante centrado para que nada crítico quede en las esquinas." },
+  { q: "¿Cuáles son las dimensiones del banner de Discord?", a: "Los banners de perfil y de servidor de Discord usan 960×540 píxeles, un rectángulo apaisado 16:9. Redimensiona tu imagen a ese tamaño exacto y conserva la proporción para que la escena no se estire. Recuerda que la banda central es la zona más visible, ya que partes de arriba y de abajo pueden quedar cubiertas por elementos del perfil superpuestos." },
+  { q: "¿Cómo hago que una imagen sea cuadrada para un avatar de Discord?", a: "Usa la opción de recortar a cuadrado, que recorta el lado más largo de una foto rectangular hasta una forma 1:1 y luego la escala a 128×128 o más. Centra la cara del sujeto antes de recortar, porque Discord muestra los avatares dentro de una máscara circular — un cuadrado centrado mantiene las cabezas y los detalles clave dentro del círculo visible." },
+  { q: "¿Redimensionar una imagen reduce su calidad?", a: "Reducir el tamaño apenas afecta la calidad — estás descartando píxeles que no necesitabas y los bordes se mantienen nítidos. Ampliar es distinto: agrandar una imagen pequeña no puede recuperar detalle que nunca se capturó, así que se ve borrosa. Para el mejor resultado, parte del original de mayor resolución que tengas y reduce hacia el tamaño objetivo de Discord." }
+];
+
+const dossier = {
+  eyebrow: "Plano del Redimensionador de Imágenes",
+  heading: "De cualquier imagen a",
+  highlight: "dimensiones exactas de Discord",
+  intro: "Discord valida varios assets por dimensiones exactas en píxeles, y subir el tamaño incorrecto le cede el recorte a Discord en lugar de a ti. Así encajan los tamaños de cada asset, el redimensionado y recorte en el canvas, la elección de proporción y la privacidad del procesamiento local — todo en tu navegador.",
+  steps: [
+    "Tamaños de los Assets de Discord",
+    "Redimensionar y Recortar",
+    "Relación de Aspecto",
+    "Local y Privado"
+  ],
+  cards: [
+    {
+      kicker: "MAPA DE TAMAÑOS // 01",
+      badge: "TAMAÑOS DE ASSETS",
+      badgeTone: "emerald" as const,
+      title: "El tamaño exacto en píxeles de cada asset de Discord",
+      body: [
+        "Discord valida varios assets por dimensiones exactas en píxeles, y subir el tamaño incorrecto le cede el recorte a Discord en lugar de a ti. Una foto de perfil, o avatar, se muestra a 128×128 — sube un cuadrado de al menos 128 píxeles de ancho y se mantiene nítido. Un icono de servidor quiere 512×512, los emojis personalizados van a 128×128 y los stickers llegan hasta 320×320 como APNG. Un banner de perfil o de servidor es 960×540, un rectángulo 16:9 limpio, mientras que un icono de rol es un diminuto 64×64. Cuadra esos números de antemano y Discord acepta el archivo tal cual, sin que su propia reducción ablande los bordes.",
+        "Acertar el tamaño antes de subir es lo esencial, porque el redimensionado automático de Discord no es amable con el detalle. Cuando le entregas una imagen demasiado grande, o con la forma equivocada, recorta y comprime a su manera — las cabezas se salen del encuadre, las líneas finas se emborronan y el texto pequeño se vuelve pastoso. Fijar el canvas a las dimensiones objetivo aquí significa que los píxeles que exportas son los píxeles que Discord guarda. No hay que adivinar si una imagen de 500×500 pasará como icono de servidor o si un sticker de 319×320 será rechazado; cada ajuste aterriza en el valor que la plataforma espera."
+      ]
+    },
+    {
+      kicker: "CONTROLES DEL CANVAS // 02",
+      badge: "REDIMENSIONAR Y RECORTAR",
+      badgeTone: "blue" as const,
+      title: "Fija un tamaño exacto en píxeles o recorta a un cuadrado",
+      body: [
+        "Este redimensionador trabaja sobre un canvas del navegador, así que cada cambio ocurre sobre los propios píxeles y no sobre una vista previa CSS estirada. Escribe un ancho y un alto exactos y la herramienta redibuja tu imagen a ese tamaño y exporta un archivo real con esas dimensiones — un icono de servidor de 512×512 de verdad, no una imagen grande apretada en una caja pequeña. Cuando ya sabes el número que Discord quiere, este es el camino más rápido: introdúcelo, exporta y sube. La salida es un ráster nuevo a la resolución que pediste, listo para arrastrar directo al diálogo de subida de Discord sin más edición.",
+        "Cuando la forma importa más que una sola dimensión, recorta a un cuadrado en su lugar. La mayoría de los espacios de Discord — avatares, iconos de servidor, emojis y stickers — son cuadrados, así que recortar una foto rectangular a un recorte 1:1 suele ser la solución real. El canvas te permite cortar la imagen a un cuadrado y luego escalar ese cuadrado al tamaño objetivo exacto en una sola pasada. Como todo corre en el mismo canvas, previsualizas el recorte y las dimensiones finales juntos, y el archivo que descargas ya coincide con la forma y el número de píxeles que Discord pide."
+      ]
+    },
+    {
+      kicker: "CONTROL DE PROPORCIÓN // 03",
+      badge: "RELACIÓN DE ASPECTO",
+      badgeTone: "amber" as const,
+      title: "Conserva la proporción o recorta para rellenar",
+      body: [
+        "Cada redimensionado obliga a elegir entre dos comportamientos cuando la forma del origen y la del objetivo no coinciden. Conservar la relación de aspecto escala toda la imagen para que quepa y deja el espacio sobrante con bordes, así no se corta nada pero puede que veas relleno alrededor de una foto que no es cuadrada. Recortar para rellenar hace lo contrario: escala hasta que el marco queda completamente cubierto y recorta lo que se sale de los bordes. Para un banner que debe ocupar un rectángulo de 960×540, conservar la proporción protege la composición; para un avatar cuadrado, recortar para rellenar es casi siempre lo que de verdad quieres.",
+        "La razón por la que recortar a cuadrado importa tanto en los avatares es la máscara circular de Discord. Tu foto de perfil se guarda como un cuadrado pero se muestra dentro de un círculo, así que las esquinas quedan ocultas y cualquier cosa cerca de un borde puede recortarse. Si metes una foto ancha en un cuadrado con bordes, el sujeto se encoge en una franja fina; si recortas para rellenar y centras la cara, queda cómoda dentro del círculo. Decidir el recorte aquí — en vez de dejar que Discord adivine — es como evitas que la máscara corte la parte de arriba de la cabeza de alguien o parta un logo por la mitad."
+      ],
+      footer: "Para avatares, recorta a un cuadrado centrado para que la máscara circular de Discord nunca corte cabezas ni bordes."
+    },
+    {
+      kicker: "PRIVACIDAD POR DISEÑO // 04",
+      badge: "LOCAL Y PRIVADO",
+      badgeTone: "purple" as const,
+      title: "Todo ocurre en tu navegador",
+      body: [
+        "El redimensionado ocurre por completo en un canvas dentro de la pestaña de tu navegador. Cuando eliges un archivo, se lee en memoria, se redibuja al tamaño objetivo y se te ofrece de vuelta como descarga — nunca se envía a un servidor, nunca se guarda y nunca se registra. Eso hace que la herramienta sea segura para capturas privadas, trabajo de clientes y marcas sin publicar que no puedes entregar a un tercero. No hay cuenta que crear ni cola que esperar; el trabajo es instantáneo porque es local. Cierra la pestaña y todo rastro de la imagen desaparece de la página, sin nada dejado atrás en un servidor remoto.",
+        "Un límite que conviene tener en cuenta: reducir el tamaño mantiene una imagen nítida, pero ampliar una imagen pequeña no puede inventar detalle que nunca se capturó. Agrandar un icono de 64×64 a un icono de servidor de 512×512 solo reparte los mismos píxeles sobre dieciséis veces el área, así que los bordes se ablandan y el resultado se ve borroso. Parte siempre del origen de mayor resolución que tengas y reduce hacia el objetivo de Discord, no al revés desde algo diminuto. Si tu única copia es pequeña, es mejor reexportar desde el arte original o tomar una captura más grande que ampliar y aceptar el desenfoque."
+      ],
+      footer: "Reducir mantiene la nitidez — parte del origen más grande que tengas, porque ampliar solo añade desenfoque."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/image-resizer.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Redimensionar Imágenes</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Redimensionar Imágenes Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Ajustes con un clic para avatar, icono, emoji, sticker y banner • Ajustar, rellenar o estirar • 100% en el navegador</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
+      </div>
+    </div>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <ImageResizerWorkspace lang="es" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
+  </div>
+</Layout>

@@ -1,0 +1,120 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import MarkdownWorkspace from '../../../components/tools/MarkdownWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+
+const pageTitle = "Markdown Discord | Editor con Vista Previa";
+const pageDescription = "Editor de markdown Discord gratis con vista previa en vivo: negrita, cursiva, títulos, spoilers, bloques de código y citas. Copia y pega en el chat.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/markdown/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/markdown/";
+
+const appSchema = generateSoftwareApplicationSchema("Previsualizador de Markdown para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Markdown", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cómo pongo texto en negrita en Discord?", a: "Rodea las palabras con dos asteriscos a cada lado: **así**. Discord muestra en negrita todo lo que quede entre los pares. Combínalo con cursiva usando tres asteriscos para ***negrita y cursiva***, o selecciona el texto y pulsa el botón de negrita de la barra de herramientas, que inserta los asteriscos por ti." },
+  { q: "¿Cómo hago una etiqueta de spoiler en Discord?", a: "Pon barras verticales dobles alrededor del texto: ||spoiler aquí||. Discord lo oculta tras una caja gris que quien lee debe pulsar o tocar para revelar, así que no estropea nada a quien pasa por el canal. En la vista previa de aquí se muestra tapado y se descubre al hacer clic, igual que en la app real." },
+  { q: "¿Cómo funcionan los títulos de Discord (cómo hago texto grande)?", a: "Empieza una línea con # y un espacio para un título grande, ## para uno mediano o ### para uno pequeño. No hay tamaño mayor — # es el texto más grande que ofrece Discord. Los títulos solo funcionan dentro de los mensajes, no en los nombres de usuario ni en tu Sobre mí, y el espacio tras las almohadillas es obligatorio." },
+  { q: "¿Cómo subrayo texto en Discord?", a: "Rodea el texto con dos guiones bajos: __subrayado__. Esto es exclusivo de Discord y no forma parte del markdown estándar, donde los guiones bajos dobles significan negrita. Un solo guion bajo, _así_, da cursiva en su lugar, y puedes apilarlos como __*cursiva subrayada*__ cuando necesitas ambos a la vez." },
+  { q: "¿Cómo hago un hipervínculo enmascarado en Discord?", a: "Usa la sintaxis [texto visible](https://ejemplo.com) — la etiqueta se muestra como un enlace que se puede pulsar y la URL queda oculta. El detalle importante es que los enlaces enmascarados solo se renderizan en embeds y en unas pocas superficies, no en los mensajes de chat normales, donde quedan como texto literal. Los embeds de bots y webhooks son el lugar habitual donde funcionan." }
+];
+const dossier = {
+  eyebrow: "Plano del Formato Markdown",
+  heading: "De texto plano a",
+  highlight: "mensajes de chat con formato",
+  intro: "Los mensajes de Discord admiten una variante ligera de markdown para dar estilo al texto en línea. Así encajan la sintaxis básica, los estilos en línea, los formatos de bloque y los elementos de estructura — con una vista previa en vivo que muestra exactamente cómo se renderiza cada uno antes de enviar.",
+  steps: [
+    "Qué Es el Markdown",
+    "Estilos de Texto en Línea",
+    "Bloques: Código, Cita, Spoiler",
+    "Títulos, Listas y Enlaces"
+  ],
+  cards: [
+    {
+      kicker: "QUÉ ES // 01",
+      badge: "VISTA PREVIA EN VIVO",
+      badgeTone: "emerald" as const,
+      title: "Un markdown ligero pensado para el chat",
+      body: [
+        "Discord toma una pequeña parte de markdown para sus mensajes. Rodeas el texto con unos pocos símbolos y se muestra con estilo — sin HTML y sin barra de herramientas obligatoria. El conjunto básico cubre negrita, cursiva, subrayado, tachado, código en línea, spoilers, citas de bloque, bloques de código de varias líneas, títulos, listas con viñetas y numeradas, y subtexto pequeño. Como son solo caracteres que escribes en línea, los mismos atajos funcionan igual en la app de escritorio, el cliente del navegador y el móvil, así que lo que aprendes aquí sirve en todas partes.",
+        "El editor de aquí refleja esa variante con exactitud. Escribe a la izquierda y el panel de la derecha se redibuja con cada tecla, mostrando con precisión cómo renderizará Discord el mensaje antes de que lo envíes. Todo funciona localmente en tu navegador — no se sube nada, no hace falta cuenta y no se publica ningún mensaje por ti. Cuando la vista previa por fin se ve bien, copia el markdown en crudo y pégalo en cualquier canal o mensaje directo. Sirve como un borrador seguro para acertar a la primera una combinación difícil de negrita, citas y bloques de código."
+      ]
+    },
+    {
+      kicker: "ESTILOS EN LÍNEA // 02",
+      badge: "NEGRITA / CURSIVA / CÓDIGO",
+      badgeTone: "blue" as const,
+      title: "Negrita, cursiva, subrayado, tachado y código",
+      body: [
+        "Los estilos en línea envuelven un fragmento de texto por ambos lados con el mismo marcador. Dos asteriscos ponen el texto en **negrita**, un solo asterisco o un guion bajo lo pasan a *cursiva*, dos guiones bajos añaden un __subrayado__ que es exclusivo de Discord y no forma parte del markdown estándar, dos virgulillas ~~tachan~~ el texto, y una comilla invertida crea `código en línea` que ignora cualquier otro formato dentro. Estos cinco son los estilos que más usas en los mensajes del día a día, y la barra de herramientas envuelve lo que tengas seleccionado.",
+        "Puedes anidar los marcadores para combinar efectos. Tres asteriscos dan ***negrita y cursiva*** a la vez, y puedes superponer un subrayado sobre negrita y cursiva envolviendo todo con dos guiones bajos más para máximo énfasis. El orden de los marcadores no importa mientras cada marcador de apertura tenga uno de cierre alrededor del mismo texto. Como el código en línea desactiva cualquier otro formato dentro, un par de comillas invertidas es la forma más rápida de que asteriscos, guiones bajos o virgulillas aparezcan literales en un tramo corto, en lugar de escapar cada símbolo uno a uno con una barra invertida."
+      ]
+    },
+    {
+      kicker: "FORMATOS DE BLOQUE // 03",
+      badge: "CÓDIGO / CITA / SPOILER",
+      badgeTone: "amber" as const,
+      title: "Bloques de código, citas y spoilers",
+      body: [
+        "Para un bloque de código, abre y cierra con tres comillas invertidas en su propia línea y pon tu código entre ellas. Añade el nombre de un lenguaje justo después de las comillas de apertura — ```js, ```py, ```json — y Discord aplica resaltado de sintaxis para ese lenguaje, lo cual es perfecto para compartir fragmentos que se mantienen legibles y monoespaciados. Un bloque de código conserva tus saltos de línea y la sangría con exactitud y, como el código en línea, ignora cualquier otro símbolo de markdown dentro, así que también sirve para mostrar caracteres de formato en crudo sin que se rendericen.",
+        "Las citas y los spoilers funcionan a nivel de línea y de fragmento. Un signo de mayor que y un espacio al inicio de una línea, > así, crea una cita de una sola línea; tres de ellos, >>>, convierten cada línea que sigue en una cita continua hasta que termina el mensaje. Para ocultar texto tras una caja que se pulsa, envuélvelo entre barras verticales dobles: ||spoiler||. Discord lo tapa hasta que alguien toca para revelarlo, lo cual es ideal para giros de trama, respuestas o cualquier cosa que no deba estropear el canal de un vistazo. Los tres se renderizan en vivo en la vista previa de aquí."
+      ],
+      footer: "Nombra el lenguaje tras la apertura del bloque — ```js o ```py — para resaltar la sintaxis; >>> inicia una cita de varias líneas."
+    },
+    {
+      kicker: "ESTRUCTURA Y ENLACES // 04",
+      badge: "TÍTULOS / LISTAS",
+      badgeTone: "purple" as const,
+      title: "Títulos, listas, subtexto y enlaces enmascarados",
+      body: [
+        "Discord añadió la estructura de bloques en 2023. Empieza una línea con # para un título grande, ## para uno mediano y ### para uno pequeño — el espacio tras las almohadillas es obligatorio, y los títulos solo se renderizan dentro de los mensajes, nunca en los nombres de usuario ni en tu Sobre mí. Un guion o un asterisco seguido de un espacio inicia una lista con viñetas, y un número con un punto, como 1., inicia una lista numerada; aplica sangría al marcador para anidar un subelemento. Para una línea de texto pequeño y gris apagado — útil para pies o notas — antepón -# al subtexto.",
+        "Los enlaces enmascarados vienen con una advertencia importante. La sintaxis [texto](https://ejemplo.com) muestra una etiqueta que se puede pulsar en lugar de una URL en crudo, pero Discord solo la renderiza en embeds y en unas pocas superficies — en un mensaje de chat normal se queda como texto literal, así que no confíes en ella ahí. Por último, para que cualquier carácter especial aparezca literal en vez de activar el formato, pon una barra invertida justo delante: \\*no es cursiva\\* imprime los asteriscos. Ese escape es la forma limpia de escribir un símbolo suelto, mostrar un trozo de sintaxis o evitar que un estilo se active por accidente a mitad de frase."
+      ],
+      footer: "Los enlaces enmascarados [texto](url) solo se renderizan en embeds, no en mensajes normales; escapa cualquier símbolo con una barra invertida \\ delante."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/markdown.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Markdown</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Previsualizador de Markdown Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Da formato a negrita, cursiva, spoilers y código • Vista previa del chat en vivo • Copia y pega</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
+      </div>
+    </div>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <MarkdownWorkspace lang="es" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
+  </div>
+</Layout>

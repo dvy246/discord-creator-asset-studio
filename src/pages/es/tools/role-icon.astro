@@ -1,6 +1,9 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../../utils/seo';
+import RoleIconWorkspace from '../../../components/tools/RoleIconWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
 
 const pageTitle = "Creador de Iconos de Rol Discord | Exacto 64×64";
 const pageDescription = "Redimensiona iconos de rol de Discord a exactamente 64×64 píxeles por debajo de 256 KB para servidores Boost Nivel 2. 100% en tu navegador, sin subidas.";
@@ -14,23 +17,77 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 const faqItems = [
-  { q: "¿Cuál es el tamaño del icono de rol de Discord?", a: "Los iconos de rol deben ser exactamente 64×64 píxeles y permanecer por debajo de 256 KB." },
-  { q: "¿Qué necesito para usar iconos de rol personalizados?", a: "Tu servidor debe alcanzar Boost Nivel 2 (7 boosts) y necesitas el permiso de Gestionar Roles o de Administrador." },
-  { q: "¿Por qué se rechaza mi icono de rol?", a: "Las causas más comunes son dimensiones incorrectas (debe ser exactamente 64×64) o superar el límite de 256 KB." }
+  { q: "¿Cuál es el tamaño de un icono de rol de Discord?", a: "Los iconos de rol deben subirse como un cuadrado de 64×64 píxeles y mantenerse por debajo de 256 KB. Discord los reduce luego a unos 16–20 píxeles junto a los nombres, así que partir de un archivo limpio de 64×64 mantiene la insignia nítida en pantallas de alta resolución sin superar el límite." },
+  { q: "¿Cómo añado un icono a un rol de Discord?", a: "Abre Ajustes del Servidor → Roles, selecciona el rol que quieras y ve a su pestaña de Visualización. Desde ahí puedes subir una imagen personalizada de 64×64 o elegir un emoji estándar como icono y guardar. La insignia aparecerá junto a cada miembro que tenga ese rol." },
+  { q: "¿Se necesitan boosts para los iconos de rol?", a: "Sí. Los iconos de rol personalizados requieren que el servidor alcance Boost Nivel 2, que necesita siete boosts de los miembros. Si el servidor baja luego de Nivel 2, tus iconos guardados quedan ocultos en el chat hasta que se restablezca el nivel. También necesitas el permiso de Gestionar Roles." },
+  { q: "¿Puede ser un GIF animado un icono de rol de Discord?", a: "No. Discord solo admite imágenes estáticas para los iconos de rol, así que funcionan los archivos PNG y JPG, pero no los GIFs animados ni los APNG. Un PNG transparente suele lucir mejor porque el icono queda limpio junto al nombre, sin una caja de fondo visible." },
+  { q: "¿Por qué mi icono de rol se ve borroso o es rechazado?", a: "El desenfoque suele venir de un exceso de detalle: a 16–20 píxeles, las líneas finas y el texto pequeño se emborronan, así que las siluetas simples y contundentes se leen mejor. Los rechazos suelen deberse a dimensiones incorrectas — debe ajustarse a 64×64 — o a superar el tope de 256 KB." }
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es",
-  "mainEntity": faqItems.map((f) => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+const dossier = {
+  eyebrow: "Plano Técnico del Icono de Rol",
+  heading: "Iconos de rol que se reconocen a",
+  highlight: "simple vista",
+  intro: "Los iconos de rol son los gráficos más pequeños de todo Discord. Los subes a 64×64 píxeles, pero Discord los reduce a unos 16–20 píxeles junto a los nombres. Así encajan las reglas de tamaño, el reescalado, la teoría de siluetas y los requisitos de Boost para que tus insignias se reconozcan al instante.",
+  steps: [
+    "El Tamaño Exacto 64×64",
+    "Reducción a 16px en el Chat",
+    "Siluetas Nítidas y Contraste",
+    "Boost Nivel 2 y Permisos"
+  ],
+  cards: [
+    {
+      kicker: "MÉTRICA DE ESPECIFICACIÓN // 01",
+      badge: "64 × 64 PÍXELES",
+      badgeTone: "emerald" as const,
+      title: "La regla exacta de 64×64 píxeles",
+      body: [
+        "Discord recomienda subir los iconos de rol como un cuadrado de 64×64 píxeles con una relación 1:1 limpia. A diferencia de los banners o los emojis, que admiten formas variadas, un icono de rol debe caber en ese cuadrado ordenado, así que las dimensiones raras como 63×64 se estiran o se recortan de forma extraña al procesarse.",
+        "El tope de archivo es 256 KB, espacio de sobra para un PNG o JPG nítido a este tamaño. Un PNG transparente luce mejor porque el icono flota limpio junto al nombre, sin una caja visible. Este creador centra y redimensiona tu arte en un lienzo exacto de 64×64 dentro de tu navegador, para que exportes sin errores de subida."
+      ]
+    },
+    {
+      kicker: "REESCALADO ÓPTICO // 02",
+      badge: "CHAT A 16PX",
+      badgeTone: "blue" as const,
+      title: "Lo pequeño que se ve un icono de rol",
+      body: [
+        "Aunque lo subas a 64×64 píxeles, Discord muestra los iconos de rol a unos 16×16 píxeles junto a los nombres en el chat y a unos 20×20 píxeles en la lista de miembros. Es casi una reducción de 4:1 respecto al archivo que subes, así que cada detalle se comprime en una huella diminuta.",
+        "A esa escala, el texto pequeño, las líneas finas, los sombreados sutiles y los escudos intrincados se difuminan en una mancha confusa. El truco es diseñar para el tamaño de visualización, no para el de subida. Previsualiza tu icono junto a un nombre de ejemplo a escala real de chat antes de usarlo y simplifica todo lo que se vea turbio."
+      ]
+    },
+    {
+      kicker: "LEGIBILIDAD GRÁFICA // 03",
+      badge: "TEORÍA DE SILUETAS",
+      badgeTone: "amber" as const,
+      title: "Siluetas nítidas y formas de alto contraste",
+      body: [
+        "Los mejores iconos de rol funcionan como señales de tráfico: reconoces la forma al instante. Una sola silueta contundente — una corona para administradores, un escudo para moderadores, una estrella para boosters, un mando para gamers o una paleta para artistas — se lee mucho mejor que una ilustración detallada. Las formas sólidas de un color sobreviven a la reducción; los degradados y los emblemas finos no.",
+        "El contraste importa igual. Como el icono se sitúa junto a un nombre de rol de color, una insignia toda dorada puede desaparecer junto al texto dorado. Los elementos blancos y limpios o un contorno tenue ayudan a que la forma resalte tanto en temas oscuros como claros, y se mantenga legible sea cual sea el color del rol."
+      ],
+      footer: "Siluetas simples y de alto contraste se mantienen legibles en temas oscuros y claros."
+    },
+    {
+      kicker: "REQUISITOS DEL SERVIDOR // 04",
+      badge: "BOOST NIVEL 2",
+      badgeTone: "purple" as const,
+      title: "Boost Nivel 2 y cómo asignar un icono",
+      body: [
+        "Los iconos de rol personalizados solo se desbloquean cuando el servidor alcanza Boost Nivel 2, que requiere siete boosts de los miembros. Si el servidor baja de Nivel 2, tus iconos subidos siguen guardados en los ajustes, pero Discord los oculta del chat hasta que se recupere el nivel de boost. También necesitas el permiso de Gestionar Roles para asignarlos.",
+        "Para configurarlo, abre Ajustes del Servidor → Roles, elige un rol y usa su pestaña de Visualización. Puedes subir una imagen personalizada o elegir un emoji estándar como icono. Discord admite PNG y JPG estáticos aquí, no GIFs animados. Todo en esta página se procesa en tu navegador, así que nada se sube nunca a un servidor."
+      ],
+      footer: "Configúralo en Ajustes del Servidor → Roles → Visualización · cero subidas, todo en el navegador."
+    }
+  ]
 };
 ---
 
 <Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/role-icon.png">
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
     <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
       <div class="flex items-center gap-2">
         <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
@@ -72,45 +129,13 @@ const faqSchema = {
       </div>
     </div>
 
-    <div class="rounded-[16px] border-2 border-[#3368A0]/30 dark:border-[#66A3BF]/30 bg-gradient-to-br from-[#FAF8F5] to-[#C8DFDB]/20 dark:from-[#141A24] dark:to-[#202E42]/50 p-6 sm:p-8 text-center mb-8">
-      <span class="inline-block px-3 py-1 rounded-full bg-[#0D9488]/15 text-[#0D9488] font-bold text-xs font-mono mb-3">HERRAMIENTA INTERACTIVA</span>
-      <h2 class="text-xl sm:text-2xl font-extrabold text-[#192538] dark:text-white mb-2">Abrir el Estudio de Iconos de Rol</h2>
-      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] max-w-lg mx-auto mb-5">
-        La herramienta interactiva completa (recorte al lienzo 64×64 y validación de 256 KB) está disponible en el estudio principal.
-      </p>
-      <a href={enUrl} class="btn-primary inline-block text-xs px-6 py-3 rounded-[10px] font-semibold shadow-sm">
-        Abrir Herramienta de Iconos de Rol →
-      </a>
-      <p class="text-[11px] text-[#6B7A90] mt-3">La herramienta funciona igual en todos los idiomas — tus archivos nunca salen de tu dispositivo.</p>
-    </div>
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <RoleIconWorkspace lang="es" />
 
-    
-    <div class="space-y-6 mb-12 mt-8">
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Exactamente 64×64 Píxeles</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Discord exige una resolución exacta de 64×64 píxeles para los iconos de rol. Los archivos de 63×64 o 128×128 serán rechazados o distorsionados durante la subida. La herramienta recorta, centra y rellena tu arte en un lienzo limpio de 64×64.
-        </p>
-      </article>
-      <article class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-        <h2 class="text-lg font-bold text-[#192538] dark:text-white mb-2">Requisito de Boost Nivel 2</h2>
-        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
-          Los iconos de rol personalizados solo están disponibles en servidores con Boost Nivel 2 (7 boosts) y requieren el permiso de Gestionar Roles o de Administrador. Para archivos de 64×64 píxeles, el límite de 256 KB ofrece espacio amplio para datos RGBA de 32 bits.
-        </p>
-      </article>
-    </div>
+    <!-- Dossier de desplazamiento (componente compartido) -->
+    <ToolDossier {...dossier} />
 
-    <section>
-      <h2 class="text-2xl font-bold text-[#192538] dark:text-white mb-6 text-center">Preguntas Frecuentes</h2>
-      <div class="space-y-4">
-        {faqItems.map((item) => (
-          <div class="card-panel p-6 rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24]">
-            <h3 class="text-sm font-bold text-[#192538] dark:text-white mb-2">{item.q}</h3>
-            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{item.a}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+    <!-- FAQ (componente compartido, misma fuente que el JSON-LD) -->
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
   </div>
 </Layout>
-

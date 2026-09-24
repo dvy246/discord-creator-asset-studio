@@ -1,0 +1,444 @@
+---
+/**
+ * GifCompressorWorkspace.astro — Discord GIF compressor.
+ *
+ * Decodes an animated GIF's frames with the browser ImageDecoder (WebCodecs),
+ * then re-encodes with gifenc after applying three size levers: downscale,
+ * palette reduction, and frame-skip. Targets Discord's 256 KiB emoji cap or
+ * 10 MB chat cap. Language-agnostic logic on fixed element IDs; visible labels
+ * via `t`, runtime strings via data-* (`js` → `L`). Imported by the EN
+ * (/tools/gif-compressor/) and ES (/es/tools/gif-compressor/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    dropTitle: 'Upload an animated GIF to compress',
+    dropHint: 'Animated GIF • Decoded and re-encoded entirely in your browser',
+    editorTitle: 'Compression Controls',
+    editorSub: 'Tune scale, colors, and frame rate, then compress',
+    reset: 'Reset',
+    targetLabel: 'Target Limit',
+    targetEmoji: 'Emoji / sticker — 256 KiB',
+    targetBanner: 'Chat / banner — 10 MB',
+    targetNone: 'No target (just shrink)',
+    scaleLabel: 'Scale',
+    colorsLabel: 'Max Colors',
+    frameSkipLabel: 'Keep every',
+    frameSkipUnit: 'frame(s)',
+    compressBtn: 'Compress GIF',
+    working: 'Compressing…',
+    previewTitle: 'Compressed Preview',
+    previewBox: 'No GIF yet',
+    receiptTitle: 'Compression Receipt',
+    awaiting: 'Awaiting GIF',
+    origSize: 'Original Size:',
+    outSize: 'Compressed Size:',
+    saved: 'Space Saved:',
+    dims: 'Output Dimensions:',
+    frames: 'Frames:',
+    downloadBtn: 'Download Compressed GIF',
+    links: [
+      { icon: '🎞️', href: '/tools/gif-maker/', label: 'Discord GIF Maker & Video Converter' },
+      { icon: '🗜️', href: '/tools/image-compressor/', label: 'Discord Image Compressor (Static)' },
+      { icon: '📖', href: '/guides/discord-gif-guide/', label: 'Discord GIF Optimization Guide' }
+    ]
+  },
+  es: {
+    dropTitle: 'Sube un GIF animado para comprimir',
+    dropHint: 'GIF animado • Decodificado y recodificado en tu navegador',
+    editorTitle: 'Controles de Compresión',
+    editorSub: 'Ajusta escala, colores y fotogramas, luego comprime',
+    reset: 'Reiniciar',
+    targetLabel: 'Límite Objetivo',
+    targetEmoji: 'Emoji / sticker — 256 KiB',
+    targetBanner: 'Chat / banner — 10 MB',
+    targetNone: 'Sin objetivo (solo reducir)',
+    scaleLabel: 'Escala',
+    colorsLabel: 'Colores Máx.',
+    frameSkipLabel: 'Conservar cada',
+    frameSkipUnit: 'fotograma(s)',
+    compressBtn: 'Comprimir GIF',
+    working: 'Comprimiendo…',
+    previewTitle: 'Vista Previa Comprimida',
+    previewBox: 'Aún no hay GIF',
+    receiptTitle: 'Recibo de Compresión',
+    awaiting: 'Esperando GIF',
+    origSize: 'Tamaño Original:',
+    outSize: 'Tamaño Comprimido:',
+    saved: 'Espacio Ahorrado:',
+    dims: 'Dimensiones de Salida:',
+    frames: 'Fotogramas:',
+    downloadBtn: 'Descargar GIF Comprimido',
+    links: [
+      { icon: '🎞️', href: '/tools/gif-maker/', label: 'Creador y Conversor de GIF de Discord' },
+      { icon: '🗜️', href: '/es/tools/image-compressor/', label: 'Compresor de Imágenes (Estático)' },
+      { icon: '📖', href: '/guides/discord-gif-guide/', label: 'Guía de Optimización de GIF' }
+    ]
+  }
+}[lang];
+
+const js = {
+  en: {
+    invalidFile: 'Please upload an animated GIF file.',
+    noDecoder: 'Your browser cannot decode GIF frames (ImageDecoder unavailable). Try the latest Chrome, Edge, or Firefox.',
+    decodeError: 'Could not read this GIF. It may be corrupted or not animated.'
+  },
+  es: {
+    invalidFile: 'Sube un archivo GIF animado.',
+    noDecoder: 'Tu navegador no puede decodificar fotogramas GIF (ImageDecoder no disponible). Prueba el Chrome, Edge o Firefox más reciente.',
+    decodeError: 'No se pudo leer este GIF. Puede estar dañado o no ser animado.'
+  }
+}[lang];
+---
+
+<div
+  class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16"
+  id="gc-workspace"
+  data-invalid-file={js.invalidFile}
+  data-no-decoder={js.noDecoder}
+  data-decode-error={js.decodeError}
+  data-working={t.working}
+  data-awaiting={t.awaiting}
+>
+  <!-- Left: upload + controls -->
+  <div class="lg:col-span-7 space-y-6">
+    <div id="gc-drop" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] dark:bg-[#141A24] p-8 text-center transition-all cursor-pointer relative shadow-xs">
+      <input type="file" id="gc-file" accept="image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+      <div class="space-y-3 pointer-events-none">
+        <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center mx-auto text-xl font-bold">🎞️</div>
+        <div>
+          <p class="text-sm font-bold text-[#192538] dark:text-white">{t.dropTitle}</p>
+          <p class="text-xs text-[#6B7A90] dark:text-[#8494A7] mt-1">{t.dropHint}</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="gc-editor" class="card-panel rounded-[14px] p-6 hidden space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+        <div>
+          <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.editorTitle}</h2>
+          <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.editorSub}</p>
+        </div>
+        <button id="gc-reset" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">{t.reset}</button>
+      </div>
+
+      <div>
+        <label for="gc-target" class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5"><span>🎯</span> {t.targetLabel}</label>
+        <select id="gc-target" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none">
+          <option value="262144">{t.targetEmoji}</option>
+          <option value="10485760">{t.targetBanner}</option>
+          <option value="0">{t.targetNone}</option>
+        </select>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between text-xs font-semibold text-[#192538] dark:text-white mb-2">
+          <span class="flex items-center gap-1.5"><span>📏</span> {t.scaleLabel}</span>
+          <span id="gc-scale-out" class="font-mono text-[11px] text-[#3368A0] dark:text-[#66A3BF]">100%</span>
+        </div>
+        <input type="range" id="gc-scale" min="0.1" max="1" step="0.05" value="1" class="w-full accent-[#3368A0] h-1.5 bg-[#E0DBD0] dark:bg-[#263346] rounded-lg cursor-pointer" />
+      </div>
+
+      <div>
+        <label for="gc-colors" class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5"><span>🎨</span> {t.colorsLabel}</label>
+        <select id="gc-colors" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none">
+          <option value="256">256</option>
+          <option value="128">128</option>
+          <option value="64" selected>64</option>
+          <option value="32">32</option>
+          <option value="16">16</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="gc-skip" class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5"><span>⏭️</span> {t.frameSkipLabel}</label>
+        <div class="flex items-center gap-2">
+          <select id="gc-skip" class="flex-1 text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+          <span class="text-xs text-[#6B7A90] dark:text-[#8494A7]">{t.frameSkipUnit}</span>
+        </div>
+      </div>
+
+      <button id="gc-compress" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2 shadow-sm">
+        <svg id="gc-spinner" class="hidden animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>
+        <span id="gc-compress-label">{t.compressBtn}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Right: preview + receipt -->
+  <div class="lg:col-span-5 space-y-6">
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.previewTitle}</h2>
+      </div>
+      <div class="rounded-[10px] bg-[#FAF8F5] dark:bg-[#101622] border border-[#E0DBD0] dark:border-[#263346] p-4 flex items-center justify-center min-h-[180px] overflow-hidden bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] dark:bg-[repeating-conic-gradient(#1A2230_0%_25%,#121824_0%_50%)] [background-size:16px_16px]">
+        <img id="gc-preview" class="max-w-full max-h-[260px] object-contain rounded shadow-md hidden" alt="Compressed GIF preview" />
+        <span id="gc-preview-empty" class="text-xs text-[#6B7A90] dark:text-[#8494A7] font-mono">{t.previewBox}</span>
+      </div>
+    </div>
+
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.receiptTitle}</h2>
+        <span id="gc-badge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">{t.awaiting}</span>
+      </div>
+      <div class="space-y-3 font-mono text-xs">
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]"><span class="text-[#6B7A90]">{t.origSize}</span><span id="gc-stat-orig" class="text-[#192538]">--</span></div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]"><span class="text-[#6B7A90]">{t.outSize}</span><span id="gc-stat-out" class="font-bold text-[#192538]">--</span></div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]"><span class="text-[#6B7A90]">{t.saved}</span><span id="gc-stat-saved" class="text-[#0D9488] font-bold">--</span></div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]"><span class="text-[#6B7A90]">{t.dims}</span><span id="gc-stat-dims" class="text-[#192538]">-- × --</span></div>
+        <div class="flex justify-between py-1.5"><span class="text-[#6B7A90]">{t.frames}</span><span id="gc-stat-frames" class="text-[#192538]">--</span></div>
+      </div>
+
+      <div id="gc-alert" class="mt-4 hidden p-3 rounded-[8px] text-xs"></div>
+
+      <button id="gc-download" class="btn-primary w-full py-3 rounded-[10px] text-sm font-semibold mt-4 hidden">{t.downloadBtn}</button>
+
+      <div class="mt-4 pt-3 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-medium">
+        {t.links.map((link) => (
+          <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+            <span>{link.icon}</span> {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { GIFEncoder, quantize, applyPalette } from 'gifenc';
+
+  const ws = document.getElementById('gc-workspace');
+  const L = {
+    invalidFile: ws?.dataset.invalidFile || 'Please upload an animated GIF file.',
+    noDecoder: ws?.dataset.noDecoder || 'Your browser cannot decode GIF frames.',
+    decodeError: ws?.dataset.decodeError || 'Could not read this GIF.',
+    working: ws?.dataset.working || 'Compressing…',
+    awaiting: ws?.dataset.awaiting || 'Awaiting GIF'
+  };
+
+  const fileInput = document.getElementById('gc-file') as HTMLInputElement;
+  const dropzone = document.getElementById('gc-drop');
+  const editor = document.getElementById('gc-editor');
+  const resetBtn = document.getElementById('gc-reset');
+  const targetSel = document.getElementById('gc-target') as HTMLSelectElement;
+  const scaleSlider = document.getElementById('gc-scale') as HTMLInputElement;
+  const scaleOut = document.getElementById('gc-scale-out');
+  const colorsSel = document.getElementById('gc-colors') as HTMLSelectElement;
+  const skipSel = document.getElementById('gc-skip') as HTMLSelectElement;
+  const compressBtn = document.getElementById('gc-compress') as HTMLButtonElement;
+  const compressLabel = document.getElementById('gc-compress-label');
+  const spinner = document.getElementById('gc-spinner');
+
+  const previewImg = document.getElementById('gc-preview') as HTMLImageElement;
+  const previewEmpty = document.getElementById('gc-preview-empty');
+  const statOrig = document.getElementById('gc-stat-orig');
+  const statOut = document.getElementById('gc-stat-out');
+  const statSaved = document.getElementById('gc-stat-saved');
+  const statDims = document.getElementById('gc-stat-dims');
+  const statFrames = document.getElementById('gc-stat-frames');
+  const badge = document.getElementById('gc-badge');
+  const alertBox = document.getElementById('gc-alert');
+  const downloadBtn = document.getElementById('gc-download');
+
+  let sourceBytes = 0;
+  let originalName = 'gif';
+  let sourceBuffer: ArrayBuffer | null = null;
+  let srcWidth = 0, srcHeight = 0;
+  let outUrl: string | null = null;
+  let outBlob: Blob | null = null;
+
+  function fmt(bytes: number): string {
+    if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    if (bytes >= 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${bytes} B`;
+  }
+
+  function cleanup() { if (outUrl) { URL.revokeObjectURL(outUrl); outUrl = null; } }
+
+  fileInput?.addEventListener('change', (e) => {
+    const f = (e.target as HTMLInputElement).files?.[0];
+    if (f) handleFile(f);
+  });
+  dropzone?.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]'); });
+  dropzone?.addEventListener('dragleave', () => dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]'));
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    const f = e.dataTransfer?.files?.[0];
+    if (f) handleFile(f);
+  });
+
+  async function handleFile(file: File) {
+    if (file.type !== 'image/gif') { alert(L.invalidFile); return; }
+    originalName = file.name.replace(/\.[^/.]+$/, '');
+    sourceBytes = file.size;
+    sourceBuffer = await file.arrayBuffer();
+    if (statOrig) statOrig.innerText = fmt(sourceBytes);
+    editor?.classList.remove('hidden');
+    // reset output
+    cleanup();
+    outBlob = null;
+    downloadBtn?.classList.add('hidden');
+    previewImg.classList.add('hidden');
+    previewEmpty?.classList.remove('hidden');
+    badge!.innerText = L.awaiting;
+    badge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
+    alertBox?.classList.add('hidden');
+  }
+
+  scaleSlider?.addEventListener('input', () => {
+    if (scaleOut) scaleOut.innerText = `${Math.round(parseFloat(scaleSlider.value) * 100)}%`;
+  });
+
+  compressBtn?.addEventListener('click', async () => {
+    if (!sourceBuffer) return;
+    if (typeof (window as any).ImageDecoder === 'undefined') { alert(L.noDecoder); return; }
+
+    compressBtn.disabled = true;
+    spinner?.classList.remove('hidden');
+    if (compressLabel) compressLabel.innerText = L.working;
+
+    try {
+      await compress();
+    } catch (e) {
+      alert(L.decodeError);
+      console.error(e);
+    } finally {
+      compressBtn.disabled = false;
+      spinner?.classList.add('hidden');
+      if (compressLabel) compressLabel.innerText = document.getElementById('gc-compress-label')?.dataset.orig || 'Compress GIF';
+    }
+  });
+
+  async function compress() {
+    const scale = parseFloat(scaleSlider.value);
+    const maxColors = parseInt(colorsSel.value, 10);
+    const skip = parseInt(skipSel.value, 10);
+
+    const decoder = new (window as any).ImageDecoder({ data: sourceBuffer, type: 'image/gif' });
+    await decoder.tracks.ready;
+    const track = decoder.tracks.selectedTrack;
+    const frameCount = track.frameCount;
+
+    const enc = GIFEncoder();
+    const tmp = document.createElement('canvas');
+    const ctx = tmp.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
+
+    let outW = 0, outH = 0, kept = 0;
+    let accumDelay = 0; // ms carried when skipping frames
+
+    for (let i = 0; i < frameCount; i++) {
+      const { image } = await decoder.decode({ frameIndex: i });
+      const frameDelayMs = image.duration ? image.duration / 1000 : 100; // µs → ms
+
+      if (i === 0) {
+        srcWidth = image.displayWidth;
+        srcHeight = image.displayHeight;
+        outW = Math.max(1, Math.round(srcWidth * scale));
+        outH = Math.max(1, Math.round(srcHeight * scale));
+        tmp.width = outW;
+        tmp.height = outH;
+      }
+
+      // Frame-skip: keep every `skip`-th frame, fold skipped delay forward.
+      if (i % skip !== 0) {
+        accumDelay += frameDelayMs;
+        image.close();
+        continue;
+      }
+
+      ctx.clearRect(0, 0, outW, outH);
+      ctx.drawImage(image, 0, 0, outW, outH);
+      image.close();
+
+      const { data } = ctx.getImageData(0, 0, outW, outH);
+      const palette = quantize(data, maxColors, { format: 'rgba4444' });
+      const index = applyPalette(data, palette, 'rgba4444');
+      const delay = Math.max(20, Math.round(frameDelayMs + accumDelay));
+      accumDelay = 0;
+      enc.writeFrame(index, outW, outH, { palette, delay, transparent: true });
+      kept++;
+    }
+
+    enc.finish();
+    decoder.close();
+
+    const bytes = enc.bytes();
+    outBlob = new Blob([bytes], { type: 'image/gif' });
+    cleanup();
+    outUrl = URL.createObjectURL(outBlob);
+
+    previewImg.src = outUrl;
+    previewImg.classList.remove('hidden');
+    previewEmpty?.classList.add('hidden');
+    downloadBtn?.classList.remove('hidden');
+
+    const outBytes = outBlob.size;
+    const savedPct = sourceBytes > 0 ? Math.max(0, Math.round((1 - outBytes / sourceBytes) * 100)) : 0;
+    if (statOut) statOut.innerText = fmt(outBytes);
+    if (statSaved) statSaved.innerText = `${savedPct}% (${fmt(Math.max(0, sourceBytes - outBytes))})`;
+    if (statDims) statDims.innerText = `${outW} × ${outH}`;
+    if (statFrames) statFrames.innerText = `${kept} / ${frameCount}`;
+
+    const target = parseInt(targetSel.value, 10);
+    if (target > 0) {
+      const ok = outBytes <= target;
+      badge!.innerText = ok ? 'Within target' : 'Over target';
+      badge!.className = ok
+        ? 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold'
+        : 'text-[11px] font-mono uppercase bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 px-2.5 py-0.5 rounded font-bold';
+      alertBox!.className = ok
+        ? 'mt-4 p-3 rounded-[8px] text-xs bg-[#C8DFDB]/40 text-[#0D9488] border border-[#0D9488]/30 block font-medium'
+        : 'mt-4 p-3 rounded-[8px] text-xs bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 block font-medium';
+      alertBox!.innerText = ok
+        ? '✓ Under your target — ready to upload.'
+        : '⚠ Still over target. Lower the scale, colors, or keep fewer frames and compress again.';
+    } else {
+      badge!.innerText = 'Done';
+      badge!.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
+      alertBox?.classList.add('hidden');
+    }
+  }
+
+  downloadBtn?.addEventListener('click', () => {
+    if (!outBlob || !outUrl) return;
+    const a = document.createElement('a');
+    a.href = outUrl;
+    a.download = `compressed_${originalName}.gif`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    cleanup();
+    outBlob = null;
+    sourceBuffer = null;
+    sourceBytes = 0;
+    editor?.classList.add('hidden');
+    previewImg.classList.add('hidden');
+    previewImg.removeAttribute('src');
+    previewEmpty?.classList.remove('hidden');
+    downloadBtn?.classList.add('hidden');
+    ['gc-stat-orig','gc-stat-out','gc-stat-saved','gc-stat-frames'].forEach((id) => { const el = document.getElementById(id); if (el) el.innerText = '--'; });
+    if (statDims) statDims.innerText = '-- × --';
+    badge!.innerText = L.awaiting;
+    badge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
+    alertBox?.classList.add('hidden');
+    fileInput.value = '';
+    scaleSlider.value = '1';
+    if (scaleOut) scaleOut.innerText = '100%';
+  });
+
+  // Store original label for restore
+  if (compressLabel) compressLabel.dataset.orig = compressLabel.innerText;
+</script>

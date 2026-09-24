@@ -1,8 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
-import SketchCircle from '../../components/SketchCircle.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import EmojiWorkspace from '../../components/tools/EmojiWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Emoji Maker | Compress to 256KB | Asset Studio";
 const pageDescription = "Resize and compress custom emojis with our Discord emoji maker. Format PNG, GIF, and animated assets under 256 KiB with instant 32x32 chat preview.";
@@ -19,41 +21,68 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Emoji Studio", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "What size should a Discord emoji be, and why upload at 128×128 if chat shows 32px?", a: "Upload custom emoji at 128×128 pixels, a 1:1 square. Discord downscales them to roughly 32×32 in chat and about 48×48 when sent alone, but authoring at the full 128×128 keeps them crisp on high-density phone and desktop screens. Keep the file under 256 KiB. This maker resizes to 128×128 automatically." },
+  { q: "Why is my Discord emoji blurry or pixelated in chat?", a: "Chat shrinks your 128×128 upload to about 32 pixels, so thin outlines, small text, and fine gradients collapse into mush. Design with a bold silhouette, solid colors, and a stroke of at least 2 pixels at 128px scale. A clean transparent background also stops white halos in dark mode." },
+  { q: "How many emoji slots does a Discord server have?", a: "Every server starts with 50 custom emoji slots. Server Boosting raises that cap: Level 1 unlocks 100 slots, Level 2 unlocks 150, and Level 3 unlocks 250. If a server loses boosts and drops a tier, emoji beyond the new limit are disabled until you free up slots or re-boost." },
+  { q: "Do animated emoji need Discord Nitro?", a: "Animated emoji must be GIF files under the same 256 KiB limit. Per Discord's rules, posting an animated emoji requires Nitro, and using any custom emoji outside the server that owns it also requires Nitro. Static custom emoji, by contrast, work for everyone inside their home server with no subscription." },
+  { q: "Why does Discord reject an emoji that shows under 256 KB on my computer?", a: "Your operating system reports size in decimal kilobytes (1 KB = 1,000 bytes), but Discord enforces binary kibibytes (1 KiB = 1,024 bytes), a hard ceiling of 262,144 bytes. A file listed as '256 KB' can hold 262,800 bytes and be refused. This studio checks the exact byte count before you export." }
+];
+
+const dossier = {
+  eyebrow: "Emoji Technical Blueprint",
+  heading: "Custom emoji that stay sharp at",
+  highlight: "32 pixels",
+  intro: "A custom emoji is authored at 128×128 but lives at about 32 pixels in chat, under a strict 256 KiB cap. Here is how the size limit, downscaling, transparency, and Discord's slot and Nitro rules fit together.",
+  steps: [
+    "The 256 KiB File Cap",
+    "128px → 32px Chat Scaling",
+    "Transparent Edges & Formats",
+    "Slots, Nitro & Naming"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "Why does Discord reject custom emojis that measure under 256 KB on desktop?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Discord enforces a strict binary limit of 256 KiB, which is exactly 262,144 bytes. Operating systems like Windows and macOS count 1 KB as 1,000 bytes. So an emoji showing as 256 KB on your computer might actually be 263,000 bytes, which Discord rejects. Discord Asset Studio checks the exact byte count so your upload works without errors."
-      }
+      kicker: "FILE SIZE MATH // 01",
+      badge: "262,144 BYTES",
+      badgeTone: "emerald" as const,
+      title: "The 256 KiB ceiling vs decimal kilobytes",
+      body: [
+        "The most common reason Discord rejects a custom emoji is a file-size mismatch. Windows and macOS report sizes in decimal kilobytes, where 1 KB equals 1,000 bytes, but Discord measures in binary kibibytes, where 1 KiB equals 1,024 bytes. That sets a hard ceiling of exactly 262,144 bytes.",
+        "An image your desktop labels '256 KB' can actually contain 262,800 bytes, and Discord checks the raw byte length and refuses it instantly. This studio measures the encoded size before you export, so you fix an oversize file here instead of guessing after a failed upload."
+      ],
+      footer: "Real upload ceiling: 262,144 bytes — checked before you export."
     },
     {
-      "@type": "Question",
-      "name": "What is the official Discord emoji size, and why author at 128x128 when chat displays 32x32?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The recommended Discord emoji size is 128x128 pixels with a 256 KiB file limit. While Discord shows inline chat emojis at 32x32 pixels, making them at 128x128 keeps them looking sharp on high-resolution phone screens and desktop monitors. Our Discord emoji resizer scales your image to 128x128 automatically."
-      }
+      kicker: "DISPLAY SCALING // 02",
+      badge: "128px → 32px",
+      badgeTone: "blue" as const,
+      title: "Why emoji are authored at 128px but seen at 32px",
+      body: [
+        "You upload at 128×128 pixels, yet Discord renders inline emoji at roughly 32×32 in chat, and about 48×48 when one is sent on its own as a jumbo emote. Shrinking that far throws away around three-quarters of your pixel grid, so anything delicate is lost.",
+        "Thin one-pixel outlines, small lettering, and soft gradients that look sharp at full size turn into blurry smudges once chat compresses them. Favor a bold silhouette, solid fills, and strong contrast so the emote still reads at a glance. The live 32px preview here shows exactly how it will land before you commit."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "How does transparent background handling work for custom emojis?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Custom emojis look best when saved as PNG files with transparent backgrounds. If an emoji is saved with a white or gray background box, it will show an ugly square outline in Discord's dark mode. Saving with a clean alpha channel ensures your emoji looks great on both dark (#313338) and light (#FFFFFF) themes."
-      }
+      kicker: "CLEAN EDGES // 03",
+      badge: "PNG · GIF · TRANSPARENT",
+      badgeTone: "amber" as const,
+      title: "Transparent PNGs and choosing the right format",
+      body: [
+        "Static emoji can be PNG, JPG, or GIF, but a transparent PNG is the safest choice. Discord members read chat in dark mode (#313338), light mode, and custom themes, so an emoji baked onto a solid or semi-transparent box shows an ugly halo ring on darker backgrounds.",
+        "Keeping a clean 32-bit alpha channel lets the same emote sit naturally on any theme. For motion, use a GIF and keep it lean — trimming frames and reducing the color palette is usually what pulls an animation back under the 256 KiB cap. This tool previews your art on both light and dark before export."
+      ],
+      footer: "Dual-theme check: no white halo on #313338 dark or light backgrounds."
     },
     {
-      "@type": "Question",
-      "name": "What image formats can be used for static and animated Discord emojis?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Static custom emojis can be PNG, JPG, or WebP. For an animated Discord animated emoji, you must use GIF format under the same 256 KiB limit. When creating Discord gif emojis, keeping your animation to 20–25 FPS and reducing colors helps the file stay under 256 KiB."
-      }
+      kicker: "SLOTS & PERMISSIONS // 04",
+      badge: "50 → 250 SLOTS",
+      badgeTone: "purple" as const,
+      title: "Slots, Nitro rules, and emoji names",
+      body: [
+        "Before you export, know where the emote will live. A server starts with 50 emoji slots and Boosting raises the cap to 100, 150, or 250 at Levels 1, 2, and 3. Names must be 2–32 characters using only letters, numbers, and underscores, and you need the Manage Expressions permission to add one.",
+        "Nitro governs usage, not upload: members need Nitro to post animated emoji and to use any custom emoji outside its home server. Everything here runs entirely in your browser — your image never leaves your device — so you can size, preview, and export privately, then add the file inside Discord's Server Settings."
+      ],
+      footer: "100% in-browser · nothing uploaded until you add it in Discord."
     }
   ]
 };
@@ -63,15 +92,18 @@ const faqSchema = {
   <!-- Inject Schemas -->
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <!-- Breadcrumb & Header -->
     <div class="mb-8">
-      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
         <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
         <span class="text-[#192538] dark:text-white font-semibold">Emoji Studio</span>
+      </div>
+        <a href="/es/tools/emoji/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
       </nav>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -87,545 +119,14 @@ const faqSchema = {
       </div>
     </div>
 
-    <!-- Main Workspace Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
-      <!-- Left Column: Upload & Canvas Controls (7 cols) -->
-      <div class="lg:col-span-7 space-y-6">
-        <!-- File Input Dropzone -->
-        <div 
-          id="dropzone" 
-          class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] p-8 text-center transition-all cursor-pointer relative shadow-xs"
-        >
-          <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
-          <div class="space-y-3 pointer-events-none">
-            <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 text-[#3368A0] flex items-center justify-center mx-auto text-xl font-bold">
-              📁
-            </div>
-            <div>
-              <p class="text-sm font-bold text-[#192538]">Click to browse or drop emoji artwork</p>
-              <p class="text-xs text-[#6B7A90] mt-1">PNG, JPG, WebP, or GIF (Processed in local memory)</p>
-            </div>
-          </div>
-        </div>
+    <!-- Main Workspace Layout (shared component) -->
+    <EmojiWorkspace lang="en" />
 
-        <!-- Canvas & Editor Controls -->
-        <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden">
-          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">Canvas Transformation (128 × 128)</h2>
-            <button id="resetBtn" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">
-              Reset
-            </button>
-          </div>
+    <!-- Sticky-scroll technical dossier (shared component) -->
+    <ToolDossier {...dossier} />
 
-          <!-- Live Canvas Surface -->
-          <div class="flex items-center justify-center p-6 bg-[#FAF8F5] rounded-[10px] border border-[#E0DBD0] overflow-hidden mb-6">
-            <canvas id="mainCanvas" width="128" height="128" class="max-w-[128px] max-h-[128px] shadow-sm rounded-[6px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] [background-size:16px_16px]"></canvas>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex flex-col sm:flex-row items-center gap-3">
-            <button id="exportBtn" class="btn-primary w-full sm:flex-1 py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2">
-              <span>Export Verified Emoji</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column: Validation Receipt & Live Discord Preview (5 cols) -->
-      <div class="lg:col-span-5 space-y-6">
-        <!-- Live Chat Size Previews -->
-        <div class="card-panel rounded-[14px] p-6">
-          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">Discord Chat Preview</h2>
-            <!-- Light/Dark Preview Surface Toggle -->
-            <div class="flex items-center gap-1 bg-[#FAF8F5] p-1 rounded-[6px] border border-[#E0DBD0]">
-              <button id="themeDarkBtn" class="text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium">Dark</button>
-              <button id="themeLightBtn" class="text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium">Light</button>
-            </div>
-          </div>
-
-          <div id="previewSurface" class="p-4 rounded-[10px] bg-[#313338] text-white transition-colors">
-            <div class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-full bg-[#5865f2] flex items-center justify-center font-bold text-xs flex-shrink-0">
-                User
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-baseline gap-2 mb-1">
-                  <span class="text-xs font-semibold">Server Member</span>
-                  <span class="text-[10px] text-[#949ba4]">Today at 4:20 PM</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="text-xs">Check out this custom emoji:</span>
-                  <!-- 32x32 Container for Chat Simulation -->
-                  <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-black/10 rounded overflow-hidden">
-                    <img id="chatPreviewImg" class="max-w-full max-h-full object-contain hidden" alt="Emoji Preview" />
-                    <span id="chatPreviewPlaceholder" class="text-[10px] text-[#949ba4]">--</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Real-time Verification Receipt -->
-        <div class="card-panel rounded-[14px] p-6">
-          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">Compliance Audit</h2>
-            <span id="receiptBadge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
-              Awaiting Media
-            </span>
-          </div>
-
-          <div class="space-y-3 font-mono text-xs">
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Target Dimensions:</span>
-              <span class="font-bold text-[#192538]">128 × 128 px</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Original Dimensions:</span>
-              <span id="statDimensions" class="text-[#192538]">-- × --</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Binary Limit:</span>
-              <span class="text-[#0D9488] font-bold">256 KiB (262,144 bytes)</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Measured Byte Size:</span>
-              <span id="statBytes" class="text-[#192538]">-- KiB</span>
-            </div>
-            <div class="flex justify-between py-1.5">
-              <span class="text-[#6B7A90]">Export Encoding:</span>
-              <span id="statFormat" class="text-[#192538]">PNG / WebP</span>
-            </div>
-          </div>
-
-          <div id="receiptAlert" class="mt-4 hidden p-3 rounded-[8px] text-xs"></div>
-        </div>
-
-        <div class="card-panel rounded-[14px] p-6">
-          <h3 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-2">Technical Guides</h3>
-          <p class="text-xs text-[#475569] leading-relaxed mb-3">
-            Compare emoji limits with stickers and banners, or learn palette quantization techniques for animated GIF emojis.
-          </p>
-          <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-medium">
-            <a href="/guides/discord-sizes/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
-              <span>📖</span> Discord Asset Sizes Cheat Sheet
-            </a>
-            <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
-              <span>✨</span> Animated Emoji 256 KiB GIF Guide
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Text-Locking Sticky Stacking Technical Dossier (600+ Words) -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-        
-        <!-- Left Column: Pinned Progress Timeline (5 cols) -->
-        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
-            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
-            <span>Emoji Guide</span>
-          </div>
-
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Create clean, <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">crisp</span><SketchUnderline color="#66A3BF" /></span> Discord emojis.
-          </h2>
-
-          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
-            From the strict 256 KiB file limit to how emojis look inside 32px chat, here is how to make sure your custom emojis look great on every device.
-          </p>
-
-          <!-- Step Timeline -->
-          <div class="relative pl-6 space-y-5 select-none pt-2">
-            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
-            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
-              <span class="text-xs sm:text-sm">01 / The 256 KiB File Cap</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
-              <span class="text-xs sm:text-sm">02 / 32px Chat Scaling</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
-              <span class="text-xs sm:text-sm">03 / Clean Transparent Edges</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
-              <span class="text-xs sm:text-sm">04 / 100% In-Browser Privacy</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Column: Stacking Sticky Dossier Cards (7 cols) -->
-        <div class="lg:col-span-7 relative pb-16 space-y-12">
-          
-          <!-- Card 1 -->
-          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">GUIDE // 01</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">262,144 BYTES MAX</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                The 256 KiB Limit vs Decimal Kilobytes
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                The most common reason Discord rejects an emoji is file size math. Operating systems like Windows and macOS calculate file sizes in decimal units: 1 kilobyte (KB) equals 1,000 bytes. Discord, however, counts in binary kibibytes (KiB), where 1 KiB equals 1,024 bytes.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                That sets Discord's hard ceiling at exactly 262,144 bytes. An image showing as "256 KB" on your desktop might actually contain 262,800 bytes. Discord checks the raw byte length and rejects the file right away. Our studio checks the exact byte count before you export, so you never get that generic upload failure.
-              </p>
-              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
-                <div>
-                  <span class="text-[#6B7A90]">Real Upload Ceiling:</span>
-                  <span class="text-[#0D9488] font-bold ml-1">262,144 Bytes (256 KiB)</span>
-                </div>
-                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">Strict API Limit</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">DESIGN TIPS // 02</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">128px → 32px CHAT</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Why 32px Chat Scaling Matters
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                You can upload emojis up to 128x128 pixels, but Discord shrinks them to 32x32 pixels in normal chat (and 48x48 pixels when sent as a standalone jumbo emote). When an image shrinks that much, 75% of its pixel grid is condensed by the app's rendering engine. Using a dedicated Discord emoji resizer lets you preview chat readability beforehand.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Tiny details, thin 1-pixel outlines, and faint color gradients that look great full-size can easily become blurry smudges in fast chat. Sticking to the standard 128x128 Discord emoji size with bold silhouettes and solid contrast ensures your emotes stay readable and fun.
-              </p>
-              <div class="grid grid-cols-2 gap-3 text-xs font-mono">
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Inline Chat Size:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">32 × 32 px</span>
-                </div>
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Jumbo Message Size:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">48 × 48 px</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">CLEAN EDGES // 03</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">TRANSPARENT ALPHA</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Avoid White Halos on Dark Mode
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Discord users switch between dark mode (#313338), light mode (#FFFFFF), and custom Nitro themes. An emoji created with a solid square background or feathered semi-transparent edges blended against white will produce an unsightly white halo ring when posted in dark mode chats.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Discord Asset Studio preserves full 32-bit RGBA transparency. Our export isolates transparent pixel edges, avoids color bleeding, and lets you preview your emoji against both light and dark backgrounds so it looks crisp wherever it is posted.
-              </p>
-              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
-                <span class="text-[#0D9488] font-bold">✓ Dual-Theme Verified:</span>
-                <span>Tested for both #313338 Dark and #FFFFFF Light backgrounds.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="sticky-step-wrapper sticky top-36 z-40">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">PRIVACY FIRST // 04</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">LOCAL BROWSER ONLY</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Zero Cloud Uploads & Total Privacy
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Many online converters send your original artwork to third-party cloud servers. If you are preparing unreleased branding, community emotes, or private illustrations, that introduces unnecessary privacy risks. Discord Asset Studio runs 100% in your local browser memory.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                When you drop an image here, your browser creates a local temporary URL. The file bytes remain on your computer or phone. We calculate dimensions, scale the image, and export the final PNG without sending a single byte across the internet.
-              </p>
-              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span>Zero Cloud Storage • Zero File Tracking • Private by Design</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Comprehensive FAQ Accordion Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <!-- FAQ (shared component, single source of truth with JSON-LD) -->
+    <ToolFaq items={faqItems} />
 
   </div>
-
-  <!-- Interactive Logic & Sticky Scroll Tracking Script -->
-  <script>
-    const MAX_EMOJI_BYTES = 256 * 1024; // 262,144 bytes
-
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    const dropzone = document.getElementById('dropzone');
-    const editorPanel = document.getElementById('editorPanel');
-    const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
-    const resetBtn = document.getElementById('resetBtn');
-    const exportBtn = document.getElementById('exportBtn');
-    const chatPreviewImg = document.getElementById('chatPreviewImg') as HTMLImageElement;
-    const chatPreviewPlaceholder = document.getElementById('chatPreviewPlaceholder');
-    const previewSurface = document.getElementById('previewSurface');
-    const themeDarkBtn = document.getElementById('themeDarkBtn');
-    const themeLightBtn = document.getElementById('themeLightBtn');
-
-    const statDimensions = document.getElementById('statDimensions');
-    const statBytes = document.getElementById('statBytes');
-    const statFormat = document.getElementById('statFormat');
-    const receiptBadge = document.getElementById('receiptBadge');
-    const receiptAlert = document.getElementById('receiptAlert');
-
-    let currentBlob: Blob | null = null;
-    let currentObjectUrl: string | null = null;
-    let sourceImage: HTMLImageElement | null = null;
-
-    function cleanup() {
-      if (currentObjectUrl) {
-        URL.revokeObjectURL(currentObjectUrl);
-        currentObjectUrl = null;
-      }
-    }
-
-    fileInput?.addEventListener('change', (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      handleFile(file);
-    });
-
-    dropzone?.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
-    });
-
-    dropzone?.addEventListener('dragleave', () => {
-      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
-    });
-
-    dropzone?.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
-      const file = e.dataTransfer?.files?.[0];
-      if (!file) return;
-      handleFile(file);
-    });
-
-    function handleFile(file: File) {
-      if (!file.type.startsWith('image/')) {
-        alert('Please upload a valid image file (PNG, JPG, WebP, or GIF).');
-        return;
-      }
-
-      cleanup();
-      currentObjectUrl = URL.createObjectURL(file);
-      const img = new Image();
-      img.onload = () => {
-        sourceImage = img;
-        processEmoji(img, file);
-      };
-      img.src = currentObjectUrl;
-    }
-
-    function processEmoji(img: HTMLImageElement, originalFile: File) {
-      const ctx = mainCanvas.getContext('2d');
-      if (!ctx) return;
-
-      const targetSize = 128;
-      mainCanvas.width = targetSize;
-      mainCanvas.height = targetSize;
-      ctx.clearRect(0, 0, targetSize, targetSize);
-
-      const scale = Math.min(targetSize / img.width, targetSize / img.height);
-      const w = img.width * scale;
-      const h = img.height * scale;
-      const x = (targetSize - w) / 2;
-      const y = (targetSize - h) / 2;
-
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(img, x, y, w, h);
-
-      mainCanvas.toBlob((blob) => {
-        if (!blob) return;
-        currentBlob = blob;
-        cleanup();
-        currentObjectUrl = URL.createObjectURL(blob);
-
-        chatPreviewImg.src = currentObjectUrl;
-        chatPreviewImg.classList.remove('hidden');
-        chatPreviewPlaceholder?.classList.add('hidden');
-
-        editorPanel?.classList.remove('hidden');
-
-        const bytes = blob.size;
-        const kib = (bytes / 1024).toFixed(1);
-        statDimensions!.innerText = `${img.width}×${img.height} → 128×128`;
-        statBytes!.innerText = `${kib} KiB (${bytes.toLocaleString()} bytes)`;
-        statFormat!.innerText = blob.type.replace('image/', '').toUpperCase();
-
-        if (bytes <= MAX_EMOJI_BYTES) {
-          receiptBadge!.innerText = 'Compliant';
-          receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
-          receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#C8DFDB]/40 text-[#0D9488] border border-[#0D9488]/30 block font-medium';
-          receiptAlert!.innerText = '✓ Pass: Exactly within the 256 KiB upload limit and 128x128 dimensions.';
-        } else {
-          receiptBadge!.innerText = 'Exceeds Cap';
-          receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 px-2.5 py-0.5 rounded font-bold';
-          receiptAlert!.className = 'p-3 rounded-[8px] text-xs bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 block font-medium';
-          receiptAlert!.innerText = `⚠ Warning: File size (${kib} KiB) exceeds Discord's 256 KiB cap by ${(bytes - MAX_EMOJI_BYTES).toLocaleString()} bytes.`;
-        }
-      }, 'image/png');
-    }
-
-    resetBtn?.addEventListener('click', () => {
-      cleanup();
-      currentBlob = null;
-      sourceImage = null;
-      editorPanel?.classList.add('hidden');
-      chatPreviewImg?.classList.add('hidden');
-      chatPreviewPlaceholder?.classList.remove('hidden');
-      statDimensions!.innerText = '-- × --';
-      statBytes!.innerText = '-- KiB';
-      statFormat!.innerText = 'PNG / WebP';
-      receiptBadge!.innerText = 'Awaiting Media';
-      receiptBadge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
-      receiptAlert?.classList.add('hidden');
-      fileInput.value = '';
-    });
-
-    exportBtn?.addEventListener('click', () => {
-      if (!currentBlob || !currentObjectUrl) return;
-
-      if (currentBlob.size > MAX_EMOJI_BYTES) {
-        alert(`Cannot export: Final encoded Blob (${(currentBlob.size / 1024).toFixed(1)} KiB) exceeds the 256 KiB Discord limit.`);
-        return;
-      }
-
-      const a = document.createElement('a');
-      a.href = currentObjectUrl;
-      a.download = 'discord-emoji-128x128.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    });
-
-    themeDarkBtn?.addEventListener('click', () => {
-      previewSurface!.className = 'p-4 rounded-[10px] bg-[#313338] text-white transition-colors';
-      themeDarkBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
-      themeLightBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
-    });
-
-    themeLightBtn?.addEventListener('click', () => {
-      previewSurface!.className = 'p-4 rounded-[10px] bg-[#ffffff] text-[#313338] transition-colors border border-[#e3e5e8]';
-      themeLightBtn.className = 'text-[11px] px-2.5 py-0.5 rounded bg-[#3368A0] text-white font-medium';
-      themeDarkBtn!.className = 'text-[11px] px-2.5 py-0.5 rounded text-[#475569] hover:text-[#192538] font-medium';
-    });
-
-    // Sticky Scroll Stacking & Observer Script
-    function setupScrollLocking() {
-      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
-      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
-      const progressBar = document.getElementById('scroll-progress-line');
-
-      if (!cardWrappers.length) return;
-
-      function updateCardStack() {
-        let activeIndex = 0;
-
-        cardWrappers.forEach((wrapper, index) => {
-          const rect = wrapper.getBoundingClientRect();
-          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
-          const isLocked = rect.top <= stickyTop + 8;
-
-          if (isLocked) {
-            activeIndex = index;
-          }
-
-          // Smoothly scale previous locked cards as next card arrives
-          const nextCard = cardWrappers[index + 1];
-          if (nextCard) {
-            const nextRect = nextCard.getBoundingClientRect();
-            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
-            const transitionDist = 180;
-            
-            if (nextRect.top < nextStickyTop + transitionDist) {
-              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
-              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
-              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
-            } else {
-              wrapper.style.transform = 'scale(1)';
-              wrapper.style.filter = 'brightness(1)';
-            }
-          }
-        });
-
-        stepIndicators.forEach((ind, i) => {
-          const dot = ind.querySelector('.step-dot');
-          if (i <= activeIndex) {
-            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.add('border-current', 'scale-110');
-            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          } else {
-            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.add('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.remove('border-current', 'scale-110');
-            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          }
-        });
-
-        if (progressBar) {
-          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
-          progressBar.style.height = `${pct}%`;
-        }
-      }
-
-      window.addEventListener('scroll', updateCardStack, { passive: true });
-      updateCardStack();
-    }
-
-    setupScrollLocking();
-    document.addEventListener('astro:after-swap', setupScrollLocking);
-  </script>
 </Layout>

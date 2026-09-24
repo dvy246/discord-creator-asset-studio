@@ -1,0 +1,126 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import PermissionsCalculatorWorkspace from '../../../components/tools/PermissionsCalculatorWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+
+const pageTitle = "Calculadora de Permisos Discord | Roles y Bots";
+const pageDescription = "Calculadora de permisos Discord: marca permisos para obtener el entero, decodifica cualquier valor y crea la URL de invitación del bot.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/permissions-calculator/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/permissions-calculator/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Calculadora de Permisos para Discord",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Calculadora de Permisos", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Qué es una calculadora de permisos de Discord y cómo se usa?", a: "Una calculadora de permisos de Discord convierte las casillas de encendido/apagado de un rol en el número que Discord realmente almacena, llamado entero de permisos. Marca los permisos que quieres para un rol o un bot y la calculadora combina sus valores de bit con un OR en un solo entero que puedes pegar en una librería de bots, una llamada a la API o la configuración de un rol. También funciona al revés — pega un entero existente y las casillas correspondientes se marcan para auditar lo que un rol ya puede hacer." },
+  { q: "¿Qué es el entero de permisos de Discord y por qué es tan grande?", a: "Cada permiso de Discord es un bit dentro de un campo de bits, y el entero de permisos es la suma de esos bits. Como Discord tiene ya más de cincuenta permisos distintos, las banderas superan el bit 50, así que un entero con todos los permisos es un número de dieciséis o más dígitos. Por eso el valor se calcula con BigInt y no con un número normal — un entero de 32 bits no puede guardar banderas por encima del bit 30 sin desbordarse, un fallo habitual en calculadoras caseras." },
+  { q: "¿Qué hace en realidad el permiso Administrador?", a: "Administrador es el interruptor maestro. Un rol con Administrador recibe automáticamente todos los demás permisos y, lo más importante, omite todas las restricciones a nivel de canal — un canal configurado para ocultar mensajes a todos seguirá siendo totalmente visible para un administrador. Su valor entero es 8 (bit 3). Como lo anula todo, concédelo solo a roles de total confianza; para moderadores, prefiere un conjunto explícito como Expulsar, Banear y Gestionar mensajes." },
+  { q: "¿Cómo uso el entero de permisos en un enlace de invitación del bot?", a: "La URL de autorización (OAuth2) de un bot lleva los permisos solicitados como parámetro: https://discord.com/oauth2/authorize?client_id=TU_APP_ID&scope=bot&permissions=ENTERO. Pega el Client ID de tu aplicación en el generador de arriba, marca los permisos que necesita el bot y se ensambla la URL completa con el entero correcto. Cuando el dueño de un servidor abre ese enlace, Discord preselecciona exactamente esos permisos, siguiendo el principio de mínimo privilegio." },
+  { q: "¿Cuál es la diferencia entre permisos del servidor y restricciones de canal?", a: "Los permisos del servidor (guild) son el conjunto base que otorgan los roles de un miembro y se aplican en todas partes. Las restricciones de canal luego añaden o quitan permisos concretos en un canal o categoría, superponiéndose a los permisos del rol. Esta calculadora produce el entero base del rol; el acceso final en un canal dado es esa base combinada con las restricciones de permitir/denegar del canal — salvo Administrador, que ignora las restricciones por completo." }
+];
+
+const dossier = {
+  eyebrow: "Plano de la Calculadora de Permisos",
+  heading: "De casillas a un",
+  highlight: "entero de permisos",
+  intro: "Discord guarda los poderes de un rol como un número grande, no como una lista. Esta calculadora convierte las casillas de permisos en ese número y de vuelta. Así funciona el campo de bits, cómo los presets aceleran los roles comunes, cómo el entero se conecta a la invitación de un bot y por qué Administrador está en una categoría aparte.",
+  steps: [
+    "El Campo de Bits",
+    "Roles y Presets",
+    "URLs de Invitación",
+    "Administrador y Restricciones"
+  ],
+  cards: [
+    {
+      kicker: "EL CAMPO DE BITS // 01",
+      badge: "UN NÚMERO, MUCHOS BITS",
+      badgeTone: "blue" as const,
+      title: "Cada permiso es un solo bit",
+      body: [
+        "Discord no guarda los poderes de un rol como una lista de tareas — guarda un entero. Cada permiso ocupa una posición de bit fija: Crear invitación es el bit 0 (valor 1), Expulsar miembros el bit 1 (valor 2), Banear miembros el bit 2 (valor 4), Administrador el bit 3 (valor 8), y así hasta pasar del bit 50 hoy. Un permiso está concedido cuando su bit vale 1. Para combinar varios se hace el OR bit a bit de sus valores, que para bits que no se solapan equivale a sumarlos: Expulsar (2) más Banear (4) más Gestionar mensajes (8192) da el entero 8198.",
+        "Eso es justo lo que hacen las casillas de arriba. Marca un permiso y su valor de bit se combina con un OR en el total que muestra el campo de salida; desmárcalo y el bit se borra. Como las banderas ya superan lo que cabe en un número de 32 bits, el valor se arma con BigInt para que nada se desborde en las posiciones altas. El decodificador inverso lee un entero pegado bit a bit y vuelve a marcar las casillas correspondientes, lo que lo hace una forma rápida de auditar un rol o un número misterioso de una respuesta de la API."
+      ]
+    },
+    {
+      kicker: "ROLES Y PRESETS // 02",
+      badge: "ADMIN / MOD / MIEMBRO",
+      badgeTone: "emerald" as const,
+      title: "Parte de una base sensata",
+      body: [
+        "La mayoría de servidores reutiliza el mismo puñado de formas de rol, así que los presets cargan un conjunto de permisos revisado con un clic. Administrador es el único interruptor todopoderoso. Moderador reúne las herramientas de aplicación — Expulsar, Banear, Aislar, Gestionar mensajes e hilos, más Mover, Silenciar y Ensordecer en voz — sin el modo dios de Administrador. Miembro es un valor por defecto amable para humanos verificados: hablar, publicar, reaccionar, usar emoji externos, unirse a voz y crear hilos. Solo lectura lo recorta a ver canales e historial.",
+        "Los presets son un punto de partida, no una regla. Tras cargar uno, marca o desmarca permisos concretos para adaptarlo a tu servidor y copia el entero resultante. Esto refleja la propia recomendación de Discord de dar a cada rol el mínimo privilegio que necesita — empieza estrecho, añade con intención y mantén los permisos peligrosos como Gestionar servidor, Gestionar roles y Administrador en los menos roles posibles."
+      ],
+      footer: "Los presets cargan una base de confianza; refina por permiso y copia el entero."
+    },
+    {
+      kicker: "URLS DE INVITACIÓN // 03",
+      badge: "AUTORIZAR OAUTH2",
+      badgeTone: "amber" as const,
+      title: "El entero viaja en el enlace de invitación",
+      body: [
+        "Cuando añades un bot a un servidor, los permisos que pide van dentro de su URL de autorización OAuth2 como parámetro permissions. El generador de arriba toma el Client ID de tu bot (su Application ID del Portal de Desarrolladores) y los permisos que marcas, luego ensambla el enlace completo: discord.com/oauth2/authorize con client_id, un scope de bot más applications.commands y el entero de permisos calculado. Comparte ese enlace con el dueño de un servidor y Discord preselecciona exactamente esos permisos en el rol gestionado del bot.",
+        "Pedir solo lo que el bot necesita es buena seguridad y buena UX — los dueños de servidores aprueban mucho antes un bot que pide Enviar mensajes e Insertar enlaces que uno que exige Administrador. Si tu bot solo publica mensajes, el entero se mantiene pequeño y legible. Siempre puedes pegar el número de permisos de un bot existente en el decodificador para ver con precisión qué pidió antes de aprobarlo."
+      ]
+    },
+    {
+      kicker: "ADMINISTRADOR Y RESTRICCIONES // 04",
+      badge: "MANEJAR CON CUIDADO",
+      badgeTone: "purple" as const,
+      title: "Por qué Administrador está aparte",
+      body: [
+        "Administrador (bit 3, valor 8) no es un permiso más — es una anulación de todo el sistema. Un rol que lo tiene se trata como si tuviera todos los permisos e ignora por completo las restricciones de permitir/denegar a nivel de canal. Un canal privado que deniega Ver canal a todos sigue siendo totalmente visible para un administrador. Ese poder es por lo que la calculadora lo señala: conceder Administrador a un rol público o autoasignable es una de las formas más comunes de que un servidor sea comprometido.",
+        "Para todos por debajo del dueño, prefiere permisos explícitos. Un moderador no necesita Administrador para quitar a quienes rompen las reglas; Expulsar, Banear, Aislar y Gestionar mensajes lo cubren sin darle acceso a los ajustes del servidor ni a la gestión de roles. Recuerda también que el entero que produce esta herramienta es el permiso base del rol — el acceso real en un canal dado es esa base combinada con las restricciones propias del canal, y solo Administrador escapa de esa combinación."
+      ],
+      footer: "Administrador concede todo y omite las restricciones de canal — concédelo con moderación."
+    }
+  ]
+};
+---
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/permissions-calculator.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Ruta de navegación" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Calculadora de Permisos</span>
+        </div>
+        <a href={enUrl} class="hover:text-[#3368A0] transition-colors" hreflang="en">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Calculadora de Permisos Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Marca permisos → entero en vivo • Decodifica cualquier valor • Crea la URL de invitación del bot</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <PermissionsCalculatorWorkspace lang="es" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
+
+  </div>
+</Layout>

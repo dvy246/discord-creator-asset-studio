@@ -1,0 +1,130 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import SpoilerWorkspace from '../../components/tools/SpoilerWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Spoiler Tag Maker | Hide Text and Images";
+const pageDescription = "Make a Discord spoiler tag fast: wrap text in || || markup or add the SPOILER_ prefix to hide a spoiler image on desktop and mobile. Free, in-browser.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/spoiler/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Spoiler Tag Maker",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Spoiler Maker", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "How do you make a spoiler in Discord?", a: "Wrap the text in double vertical bars, like ||this||, and Discord hides it behind a gray blurred bar that reveals on click. In the message box you can also select the words and press Ctrl+Shift+S (Cmd+Shift+S on Mac) to add the bars. Paste your message in the text tab above and it inserts the markup for you." },
+  { q: "How do you mark an image as a spoiler on Discord?", a: "To hide an uploaded image or video, click the eye icon in the upload preview before you send it, or rename the file so it starts with SPOILER_. Either way Discord renders the attachment blurred until someone clicks it. The image tab above renames your file to SPOILER_yourfile so it uploads pre-hidden with no extra clicks." },
+  { q: "Why isn't my Discord spoiler working on mobile?", a: "The most common cause is a stray space inside the bars: ||text|| works, but || text || does not. Check that the double bars touch the words on both sides and that you used two bars, not one. The || || markup and the SPOILER_ filename prefix both work on the mobile app, so a correctly formatted spoiler blurs on every device." },
+  { q: "What's the keyboard shortcut to add a spoiler tag in Discord?", a: "Select the text in the message box and press Ctrl+Shift+S on Windows or Linux, or Cmd+Shift+S on Mac, and Discord wraps your selection in the || || spoiler markup automatically. It is the same as typing the bars by hand, just faster. You can also type the two vertical bars around the words yourself if you prefer." },
+  { q: "Does this spoiler tool upload my images to a server?", a: "No. Text markup is built in your browser with plain string handling, and images are only renamed on your device — the file bytes never leave your machine. The blurred preview is a CSS effect drawn locally so you can confirm the spoiler before you post it. There is no account, upload, or tracking." }
+];
+
+const dossier = {
+  eyebrow: "Spoiler Technical Blueprint",
+  heading: "Hide anything with a Discord",
+  highlight: "spoiler tag",
+  intro: "A Discord spoiler tag hides content behind a gray, blurred bar that only reveals when a reader clicks it. There are two mechanisms — || || markup for text and the SPOILER_ prefix (or the eye icon) for attachments. Here is how each one works across desktop, web, and mobile, all built in your browser.",
+  steps: [
+    "Text Spoiler Markup (|| ||)",
+    "The Spoiler Keyboard Shortcut",
+    "Spoiler Images & Attachments",
+    "Private, In-Browser Processing"
+  ],
+  cards: [
+    {
+      kicker: "TEXT MARKUP // 01",
+      badge: "|| ||",
+      badgeTone: "emerald" as const,
+      title: "Hiding text with double vertical bars",
+      body: [
+        "Discord reads two vertical bars on each side of your words as a spoiler tag. Typing ||plot twist|| renders a gray, blurred bar that only reveals the text when a reader clicks or taps it. The markup works inline, in the middle of a sentence, so you can hide a single word, a link, or a whole paragraph without breaking the rest of your message.",
+        "The one rule that trips people up is spacing: the bars must sit flush against the text, so ||secret|| works but || secret || does not. The text tab above adds the markup for you and lets you choose how finely to hide it — the whole message, one bar per line for spoiler lists, or a separate bar around every word or character for a heavier redaction — then shows a live Discord preview you can click to reveal, exactly like the real app."
+      ],
+      footer: "You type ||the killer is…|| — readers see a blurred bar until they click."
+    },
+    {
+      kicker: "KEYBOARD SHORTCUT // 02",
+      badge: "CTRL+SHIFT+S",
+      badgeTone: "blue" as const,
+      title: "The one-key spoiler shortcut in the message box",
+      body: [
+        "Adding the bars by hand is quick, but Discord also ships a built-in shortcut. Select the text you want to hide in the message box and press Ctrl+Shift+S on Windows or Linux, or Cmd+Shift+S on Mac. Discord wraps your selection in the || || markup instantly, so you never have to hunt for the pipe key or count bars.",
+        "The shortcut and the typed markup produce exactly the same spoiler tag, so use whichever feels faster. If you are drafting a longer message with several hidden reveals, selecting and pressing the shortcut for each phrase is usually quicker than typing four bars every time."
+      ]
+    },
+    {
+      kicker: "ATTACHMENT SPOILERS // 03",
+      badge: "SPOILER_ / EYE ICON",
+      badgeTone: "amber" as const,
+      title: "Marking an image, video, or file as a spoiler",
+      body: [
+        "Attachments hide two ways. In the upload preview, click the eye icon (or tick 'Mark as spoiler') before you press send, and Discord blurs the image, video, or file behind a click. On the mobile app, tap the attachment after selecting it and choose 'Mark as Spoiler' from the menu.",
+        "The second route is the filename prefix: rename art.png to SPOILER_art.png and it uploads pre-hidden with no checkbox at all. The prefix is the most reliable option for bulk drag-and-drop or bot posts, since it does not depend on the UI. The image tab above renames your file to that exact form and hands you a ready-to-send copy."
+      ],
+      footer: "Spoilered files still count toward Discord's upload size limit — compress large media first."
+    },
+    {
+      kicker: "PRIVACY BY DESIGN // 04",
+      badge: "ZERO UPLOADS",
+      badgeTone: "purple" as const,
+      title: "Nothing leaves your device",
+      body: [
+        "Everything here runs locally. The text markup is built with plain string handling, and your image is only renamed in the browser — the file bytes are never sent to a server. The blurred preview you see is a CSS effect drawn on your own machine, so you can confirm the spoiler looks right before posting.",
+        "That matters for the whole point of a spoiler: sensitive screenshots, story leaks, and surprise reveals stay private until the moment a reader chooses to look. There is no account to create, no upload step, and no tracking — you copy the markup or download the renamed file and paste it straight into Discord."
+      ],
+      footer: "No server uploads · local rename and markup only."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/spoiler.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Spoiler Maker</span>
+      </div>
+        <a href="/es/tools/spoiler/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Spoiler Tag</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Add a spoiler tag to text with || || markup, or hide a spoiler image with the SPOILER_ prefix — on desktop and mobile</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <SpoilerWorkspace lang="en" />
+
+    <!-- Sticky-scroll technical dossier (shared component) -->
+    <ToolDossier {...dossier} />
+
+    <!-- FAQ (shared component, single source of truth with JSON-LD) -->
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>

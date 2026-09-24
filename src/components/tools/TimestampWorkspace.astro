@@ -1,0 +1,260 @@
+---
+/**
+ * TimestampWorkspace.astro — Discord dynamic timestamp generator.
+ *
+ * Converts a picked date/time into Discord's <t:UNIX:style> markup for all
+ * seven style codes (t, T, d, D, f, F, R), with a browser-rendered preview of
+ * how each renders and one-click copy. Pure JS, no canvas. Language-agnostic
+ * logic on fixed element IDs; visible labels via `t`, runtime strings via
+ * data-* (`js` → `L`). Imported by the EN (/tools/timestamp/) and ES
+ * (/es/tools/timestamp/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+// Style rows rendered statically; the client fills code + preview per row.
+const STYLES = [
+  { code: 't', key: 'shortTime' },
+  { code: 'T', key: 'longTime' },
+  { code: 'd', key: 'shortDate' },
+  { code: 'D', key: 'longDate' },
+  { code: 'f', key: 'shortFull' },
+  { code: 'F', key: 'longFull' },
+  { code: 'R', key: 'relative' }
+];
+
+const t = {
+  en: {
+    pickTitle: 'Pick a date and time',
+    pickSub: 'Timestamps render in each viewer\'s own timezone automatically.',
+    nowBtn: 'Use current time',
+    tzNote: 'Interpreted in your local timezone:',
+    styleNames: {
+      shortTime: 'Short Time',
+      longTime: 'Long Time',
+      shortDate: 'Short Date',
+      longDate: 'Long Date',
+      shortFull: 'Short Date/Time',
+      longFull: 'Long Date/Time',
+      relative: 'Relative'
+    },
+    colCode: 'Markup',
+    colPreview: 'Preview',
+    copy: 'Copy',
+    links: [
+      { icon: '🎨', href: '/tools/colors/', label: 'Discord Color & Hex Codes' },
+      { icon: '🙈', href: '/tools/spoiler/', label: 'Discord Spoiler Maker (Text & Image)' },
+      { icon: '📖', href: '/guides/discord-sizes/', label: 'Official Discord Size & Limit Guide' }
+    ]
+  },
+  es: {
+    pickTitle: 'Elige una fecha y hora',
+    pickSub: 'Las marcas de tiempo se muestran en la zona horaria de cada persona automáticamente.',
+    nowBtn: 'Usar hora actual',
+    tzNote: 'Interpretado en tu zona horaria local:',
+    styleNames: {
+      shortTime: 'Hora Corta',
+      longTime: 'Hora Larga',
+      shortDate: 'Fecha Corta',
+      longDate: 'Fecha Larga',
+      shortFull: 'Fecha/Hora Corta',
+      longFull: 'Fecha/Hora Larga',
+      relative: 'Relativa'
+    },
+    colCode: 'Marcado',
+    colPreview: 'Vista Previa',
+    copy: 'Copiar',
+    links: [
+      { icon: '🎨', href: '/es/tools/colors/', label: 'Colores y Códigos Hex de Discord' },
+      { icon: '🙈', href: '/es/tools/spoiler/', label: 'Creador de Spoilers de Discord' },
+      { icon: '📖', href: '/es/guides/discord-sizes/', label: 'Guía Oficial de Tamaños y Límites' }
+    ]
+  }
+}[lang];
+
+const js = {
+  en: { copied: 'Copied', copy: 'Copy', locale: 'en-GB' },
+  es: { copied: 'Copiado', copy: 'Copiar', locale: 'es-ES' }
+}[lang];
+---
+
+<div
+  id="ts-workspace"
+  class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16"
+  data-copied={js.copied}
+  data-copy={js.copy}
+  data-locale={js.locale}
+>
+  <!-- Left: picker -->
+  <div class="lg:col-span-5 space-y-6">
+    <div class="card-panel rounded-[14px] p-6 space-y-4">
+      <div>
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.pickTitle}</h2>
+        <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mt-1">{t.pickSub}</p>
+      </div>
+      <input type="datetime-local" id="ts-datetime" step="1" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2.5 focus:border-[#3368A0] focus:outline-none" />
+      <button type="button" id="ts-now" class="btn-secondary w-full py-2.5 rounded-[8px] text-xs font-semibold flex items-center justify-center gap-1.5">
+        <span>🕒</span> {t.nowBtn}
+      </button>
+      <div class="p-3 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] text-xs">
+        <span class="text-[#6B7A90] dark:text-[#8494A7]">{t.tzNote}</span>
+        <span id="ts-tz" class="block font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] mt-1"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: outputs -->
+  <div class="lg:col-span-7">
+    <div class="card-panel rounded-[14px] p-2 sm:p-4">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="text-[10px] font-mono uppercase text-[#6B7A90] dark:text-[#8494A7]">
+            <th class="py-2 px-2 font-semibold">{t.colPreview}</th>
+            <th class="py-2 px-2 font-semibold hidden sm:table-cell">{t.colCode}</th>
+            <th class="py-2 px-2"></th>
+          </tr>
+        </thead>
+        <tbody id="ts-rows">
+          {STYLES.map((s) => (
+            <tr class="border-t border-[#E0DBD0] dark:border-[#263346]" data-style={s.code}>
+              <td class="py-2.5 px-2 align-middle">
+                <span class="block text-[10px] font-mono uppercase text-[#6B7A90] dark:text-[#8494A7] mb-0.5">{t.styleNames[s.key as keyof typeof t.styleNames]}</span>
+                <span class="ts-preview text-sm font-medium text-[#192538] dark:text-white"></span>
+              </td>
+              <td class="py-2.5 px-2 align-middle hidden sm:table-cell">
+                <code class="ts-code text-xs font-mono text-[#3368A0] dark:text-[#66A3BF]"></code>
+              </td>
+              <td class="py-2.5 px-2 align-middle text-right">
+                <button type="button" class="ts-copy btn-secondary text-xs px-3 py-1.5 rounded-[6px]">{t.copy}</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-6 flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium">
+      {t.links.map((link) => (
+        <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+          <span>{link.icon}</span> {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  const ws = document.getElementById('ts-workspace');
+  const L = {
+    copied: ws?.dataset.copied || 'Copied',
+    copy: ws?.dataset.copy || 'Copy',
+    locale: ws?.dataset.locale || 'en-GB'
+  };
+
+  const dtInput = document.getElementById('ts-datetime') as HTMLInputElement;
+  const nowBtn = document.getElementById('ts-now');
+  const tzEl = document.getElementById('ts-tz');
+  const rows = document.getElementById('ts-rows');
+
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  }
+
+  function toLocalInputValue(d: Date): string {
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
+  function renderPreview(unix: number, style: string): string {
+    const d = new Date(unix * 1000);
+    const loc = L.locale;
+    switch (style) {
+      case 't':
+        return d.toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit' });
+      case 'T':
+        return d.toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      case 'd':
+        return d.toLocaleDateString(loc, { day: '2-digit', month: '2-digit', year: 'numeric' });
+      case 'D':
+        return d.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' });
+      case 'f':
+        return d.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' }) + ' ' +
+               d.toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit' });
+      case 'F':
+        return d.toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + ' ' +
+               d.toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit' });
+      case 'R':
+        return relative(unix);
+      default:
+        return '';
+    }
+  }
+
+  function relative(unix: number): string {
+    const diff = unix * 1000 - Date.now();
+    const rtf = new Intl.RelativeTimeFormat(L.locale, { numeric: 'auto' });
+    const abs = Math.abs(diff);
+    const min = 60000, hr = 3600000, day = 86400000, mo = day * 30, yr = day * 365;
+    if (abs < min) return rtf.format(Math.round(diff / 1000), 'second');
+    if (abs < hr) return rtf.format(Math.round(diff / min), 'minute');
+    if (abs < day) return rtf.format(Math.round(diff / hr), 'hour');
+    if (abs < mo) return rtf.format(Math.round(diff / day), 'day');
+    if (abs < yr) return rtf.format(Math.round(diff / mo), 'month');
+    return rtf.format(Math.round(diff / yr), 'year');
+  }
+
+  function update() {
+    const val = dtInput.value;
+    if (!val) return;
+    const date = new Date(val);
+    if (isNaN(date.getTime())) return;
+    const unix = Math.floor(date.getTime() / 1000);
+
+    if (tzEl) {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'local';
+      tzEl.textContent = `${date.toLocaleString(L.locale)} (${tz})`;
+    }
+
+    rows?.querySelectorAll<HTMLElement>('tr[data-style]').forEach((tr) => {
+      const style = tr.dataset.style || 'f';
+      const code = `<t:${unix}:${style}>`;
+      const codeEl = tr.querySelector('.ts-code');
+      const prevEl = tr.querySelector('.ts-preview');
+      if (codeEl) codeEl.textContent = code;
+      if (prevEl) prevEl.textContent = renderPreview(unix, style);
+    });
+  }
+
+  rows?.querySelectorAll<HTMLElement>('tr[data-style]').forEach((tr) => {
+    const btn = tr.querySelector<HTMLButtonElement>('.ts-copy');
+    btn?.addEventListener('click', () => {
+      const code = tr.querySelector('.ts-code')?.textContent || '';
+      if (!code) return;
+      copyText(code);
+      const original = btn.textContent || L.copy;
+      btn.textContent = L.copied;
+      setTimeout(() => { btn.textContent = original; }, 1200);
+    });
+  });
+
+  dtInput?.addEventListener('input', update);
+  nowBtn?.addEventListener('click', () => {
+    dtInput.value = toLocalInputValue(new Date());
+    update();
+  });
+
+  // Init to now
+  dtInput.value = toLocalInputValue(new Date());
+  update();
+</script>

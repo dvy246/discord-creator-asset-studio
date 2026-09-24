@@ -1,9 +1,24 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SketchUnderline from '../components/SketchUnderline.astro';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '../utils/seo';
+
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/about/";
+const aboutSchema = generateWebPageSchema({
+  type: 'AboutPage',
+  name: 'About Discord Creator Asset Studio',
+  description: 'The mission, engineering philosophy, and privacy-first, in-browser architecture behind Discord Creator Asset Studio — an independent project not affiliated with Discord.',
+  url: pageUrl
+});
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "About", url: pageUrl }
+]);
 ---
 
 <Layout title="About Us | Discord Asset Studio" description="Learn about the mission, engineering philosophy, and privacy-first architecture of Discord Asset Studio.">
+  <script type="application/ld+json" set:html={aboutSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-10">
       <span class="text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Independent Creator Tooling</span>

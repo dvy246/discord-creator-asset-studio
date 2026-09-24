@@ -1,0 +1,474 @@
+---
+/**
+ * SpoilerWorkspace.astro — shared Discord spoiler maker (text + image).
+ *
+ * Text mode: wraps input in Discord's ||spoiler|| markup at four granularities
+ * (whole message / per line / per word / per character) and renders a LIVE,
+ * click-to-reveal Discord-style preview so users see the exact bar behaviour
+ * before pasting. Image mode: renames the download with the SPOILER_ prefix
+ * Discord uses to blur an attachment until clicked. Language-agnostic logic on
+ * fixed element IDs; visible labels via `t`, runtime strings via data-* (`js`
+ * → `L`). Imported by the EN (/tools/spoiler/) and ES (/es/tools/spoiler/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    tabText: 'Text Spoiler',
+    tabImage: 'Image Spoiler',
+    textTitle: 'Wrap text in a Discord spoiler',
+    textSub: 'Type or paste text, pick how much to hide, then copy the || || markup.',
+    placeholder: 'Type the message you want to hide…',
+    styleLabel: 'Spoiler style',
+    modeWhole: 'Whole message',
+    modeLine: 'Per line',
+    modeWord: 'Per word',
+    modeChar: 'Per character',
+    ignoreSpaces: 'Hide the spaces too (per word / character)',
+    outputLabel: 'Spoiler markup',
+    copyBtn: 'Copy Spoiler Text',
+    copied: 'Copied!',
+    clearBtn: 'Clear',
+    cmdLabel: 'Whole-message command',
+    cmdBody: 'Prefer a command? Type /spoiler then your text and Discord hides the entire message.',
+    previewLabel: 'Live Discord preview',
+    previewSub: 'Click a bar to reveal it — exactly like the real app.',
+    revealAll: 'Reveal all',
+    hideAll: 'Hide all',
+    previewEmpty: 'Your spoiler preview appears here as you type.',
+    previewUser: 'You',
+    previewTime: 'Today at 12:00 PM',
+    imageTitle: 'Make an image a Discord spoiler',
+    imageSub: 'Upload any image — we rename the download with the SPOILER_ prefix Discord uses to blur attachments until clicked.',
+    imageDrop: 'Upload image to mark as spoiler',
+    imageHint: 'PNG, JPG, WebP, or GIF • Renamed to SPOILER_<name>',
+    downloadBtn: 'Download Spoiler Image',
+    fileReady: 'Ready to download as:',
+    manualTitle: 'Or do it manually in Discord',
+    manualBody: 'On desktop, attach the image, then check "Mark as spoiler" before sending. On mobile, tap the attachment thumbnail and choose "Mark as Spoiler". Renaming the file with a SPOILER_ prefix (as this tool does) triggers the same blur automatically.',
+    links: [
+      { icon: '📖', href: '/blog/how-to-put-spoiler-on-discord-image/', label: 'How to Put a Spoiler on a Discord Image (Full Guide)' },
+      { icon: '🗜️', href: '/tools/image-compressor/', label: 'Discord Image Compressor (Under 10 MB)' },
+      { icon: '📐', href: '/tools/image-resizer/', label: 'Discord Image Resizer (Exact Sizes)' }
+    ]
+  },
+  es: {
+    tabText: 'Spoiler de Texto',
+    tabImage: 'Spoiler de Imagen',
+    textTitle: 'Envuelve texto en un spoiler de Discord',
+    textSub: 'Escribe o pega texto, elige cuánto ocultar y copia el marcado || ||.',
+    placeholder: 'Escribe el mensaje que quieres ocultar…',
+    styleLabel: 'Estilo de spoiler',
+    modeWhole: 'Mensaje completo',
+    modeLine: 'Por línea',
+    modeWord: 'Por palabra',
+    modeChar: 'Por carácter',
+    ignoreSpaces: 'Ocultar también los espacios (por palabra / carácter)',
+    outputLabel: 'Marcado de spoiler',
+    copyBtn: 'Copiar Texto Spoiler',
+    copied: '¡Copiado!',
+    clearBtn: 'Limpiar',
+    cmdLabel: 'Comando de mensaje completo',
+    cmdBody: '¿Prefieres un comando? Escribe /spoiler y luego tu texto, y Discord oculta el mensaje entero.',
+    previewLabel: 'Vista previa en vivo de Discord',
+    previewSub: 'Haz clic en una barra para revelarla — igual que en la app real.',
+    revealAll: 'Revelar todo',
+    hideAll: 'Ocultar todo',
+    previewEmpty: 'Tu vista previa de spoiler aparece aquí mientras escribes.',
+    previewUser: 'Tú',
+    previewTime: 'Hoy a las 12:00',
+    imageTitle: 'Convierte una imagen en spoiler de Discord',
+    imageSub: 'Sube cualquier imagen — renombramos la descarga con el prefijo SPOILER_ que Discord usa para difuminar adjuntos hasta hacer clic.',
+    imageDrop: 'Sube una imagen para marcar como spoiler',
+    imageHint: 'PNG, JPG, WebP o GIF • Renombrada a SPOILER_<nombre>',
+    downloadBtn: 'Descargar Imagen Spoiler',
+    fileReady: 'Lista para descargar como:',
+    manualTitle: 'O hazlo manualmente en Discord',
+    manualBody: 'En escritorio, adjunta la imagen y marca "Marcar como spoiler" antes de enviar. En móvil, toca la miniatura del adjunto y elige "Marcar como Spoiler". Renombrar el archivo con el prefijo SPOILER_ (como hace esta herramienta) activa el mismo difuminado automáticamente.',
+    links: [
+      { icon: '📖', href: '/blog/how-to-put-spoiler-on-discord-image/', label: 'Cómo Poner un Spoiler en una Imagen de Discord (Guía)' },
+      { icon: '🗜️', href: '/es/tools/image-compressor/', label: 'Compresor de Imágenes de Discord (Bajo 10 MB)' },
+      { icon: '📐', href: '/es/tools/image-resizer/', label: 'Redimensionador de Imágenes de Discord' }
+    ]
+  }
+}[lang];
+
+const js = {
+  en: { copy: 'Copy Spoiler Text', copied: 'Copied!', invalidFile: 'Please upload a valid image file.', revealAll: 'Reveal all', hideAll: 'Hide all' },
+  es: { copy: 'Copiar Texto Spoiler', copied: '¡Copiado!', invalidFile: 'Sube un archivo de imagen válido.', revealAll: 'Revelar todo', hideAll: 'Ocultar todo' }
+}[lang];
+---
+
+<div
+  id="sp-workspace"
+  class="mb-16"
+  data-copy={js.copy}
+  data-copied={js.copied}
+  data-invalid-file={js.invalidFile}
+  data-reveal-all={js.revealAll}
+  data-hide-all={js.hideAll}
+>
+  <!-- Tabs -->
+  <div class="flex items-center gap-2 mb-6" role="tablist">
+    <button type="button" id="sp-tab-text" role="tab" aria-selected="true" class="px-4 py-2 rounded-[8px] text-sm font-semibold border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] text-[#3368A0] dark:text-[#66A3BF] transition-all flex items-center gap-1.5">
+      <span>💬</span> {t.tabText}
+    </button>
+    <button type="button" id="sp-tab-image" role="tab" aria-selected="false" class="px-4 py-2 rounded-[8px] text-sm font-medium border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all flex items-center gap-1.5">
+      <span>🖼️</span> {t.tabImage}
+    </button>
+  </div>
+
+  <!-- Text Panel -->
+  <div id="sp-panel-text" class="space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <!-- Input + granularity controls -->
+      <div class="card-panel rounded-[14px] p-6 space-y-4">
+        <div>
+          <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.textTitle}</h2>
+          <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mt-1">{t.textSub}</p>
+        </div>
+        <textarea id="sp-text-in" rows="5" placeholder={t.placeholder} class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none resize-y"></textarea>
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] mb-2">{t.styleLabel}</p>
+          <div id="sp-modes" role="group" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button type="button" data-mode="whole" aria-pressed="true" class="px-3 py-2 rounded-[8px] text-xs font-semibold border-2 border-[#3368A0] bg-[#3368A0] text-white transition-all">{t.modeWhole}</button>
+            <button type="button" data-mode="line" aria-pressed="false" class="px-3 py-2 rounded-[8px] text-xs font-medium border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all">{t.modeLine}</button>
+            <button type="button" data-mode="word" aria-pressed="false" class="px-3 py-2 rounded-[8px] text-xs font-medium border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all">{t.modeWord}</button>
+            <button type="button" data-mode="char" aria-pressed="false" class="px-3 py-2 rounded-[8px] text-xs font-medium border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all">{t.modeChar}</button>
+          </div>
+        </div>
+        <label class="flex items-center gap-2 text-xs text-[#475569] dark:text-[#CBD5E1] cursor-pointer">
+          <input type="checkbox" id="sp-ignore-spaces" class="accent-[#3368A0]" />
+          {t.ignoreSpaces}
+        </label>
+      </div>
+
+      <!-- Live Discord preview -->
+      <div class="card-panel rounded-[14px] p-6 space-y-3">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.previewLabel}</h2>
+            <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mt-1">{t.previewSub}</p>
+          </div>
+          <button type="button" id="sp-reveal-all" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px] whitespace-nowrap shrink-0">
+            <span id="sp-reveal-all-label">{t.revealAll}</span>
+          </button>
+        </div>
+        <div class="rounded-[10px] bg-[#313338] p-4 min-h-[150px]">
+          <div id="sp-preview-empty" class="flex items-center justify-center h-[118px] text-xs text-[#949ba4] font-mono text-center px-4">{t.previewEmpty}</div>
+          <div id="sp-preview-card" class="hidden flex gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#5865F2] flex items-center justify-center text-white font-bold text-sm shrink-0" aria-hidden="true">{t.previewUser.charAt(0)}</div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-baseline gap-2">
+                <span class="text-[#f2f3f5] font-semibold text-sm">{t.previewUser}</span>
+                <span class="text-[#949ba4] text-[10px]">{t.previewTime}</span>
+              </div>
+              <div id="sp-preview-msg" class="text-[#dbdee1] text-sm leading-relaxed mt-0.5 whitespace-pre-wrap break-words"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output markup -->
+    <div class="card-panel rounded-[14px] p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.outputLabel}</h2>
+        <button type="button" id="sp-clear" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">{t.clearBtn}</button>
+      </div>
+      <pre id="sp-text-out" class="w-full min-h-[96px] max-h-[220px] overflow-auto text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#101622] text-[#192538] dark:text-white px-3 py-2 whitespace-pre-wrap break-words font-mono"></pre>
+      <button type="button" id="sp-copy" class="btn-primary w-full py-3 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2">
+        <span id="sp-copy-label">{t.copyBtn}</span>
+      </button>
+      <div class="flex items-start gap-2 p-3 rounded-[8px] bg-[#C8DFDB]/25 dark:bg-[#1F2E45] border border-[#66A3BF]/25 text-[11px] text-[#192538] dark:text-[#CBD5E1] leading-relaxed">
+        <span class="font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] shrink-0">/spoiler</span>
+        <span><strong>{t.cmdLabel}.</strong> {t.cmdBody}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Panel -->
+  <div id="sp-panel-image" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+    <div class="space-y-4">
+      <div id="sp-drop" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] dark:bg-[#141A24] p-8 text-center transition-all cursor-pointer relative shadow-xs">
+        <input type="file" id="sp-file" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+        <div class="space-y-3 pointer-events-none">
+          <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center mx-auto text-xl font-bold">🙈</div>
+          <div>
+            <p class="text-sm font-bold text-[#192538] dark:text-white">{t.imageDrop}</p>
+            <p class="text-xs text-[#6B7A90] dark:text-[#8494A7] mt-1">{t.imageHint}</p>
+          </div>
+        </div>
+      </div>
+      <div id="sp-file-info" class="hidden card-panel rounded-[14px] p-4">
+        <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mb-1">{t.fileReady}</p>
+        <p id="sp-file-name" class="text-sm font-mono font-bold text-[#0D9488] break-all"></p>
+        <button type="button" id="sp-download" class="btn-primary w-full py-3 rounded-[10px] text-sm font-semibold mt-3">{t.downloadBtn}</button>
+      </div>
+    </div>
+
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex items-center justify-center min-h-[180px] rounded-[10px] bg-[#FAF8F5] dark:bg-[#101622] border border-[#E0DBD0] dark:border-[#263346] p-4 overflow-hidden">
+        <div id="sp-blur-wrap" class="hidden relative">
+          <img id="sp-preview" class="max-w-full max-h-[220px] object-contain rounded blur-xl scale-105" alt="Spoiler image preview (blurred)" />
+          <span class="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase tracking-wider text-[#192538] dark:text-white bg-black/20 rounded">Spoiler</span>
+        </div>
+        <span id="sp-image-empty" class="text-xs text-[#6B7A90] dark:text-[#8494A7] font-mono">No image yet</span>
+      </div>
+      <div class="mt-4 p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1]">
+        <p class="font-bold mb-1">{t.manualTitle}</p>
+        <p class="leading-relaxed">{t.manualBody}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related links -->
+  <div class="mt-6 flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium">
+    {t.links.map((link) => (
+      <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+        <span>{link.icon}</span> {link.label}
+      </a>
+    ))}
+  </div>
+</div>
+
+<script>
+  const ws = document.getElementById('sp-workspace');
+  const L = {
+    copy: ws?.dataset.copy || 'Copy Spoiler Text',
+    copied: ws?.dataset.copied || 'Copied!',
+    invalidFile: ws?.dataset.invalidFile || 'Please upload a valid image file.',
+    revealAll: ws?.dataset.revealAll || 'Reveal all',
+    hideAll: ws?.dataset.hideAll || 'Hide all'
+  };
+
+  // --- Tabs ---
+  const tabText = document.getElementById('sp-tab-text');
+  const tabImage = document.getElementById('sp-tab-image');
+  const panelText = document.getElementById('sp-panel-text');
+  const panelImage = document.getElementById('sp-panel-image');
+  const TAB_ACTIVE = 'px-4 py-2 rounded-[8px] text-sm font-semibold border-2 border-[#3368A0] bg-[#FAF8F5] dark:bg-[#1E2738] text-[#3368A0] dark:text-[#66A3BF] transition-all flex items-center gap-1.5';
+  const TAB_INACTIVE = 'px-4 py-2 rounded-[8px] text-sm font-medium border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all flex items-center gap-1.5';
+
+  function showTab(which: 'text' | 'image') {
+    const isText = which === 'text';
+    panelText?.classList.toggle('hidden', !isText);
+    panelImage?.classList.toggle('hidden', isText);
+    if (tabText && tabImage) {
+      tabText.className = isText ? TAB_ACTIVE : TAB_INACTIVE;
+      tabImage.className = isText ? TAB_INACTIVE : TAB_ACTIVE;
+      tabText.setAttribute('aria-selected', String(isText));
+      tabImage.setAttribute('aria-selected', String(!isText));
+    }
+  }
+  tabText?.addEventListener('click', () => showTab('text'));
+  tabImage?.addEventListener('click', () => showTab('image'));
+
+  // --- Text spoiler ---
+  const textIn = document.getElementById('sp-text-in') as HTMLTextAreaElement;
+  const ignoreSpaces = document.getElementById('sp-ignore-spaces') as HTMLInputElement;
+  const textOut = document.getElementById('sp-text-out');
+  const copyBtn = document.getElementById('sp-copy');
+  const copyLabel = document.getElementById('sp-copy-label');
+  const clearBtn = document.getElementById('sp-clear');
+  const modeGroup = document.getElementById('sp-modes');
+  const modeBtns = modeGroup ? Array.from(modeGroup.querySelectorAll('button')) : [];
+  const previewEmpty = document.getElementById('sp-preview-empty');
+  const previewCard = document.getElementById('sp-preview-card');
+  const previewMsg = document.getElementById('sp-preview-msg');
+  const revealAllBtn = document.getElementById('sp-reveal-all');
+  const revealAllLabel = document.getElementById('sp-reveal-all-label');
+
+  const MODE_ACTIVE = 'px-3 py-2 rounded-[8px] text-xs font-semibold border-2 border-[#3368A0] bg-[#3368A0] text-white transition-all';
+  const MODE_INACTIVE = 'px-3 py-2 rounded-[8px] text-xs font-medium border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0] transition-all';
+
+  let mode = 'whole';
+  let allRevealed = false;
+
+  const wrap = (s: string) => `||${s}||`;
+
+  function buildMarkup(raw: string): string {
+    if (!raw) return '';
+    if (mode === 'whole') return wrap(raw);
+    if (mode === 'line') return raw.split('\n').map((l) => (l.trim() ? wrap(l) : l)).join('\n');
+    const hideSp = !!ignoreSpaces?.checked;
+    if (mode === 'word') {
+      return raw.split(/(\s+)/).map((tok) => {
+        if (tok === '') return '';
+        if (/^\s+$/.test(tok)) return hideSp ? wrap(tok) : tok;
+        return wrap(tok);
+      }).join('');
+    }
+    return Array.from(raw).map((ch) => (/\s/.test(ch) ? (hideSp ? wrap(ch) : ch) : wrap(ch))).join('');
+  }
+
+  function renderPreview(markup: string) {
+    if (!previewMsg) return;
+    previewMsg.innerHTML = '';
+    if (!markup) {
+      previewCard?.classList.add('hidden');
+      previewEmpty?.classList.remove('hidden');
+      return;
+    }
+    previewCard?.classList.remove('hidden');
+    previewEmpty?.classList.add('hidden');
+    const re = /\|\|([\s\S]+?)\|\|/g;
+    let last = 0;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(markup)) !== null) {
+      if (m.index > last) previewMsg.appendChild(document.createTextNode(markup.slice(last, m.index)));
+      const span = document.createElement('span');
+      span.className = 'sp-tag' + (allRevealed ? ' revealed' : '');
+      span.textContent = m[1];
+      span.addEventListener('click', () => span.classList.toggle('revealed'));
+      previewMsg.appendChild(span);
+      last = re.lastIndex;
+    }
+    if (last < markup.length) previewMsg.appendChild(document.createTextNode(markup.slice(last)));
+  }
+
+  function build() {
+    const markup = buildMarkup(textIn.value);
+    if (textOut) textOut.textContent = markup;
+    renderPreview(markup);
+  }
+
+  modeBtns.forEach((btn) => btn.addEventListener('click', () => {
+    mode = btn.getAttribute('data-mode') || 'whole';
+    modeBtns.forEach((b) => {
+      const on = b === btn;
+      b.className = on ? MODE_ACTIVE : MODE_INACTIVE;
+      b.setAttribute('aria-pressed', String(on));
+    });
+    build();
+  }));
+
+  textIn?.addEventListener('input', build);
+  ignoreSpaces?.addEventListener('change', build);
+
+  revealAllBtn?.addEventListener('click', () => {
+    allRevealed = !allRevealed;
+    previewMsg?.querySelectorAll('.sp-tag').forEach((el) => el.classList.toggle('revealed', allRevealed));
+    if (revealAllLabel) revealAllLabel.textContent = allRevealed ? L.hideAll : L.revealAll;
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    const text = textOut?.textContent || '';
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    if (copyLabel) {
+      copyLabel.textContent = L.copied;
+      setTimeout(() => { copyLabel.textContent = L.copy; }, 1500);
+    }
+  });
+
+  clearBtn?.addEventListener('click', () => {
+    textIn.value = '';
+    if (textOut) textOut.textContent = '';
+    renderPreview('');
+    allRevealed = false;
+    if (revealAllLabel) revealAllLabel.textContent = L.revealAll;
+    textIn.focus();
+  });
+
+  // --- Image spoiler ---
+  const dropzone = document.getElementById('sp-drop');
+  const fileInput = document.getElementById('sp-file') as HTMLInputElement;
+  const fileInfo = document.getElementById('sp-file-info');
+  const fileNameEl = document.getElementById('sp-file-name');
+  const downloadBtn = document.getElementById('sp-download');
+  const blurWrap = document.getElementById('sp-blur-wrap');
+  const previewImg = document.getElementById('sp-preview') as HTMLImageElement;
+  const imageEmpty = document.getElementById('sp-image-empty');
+
+  let spoilerName = '';
+  let objectUrl: string | null = null;
+  let selectedFile: File | null = null;
+
+  function handleFile(file: File) {
+    if (!file.type.startsWith('image/')) {
+      alert(L.invalidFile);
+      return;
+    }
+    selectedFile = file;
+    // Discord blurs any attachment whose filename starts with SPOILER_.
+    spoilerName = file.name.startsWith('SPOILER_') ? file.name : `SPOILER_${file.name}`;
+    if (fileNameEl) fileNameEl.textContent = spoilerName;
+    fileInfo?.classList.remove('hidden');
+
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    objectUrl = URL.createObjectURL(file);
+    previewImg.src = objectUrl;
+    blurWrap?.classList.remove('hidden');
+    imageEmpty?.classList.add('hidden');
+  }
+
+  fileInput?.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) handleFile(file);
+  });
+  dropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+  dropzone?.addEventListener('dragleave', () => {
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) handleFile(file);
+  });
+
+  downloadBtn?.addEventListener('click', () => {
+    if (!selectedFile || !objectUrl) return;
+    const a = document.createElement('a');
+    a.href = objectUrl;
+    a.download = spoilerName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+</script>
+
+<style>
+  #sp-preview-msg :global(.sp-tag) {
+    background: #1e1f22;
+    color: transparent;
+    border-radius: 4px;
+    padding: 0 2px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  #sp-preview-msg :global(.sp-tag:hover) {
+    background: #26272b;
+  }
+  #sp-preview-msg :global(.sp-tag.revealed) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #dbdee1;
+  }
+</style>
+
+
+
+
+
+
+
+
+

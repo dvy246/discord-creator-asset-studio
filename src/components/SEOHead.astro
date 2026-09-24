@@ -44,6 +44,8 @@ const SPANISH_ROUTES = new Set([
   '/es',
   '/guides/discord-sizes',
   '/es/guides/discord-sizes',
+  '/guides/discord-gif-guide',
+  '/es/guides/discord-gif-guide',
   '/tools/emoji',
   '/es/tools/emoji',
   '/tools/sticker',
@@ -53,7 +55,49 @@ const SPANISH_ROUTES = new Set([
   '/tools/avatar',
   '/es/tools/avatar',
   '/tools/role-icon',
-  '/es/tools/role-icon'
+  '/es/tools/role-icon',
+  '/tools/image-compressor',
+  '/es/tools/image-compressor',
+  '/tools/image-resizer',
+  '/es/tools/image-resizer',
+  '/tools/spoiler',
+  '/es/tools/spoiler',
+  '/tools/colors',
+  '/es/tools/colors',
+  '/tools/timestamp',
+  '/es/tools/timestamp',
+  '/tools/emoji-copy-paste',
+  '/es/tools/emoji-copy-paste',
+  '/tools/server-icon',
+  '/es/tools/server-icon',
+  '/tools/badge-maker',
+  '/es/tools/badge-maker',
+  '/tools/gif-compressor',
+  '/es/tools/gif-compressor',
+  '/tools/video-compressor',
+  '/es/tools/video-compressor',
+  '/tools/fake-message-maker',
+  '/es/tools/fake-message-maker',
+  '/tools/fonts',
+  '/es/tools/fonts',
+  '/tools/colored-text',
+  '/es/tools/colored-text',
+  '/tools/markdown',
+  '/es/tools/markdown',
+  '/tools/embed-builder',
+  '/es/tools/embed-builder',
+  '/tools/snowflake',
+  '/es/tools/snowflake',
+  '/tools/gif-maker',
+  '/es/tools/gif-maker',
+  '/tools/permissions-calculator',
+  '/es/tools/permissions-calculator',
+  '/tools/username-generator',
+  '/es/tools/username-generator',
+  '/tools/bio-generator',
+  '/es/tools/bio-generator',
+  '/tools/text-formatting',
+  '/es/tools/text-formatting'
 ]);
 
 const routeHasSpanish = hasSpanishAlternate !== undefined
@@ -102,6 +146,9 @@ const routeHasSpanish = hasSpanishAlternate !== undefined
 <meta property="og:image:alt" content={ogImageAlt} />
 <meta property="og:site_name" content="Discord Asset Studio" />
 <meta property="og:locale" content={isEs ? 'es_ES' : 'en_US'} />
+{!noindex && routeHasSpanish && (
+  <meta property="og:locale:alternate" content={isEs ? 'en_US' : 'es_ES'} />
+)}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />

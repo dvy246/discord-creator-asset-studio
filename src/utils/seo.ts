@@ -1,3 +1,27 @@
+const ORG = {
+  "@type": "Organization",
+  "@id": "https://discord-creator-asset-studio.pages.dev/#organization",
+  "name": "Discord Creator Asset Studio",
+  "alternateName": "Discord Asset Studio",
+  "url": "https://discord-creator-asset-studio.pages.dev/",
+  "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg",
+  "description": "Independent, browser-only creator tools for Discord assets. Not affiliated with or endorsed by Discord, Inc.",
+  "areaServed": "Worldwide",
+  "knowsAbout": [
+    "Discord",
+    "Discord server customization",
+    "Discord emojis",
+    "Discord stickers",
+    "Discord banners",
+    "Discord avatars and profile pictures",
+    "Discord role icons and server badges",
+    "image resizing and compression",
+    "animated GIF creation",
+    "Discord markdown and message formatting"
+  ],
+  "sameAs": ["https://github.com/dvy246/discord-creator-asset-studio", "https://github.com/dvy246"]
+};
+
 export function generateSoftwareApplicationSchema(name: string, description: string, url: string) {
   return JSON.stringify({
     "@context": "https://schema.org",
@@ -7,11 +31,65 @@ export function generateSoftwareApplicationSchema(name: string, description: str
     "url": url,
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Any",
+    "browserRequirements": "Requires a modern web browser with JavaScript enabled.",
+    "isAccessibleForFree": true,
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "USD"
-    }
+    },
+    "publisher": ORG
+  });
+}
+
+/**
+ * Organization entity — emitted site-wide so AI/answer engines can ground the
+ * brand and its independence from Discord. Improves E-E-A-T + GEO attribution.
+ */
+export function generateOrganizationSchema() {
+  return JSON.stringify({ "@context": "https://schema.org", ...ORG });
+}
+
+/**
+ * WebPage / AboutPage / ContactPage entity for non-tool trust pages.
+ */
+export function generateWebPageSchema(opts: {
+  type?: 'WebPage' | 'AboutPage' | 'ContactPage';
+  name: string;
+  description: string;
+  url: string;
+  lang?: string;
+}) {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": opts.type ?? "WebPage",
+    "name": opts.name,
+    "description": opts.description,
+    "url": opts.url,
+    "inLanguage": opts.lang ?? "en",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Discord Creator Asset Studio",
+      "url": "https://discord-creator-asset-studio.pages.dev/"
+    },
+    "publisher": ORG
+  });
+}
+
+/**
+ * FAQPage schema from a unified {q,a}[] shape. Single source of truth so the
+ * visible FAQ accordion and the JSON-LD never drift. Pass lang for inLanguage.
+ */
+export function generateFaqSchema(items: { q: string; a: string }[], lang?: string) {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    ...(lang ? { "inLanguage": lang } : {}),
+    "mainEntity": items.map((f) => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a }
+    }))
   });
 }
 
@@ -37,6 +115,7 @@ const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og-image.png`;
  */
 export function generateBlogPostingSchema(post: {
   title: string;
+  heading?: string;
   metaDescription: string;
   slug: string;
   datePublished: string;
@@ -49,7 +128,7 @@ export function generateBlogPostingSchema(post: {
   return JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": post.title,
+    "headline": post.heading ?? post.title,
     "description": post.metaDescription,
     "image": post.image ?? DEFAULT_OG_IMAGE,
     "inLanguage": "en",
@@ -58,20 +137,19 @@ export function generateBlogPostingSchema(post: {
     "datePublished": post.datePublished,
     "dateModified": post.dateModified,
     "articleSection": post.category,
+    "isPartOf": {
+      "@type": "WebSite",
+      "@id": SITE_ORIGIN + "/#website",
+      "name": "Discord Creator Asset Studio",
+      "url": SITE_ORIGIN + "/"
+    },
     "author": {
       "@type": "Organization",
       "name": post.author.name,
-      "url": SITE_ORIGIN + "/"
+      ...(post.author.role ? { "description": post.author.role } : {}),
+      "parentOrganization": { "@id": SITE_ORIGIN + "/#organization" }
     },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Discord Creator Asset Studio",
-      "url": SITE_ORIGIN + "/",
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${SITE_ORIGIN}/favicon.svg`
-      }
-    }
+    "publisher": { "@id": SITE_ORIGIN + "/#organization" }
   });
 }
 

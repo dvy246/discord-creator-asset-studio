@@ -1,0 +1,127 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import FakeMessageWorkspace from '../../components/tools/FakeMessageWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Fake Message Maker | Fake Chat Screenshot";
+const pageDescription = "Free Discord fake message maker for memes, fiction and roleplay. Build a fake chat screenshot in your browser with a FICTIONAL watermark. Nothing uploaded.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/fake-message-maker/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Fake Message Maker",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Fake Message Maker", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "What is this Discord fake message maker for?", a: "It builds clearly fictional Discord-style chat screenshots for memes, comics, roleplay servers, and \"Beluga-style\" edits. You type the names and messages, pick colors and avatars, and download a PNG that looks like a Discord chat. It is a mockup generator — the messages are made up by you, not pulled from any real conversation or account." },
+  { q: "How do I make a fake Discord message?", a: "Add a message card, type a display name, paste your line of dialogue, and optionally set a name color, a timestamp, a BOT tag, or upload an avatar. The preview on the right redraws instantly, and consecutive messages from the same name group together just like the real client. Add as many messages as your scene needs, then hit Download PNG." },
+  { q: "Is using a fake message maker safe and allowed?", a: "For jokes, stories, and roleplay, yes — fictional mockups are a normal part of meme culture. What is not okay is using a fake screenshot to impersonate a real person, fabricate evidence, harass someone, or deceive people into thinking a real conversation happened. That crosses into defamation and fraud. Keep it obviously fictional, which is exactly why the FICTIONAL watermark is on by default." },
+  { q: "Why is there a FICTIONAL watermark, and can I remove it?", a: "The watermark keeps the image honest — it signals at a glance that the chat was made up, so nobody mistakes your meme for a real leak. You can toggle it off for a cleaner comic panel, but a reminder appears asking you to only do that with fully fictional content. Please leave it on for anything that could be misread as real." },
+  { q: "Are my messages or avatars uploaded anywhere?", a: "No. The whole tool runs in your browser: the chat is drawn onto a canvas locally and the PNG is generated on your device. Nothing you type and no avatar you upload is sent to a server, saved to an account, or stored after you close the tab. That is why it works offline once the page has loaded." },
+  { q: "Can I change the theme, avatars, and bot tags?", a: "Yes. Switch between Discord's dark and light themes, rename the channel at the top, give each message its own name color, add a blurple BOT tag for bot dialogue, and upload a custom avatar per name (or let the tool draw a colored initial). Everything you see in the preview is exactly what downloads in the PNG." }
+];
+const dossier = {
+  eyebrow: "Fake Message Maker Blueprint",
+  heading: "From a scripted scene to",
+  highlight: "a shareable fake chat PNG",
+  intro: "A good fake-chat meme reads as authentic at a glance yet is honestly fictional. Here is how the canvas mockup, the message-grouping logic, the theming controls, and the built-in safety framing fit together so your screenshot lands the joke without misleading anyone.",
+  steps: [
+    "What It Makes",
+    "How It Renders",
+    "Styling Controls",
+    "Honest & Private"
+  ],
+  cards: [
+    {
+      kicker: "THE OUTPUT // 01",
+      badge: "FICTIONAL CHAT MOCKUP",
+      badgeTone: "emerald" as const,
+      title: "A screenshot, not a real conversation",
+      body: [
+        "This tool produces a Discord-styled chat image from dialogue you write yourself. It is built for memes, webcomic panels, roleplay recaps, and the \"Beluga-style\" edits that string invented messages into a punchline. Because you author every line, the result is a prop — a fictional scene rendered to look like the app, the same way a movie set dresses a room to look real without being anyone's actual home.",
+        "That framing matters. A fake chat is great comedy and terrible evidence: the instant a mockup is passed off as a genuine screenshot of a real person, it stops being a joke and becomes impersonation or defamation. The whole design here — the default watermark, the disclaimer, the meme-first copy — steers you toward the fictional use and away from anything that would deceive a viewer into thinking a real exchange took place."
+      ]
+    },
+    {
+      kicker: "THE CANVAS // 02",
+      badge: "DRAWN LOCALLY / PIXEL-PERFECT",
+      badgeTone: "blue" as const,
+      title: "Every row painted onto a canvas",
+      body: [
+        "The preview is not HTML pretending to be an image — it is a real <canvas> that the page paints message by message. Each row lays down an avatar, a colored username, an optional BOT tag, a timestamp, and word-wrapped body text using the same spacing Discord uses. Consecutive messages from the same name are grouped under one avatar, just like the client does, so a back-and-forth reads naturally instead of repeating the header on every line.",
+        "Because the on-screen preview and the exported file are the same canvas, what you see is exactly what downloads — there is no second rendering path to drift out of sync. The image is generated at 2× resolution so text stays crisp when you drop it into a meme template or zoom in, and the height grows automatically to fit however many messages your scene runs to."
+      ]
+    },
+    {
+      kicker: "THE CONTROLS // 03",
+      badge: "THEME / COLOR / AVATAR / BOT",
+      badgeTone: "amber" as const,
+      title: "Style each name to sell the scene",
+      body: [
+        "Detail is what makes a fake chat land. Switch between Discord's dark and light themes to match wherever the meme will live, and rename the channel at the top so the header reads right. Every message carries its own controls: a display name, a name color for role-tinted usernames, a free-text timestamp, a blurple BOT tag for bot dialogue, and an avatar you can upload — or leave blank to get an automatic colored initial keyed to the name.",
+        "Those per-message settings are what separate a convincing edit from an obvious one. Give each character a consistent color and avatar and the eye reads them as distinct people; add a BOT tag and a bot's line looks like a real integration reply. The controls are deliberately close to the real app's options so your scripted exchange carries the texture of an actual server — while staying, by design, entirely made up."
+      ],
+      footer: "Theme, per-name color, timestamp, BOT tag, and avatar — the same knobs the real client exposes, tuned for a mockup."
+    },
+    {
+      kicker: "SAFETY MODEL // 04",
+      badge: "WATERMARK ON / NOTHING UPLOADED",
+      badgeTone: "purple" as const,
+      title: "Honest by default, private by design",
+      body: [
+        "Two guardrails ship on by default. The FICTIONAL watermark tiles faintly across the image with a corner badge, so a reshared screenshot still announces itself as invented; you can turn it off for a clean comic panel, but a reminder appears asking you to only do that with fully fictional content. A persistent disclaimer sits above the editor spelling out the one rule that matters: never use a mockup to impersonate a real person, fabricate proof, harass, or defraud.",
+        "Privacy is the other half. The entire tool runs in your browser — names, messages, and any avatar you upload are drawn locally onto the canvas and exported straight to a PNG. Nothing is sent to a server, tied to an account, or stored after you close the tab, so a private in-joke stays private. The combination is deliberate: make it easy to create an obviously fictional meme, and impossible to quietly turn it into a real-looking accusation."
+      ],
+      footer: "Default watermark + disclaimer keep it honest; fully local rendering keeps it private."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/fake-message-maker.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Fake Message Maker</span>
+      </div>
+        <a href="/es/tools/fake-message-maker/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Fake Message</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Make fake Discord chat screenshots for memes, fiction &amp; roleplay • FICTIONAL watermark • In-browser</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <FakeMessageWorkspace lang="en" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>

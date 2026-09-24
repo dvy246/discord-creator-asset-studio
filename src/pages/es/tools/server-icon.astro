@@ -1,0 +1,122 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+import ServerIconWorkspace from '../../../components/tools/ServerIconWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+
+const pageTitle = "Creador de Icono de Servidor Discord | 512x512";
+const pageDescription = "Creador de icono de servidor Discord: encuadra tu arte en un lienzo exacto de 512x512 con vista previa de cuadrado redondeado y exporta PNG. En tu navegador.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/server-icon/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/server-icon/";
+
+const appSchema = generateSoftwareApplicationSchema("Creador de Icono de Servidor para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Icono de Servidor", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Qué tamaño debe tener un icono de servidor de Discord?", a: "Discord recomienda subir un cuadrado de 512×512 píxeles, siendo 128×128 el mínimo práctico. Esa única imagen se reutiliza en todas partes donde aparece el servidor, y Discord la reduce para cada lugar. Empezar en 512×512 mantiene cada copia reducida nítida. Este creador encuadra tu arte en un lienzo exacto de 512×512 antes de exportar." },
+  { q: "¿Por qué se ve borroso el icono de mi servidor de Discord?", a: "El desenfoque suele deberse a que el original era menor de 512×512 y Discord lo amplió, o a que un logo con detalle se comprimió al reducirlo para la lista de servidores. Sube un PNG nítido de 512×512, mantén las formas clave grandes y centradas, y evita el texto fino. Exportar desde este lienzo evita resultados pixelados." },
+  { q: "¿Cómo hago un icono de servidor animado en Discord?", a: "Un icono GIF animado solo se desbloquea cuando el servidor alcanza el Boost Nivel 1. Una vez logrado, sube un GIF en bucle directamente en Ajustes del Servidor → Información General. Esta herramienta exporta un PNG estático de 512×512, que funciona en todos los servidores; cambia a un GIF más tarde cuando el nivel de boost esté activo." },
+  { q: "¿Cómo cambio el icono de mi servidor de Discord?", a: "Abre Ajustes del Servidor, elige Información General, haz clic en la miniatura del icono y sube tu imagen de 512×512; necesitas el permiso Gestionar Servidor. El cambio se aplica al instante para todos. Exporta tu arte aquí primero para que llegue al tamaño recomendado y se mantenga nítido en lugar de que Discord lo redimensione." },
+  { q: "¿Por qué se ve recortado el icono de mi servidor en los bordes?", a: "Discord redondea cada icono de servidor y recorta las esquinas: en la lista aparece como un cuadrado redondeado que se convierte en un círculo completo cuando el servidor está activo o al pasar el cursor. Lo que quede cerca de un borde se corta, así que mantén logos, caras y texto centrados. La vista previa muestra este encuadre antes de exportar." }
+];
+
+const dossier = {
+  eyebrow: "Plano Técnico del Icono de Servidor",
+  heading: "Diseña iconos de servidor que se ven",
+  highlight: "siempre nítidos",
+  intro: "Un icono de servidor es un pequeño cuadrado que Discord reutiliza en todas partes y luego enmascara en un círculo. Hacerlo bien significa exportar al tamaño correcto, centrar el sujeto dentro del área recortada y saber qué formatos y niveles de boost realmente funcionan. Aquí tienes el plano completo.",
+  steps: [
+    "El Lienzo de 512×512",
+    "Máscara Circular y Zona Segura",
+    "Formatos y Límite de Archivo",
+    "Boosts y Cómo Subirlo"
+  ],
+  cards: [
+    {
+      kicker: "TAMAÑO DEL LIENZO // 01",
+      badge: "512 × 512 PX",
+      badgeTone: "emerald" as const,
+      title: "Por qué 512×512 es el tamaño para exportar",
+      body: [
+        "Discord recomienda un cuadrado de 512×512 píxeles para los iconos de servidor, y 128×128 es el mínimo práctico. Ese único archivo se reutiliza en todos los lugares donde aparece el servidor —la barra lateral, los embeds de invitación, la cabecera y el móvil— y Discord lo reduce para cada sitio. Empezar grande mantiene cada copia reducida nítida en vez de borrosa.",
+        "Este creador fija el lienzo a una relación exacta 1:1 a 512×512, así que no hay que adivinar dimensiones ni proporción. Panea y haz zoom para encuadrar tu arte, y el PNG que exportas ya está al tamaño recomendado, listo para subir en Ajustes del Servidor sin que Discord lo redimensione al entrar."
+      ]
+    },
+    {
+      kicker: "GEOMETRÍA DE MÁSCARA // 02",
+      badge: "CENTRO SEGURO",
+      badgeTone: "blue" as const,
+      title: "La máscara circular recorta tus esquinas",
+      body: [
+        "Discord no muestra tu cuadrado tal cual. Redondea el icono y recorta las esquinas: en la lista de servidores se ve como un cuadrado redondeado, y se convierte en un círculo completo cuando el servidor está seleccionado o al pasar el cursor. Lo que quede en las esquinas simplemente desaparece tras la máscara.",
+        "La solución es la composición: mantén logos, caras y texto dentro del área central segura con margen por todos lados. La vista previa muestra el icono grande y pequeño sobre el color real de la barra lateral oscura de Discord, para que confirmes que nada importante se recorta antes de exportar."
+      ],
+      footer: "La máscara recorta las esquinas: mantén cada detalle clave centrado."
+    },
+    {
+      kicker: "FORMATO Y PESO // 03",
+      badge: "PNG · JPG · GIF",
+      badgeTone: "amber" as const,
+      title: "Formatos, transparencia y tamaño de archivo",
+      body: [
+        "Discord acepta PNG, JPG y GIF para los iconos de servidor. PNG es la mejor opción por defecto: mantiene los bordes duros y el texto nítidos y admite transparencia, aunque Discord rellena cualquier zona transparente detrás del círculo. JPG va bien para arte fotográfico, y GIF solo hace falta cuando quieres movimiento.",
+        "El tamaño de archivo rara vez es un problema aquí. El límite de subida es de 10 MB, y un PNG limpio de 512×512 pesa solo unas pocas decenas de kilobytes, muy por debajo del tope. Como todo se procesa y exporta en tu navegador, no hay subidas a ningún servidor y nada de tu imagen se guarda ni se rastrea."
+      ]
+    },
+    {
+      kicker: "PROTOCOLO DE SUBIDA // 04",
+      badge: "GIF BOOST NIVEL 1",
+      badgeTone: "purple" as const,
+      title: "Iconos animados y dónde subirlos",
+      body: [
+        "Un icono estático funciona en todos los servidores, sin ningún requisito. Un icono GIF animado es una ventaja que solo se desbloquea cuando el servidor alcanza el Boost Nivel 1, así que si la ranura del icono rechaza tu GIF, revisa primero el nivel de boost del servidor. Hasta entonces, un PNG estático es la opción fiable.",
+        "Para configurarlo, abre Ajustes del Servidor → Información General, haz clic en el icono y súbelo; necesitas el permiso Gestionar Servidor, y el cambio se aplica al instante para todos. Exporta aquí tu PNG estático primero para que llegue al tamaño exacto recomendado, y cambia a un GIF más tarde cuando el nivel de boost esté activo."
+      ],
+      footer: "El PNG estático funciona en cualquier sitio; el GIF animado necesita Boost Nivel 1."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/server-icon.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+    <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-6 font-mono" aria-label="Miga de pan">
+      <div class="flex items-center gap-2">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Icono de Servidor</span>
+      </div>
+      <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+    </nav>
+
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+        100% en el navegador · Cero subidas
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mb-3">
+        Creador de Icono de Servidor Discord
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed max-w-2xl">
+        Encuadra tu arte en un lienzo exacto de <strong>512×512</strong> con paneo y zoom, vista previa de cuadrado redondeado como la lista de servidores, y exporta PNG. Todo el procesamiento ocurre localmente.
+      </p>
+    </header>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <ServerIconWorkspace lang="es" />
+
+    <!-- Dossier de desplazamiento (componente compartido) -->
+    <ToolDossier {...dossier} />
+
+    <!-- FAQ (componente compartido, misma fuente que el JSON-LD) -->
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
+  </div>
+</Layout>

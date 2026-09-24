@@ -1,0 +1,127 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import ImageResizerWorkspace from '../../components/tools/ImageResizerWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Image Resizer | Exact Discord Sizes";
+const pageDescription = "Free Discord image resizer: scale any picture to exact avatar 512x512, sticker 320x320, emoji 128x128, or 960x540 banner sizes. In-browser, zero uploads.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/image-resizer/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Image Resizer",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Image Resizer", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "What size is a Discord profile picture in pixels?", a: "A Discord profile picture, or avatar, displays at 128×128 pixels and is always square. Upload a square image at least 128 pixels on each side; a larger square such as 256 or 512 also works and stays crisp when Discord scales it down. Avoid non-square images, since Discord will crop them to fit the circle." },
+  { q: "How do I resize an image for a Discord server icon?", a: "Set the resizer to 512×512, the size Discord uses for server icons. If your source isn't square, crop it to a square first so the icon isn't distorted or letterboxed, then export. Because the icon is also shown inside a circle in some places, keep the important part centered so nothing critical sits in the corners." },
+  { q: "What are the Discord banner dimensions?", a: "Discord profile and server banners use 960×540 pixels, a 16:9 landscape rectangle. Resize your image to exactly that size and keep the aspect ratio so the scene isn't stretched. Remember the middle band is the most visible area, since parts of the top and bottom can be covered by overlaid profile elements." },
+  { q: "How do I make an image square for a Discord avatar?", a: "Use the crop-to-square option, which trims the longer side of a rectangular photo down to a 1:1 shape, then scale it to 128×128 or larger. Center the subject's face before you crop, because Discord displays avatars inside a circular mask — a centered square keeps heads and key details safely inside the visible circle." },
+  { q: "Does resizing an image reduce its quality?", a: "Resizing down barely affects quality — you are discarding pixels you didn't need, and edges stay sharp. Scaling up is different: enlarging a small image can't recover detail that was never captured, so it looks soft or blurry. For the best result, start from the highest-resolution original you have and resize down toward the Discord target." }
+];
+
+const dossier = {
+  eyebrow: "Image Resizer Blueprint",
+  heading: "From any picture to",
+  highlight: "exact Discord dimensions",
+  intro: "Discord validates several assets by exact pixel dimensions, and uploading the wrong size hands the crop to Discord instead of you. Here is how the asset sizes, the canvas resize and crop, the aspect-ratio choice, and the privacy of local processing fit together — all in your browser.",
+  steps: [
+    "Discord Asset Sizes",
+    "Resize & Crop",
+    "Aspect Ratio",
+    "Local & Private"
+  ],
+  cards: [
+    {
+      kicker: "ASSET SIZE MAP // 01",
+      badge: "DISCORD ASSET SIZES",
+      badgeTone: "emerald" as const,
+      title: "The exact pixel size for every Discord asset",
+      body: [
+        "Discord validates several assets by exact pixel dimensions, and uploading the wrong size hands the crop to Discord instead of you. A profile picture, or avatar, renders at 128×128 — upload a square at least 128 pixels wide and it stays crisp. A server icon wants 512×512, custom emoji sit at 128×128, and stickers go up to 320×320 as an APNG. A profile or server banner is 960×540, a clean 16:9 rectangle, while a role icon is a tiny 64×64. Match those numbers up front and Discord accepts the file as-is, with none of its own downscaling softening the edges.",
+        "Getting the size right before you upload is the whole point, because Discord's automatic resize is not kind to detail. When you hand it a picture that is too large, or the wrong shape, it crops and compresses on its own terms — heads drift out of frame, thin lines blur, and small text turns mushy. Setting the canvas to the target dimensions here means the pixels you export are the pixels Discord stores. There is no guesswork about whether a 500×500 image will pass as a server icon or a 319×320 sticker will bounce; each preset lands on the value the platform expects."
+      ]
+    },
+    {
+      kicker: "CANVAS CONTROLS // 02",
+      badge: "RESIZE & CROP",
+      badgeTone: "blue" as const,
+      title: "Set an exact pixel size or crop to a square",
+      body: [
+        "This resizer works on a browser canvas, so every change happens on the pixels themselves rather than on a stretched CSS preview. Type an exact width and height and the tool redraws your image at that size and exports a real file at those dimensions — a true 512×512 server icon, not a large image squeezed into a small box. When you already know the number Discord wants, this is the fastest path: enter it, export, and upload. The output is a fresh raster at the resolution you asked for, ready to drop straight into Discord's upload dialog without any further editing.",
+        "When the shape matters more than a single dimension, crop to a square instead. Most Discord slots — avatars, server icons, emoji, and stickers — are square, so trimming a rectangular photo down to a 1:1 crop is usually the real fix. The canvas lets you cut the image to a square and then scale that square to the exact target size in one pass. Because it all runs on the same canvas, you preview the crop and the final dimensions together, and the file you download already matches both the shape and the pixel count Discord asks for."
+      ]
+    },
+    {
+      kicker: "RATIO CONTROL // 03",
+      badge: "ASPECT RATIO",
+      badgeTone: "amber" as const,
+      title: "Keep the aspect ratio or crop to fill",
+      body: [
+        "Every resize forces a choice between two behaviors when the source shape and the target shape disagree. Preserving the aspect ratio scales the whole image to fit and letterboxes the leftover space, so nothing is cut but you may see padding around a photo that isn't square. Cropping to fill does the opposite: it scales up until the frame is completely covered and trims whatever spills past the edges. For a banner that must sit in a 960×540 rectangle, keeping the ratio protects the composition; for a square avatar, cropping to fill is almost always what you actually want.",
+        "The reason crop-to-square matters so much for avatars is Discord's circular mask. Your profile picture is stored as a square but displayed inside a circle, so the corners are hidden and anything near an edge can be clipped. If you letterbox a wide photo into a square, the subject shrinks into a thin strip; if you crop to fill and center the face, it sits comfortably inside the circle. Deciding the crop here — rather than letting Discord guess — is how you stop the mask from slicing off the top of someone's head or cutting a logo in half."
+      ],
+      footer: "For avatars, crop to a centered square so Discord's circular mask never cuts off heads or edges."
+    },
+    {
+      kicker: "PRIVACY BY DESIGN // 04",
+      badge: "LOCAL & PRIVATE",
+      badgeTone: "purple" as const,
+      title: "Everything runs in your browser",
+      body: [
+        "The resize happens entirely on a canvas inside your browser tab. When you pick a file, it is read into memory, redrawn at the target size, and offered back as a download — it is never sent to a server, never stored, and never logged. That makes the tool safe for private screenshots, client work, and unreleased branding you can't hand to a third party. There is no account to create and no queue to wait in; the work is instant because it is local. Close the tab and every trace of the image is gone from the page, with nothing left behind on a remote server to worry about.",
+        "One limit is worth planning around: resizing down keeps an image sharp, but scaling a small picture up cannot invent detail that was never captured. Enlarging a 64×64 icon to a 512×512 server icon just spreads the same pixels over sixteen times the area, so edges soften and the result looks blurry. Always start from the highest-resolution source you have and resize down toward the Discord target, not up from something tiny. If your only copy is small, it is better to re-export from the original artwork or take a larger screenshot than to upscale and accept the blur."
+      ],
+      footer: "Resizing down stays sharp — start from the largest source you have, since scaling up only adds blur."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/image-resizer.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Image Resizer</span>
+      </div>
+        <a href="/es/tools/image-resizer/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Image</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Resizer</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">One-click presets for avatar, sticker, emoji, role icon & banner sizes • Fit, fill or stretch • 100% in-browser</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <ImageResizerWorkspace lang="en" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>

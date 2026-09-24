@@ -1,0 +1,661 @@
+---
+/**
+ * EmbedWorkspace.astro — Discord embed + webhook builder.
+ *
+ * Visual form → live Discord embed card preview → copyable webhook JSON.
+ * Optionally POSTs the payload to a user-supplied Discord webhook URL. That
+ * URL lives in memory ONLY: it is never written to localStorage, never put in
+ * the JSON output, and the request fires solely on an explicit Send click.
+ * This is the single outbound network request in the whole site; everything
+ * else is pure client-side. Language-agnostic logic on fixed element IDs;
+ * visible labels via `t`, runtime strings via data-* (`js` → `L`). Imported by
+ * the EN (/tools/embed-builder/) and ES (/es/tools/embed-builder/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    colorLabel: 'Embed color',
+    authorLabel: 'Author',
+    authorName: 'Author name',
+    authorIcon: 'Author icon URL',
+    authorUrl: 'Author link URL',
+    titleLabel: 'Title',
+    titleText: 'Embed title',
+    titleUrl: 'Title link URL',
+    descLabel: 'Description',
+    descPh: 'Supports **markdown**, *italics*, and links.',
+    fieldsLabel: 'Fields',
+    addFieldBtn: '+ Add field',
+    fieldNamePh: 'Field name',
+    fieldValuePh: 'Field value',
+    inlineLabel: 'Inline',
+    removeField: 'Remove field',
+    mediaLabel: 'Images',
+    thumbUrl: 'Thumbnail URL',
+    imageUrl: 'Large image URL',
+    footerLabel: 'Footer',
+    footerText: 'Footer text',
+    footerIcon: 'Footer icon URL',
+    timestampLabel: 'Show timestamp',
+    messageLabel: 'Webhook message',
+    contentPh: 'Text above the embed (optional)',
+    usernamePh: 'Override username (optional)',
+    avatarPh: 'Override avatar URL (optional)',
+    previewLabel: 'Live preview',
+    jsonLabel: 'Webhook JSON',
+    copyJsonBtn: 'Copy JSON',
+    webhookLabel: 'Send to a webhook',
+    webhookNote: 'Your webhook URL is used only for this send — it is never saved, never leaves your browser except to Discord, and never appears in the JSON above.',
+    sendBtn: 'Send to Discord',
+    resetBtn: 'Reset',
+    starterTitle: 'Server announcement',
+    starterDesc: 'Welcome to the server! Read **#rules** and grab a role in **#roles**.',
+    starterField1Name: 'Members',
+    starterField1Val: '1,024',
+    starterField2Name: 'Boosts',
+    starterField2Val: 'Level 2',
+    starterFooter: 'Community Team',
+    starterAuthor: 'Announcements',
+    links: [
+      { icon: '📝', href: '/tools/markdown/', label: 'Markdown Previewer (Live)' },
+      { icon: '🌈', href: '/tools/colored-text/', label: 'Colored Text Generator (ANSI)' },
+      { icon: '🕐', href: '/tools/timestamp/', label: 'Timestamp Generator' },
+      { icon: '🎨', href: '/tools/colors/', label: 'Discord Color & Hex Codes' }
+    ]
+  },
+  es: {
+    colorLabel: 'Color del embed',
+    authorLabel: 'Autor',
+    authorName: 'Nombre del autor',
+    authorIcon: 'URL del icono del autor',
+    authorUrl: 'URL del enlace del autor',
+    titleLabel: 'Título',
+    titleText: 'Título del embed',
+    titleUrl: 'URL del enlace del título',
+    descLabel: 'Descripción',
+    descPh: 'Admite **markdown**, *cursiva* y enlaces.',
+    fieldsLabel: 'Campos',
+    addFieldBtn: '+ Añadir campo',
+    fieldNamePh: 'Nombre del campo',
+    fieldValuePh: 'Valor del campo',
+    inlineLabel: 'En línea',
+    removeField: 'Quitar campo',
+    mediaLabel: 'Imágenes',
+    thumbUrl: 'URL de la miniatura',
+    imageUrl: 'URL de la imagen grande',
+    footerLabel: 'Pie de página',
+    footerText: 'Texto del pie',
+    footerIcon: 'URL del icono del pie',
+    timestampLabel: 'Mostrar marca de tiempo',
+    messageLabel: 'Mensaje del webhook',
+    contentPh: 'Texto encima del embed (opcional)',
+    usernamePh: 'Sobrescribir nombre (opcional)',
+    avatarPh: 'Sobrescribir URL del avatar (opcional)',
+    previewLabel: 'Vista previa en vivo',
+    jsonLabel: 'JSON del webhook',
+    copyJsonBtn: 'Copiar JSON',
+    webhookLabel: 'Enviar a un webhook',
+    webhookNote: 'Tu URL de webhook se usa solo para este envío — nunca se guarda, nunca sale de tu navegador salvo hacia Discord, y nunca aparece en el JSON de arriba.',
+    sendBtn: 'Enviar a Discord',
+    resetBtn: 'Reiniciar',
+    starterTitle: 'Anuncio del servidor',
+    starterDesc: '¡Bienvenido al servidor! Lee **#reglas** y elige un rol en **#roles**.',
+    starterField1Name: 'Miembros',
+    starterField1Val: '1.024',
+    starterField2Name: 'Boosts',
+    starterField2Val: 'Nivel 2',
+    starterFooter: 'Equipo de la comunidad',
+    starterAuthor: 'Anuncios',
+    links: [
+      { icon: '📝', href: '/es/tools/markdown/', label: 'Previsualizador de Markdown' },
+      { icon: '🌈', href: '/es/tools/colored-text/', label: 'Generador de Texto de Colores (ANSI)' },
+      { icon: '🕐', href: '/es/tools/timestamp/', label: 'Generador de Marcas de Tiempo' },
+      { icon: '🎨', href: '/es/tools/colors/', label: 'Colores y Códigos Hex de Discord' }
+    ]
+  }
+}[lang];
+
+const js = {
+  en: {
+    copy: 'Copy JSON', copied: 'Copied!',
+    sending: 'Sending…', sent: 'Sent to Discord ✓', sendFail: 'Send failed',
+    invalidUrl: 'Enter a valid Discord webhook URL', emptyUrl: 'Paste a webhook URL first',
+    fieldName: 'Field name', fieldValue: 'Field value', inline: 'Inline', remove: 'Remove field',
+    empty: 'Fill in the form to build your embed…'
+  },
+  es: {
+    copy: 'Copiar JSON', copied: '¡Copiado!',
+    sending: 'Enviando…', sent: 'Enviado a Discord ✓', sendFail: 'Error al enviar',
+    invalidUrl: 'Introduce una URL de webhook de Discord válida', emptyUrl: 'Pega primero una URL de webhook',
+    fieldName: 'Nombre del campo', fieldValue: 'Valor del campo', inline: 'En línea', remove: 'Quitar campo',
+    empty: 'Rellena el formulario para construir tu embed…'
+  }
+}[lang];
+---
+<div
+  id="eb-workspace"
+  class="space-y-6 mb-16"
+  data-copy={js.copy}
+  data-copied={js.copied}
+  data-sending={js.sending}
+  data-sent={js.sent}
+  data-send-fail={js.sendFail}
+  data-invalid-url={js.invalidUrl}
+  data-empty-url={js.emptyUrl}
+  data-field-name={js.fieldName}
+  data-field-value={js.fieldValue}
+  data-inline={js.inline}
+  data-remove={js.remove}
+  data-empty={js.empty}
+  data-starter={JSON.stringify({
+    author: t.starterAuthor,
+    title: t.starterTitle,
+    desc: t.starterDesc,
+    footer: t.starterFooter,
+    fields: [
+      { name: t.starterField1Name, value: t.starterField1Val, inline: true },
+      { name: t.starterField2Name, value: t.starterField2Val, inline: true }
+    ]
+  })}
+>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+    <!-- FORM COLUMN -->
+    <div class="space-y-4">
+      <!-- Color + Author -->
+      <div class="card-panel rounded-[14px] p-4 sm:p-5 space-y-4">
+        <div>
+          <label for="eb-color" class="block text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7] mb-1.5">{t.colorLabel}</label>
+          <div class="flex items-center gap-2">
+            <input type="color" id="eb-color" value="#5865F2" class="w-10 h-9 rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-transparent cursor-pointer p-0.5" aria-label={t.colorLabel} />
+            <input type="text" id="eb-color-hex" value="#5865F2" spellcheck="false" class="w-28 rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#0F1622] text-[#192538] dark:text-[#DBDEE1] text-sm font-mono px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3368A0]" aria-label="Hex" />
+          </div>
+        </div>
+        <div class="space-y-2">
+          <span class="block text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.authorLabel}</span>
+          <input type="text" id="eb-author" placeholder={t.authorName} class="eb-in" />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <input type="url" id="eb-author-icon" placeholder={t.authorIcon} class="eb-in" />
+            <input type="url" id="eb-author-url" placeholder={t.authorUrl} class="eb-in" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Title + Description -->
+      <div class="card-panel rounded-[14px] p-4 sm:p-5 space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label for="eb-title" class="block text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7] mb-1">{t.titleText}</label>
+            <input type="text" id="eb-title" class="eb-in" />
+          </div>
+          <div>
+            <label for="eb-title-url" class="block text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7] mb-1">{t.titleUrl}</label>
+            <input type="url" id="eb-title-url" class="eb-in" />
+          </div>
+        </div>
+        <div>
+          <label for="eb-desc" class="block text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7] mb-1">{t.descLabel}</label>
+          <textarea id="eb-desc" rows="4" placeholder={t.descPh} class="eb-in resize-y leading-relaxed"></textarea>
+        </div>
+      </div>
+      <!-- EB_FORM_PART2 -->
+      <!-- Fields -->
+      <div class="card-panel rounded-[14px] p-4 sm:p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="block text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.fieldsLabel}</span>
+          <button type="button" id="eb-add-field" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px] font-semibold">{t.addFieldBtn}</button>
+        </div>
+        <div id="eb-fields" class="space-y-2"></div>
+      </div>
+
+      <!-- Images -->
+      <div class="card-panel rounded-[14px] p-4 sm:p-5 space-y-2">
+        <span class="block text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.mediaLabel}</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input type="url" id="eb-thumb" placeholder={t.thumbUrl} class="eb-in" />
+          <input type="url" id="eb-image" placeholder={t.imageUrl} class="eb-in" />
+        </div>
+      </div>
+
+      <!-- Footer + timestamp -->
+      <div class="card-panel rounded-[14px] p-4 sm:p-5 space-y-3">
+        <span class="block text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.footerLabel}</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input type="text" id="eb-footer" placeholder={t.footerText} class="eb-in" />
+          <input type="url" id="eb-footer-icon" placeholder={t.footerIcon} class="eb-in" />
+        </div>
+        <label class="flex items-center gap-2 text-sm text-[#192538] dark:text-[#DBDEE1] cursor-pointer select-none">
+          <input type="checkbox" id="eb-timestamp" class="w-4 h-4 accent-[#3368A0]" />
+          {t.timestampLabel}
+        </label>
+      </div>
+
+      <!-- Webhook message meta -->
+      <div class="card-panel rounded-[14px] p-4 sm:p-5 space-y-2">
+        <span class="block text-[11px] font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.messageLabel}</span>
+        <textarea id="eb-content" rows="2" placeholder={t.contentPh} class="eb-in resize-y"></textarea>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input type="text" id="eb-username" placeholder={t.usernamePh} class="eb-in" />
+          <input type="url" id="eb-avatar" placeholder={t.avatarPh} class="eb-in" />
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <button type="button" id="eb-reset" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">{t.resetBtn}</button>
+      </div>
+    </div>
+
+    <!-- PREVIEW COLUMN -->
+    <div class="space-y-4 lg:sticky lg:top-4">
+      <!-- EB_PREVIEW_PART -->
+      <!-- Live Discord preview -->
+      <div class="space-y-2">
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.previewLabel}</h2>
+        <div id="eb-preview" class="rounded-[12px] bg-[#313338] px-4 py-3.5 min-h-[140px] border border-[#1E1F22] overflow-hidden"></div>
+      </div>
+
+      <!-- JSON output -->
+      <div class="card-panel rounded-[14px] p-4 sm:p-5 space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.jsonLabel}</h2>
+          <button type="button" id="eb-copy" class="btn-primary text-xs px-4 py-2 rounded-[8px] font-semibold shrink-0">{t.copyJsonBtn}</button>
+        </div>
+        <pre id="eb-json" class="w-full max-h-[220px] overflow-auto text-xs rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#101622] text-[#192538] dark:text-[#DBDEE1] px-3.5 py-3 whitespace-pre-wrap break-words font-mono"></pre>
+      </div>
+
+      <!-- Webhook send (in-memory URL only) -->
+      <div class="card-panel rounded-[14px] p-4 sm:p-5 space-y-3">
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.webhookLabel}</h2>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input
+            type="url"
+            id="eb-webhook"
+            placeholder="https://discord.com/api/webhooks/…"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            data-lpignore="true"
+            class="eb-in flex-1 font-mono text-xs"
+          />
+          <button type="button" id="eb-send" class="btn-primary text-xs px-4 py-2 rounded-[8px] font-semibold shrink-0">{t.sendBtn}</button>
+        </div>
+        <p id="eb-status" class="text-xs font-semibold min-h-[1rem]" role="status" aria-live="polite"></p>
+        <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] flex items-start gap-1.5">
+          <span class="shrink-0">🔒</span><span>{t.webhookNote}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related links -->
+  <div class="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium pt-1">
+    {t.links.map((link) => (
+      <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+        <span>{link.icon}</span> {link.label}
+      </a>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  /* Form inputs (shared .eb-in). Global: some rows are built via innerHTML. */
+  #eb-workspace .eb-in {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #E0DBD0;
+    background: #ffffff;
+    color: #192538;
+    font-size: 14px;
+    padding: 8px 12px;
+    line-height: 1.4;
+  }
+  #eb-workspace .eb-in::placeholder { color: #94A3B8; }
+  #eb-workspace .eb-in:focus { outline: none; box-shadow: 0 0 0 2px #3368A0; border-color: transparent; }
+  .dark #eb-workspace .eb-in { border-color: #263346; background: #0F1622; color: #DBDEE1; }
+  .dark #eb-workspace .eb-in::placeholder { color: #5A6B80; }
+
+  /* Dynamic field row */
+  #eb-workspace .eb-field-row { display: grid; grid-template-columns: 1fr 1.4fr auto auto; gap: 6px; align-items: center; }
+  #eb-workspace .eb-field-inline { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #6B7A90; white-space: nowrap; cursor: pointer; }
+  .dark #eb-workspace .eb-field-inline { color: #8494A7; }
+  #eb-workspace .eb-field-del { color: #b4232a; font-size: 16px; line-height: 1; padding: 4px 6px; border-radius: 6px; }
+  #eb-workspace .eb-field-del:hover { background: rgba(180,35,42,0.1); }
+
+  /* Discord embed preview (always dark, mirrors Discord). */
+  #eb-preview { font-family: ui-sans-serif, system-ui, "Segoe UI", sans-serif; color: #dbdee1; font-size: 14px; }
+  #eb-preview .eb-msg-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  #eb-preview .eb-msg-av { width: 24px; height: 24px; border-radius: 50%; background: #5865F2; object-fit: cover; flex: none; }
+  #eb-preview .eb-msg-name { font-weight: 600; color: #f2f3f5; font-size: 14px; }
+  #eb-preview .eb-msg-bot { background: #5865F2; color: #fff; font-size: 10px; font-weight: 600; padding: 1px 4px; border-radius: 3px; text-transform: uppercase; letter-spacing: .02em; }
+  #eb-preview .eb-msg-content { color: #dbdee1; margin-bottom: 6px; white-space: pre-wrap; word-break: break-word; }
+  #eb-preview .eb-embed { max-width: 432px; background: #2b2d31; border-radius: 4px; border-left: 4px solid #5865F2; padding: 8px 16px 16px 12px; display: grid; grid-template-columns: auto; position: relative; }
+  #eb-preview .eb-embed.has-thumb { grid-template-columns: 1fr auto; column-gap: 16px; }
+  #eb-preview .eb-embed-main { min-width: 0; }
+  #eb-preview .eb-author { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  #eb-preview .eb-author-icon { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
+  #eb-preview .eb-author-name { font-size: 14px; font-weight: 600; color: #f2f3f5; }
+  #eb-preview .eb-author-name a { color: #f2f3f5; text-decoration: none; }
+  #eb-preview .eb-title { margin-top: 8px; font-size: 16px; font-weight: 600; color: #f2f3f5; word-break: break-word; }
+  #eb-preview .eb-title a { color: #00a8fc; text-decoration: none; }
+  #eb-preview .eb-title a:hover { text-decoration: underline; }
+  #eb-preview .eb-desc { margin-top: 8px; font-size: 14px; color: #dbdee1; white-space: pre-wrap; word-break: break-word; line-height: 1.375; }
+  #eb-preview .eb-fields { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+  #eb-preview .eb-field { flex: 1 1 30%; min-width: 100px; }
+  #eb-preview .eb-field.full { flex: 0 0 100%; width: 100%; }
+  #eb-preview .eb-field-name { font-size: 14px; font-weight: 600; color: #f2f3f5; margin-bottom: 2px; }
+  #eb-preview .eb-field-val { font-size: 14px; color: #dbdee1; white-space: pre-wrap; word-break: break-word; }
+  #eb-preview .eb-thumb { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; margin-top: 8px; }
+  #eb-preview .eb-image { margin-top: 16px; max-width: 100%; border-radius: 8px; display: block; }
+  #eb-preview .eb-footer { margin-top: 8px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #dbdee1; }
+  #eb-preview .eb-footer-icon { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
+  #eb-preview .eb-footer-sep { color: #b5bac1; }
+  #eb-preview .eb-sp { background: #1e1f22; color: transparent; border-radius: 4px; padding: 0 2px; }
+  #eb-preview .eb-empty { color: #949ba4; font-style: italic; }
+  #eb-preview a { color: #00a8fc; text-decoration: none; }
+</style>
+<!-- EMBED_WORKSPACE_SCRIPT -->
+<script>
+  const ws = document.getElementById('eb-workspace') as HTMLElement;
+  const L = {
+    copy: ws?.dataset.copy || 'Copy JSON',
+    copied: ws?.dataset.copied || 'Copied!',
+    sending: ws?.dataset.sending || 'Sending…',
+    sent: ws?.dataset.sent || 'Sent to Discord ✓',
+    sendFail: ws?.dataset.sendFail || 'Send failed',
+    invalidUrl: ws?.dataset.invalidUrl || 'Enter a valid Discord webhook URL',
+    emptyUrl: ws?.dataset.emptyUrl || 'Paste a webhook URL first',
+    fieldName: ws?.dataset.fieldName || 'Field name',
+    fieldValue: ws?.dataset.fieldValue || 'Field value',
+    inline: ws?.dataset.inline || 'Inline',
+    remove: ws?.dataset.remove || 'Remove field',
+    empty: ws?.dataset.empty || 'Fill in the form to build your embed…'
+  };
+
+  const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
+  const preview = document.getElementById('eb-preview') as HTMLElement;
+  const jsonEl = document.getElementById('eb-json') as HTMLElement;
+  const fieldsWrap = document.getElementById('eb-fields') as HTMLElement;
+  const statusEl = document.getElementById('eb-status') as HTMLElement;
+
+  function esc(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // Compact Discord inline markdown → HTML for the preview only.
+  function inline(raw: string): string {
+    let s = esc(raw);
+    const code: string[] = [];
+    s = s.replace(/`([^`\n]+)`/g, (_m, c) => { code.push(c); return ' ' + (code.length - 1) + ' '; });
+    s = s.replace(/\|\|([\s\S]+?)\|\|/g, '<span class="eb-sp">$1</span>');
+    s = s.replace(/\*\*\*([\s\S]+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    s = s.replace(/\*\*([\s\S]+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/__([\s\S]+?)__/g, '<u>$1</u>');
+    s = s.replace(/~~([\s\S]+?)~~/g, '<s>$1</s>');
+    s = s.replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
+    s = s.replace(/(^|[^_])_([^_\n]+?)_(?!_)/g, '$1<em>$2</em>');
+    s = s.replace(/\[([^\]]+?)\]\((https?:\/\/[^)\s]+?)\)/g, '<a href="$2" target="_blank" rel="noopener nofollow">$1</a>');
+    s = s.replace(/ (\d+) /g, (_m, i) => '<code style="background:#1e1f22;border-radius:3px;padding:0 3px;font-size:85%">' + code[+i] + '</code>');
+    return s;
+  }
+
+  function hexToInt(hex: string): number | null {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+    return m ? parseInt(m[1], 16) : null;
+  }
+  // <!-- EB_SCRIPT_PART2 -->
+  type Field = { name: string; value: string; inline: boolean };
+  type State = {
+    color: string; author: string; authorIcon: string; authorUrl: string;
+    title: string; titleUrl: string; desc: string; fields: Field[];
+    thumb: string; image: string; footer: string; footerIcon: string;
+    timestamp: boolean; content: string; username: string; avatar: string;
+  };
+
+  function read(): State {
+    const fields: Field[] = [];
+    fieldsWrap.querySelectorAll('.eb-field-row').forEach((r) => {
+      const name = (r.querySelector('.eb-f-name') as HTMLInputElement).value.trim();
+      const value = (r.querySelector('.eb-f-val') as HTMLInputElement).value.trim();
+      const inl = (r.querySelector('.eb-f-inline') as HTMLInputElement).checked;
+      if (name || value) fields.push({ name, value, inline: inl });
+    });
+    return {
+      color: $('eb-color-hex').value.trim(),
+      author: $('eb-author').value.trim(),
+      authorIcon: $('eb-author-icon').value.trim(),
+      authorUrl: $('eb-author-url').value.trim(),
+      title: $('eb-title').value.trim(),
+      titleUrl: $('eb-title-url').value.trim(),
+      desc: ($('eb-desc') as unknown as HTMLTextAreaElement).value,
+      fields,
+      thumb: $('eb-thumb').value.trim(),
+      image: $('eb-image').value.trim(),
+      footer: $('eb-footer').value.trim(),
+      footerIcon: $('eb-footer-icon').value.trim(),
+      timestamp: $('eb-timestamp').checked,
+      content: ($('eb-content') as unknown as HTMLTextAreaElement).value,
+      username: $('eb-username').value.trim(),
+      avatar: $('eb-avatar').value.trim()
+    };
+  }
+
+  function addFieldRow(name = '', value = '', inlineOn = true) {
+    const row = document.createElement('div');
+    row.className = 'eb-field-row';
+    const nameIn = document.createElement('input');
+    nameIn.type = 'text'; nameIn.className = 'eb-in eb-f-name'; nameIn.placeholder = L.fieldName; nameIn.value = name;
+    const valIn = document.createElement('input');
+    valIn.type = 'text'; valIn.className = 'eb-in eb-f-val'; valIn.placeholder = L.fieldValue; valIn.value = value;
+    const lbl = document.createElement('label');
+    lbl.className = 'eb-field-inline';
+    const chk = document.createElement('input');
+    chk.type = 'checkbox'; chk.className = 'eb-f-inline'; chk.checked = inlineOn; chk.style.accentColor = '#3368A0';
+    lbl.appendChild(chk); lbl.appendChild(document.createTextNode(' ' + L.inline));
+    const del = document.createElement('button');
+    del.type = 'button'; del.className = 'eb-field-del'; del.textContent = '×';
+    del.title = L.remove; del.setAttribute('aria-label', L.remove);
+    row.append(nameIn, valIn, lbl, del);
+    nameIn.addEventListener('input', updateAll);
+    valIn.addEventListener('input', updateAll);
+    chk.addEventListener('change', updateAll);
+    del.addEventListener('click', () => { row.remove(); updateAll(); });
+    fieldsWrap.appendChild(row);
+  }
+  // <!-- EB_SCRIPT_PART3 -->
+  const isUrl = (u: string) => /^https?:\/\//i.test(u);
+  const escAttr = (s: string) => esc(s).replace(/"/g, '&quot;');
+
+  function timeStr(): string {
+    const d = new Date();
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function renderPreview(s: State) {
+    const hasEmbed = !!(s.title || s.desc || s.author || s.fields.length || s.image || s.thumb || s.footer);
+    if (!s.content && !hasEmbed) {
+      preview.innerHTML = '<span class="eb-empty">' + esc(L.empty) + '</span>';
+      return;
+    }
+    const av = isUrl(s.avatar)
+      ? '<img class="eb-msg-av" src="' + escAttr(s.avatar) + '" alt="" />'
+      : '<span class="eb-msg-av"></span>';
+    let html = '<div class="eb-msg-head">' + av
+      + '<span class="eb-msg-name">' + esc(s.username || 'Webhook') + '</span>'
+      + '<span class="eb-msg-bot">Bot</span>'
+      + '<span class="eb-footer-sep" style="font-size:12px">' + timeStr() + '</span></div>';
+    if (s.content) html += '<div class="eb-msg-content">' + inline(s.content) + '</div>';
+
+    if (hasEmbed) {
+      const color = hexToInt(s.color) !== null ? s.color : '#5865F2';
+      const thumb = isUrl(s.thumb);
+      let main = '';
+      if (s.author) {
+        const icon = isUrl(s.authorIcon) ? '<img class="eb-author-icon" src="' + escAttr(s.authorIcon) + '" alt="" />' : '';
+        const name = isUrl(s.authorUrl)
+          ? '<a href="' + escAttr(s.authorUrl) + '" target="_blank" rel="noopener nofollow">' + esc(s.author) + '</a>'
+          : esc(s.author);
+        main += '<div class="eb-author">' + icon + '<span class="eb-author-name">' + name + '</span></div>';
+      }
+      if (s.title) {
+        const ti = isUrl(s.titleUrl)
+          ? '<a href="' + escAttr(s.titleUrl) + '" target="_blank" rel="noopener nofollow">' + inline(s.title) + '</a>'
+          : inline(s.title);
+        main += '<div class="eb-title">' + ti + '</div>';
+      }
+      if (s.desc) main += '<div class="eb-desc">' + inline(s.desc) + '</div>';
+      if (s.fields.length) {
+        main += '<div class="eb-fields">' + s.fields.map((f) =>
+          '<div class="eb-field' + (f.inline ? '' : ' full') + '">'
+          + '<div class="eb-field-name">' + inline(f.name) + '</div>'
+          + '<div class="eb-field-val">' + inline(f.value) + '</div></div>'
+        ).join('') + '</div>';
+      }
+      if (isUrl(s.image)) main += '<img class="eb-image" src="' + escAttr(s.image) + '" alt="" />';
+      if (s.footer || s.timestamp) {
+        const ficon = isUrl(s.footerIcon) ? '<img class="eb-footer-icon" src="' + escAttr(s.footerIcon) + '" alt="" />' : '';
+        const parts: string[] = [];
+        if (s.footer) parts.push(esc(s.footer));
+        if (s.timestamp) parts.push(timeStr());
+        main += '<div class="eb-footer">' + ficon + '<span>' + parts.join(' <span class="eb-footer-sep">•</span> ') + '</span></div>';
+      }
+      const thumbHtml = thumb ? '<img class="eb-thumb" src="' + escAttr(s.thumb) + '" alt="" />' : '';
+      html += '<div class="eb-embed' + (thumb ? ' has-thumb' : '') + '" style="border-left-color:' + esc(color) + '">'
+        + '<div class="eb-embed-main">' + main + '</div>' + thumbHtml + '</div>';
+    }
+    preview.innerHTML = html;
+  }
+  // <!-- EB_SCRIPT_PART4 -->
+  function buildPayload(s: State) {
+    const embed: Record<string, unknown> = {};
+    if (s.author) {
+      const a: Record<string, string> = { name: s.author };
+      if (isUrl(s.authorUrl)) a.url = s.authorUrl;
+      if (isUrl(s.authorIcon)) a.icon_url = s.authorIcon;
+      embed.author = a;
+    }
+    if (s.title) embed.title = s.title;
+    if (isUrl(s.titleUrl)) embed.url = s.titleUrl;
+    if (s.desc) embed.description = s.desc;
+    const ci = hexToInt(s.color);
+    if (ci !== null) embed.color = ci;
+    if (s.fields.length) {
+      embed.fields = s.fields.map((f) => ({ name: f.name || '​', value: f.value || '​', inline: f.inline }));
+    }
+    if (isUrl(s.thumb)) embed.thumbnail = { url: s.thumb };
+    if (isUrl(s.image)) embed.image = { url: s.image };
+    if (s.footer) {
+      const ft: Record<string, string> = { text: s.footer };
+      if (isUrl(s.footerIcon)) ft.icon_url = s.footerIcon;
+      embed.footer = ft;
+    }
+    if (s.timestamp) embed.timestamp = new Date().toISOString();
+
+    const payload: Record<string, unknown> = {};
+    if (s.content) payload.content = s.content;
+    if (s.username) payload.username = s.username;
+    if (isUrl(s.avatar)) payload.avatar_url = s.avatar;
+    if (Object.keys(embed).length) payload.embeds = [embed];
+    return payload;
+  }
+
+  function updateAll() {
+    const s = read();
+    renderPreview(s);
+    jsonEl.textContent = JSON.stringify(buildPayload(s), null, 2);
+  }
+
+  function status(msg: string, ok: boolean | null) {
+    statusEl.textContent = msg;
+    statusEl.classList.remove('text-[#0D9488]', 'text-[#dc322f]', 'text-[#6B7A90]', 'dark:text-[#8494A7]');
+    if (ok === true) statusEl.classList.add('text-[#0D9488]');
+    else if (ok === false) statusEl.classList.add('text-[#dc322f]');
+    else statusEl.classList.add('text-[#6B7A90]', 'dark:text-[#8494A7]');
+  }
+
+  const copyBtn = $('eb-copy');
+  copyBtn.addEventListener('click', async () => {
+    const text = jsonEl.textContent || '';
+    if (!text) return;
+    try { await navigator.clipboard.writeText(text); }
+    catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+    }
+    copyBtn.textContent = L.copied;
+    setTimeout(() => { copyBtn.textContent = L.copy; }, 1400);
+  });
+  // <!-- EB_SCRIPT_PART5 -->
+  // Webhook send. URL is read here and nowhere else — never persisted.
+  const WEBHOOK_RE = /^https:\/\/(?:ptb\.|canary\.)?discord(?:app)?\.com\/api\/(?:v\d+\/)?webhooks\/\d+\/[\w-]+/i;
+  const sendBtn = $('eb-send');
+  sendBtn.addEventListener('click', async () => {
+    const url = ($('eb-webhook').value || '').trim();
+    if (!url) { status(L.emptyUrl, false); return; }
+    if (!WEBHOOK_RE.test(url)) { status(L.invalidUrl, false); return; }
+    const payload = buildPayload(read());
+    sendBtn.disabled = true;
+    status(L.sending, null);
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        status(L.sent, true);
+      } else {
+        let detail = '';
+        try { detail = (await res.text()).slice(0, 140); } catch { /* ignore */ }
+        status(L.sendFail + ' (' + res.status + ')' + (detail ? ': ' + detail : ''), false);
+      }
+    } catch {
+      status(L.sendFail, false);
+    } finally {
+      sendBtn.disabled = false;
+    }
+  });
+
+  // Color picker <-> hex text sync
+  const colorInput = $('eb-color');
+  const hexInput = $('eb-color-hex');
+  colorInput.addEventListener('input', () => { hexInput.value = colorInput.value; updateAll(); });
+  hexInput.addEventListener('input', () => {
+    if (hexToInt(hexInput.value) !== null) colorInput.value = hexInput.value.trim().replace(/^#?/, '#');
+    updateAll();
+  });
+
+  const TEXT_IDS = ['eb-author', 'eb-author-icon', 'eb-author-url', 'eb-title', 'eb-title-url', 'eb-desc', 'eb-thumb', 'eb-image', 'eb-footer', 'eb-footer-icon', 'eb-content', 'eb-username', 'eb-avatar'];
+  TEXT_IDS.forEach((id) => $(id).addEventListener('input', updateAll));
+  $('eb-timestamp').addEventListener('change', updateAll);
+  $('eb-add-field').addEventListener('click', () => { addFieldRow('', '', true); updateAll(); });
+
+  function seed() {
+    let starter: { author?: string; title?: string; desc?: string; footer?: string; fields?: { name: string; value: string; inline: boolean }[] } = {};
+    try { starter = JSON.parse(ws.dataset.starter || '{}'); } catch { /* ignore */ }
+    $('eb-author').value = starter.author || '';
+    $('eb-title').value = starter.title || '';
+    ($('eb-desc') as unknown as HTMLTextAreaElement).value = starter.desc || '';
+    $('eb-footer').value = starter.footer || '';
+    $('eb-timestamp').checked = true;
+    fieldsWrap.innerHTML = '';
+    (starter.fields || []).forEach((f) => addFieldRow(f.name, f.value, f.inline));
+  }
+
+  $('eb-reset').addEventListener('click', () => {
+    TEXT_IDS.forEach((id) => { ($(id) as HTMLInputElement).value = ''; });
+    ($('eb-desc') as unknown as HTMLTextAreaElement).value = '';
+    ($('eb-content') as unknown as HTMLTextAreaElement).value = '';
+    colorInput.value = '#5865F2'; hexInput.value = '#5865F2';
+    seed();
+    status('', null);
+    updateAll();
+  });
+
+  seed();
+  updateAll();
+</script>
+

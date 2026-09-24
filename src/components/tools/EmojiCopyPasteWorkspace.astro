@@ -1,0 +1,177 @@
+---
+/**
+ * EmojiCopyPasteWorkspace.astro — Discord emoji copy-paste board.
+ *
+ * Curated grid of Unicode emojis and popular kaomoji, grouped by category, with
+ * click-to-copy and a live filter. Distinct from the Emoji Maker (which uploads
+ * a custom image) — this is for the built-in Unicode emojis anyone can paste.
+ * Language-agnostic logic on fixed element IDs; visible labels via `t`, runtime
+ * strings via data-* (`js` → `L`). Imported by the EN (/tools/emoji-copy-paste/)
+ * and ES (/es/tools/emoji-copy-paste/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const GROUPS = [
+  { key: 'smileys', emojis: ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😙','🥲','😋','😛','😜','🤪','😝','🤗','🤭','🫢','🤫','🤔','🫡','🤐','😐','😑','😶','🫥','😶‍🌫️','😏','😒','🙄','😬','😮‍💨','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤧','🥵','🥶','🥴','😵','😵‍💫','🤯','🤠','🥳','🥸','😎','🤓','🧐','😕','🫤','😟','🙁','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖'] },
+  { key: 'gestures', emojis: ['👍','👎','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','🫵','👋','🤚','🖐️','✋','🖖','👏','🙌','🫶','👐','🤲','🤝','🙏','✊','👊','🤛','🤜','💪','🦾','✍️','💅','🫡','🤦','🤷','🫠'] },
+  { key: 'hearts', emojis: ['❤️','🩷','🧡','💛','💚','💙','🩵','💜','🖤','🩶','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','💟','♥️','💌','💋','💯','🫀','💢','💥','💫','💦','💨'] },
+  { key: 'symbols', emojis: ['🔥','⭐','🌟','✨','⚡','💥','💫','💯','✅','❌','❗','❓','‼️','⁉️','⚠️','🚫','♻️','🔔','🔕','💤','🎉','🎊','🏆','🥇','🎯','💎','👑','🔑','🔒','🔓','🆒','🆕','🆙','🆓','🔰','⚜️','🌀','☑️','✔️','➰','〽️','🈶','🉐'] },
+  { key: 'animals', emojis: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐻‍❄️','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐔','🐧','🐦','🐤','🦄','🐝','🦋','🐌','🐞','🐢','🐙','🦑','🦈','🐬','🐳','🐋','🦭','🐺','🦉','🦇','🦅','🦩','🦚','🕷️','🦂','🐍','🦖','🐉','🐲'] },
+  { key: 'food', emojis: ['🍕','🍔','🍟','🌭','🥪','🌮','🌯','🍿','🧂','🥐','🥯','🍩','🍪','🎂','🧁','🍰','🍫','🍬','🍭','🍮','🍯','🍦','🍨','🍧','🍎','🍓','🫐','🍒','🍑','🍉','🍌','🥝','🥑','🍺','🍻','🥂','🍷','🍸','🍹','🧋','🥤','☕','🍵','🍜','🍣','🍱'] },
+  { key: 'activities', emojis: ['🎮','🕹️','🎲','🎯','🎰','🧩','🎨','🖌️','📸','🎬','🎧','🎵','🎶','🎤','🎸','🎹','🥁','🎺','🎻','🪩','⚽','🏀','🏈','⚾','🎾','🏐','🏓','🏸','🥊','🛹','🛼','🎿','🏹','🚀','🛸','🎁','💻','🖥️','⌨️','🖱️','📱','🔋','💡'] },
+  { key: 'aesthetic', emojis: ['✧','✦','⋆','˚','☆','★','⭑','⭒','⊹','࿐','｡','ﾟ','⟡','⟢','⟣','❀','✿','♡','♥','ෆ','ꨄ','⊰','⊱','➶','➹','⌇','⭙','∘','◦','·','⋯','⟿','⁺','˖','›','‹','»','«','„','⌗','⌒'] },
+  { key: 'arrows', emojis: ['←','↑','→','↓','↔️','↕️','↖️','↗️','↘️','↙️','⟶','⟵','➜','➔','➤','➟','➦','↳','↴','⤴️','⤵️','🔁','🔂','🔃','🔄','⇄','⇆','⇗','⇘','▶️','⏩','⏭️','⏪','◀️','✔️','✖️','➕','➖','➗','〰️'] },
+  { key: 'zodiac', emojis: ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓','⛎','☉','☽','☾','☄️','🌙','🌛','🌜','🌚','🌝','🌞','⭐','🌟','💫','✨','🪐','🌌','🌠','☀️','⚡','❄️','🔮','🧿'] },
+  { key: 'kaomoji', emojis: ['(╯°□°）╯︵ ┻━┻','┬─┬ ノ( ゜-゜ノ)','(ノಠ益ಠ)ノ彡┻━┻','¯\\_(ツ)_/¯','(づ｡◕‿‿◕｡)づ','(づ￣ ³￣)づ','(ノ◕ヮ◕)ノ*:･ﾟ✧','٩(◕‿◕)۶','(◍•ᴗ•◍)','ʕ•ᴥ•ʔ','(ᵔᴥᵔ)','( ͡° ͜ʖ ͡°)','(¬‿¬)','(￣ω￣)','(╥﹏╥)','(｡•́︿•̀｡)','(＾▽＾)','(≧▽≦)','(°ロ°)','(⊙_⊙)','(ㆆ_ㆆ)','(；一_一)','ಠ_ಠ','(๑•̀ㅂ•́)و✧','ᕦ(ò_óˇ)ᕤ','(∩｀-´)⊃━☆ﾟ','( •_•)>⌐■-■','(⌐■_■)'] }
+];
+
+const t = {
+  en: {
+    searchPlaceholder: 'Filter emojis by category name…',
+    clickToCopy: 'Click any emoji to copy it, then paste into Discord',
+    noResults: 'No categories match your filter.',
+    groupLabels: {
+      smileys: 'Smileys & Emotions',
+      gestures: 'Hands & Gestures',
+      hearts: 'Hearts & Love',
+      symbols: 'Symbols & Reactions',
+      animals: 'Animals & Nature',
+      food: 'Food & Drink',
+      activities: 'Activities & Objects',
+      aesthetic: 'Aesthetic & Decorative',
+      arrows: 'Arrows & Marks',
+      zodiac: 'Zodiac & Celestial',
+      kaomoji: 'Kaomoji & Text Faces'
+    },
+    links: [
+      { icon: '😀', href: '/tools/emoji/', label: 'Custom Emoji Maker (Upload Your Own)' },
+      { icon: '🎨', href: '/tools/colors/', label: 'Discord Color & Hex Codes' },
+      { icon: '🕒', href: '/tools/timestamp/', label: 'Discord Timestamp Generator' }
+    ]
+  },
+  es: {
+    searchPlaceholder: 'Filtra emojis por nombre de categoría…',
+    clickToCopy: 'Haz clic en cualquier emoji para copiarlo y pégalo en Discord',
+    noResults: 'Ninguna categoría coincide con tu filtro.',
+    groupLabels: {
+      smileys: 'Caras y Emociones',
+      gestures: 'Manos y Gestos',
+      hearts: 'Corazones y Amor',
+      symbols: 'Símbolos y Reacciones',
+      animals: 'Animales y Naturaleza',
+      food: 'Comida y Bebida',
+      activities: 'Actividades y Objetos',
+      aesthetic: 'Estéticos y Decorativos',
+      arrows: 'Flechas y Marcas',
+      zodiac: 'Zodiaco y Celestial',
+      kaomoji: 'Kaomoji y Caras de Texto'
+    },
+    links: [
+      { icon: '😀', href: '/es/tools/emoji/', label: 'Creador de Emojis (Sube el Tuyo)' },
+      { icon: '🎨', href: '/es/tools/colors/', label: 'Colores y Códigos Hex de Discord' },
+      { icon: '🕒', href: '/es/tools/timestamp/', label: 'Generador de Marcas de Tiempo' }
+    ]
+  }
+}[lang];
+
+const js = {
+  en: { copied: 'Copied!' },
+  es: { copied: '¡Copiado!' }
+}[lang];
+---
+
+<div id="ecp-workspace" class="space-y-6 mb-16" data-copied={js.copied}>
+  <div class="card-panel rounded-[14px] p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+    <input type="text" id="ecp-search" placeholder={t.searchPlaceholder} class="flex-1 text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none" />
+    <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] sm:whitespace-nowrap">{t.clickToCopy}</p>
+  </div>
+
+  <div id="ecp-groups" class="space-y-6">
+    {GROUPS.map((group) => (
+      <div class="ecp-group card-panel rounded-[14px] p-6" data-cat={t.groupLabels[group.key as keyof typeof t.groupLabels].toLowerCase()}>
+        <h2 class="text-sm font-bold text-[#192538] dark:text-white mb-3">{t.groupLabels[group.key as keyof typeof t.groupLabels]}</h2>
+        <div class="flex flex-wrap gap-2">
+          {group.emojis.map((emoji) => (
+            <button
+              type="button"
+              class="ecp-btn min-w-[2.5rem] h-10 px-2 rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] hover:border-[#3368A0] hover:bg-[#C8DFDB]/30 dark:hover:bg-[#1F2E45] transition-colors text-xl flex items-center justify-center"
+              data-emoji={emoji}
+              aria-label={`Copy ${emoji}`}
+            >{emoji}</button>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <p id="ecp-empty" class="hidden text-center text-sm text-[#6B7A90] dark:text-[#8494A7] py-8">{t.noResults}</p>
+
+  <div class="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium">
+    {t.links.map((link) => (
+      <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+        <span>{link.icon}</span> {link.label}
+      </a>
+    ))}
+  </div>
+
+  <!-- Copy toast -->
+  <div id="ecp-toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] px-4 py-2 rounded-[10px] bg-[#0D9488] text-white text-sm font-semibold shadow-lg"></div>
+</div>
+
+<script>
+  const ws = document.getElementById('ecp-workspace');
+  const L = { copied: ws?.dataset.copied || 'Copied!' };
+
+  const toast = document.getElementById('ecp-toast');
+  let toastTimer: ReturnType<typeof setTimeout> | null = null;
+
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  }
+
+  function showToast(emoji: string) {
+    if (!toast) return;
+    toast.textContent = `${emoji}  ${L.copied}`;
+    toast.classList.remove('hidden');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.add('hidden'), 1200);
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.ecp-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const emoji = btn.dataset.emoji || '';
+      if (!emoji) return;
+      copyText(emoji);
+      showToast(emoji);
+    });
+  });
+
+  // Category filter
+  const search = document.getElementById('ecp-search') as HTMLInputElement;
+  const groups = document.querySelectorAll<HTMLElement>('.ecp-group');
+  const empty = document.getElementById('ecp-empty');
+
+  search?.addEventListener('input', () => {
+    const q = search.value.trim().toLowerCase();
+    let visible = 0;
+    groups.forEach((g) => {
+      const cat = g.dataset.cat || '';
+      const match = !q || cat.includes(q);
+      g.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+    empty?.classList.toggle('hidden', visible > 0);
+  });
+</script>

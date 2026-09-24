@@ -1,0 +1,382 @@
+---
+/**
+ * PermissionsCalculatorWorkspace.astro — Discord permission calculator.
+ *
+ * Grouped permission-flag checkboxes → live BigInt permissions integer, a
+ * reverse decoder (paste an integer, boxes tick), quick role presets, and a
+ * bot-invite URL builder from a client ID. Discord permission flags exceed
+ * 2^31 (now 2^50+), so every value is computed and combined as BigInt.
+ * Language-agnostic logic on fixed IDs; visible labels via `t`, runtime
+ * strings via data-* (`js` → `L`). Imported by EN (/tools/permissions-calculator/)
+ * and ES (/es/tools/permissions-calculator/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+// Permission bit positions (1n << bit). Ordered inside Discord's own UI groups.
+// Values above bit 30 exceed 2^31 — never store or OR these as Number.
+const GROUPS = [
+  { id: 'general', perms: ['VIEW_CHANNEL','MANAGE_CHANNELS','MANAGE_ROLES','CREATE_GUILD_EXPRESSIONS','MANAGE_GUILD_EXPRESSIONS','VIEW_AUDIT_LOG','VIEW_GUILD_INSIGHTS','MANAGE_WEBHOOKS','MANAGE_GUILD'] },
+  { id: 'membership', perms: ['CREATE_INSTANT_INVITE','CHANGE_NICKNAME','MANAGE_NICKNAMES','KICK_MEMBERS','BAN_MEMBERS','MODERATE_MEMBERS'] },
+  { id: 'text', perms: ['SEND_MESSAGES','SEND_MESSAGES_IN_THREADS','CREATE_PUBLIC_THREADS','CREATE_PRIVATE_THREADS','EMBED_LINKS','ATTACH_FILES','ADD_REACTIONS','USE_EXTERNAL_EMOJIS','USE_EXTERNAL_STICKERS','MENTION_EVERYONE','MANAGE_MESSAGES','MANAGE_THREADS','READ_MESSAGE_HISTORY','SEND_TTS_MESSAGES','USE_APPLICATION_COMMANDS','SEND_VOICE_MESSAGES','SEND_POLLS','USE_EXTERNAL_APPS'] },
+  { id: 'voice', perms: ['CONNECT','SPEAK','STREAM','USE_EMBEDDED_ACTIVITIES','USE_SOUNDBOARD','USE_EXTERNAL_SOUNDS','USE_VAD','PRIORITY_SPEAKER','MUTE_MEMBERS','DEAFEN_MEMBERS','MOVE_MEMBERS','REQUEST_TO_SPEAK'] },
+  { id: 'events', perms: ['CREATE_EVENTS','MANAGE_EVENTS'] },
+  { id: 'advanced', perms: ['ADMINISTRATOR'] }
+];
+
+const BITS: Record<string, number> = {
+  CREATE_INSTANT_INVITE:0, KICK_MEMBERS:1, BAN_MEMBERS:2, ADMINISTRATOR:3, MANAGE_CHANNELS:4,
+  MANAGE_GUILD:5, ADD_REACTIONS:6, VIEW_AUDIT_LOG:7, PRIORITY_SPEAKER:8, STREAM:9, VIEW_CHANNEL:10,
+  SEND_MESSAGES:11, SEND_TTS_MESSAGES:12, MANAGE_MESSAGES:13, EMBED_LINKS:14, ATTACH_FILES:15,
+  READ_MESSAGE_HISTORY:16, MENTION_EVERYONE:17, USE_EXTERNAL_EMOJIS:18, VIEW_GUILD_INSIGHTS:19,
+  CONNECT:20, SPEAK:21, MUTE_MEMBERS:22, DEAFEN_MEMBERS:23, MOVE_MEMBERS:24, USE_VAD:25,
+  CHANGE_NICKNAME:26, MANAGE_NICKNAMES:27, MANAGE_ROLES:28, MANAGE_WEBHOOKS:29,
+  MANAGE_GUILD_EXPRESSIONS:30, USE_APPLICATION_COMMANDS:31, REQUEST_TO_SPEAK:32, MANAGE_EVENTS:33,
+  MANAGE_THREADS:34, CREATE_PUBLIC_THREADS:35, CREATE_PRIVATE_THREADS:36, USE_EXTERNAL_STICKERS:37,
+  SEND_MESSAGES_IN_THREADS:38, USE_EMBEDDED_ACTIVITIES:39, MODERATE_MEMBERS:40, CREATE_GUILD_EXPRESSIONS:43,
+  CREATE_EVENTS:44, USE_EXTERNAL_SOUNDS:45, SEND_VOICE_MESSAGES:46, SEND_POLLS:49, USE_EXTERNAL_APPS:50,
+  USE_SOUNDBOARD:42
+};
+const bitValue = (id: string) => (1n << BigInt(BITS[id])).toString();
+
+// Per-permission [name, description] in both locales. Descriptions mirror
+// Discord's in-app copy so the page reads as an authoritative reference.
+const META: Record<string, { en: [string, string]; es: [string, string] }> = {
+  VIEW_CHANNEL: { en: ['View Channels', 'See channels in the server by default.'], es: ['Ver canales', 'Ver los canales del servidor por defecto.'] },
+  MANAGE_CHANNELS: { en: ['Manage Channels', 'Create, edit, and delete channels.'], es: ['Gestionar canales', 'Crear, editar y borrar canales.'] },
+  MANAGE_ROLES: { en: ['Manage Roles', 'Create and edit roles below their own.'], es: ['Gestionar roles', 'Crear y editar roles por debajo del suyo.'] },
+  CREATE_GUILD_EXPRESSIONS: { en: ['Create Expressions', 'Add custom emoji, stickers, and sounds.'], es: ['Crear expresiones', 'Añadir emojis, stickers y sonidos.'] },
+  MANAGE_GUILD_EXPRESSIONS: { en: ['Manage Expressions', 'Edit and remove custom expressions.'], es: ['Gestionar expresiones', 'Editar y quitar expresiones personalizadas.'] },
+  VIEW_AUDIT_LOG: { en: ['View Audit Log', 'Read the record of server changes.'], es: ['Ver registro de auditoría', 'Leer el historial de cambios del servidor.'] },
+  VIEW_GUILD_INSIGHTS: { en: ['View Server Insights', 'See growth and engagement analytics.'], es: ['Ver estadísticas del servidor', 'Ver analíticas de crecimiento y actividad.'] },
+  MANAGE_WEBHOOKS: { en: ['Manage Webhooks', 'Create, edit, and delete webhooks.'], es: ['Gestionar webhooks', 'Crear, editar y borrar webhooks.'] },
+  MANAGE_GUILD: { en: ['Manage Server', 'Change the server name, region, and settings.'], es: ['Gestionar servidor', 'Cambiar nombre, región y ajustes del servidor.'] },
+  CREATE_INSTANT_INVITE: { en: ['Create Invite', 'Invite new members with an invite link.'], es: ['Crear invitación', 'Invitar miembros con un enlace.'] },
+  CHANGE_NICKNAME: { en: ['Change Nickname', 'Set their own nickname in the server.'], es: ['Cambiar apodo', 'Cambiar su propio apodo en el servidor.'] },
+  MANAGE_NICKNAMES: { en: ['Manage Nicknames', "Change other members' nicknames."], es: ['Gestionar apodos', 'Cambiar los apodos de otros miembros.'] },
+  KICK_MEMBERS: { en: ['Kick Members', 'Remove members from the server.'], es: ['Expulsar miembros', 'Quitar miembros del servidor.'] },
+  BAN_MEMBERS: { en: ['Ban Members', 'Permanently ban members from the server.'], es: ['Banear miembros', 'Banear miembros de forma permanente.'] },
+  MODERATE_MEMBERS: { en: ['Timeout Members', 'Temporarily mute members (time out).'], es: ['Aislar miembros', 'Silenciar miembros temporalmente.'] },
+  SEND_MESSAGES: { en: ['Send Messages', 'Send messages in text channels.'], es: ['Enviar mensajes', 'Enviar mensajes en canales de texto.'] },
+  SEND_MESSAGES_IN_THREADS: { en: ['Send in Threads', 'Send messages inside threads.'], es: ['Enviar en hilos', 'Enviar mensajes dentro de los hilos.'] },
+  CREATE_PUBLIC_THREADS: { en: ['Create Public Threads', 'Start threads everyone can see.'], es: ['Crear hilos públicos', 'Crear hilos visibles para todos.'] },
+  CREATE_PRIVATE_THREADS: { en: ['Create Private Threads', 'Start invite-only threads.'], es: ['Crear hilos privados', 'Crear hilos solo por invitación.'] },
+  EMBED_LINKS: { en: ['Embed Links', 'Show link previews for posted URLs.'], es: ['Insertar enlaces', 'Mostrar vistas previas de enlaces.'] },
+  ATTACH_FILES: { en: ['Attach Files', 'Upload images and files to chat.'], es: ['Adjuntar archivos', 'Subir imágenes y archivos al chat.'] },
+  ADD_REACTIONS: { en: ['Add Reactions', 'React to messages with emoji.'], es: ['Añadir reacciones', 'Reaccionar a mensajes con emojis.'] },
+  USE_EXTERNAL_EMOJIS: { en: ['Use External Emoji', 'Use emoji from other servers.'], es: ['Usar emojis externos', 'Usar emojis de otros servidores.'] },
+  USE_EXTERNAL_STICKERS: { en: ['Use External Stickers', 'Use stickers from other servers.'], es: ['Usar stickers externos', 'Usar stickers de otros servidores.'] },
+  MENTION_EVERYONE: { en: ['Mention @everyone', 'Ping @everyone, @here, and all roles.'], es: ['Mencionar a @everyone', 'Mencionar @everyone, @here y roles.'] },
+  MANAGE_MESSAGES: { en: ['Manage Messages', "Delete and pin others' messages."], es: ['Gestionar mensajes', 'Borrar y fijar mensajes de otros.'] },
+  MANAGE_THREADS: { en: ['Manage Threads', 'Rename, archive, and delete threads.'], es: ['Gestionar hilos', 'Renombrar, archivar y borrar hilos.'] },
+  READ_MESSAGE_HISTORY: { en: ['Read Message History', 'See messages sent before joining.'], es: ['Leer historial', 'Ver mensajes anteriores al ingreso.'] },
+  SEND_TTS_MESSAGES: { en: ['Send TTS Messages', 'Send text-to-speech /tts messages.'], es: ['Enviar mensajes TTS', 'Enviar mensajes de texto a voz /tts.'] },
+  USE_APPLICATION_COMMANDS: { en: ['Use Slash Commands', 'Use application and slash commands.'], es: ['Usar comandos', 'Usar comandos de aplicaciones y barra.'] },
+  SEND_VOICE_MESSAGES: { en: ['Send Voice Messages', 'Record and send voice messages.'], es: ['Enviar mensajes de voz', 'Grabar y enviar mensajes de voz.'] },
+  SEND_POLLS: { en: ['Create Polls', 'Create polls in text channels.'], es: ['Crear encuestas', 'Crear encuestas en canales de texto.'] },
+  USE_EXTERNAL_APPS: { en: ['Use External Apps', 'Use apps not added to this server.'], es: ['Usar apps externas', 'Usar apps no añadidas al servidor.'] },
+  CONNECT: { en: ['Connect', 'Join voice channels.'], es: ['Conectar', 'Unirse a canales de voz.'] },
+  SPEAK: { en: ['Speak', 'Talk in voice channels.'], es: ['Hablar', 'Hablar en canales de voz.'] },
+  STREAM: { en: ['Video', 'Share video, screen, and Go Live.'], es: ['Vídeo', 'Compartir vídeo, pantalla y Go Live.'] },
+  USE_EMBEDDED_ACTIVITIES: { en: ['Use Activities', 'Launch Activities in voice channels.'], es: ['Usar actividades', 'Abrir actividades en canales de voz.'] },
+  USE_SOUNDBOARD: { en: ['Use Soundboard', 'Play sounds from the soundboard.'], es: ['Usar soundboard', 'Reproducir sonidos del soundboard.'] },
+  USE_EXTERNAL_SOUNDS: { en: ['Use External Sounds', 'Use soundboard sounds from elsewhere.'], es: ['Usar sonidos externos', 'Usar sonidos de otros servidores.'] },
+  USE_VAD: { en: ['Use Voice Activity', 'Talk without push-to-talk.'], es: ['Usar actividad de voz', 'Hablar sin pulsar para hablar.'] },
+  PRIORITY_SPEAKER: { en: ['Priority Speaker', 'Lower others when speaking.'], es: ['Orador prioritario', 'Bajar el volumen de otros al hablar.'] },
+  MUTE_MEMBERS: { en: ['Mute Members', 'Mute members in voice channels.'], es: ['Silenciar miembros', 'Silenciar miembros en canales de voz.'] },
+  DEAFEN_MEMBERS: { en: ['Deafen Members', 'Deafen members in voice channels.'], es: ['Ensordecer miembros', 'Ensordecer miembros en voz.'] },
+  MOVE_MEMBERS: { en: ['Move Members', 'Move members between voice channels.'], es: ['Mover miembros', 'Mover miembros entre canales de voz.'] },
+  REQUEST_TO_SPEAK: { en: ['Request to Speak', 'Request to speak in Stage channels.'], es: ['Pedir la palabra', 'Pedir hablar en canales de escenario.'] },
+  CREATE_EVENTS: { en: ['Create Events', 'Create server events.'], es: ['Crear eventos', 'Crear eventos del servidor.'] },
+  MANAGE_EVENTS: { en: ['Manage Events', 'Edit and cancel server events.'], es: ['Gestionar eventos', 'Editar y cancelar eventos.'] },
+  ADMINISTRATOR: { en: ['Administrator', 'Grants every permission and bypasses channel overrides. Assign with care.'], es: ['Administrador', 'Concede todos los permisos y omite las restricciones de canal. Asignar con cuidado.'] }
+};
+
+// Role presets — arrays of permission IDs, OR-combined on click.
+const PRESETS: Record<string, string[]> = {
+  admin: ['ADMINISTRATOR'],
+  moderator: ['VIEW_CHANNEL','VIEW_AUDIT_LOG','KICK_MEMBERS','BAN_MEMBERS','MODERATE_MEMBERS','MANAGE_NICKNAMES','MANAGE_MESSAGES','MANAGE_THREADS','MENTION_EVERYONE','MOVE_MEMBERS','MUTE_MEMBERS','DEAFEN_MEMBERS','SEND_MESSAGES','READ_MESSAGE_HISTORY','CONNECT','SPEAK'],
+  member: ['VIEW_CHANNEL','CREATE_INSTANT_INVITE','CHANGE_NICKNAME','SEND_MESSAGES','SEND_MESSAGES_IN_THREADS','CREATE_PUBLIC_THREADS','EMBED_LINKS','ATTACH_FILES','ADD_REACTIONS','USE_EXTERNAL_EMOJIS','USE_EXTERNAL_STICKERS','READ_MESSAGE_HISTORY','USE_APPLICATION_COMMANDS','CONNECT','SPEAK','STREAM','USE_VAD','USE_EMBEDDED_ACTIVITIES','SEND_POLLS'],
+  readonly: ['VIEW_CHANNEL','READ_MESSAGE_HISTORY','ADD_REACTIONS','CONNECT']
+};
+// Visible labels — server-rendered per locale.
+const t = {
+  en: {
+    presetsLabel: 'Quick role presets',
+    presets: { admin: 'Administrator', moderator: 'Moderator', member: 'Member', readonly: 'Read-only' },
+    groups: { general: 'General Server Permissions', membership: 'Membership Permissions', text: 'Text Channel Permissions', voice: 'Voice Channel Permissions', events: 'Events Permissions', advanced: 'Advanced Permissions' },
+    outputLabel: 'Permissions integer',
+    outputHint: 'Paste this into a bot library, API call, or role config.',
+    copy: 'Copy',
+    clear: 'Clear all',
+    decodeLabel: 'Decode a permissions integer',
+    decodePlaceholder: 'e.g. 8 or 1071698660928',
+    decodeHint: 'Paste any permissions integer to tick the matching boxes.',
+    inviteLabel: 'Bot invite URL builder',
+    invitePlaceholder: 'Bot Client ID (Application ID)',
+    inviteHint: 'Add your bot Client ID to build an authorize URL with the selected permissions.',
+    inviteCopy: 'Copy invite URL',
+    adminNote: 'Administrator overrides every other permission and bypasses all channel-level overrides. Grant it only to fully trusted roles.',
+    selectedCount: 'permissions selected',
+    links: [
+      { href: '/tools/embed-builder/', label: 'Discord Embed Builder' },
+      { href: '/tools/timestamp/', label: 'Timestamp Generator' },
+      { href: '/tools/snowflake/', label: 'Snowflake ID Decoder' }
+    ]
+  },
+  es: {
+    presetsLabel: 'Presets rápidos de rol',
+    presets: { admin: 'Administrador', moderator: 'Moderador', member: 'Miembro', readonly: 'Solo lectura' },
+    groups: { general: 'Permisos generales del servidor', membership: 'Permisos de membresía', text: 'Permisos de canales de texto', voice: 'Permisos de canales de voz', events: 'Permisos de eventos', advanced: 'Permisos avanzados' },
+    outputLabel: 'Entero de permisos',
+    outputHint: 'Pégalo en una librería de bots, llamada a la API o configuración de rol.',
+    copy: 'Copiar',
+    clear: 'Borrar todo',
+    decodeLabel: 'Decodificar un entero de permisos',
+    decodePlaceholder: 'ej. 8 o 1071698660928',
+    decodeHint: 'Pega cualquier entero de permisos para marcar las casillas.',
+    inviteLabel: 'Generador de URL de invitación del bot',
+    invitePlaceholder: 'Client ID del bot (Application ID)',
+    inviteHint: 'Añade el Client ID de tu bot para crear una URL de autorización con los permisos elegidos.',
+    inviteCopy: 'Copiar URL de invitación',
+    adminNote: 'Administrador anula todos los demás permisos y omite las restricciones de canal. Concédelo solo a roles de total confianza.',
+    selectedCount: 'permisos seleccionados',
+    links: [
+      { href: '/es/tools/embed-builder/', label: 'Constructor de Embeds' },
+      { href: '/es/tools/timestamp/', label: 'Generador de marcas de tiempo' },
+      { href: '/es/tools/snowflake/', label: 'Decodificador de Snowflake' }
+    ]
+  }
+}[lang];
+
+// Runtime strings for the client script, passed via data-* on the root.
+const js = {
+  en: { copied: 'Copied!', copy: 'Copy', copyInvite: 'Copy invite URL', selected: 'permissions selected', invalid: 'Not a valid integer' },
+  es: { copied: '¡Copiado!', copy: 'Copiar', copyInvite: 'Copiar URL de invitación', selected: 'permisos seleccionados', invalid: 'Entero no válido' }
+}[lang];
+---
+<div
+  id="pc-workspace"
+  data-copied={js.copied}
+  data-copy={js.copy}
+  data-copyinvite={js.copyInvite}
+  data-selected={js.selected}
+  data-invalid={js.invalid}
+  data-presets={JSON.stringify(PRESETS)}
+  class="mx-auto w-full max-w-4xl"
+>
+  <!-- Output: live permissions integer -->
+  <div class="rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] p-5 sm:p-6 shadow-sm">
+    <div class="flex items-center justify-between gap-3">
+      <label for="pc-output" class="text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.outputLabel}</label>
+      <span id="pc-count" class="text-xs font-semibold text-[#3368A0] dark:text-[#66A3BF]">0 {t.selectedCount}</span>
+    </div>
+    <div class="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <input
+        id="pc-output"
+        type="text"
+        readonly
+        value="0"
+        aria-label={t.outputLabel}
+        class="w-full flex-1 rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-4 py-3 font-mono text-lg text-[#192538] dark:text-white outline-none focus:border-[#3368A0]"
+      />
+      <div class="flex gap-2">
+        <button id="pc-copy" type="button" class="btn-primary rounded-[10px] px-5 py-3 text-sm">{t.copy}</button>
+        <button id="pc-clear" type="button" class="btn-secondary rounded-[10px] px-4 py-3 text-xs font-semibold">{t.clear}</button>
+      </div>
+    </div>
+    <p class="mt-2 text-xs text-[#6B7A90] dark:text-[#8494A7]">{t.outputHint}</p>
+  </div>
+
+  <!-- Quick role presets -->
+  <div class="mt-5">
+    <p class="mb-2 text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.presetsLabel}</p>
+    <div class="flex flex-wrap gap-2">
+      {Object.entries(t.presets).map(([key, label]) => (
+        <button
+          type="button"
+          data-preset={key}
+          class="pc-preset btn-secondary rounded-full px-4 py-2 text-sm font-semibold"
+        >{label}</button>
+      ))}
+    </div>
+  </div>
+
+  <!-- Decode + invite builder -->
+  <div class="mt-5 grid gap-4 sm:grid-cols-2">
+    <div class="rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] p-5 shadow-sm">
+      <label for="pc-decode" class="text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.decodeLabel}</label>
+      <input
+        id="pc-decode"
+        type="text"
+        inputmode="numeric"
+        placeholder={t.decodePlaceholder}
+        class="mt-2 w-full rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-4 py-3 font-mono text-sm text-[#192538] dark:text-white outline-none focus:border-[#3368A0]"
+      />
+      <p id="pc-decode-hint" class="mt-2 text-xs text-[#6B7A90] dark:text-[#8494A7]">{t.decodeHint}</p>
+    </div>
+    <div class="rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] p-5 shadow-sm">
+      <label for="pc-clientid" class="text-xs font-bold uppercase tracking-wide text-[#6B7A90] dark:text-[#8494A7]">{t.inviteLabel}</label>
+      <input
+        id="pc-clientid"
+        type="text"
+        inputmode="numeric"
+        placeholder={t.invitePlaceholder}
+        class="mt-2 w-full rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-4 py-3 font-mono text-sm text-[#192538] dark:text-white outline-none focus:border-[#3368A0]"
+      />
+      <div class="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+        <input
+          id="pc-invite"
+          type="text"
+          readonly
+          aria-label={t.inviteLabel}
+          class="w-full flex-1 rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-3 py-2 font-mono text-xs text-[#475569] dark:text-[#94A3B8] outline-none"
+        />
+        <button id="pc-copyinvite" type="button" class="btn-primary shrink-0 rounded-[10px] px-4 py-2 text-sm">{t.inviteCopy}</button>
+      </div>
+      <p class="mt-2 text-xs text-[#6B7A90] dark:text-[#8494A7]">{t.inviteHint}</p>
+    </div>
+  </div>
+
+  <!-- Grouped permission checkboxes -->
+  <div class="mt-6 space-y-6">
+    {GROUPS.map((group) => (
+      <fieldset class="rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] p-5 shadow-sm">
+        <legend class="px-1 text-sm font-bold text-[#192538] dark:text-white">{t.groups[group.id as keyof typeof t.groups]}</legend>
+        <div class="mt-3 grid gap-2 sm:grid-cols-2">
+          {group.perms.map((id) => (
+            <label class="flex cursor-pointer items-start gap-3 rounded-[10px] border border-transparent p-2 transition hover:border-[#C8DFDB] dark:hover:border-[#263346] hover:bg-[#FAF8F5] dark:hover:bg-[#1B2330]">
+              <input
+                type="checkbox"
+                class="pc-perm mt-0.5 h-5 w-5 shrink-0 accent-[#3368A0]"
+                data-bit={id}
+                value={bitValue(id)}
+              />
+              <span class="min-w-0">
+                <span class="block text-sm font-semibold text-[#192538] dark:text-white">{META[id][lang][0]}</span>
+                <span class="block text-xs text-[#6B7A90] dark:text-[#8494A7]">{META[id][lang][1]}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    ))}
+  </div>
+
+  <!-- Administrator override note -->
+  <p class="mt-5 rounded-[10px] border border-[#EAB308]/40 bg-[#FEF9C3] dark:bg-[#3A2F0B] px-4 py-3 text-xs text-[#854D0E] dark:text-[#FDE047]">
+    ⚠️ {t.adminNote}
+  </p>
+
+  <!-- Trailing internal links -->
+  <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+    {t.links.map((link) => (
+      <a href={link.href} class="font-semibold text-[#3368A0] dark:text-[#66A3BF] transition hover:underline">{link.label} →</a>
+    ))}
+  </div>
+</div>
+<script>
+  const ws = document.getElementById('pc-workspace');
+  if (ws) {
+    const L = {
+      copied: ws.dataset.copied || 'Copied!',
+      copy: ws.dataset.copy || 'Copy',
+      copyInvite: ws.dataset.copyinvite || 'Copy invite URL',
+      selected: ws.dataset.selected || 'permissions selected',
+      invalid: ws.dataset.invalid || 'Not a valid integer',
+    };
+    const perms = Array.from(ws.querySelectorAll('.pc-perm')) as HTMLInputElement[];
+    const output = ws.querySelector('#pc-output') as HTMLInputElement;
+    const count = ws.querySelector('#pc-count') as HTMLElement;
+    const clientId = ws.querySelector('#pc-clientid') as HTMLInputElement;
+    const inviteOut = ws.querySelector('#pc-invite') as HTMLInputElement;
+    const decodeInput = ws.querySelector('#pc-decode') as HTMLInputElement;
+    const decodeHint = ws.querySelector('#pc-decode-hint') as HTMLElement;
+    const decodeHintDefault = decodeHint.textContent;
+
+    // Bit value of Administrator (bit 3) — implies every permission.
+    const ADMIN = 1n << 3n;
+
+    function currentValue() {
+      let total = 0n;
+      for (const p of perms) if (p.checked) total |= BigInt(p.value);
+      return total;
+    }
+
+    function buildInvite(total: string) {
+      const id = clientId.value.replace(/\D/g, '');
+      if (!id) { inviteOut.value = ''; return; }
+      inviteOut.value = `https://discord.com/oauth2/authorize?client_id=${id}&scope=bot%20applications.commands&permissions=${total}`;
+    }
+
+    function recompute() {
+      const total = currentValue();
+      output.value = total.toString();
+      const n = perms.filter((p) => p.checked).length;
+      count.textContent = `${n} ${L.selected}`;
+      buildInvite(total.toString());
+    }
+    function flash(btn: HTMLElement, label: string) {
+      const original = btn.textContent;
+      btn.textContent = L.copied;
+      btn.classList.add('!bg-[#0D9488]', '!text-white', '!border-[#0D9488]');
+      setTimeout(() => { btn.textContent = original || label; btn.classList.remove('!bg-[#0D9488]', '!text-white', '!border-[#0D9488]'); }, 1400);
+    }
+
+    async function copyText(text: string, btn: HTMLElement, label: string) {
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch {}
+        document.body.removeChild(ta);
+      }
+      flash(btn, label);
+    }
+
+    for (const p of perms) p.addEventListener('change', recompute);
+
+    (ws.querySelector('#pc-clear') as HTMLElement).addEventListener('click', () => {
+      for (const p of perms) p.checked = false;
+      recompute();
+    });
+
+    ws.querySelectorAll('.pc-preset').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const key = (btn as HTMLElement).dataset.preset;
+        const ids = PRESETS[key as string] || [];
+        for (const p of perms) p.checked = ids.includes(p.dataset.bit as string);
+        recompute();
+      });
+    });
+
+    // Reverse decode — paste an integer, tick the matching boxes.
+    decodeInput.addEventListener('input', () => {
+      const raw = decodeInput.value.trim();
+      if (!raw) { decodeHint.textContent = decodeHintDefault; decodeInput.classList.remove('!border-[#ed4245]'); return; }
+      let val: bigint;
+      try { val = BigInt(raw); } catch { decodeHint.textContent = L.invalid; decodeInput.classList.add('!border-[#ed4245]'); return; }
+      decodeInput.classList.remove('!border-[#ed4245]');
+      decodeHint.textContent = decodeHintDefault;
+      const admin = (val & ADMIN) === ADMIN;
+      for (const p of perms) {
+        const bit = BigInt(p.value);
+        p.checked = admin ? p.dataset.bit === 'ADMINISTRATOR' : (val & bit) === bit;
+      }
+      recompute();
+    });
+
+    (ws.querySelector('#pc-copy') as HTMLElement).addEventListener('click', (e) => copyText(output.value, e.currentTarget as HTMLElement, L.copy));
+    (ws.querySelector('#pc-copyinvite') as HTMLElement).addEventListener('click', (e) => copyText(inviteOut.value, e.currentTarget as HTMLElement, L.copyInvite));
+    clientId.addEventListener('input', () => buildInvite(output.value));
+
+    // PRESETS injected for the client from the server-defined map.
+    const PRESETS = JSON.parse(ws.dataset.presets || '{}');
+    recompute();
+  }
+</script>

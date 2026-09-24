@@ -1,8 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
-import SketchCircle from '../../components/SketchCircle.astro';
-import { generateSoftwareApplicationSchema, generateBreadcrumbSchema } from '../../utils/seo';
+import BannerWorkspace from '../../components/tools/BannerWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
 
 const pageTitle = "Discord Banner Maker | Crop to Safe Zones | Asset Studio";
 const pageDescription = "Free Discord banner maker for server banners and profile cards. Crop to 960x540 and 680x240 with top 48px safe zone overlays. 100% private in your browser.";
@@ -19,41 +21,68 @@ const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Banner Studio", url: pageUrl }
 ]);
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+const faqItems = [
+  { q: "What size is a Discord banner and what are the exact Discord banner dimensions?", a: "The minimum Discord server banner size is 960x540 pixels (a widescreen 16:9 Discord banner aspect ratio). For crisp text on high-DPI Retina screens, we recommend exporting at 1920x1080. For personal profiles, Discord banner dimensions are 680x240 pixels for global profiles and 600x240 for server-specific profile cards." },
+  { q: "How to change Discord server banner?", a: "To change your Discord server banner: open Discord, head to Server Settings > Overview > Server Banner Background, and upload your graphic. Static banners require Server Boost Level 2 (7 boosts), while an animated Discord banner gif requires Server Boost Level 3 (14 boosts)." },
+  { q: "Why is the top 48px safe zone critical on Discord server banners?", a: "On desktop and browser apps, Discord places your server name, dropdown menu, and boost badges right over the top 48 pixels of the banner. If you place text, logos, or faces in this top strip, the buttons will cover them up. Our safe zone overlay helps you keep key elements below this line." },
+  { q: "Can I use this as a Discord server banner maker for animated banners?", a: "Yes. You can use our tool as a Discord server banner maker for both animated banner discord graphics (GIFs) and static images up to 10.0 MB. Our live canvas preview shows both 16:9 server headers and panoramic 5:2 profile formats." },
+  { q: "Is there a Discord banner template or resizer built in?", a: "Yes. Each preset acts as a fixed Discord banner template — pick Server (960x540) or profile banner Discord sizes (680x240 and 600x240) and the canvas locks to that exact ratio. As a Discord banner resizer, it crops and scales any uploaded artwork to fit the chosen template without stretching, then exports at the correct resolution." }
+];
+
+const dossier = {
+  eyebrow: "Banner Technical Blueprint",
+  heading: "Designing clean",
+  highlight: "Discord banners",
+  intro: "Server banners and user profile cards use completely different shapes. On desktop, Discord also puts menus over the top edge. Here is how to keep your art and text looking sharp everywhere.",
+  steps: [
+    "Server vs Profile Ratios",
+    "The Top 48px Header Safe Zone",
+    "Crisp Retina Resolution",
+    "Server Boosts & Nitro Perks"
+  ],
+  cards: [
     {
-      "@type": "Question",
-      "name": "What size is a Discord banner and what are the exact Discord banner dimensions?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The minimum Discord server banner size is 960x540 pixels (a widescreen 16:9 Discord banner aspect ratio). For crisp text on high-DPI Retina screens, we recommend exporting at 1920x1080. For personal profiles, Discord banner dimensions are 680x240 pixels for global profiles and 600x240 for server-specific profile cards."
-      }
+      kicker: "RATIO MATHEMATICS // 01",
+      badge: "16:9 VS 5:2 RATIOS",
+      badgeTone: "emerald" as const,
+      title: "Server Banners (16:9) vs User Profiles (5:2)",
+      body: [
+        "A common mistake is using the exact same crop for both server headers and profile banners. They use very different shapes. Discord server banners use a widescreen 16:9 Discord banner aspect ratio (at least 960×540 px), stretching across the top of your server channels.",
+        "Profile banners, on the other hand, are wide and slim. Global profiles use 680×240 pixels, while per-server profile cards display at 600×240 pixels (roughly 5:2). If you paste a 16:9 server banner into your profile, Discord cuts off almost 40% of the top and bottom, which easily slices off character heads or text. This Discord banner maker gives you the exact canvas preset for both styles so you never have to guess."
+      ]
     },
     {
-      "@type": "Question",
-      "name": "How to change Discord server banner?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "To change your Discord server banner: open Discord, head to Server Settings > Overview > Server Banner Background, and upload your graphic. Static banners require Server Boost Level 2 (7 boosts), while an animated Discord banner gif requires Server Boost Level 3 (14 boosts)."
-      }
+      kicker: "INTERFACE OVERLAY // 02",
+      badge: "TOP 48PX OCCLUSION",
+      badgeTone: "blue" as const,
+      title: "The 48px Header Safe Zone: Protecting Typography",
+      body: [
+        "On desktop apps and web browsers, Discord places your server name, dropdown menu, and boost badges right over the top edge of your banner. It adds a subtle dark shadow behind that text to keep it readable.",
+        "This UI covers roughly the top 48 pixels (or 96 pixels on high-res Retina screens). If you put your server title, logo, or a character's face in that top strip, the Discord buttons will cover it. We show a red safe-zone overlay while you edit so you can place your important graphics where nothing blocks them."
+      ],
+      footer: "Active overlay prevents UI collision with Discord's server navigation elements."
     },
     {
-      "@type": "Question",
-      "name": "Why is the top 48px safe zone critical on Discord server banners?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "On desktop and browser apps, Discord places your server name, dropdown menu, and boost badges right over the top 48 pixels of the banner. If you place text, logos, or faces in this top strip, the buttons will cover them up. Our safe zone overlay helps you keep key elements below this line."
-      }
+      kicker: "RESOLUTION CRAFT // 03",
+      badge: "1920 × 1080 RETINA",
+      badgeTone: "amber" as const,
+      title: "Retina 2x Scaling & Background Contrast Grading",
+      body: [
+        "Discord's official minimum spec is 960×540 pixels. That worked well years ago, but on modern MacBook Retina screens, 1440p monitors, and smartphones, a 960px image gets stretched and can look soft or blurry.",
+        "We recommend exporting at 1920×1080 pixels (the exact same 16:9 shape). At 1080p, your artwork stays crystal clear on high-DPI displays. Because Discord allows files up to 10.0 MB, a clean 1080p PNG or GIF will upload easily without losing sharpness."
+      ],
+      footer: "Export a 1920×1080 master (16:9) — crisp on Retina, still under Discord's 10 MB cap."
     },
     {
-      "@type": "Question",
-      "name": "Can I use this as a Discord server banner maker for animated banners?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. You can use our tool as a Discord server banner maker for both animated banner discord graphics (GIFs) and static images up to 10.0 MB. Our live canvas preview shows both 16:9 server headers and panoramic 5:2 profile formats."
-      }
+      kicker: "PERMISSION PROTOCOLS // 04",
+      badge: "BOOST LEVEL 2 & 3",
+      badgeTone: "purple" as const,
+      title: "Server Boost Tiers & Nitro Gating Verification",
+      body: [
+        "Before you export your artwork, make sure your server has unlocked the right perks. Static server banners unlock at Server Boost Level 2 (which needs 7 server boosts). Animated GIF server banners require Server Boost Level 3 (14 boosts). If your server ever loses boosts and drops below that tier, Discord hides the banner until you reach that level again.",
+        "For user profiles, static banner uploads need Nitro Basic or standard Nitro, while animated banners need full Discord Nitro. Everything runs right in your browser, so you can test and crop your designs before uploading to Discord."
+      ],
+      footer: "Zero server uploads • in-browser 16:9 & 5:2 geometric alignment."
     }
   ]
 };
@@ -63,726 +92,37 @@ const faqSchema = {
   <!-- Inject Schemas -->
   <script type="application/ld+json" set:html={appSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <div class="mb-8">
-      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
         <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
         <span>/</span>
         <span class="text-[#192538] dark:text-white font-semibold">Banner Studio</span>
+      </div>
+        <a href="/es/tools/banner/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
       </nav>
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
             <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Banner</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Maker</span><SketchUnderline color="#66A3BF" /></span>
           </h1>
-          <p class="text-xs sm:text-sm text-[#475569] mt-1">Profile Banners (680×240 & 600×240) • Server Banners (960×540 / 1920×1080) with top 48px safe zone overlay</p>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Profile Banners (680×240 & 600×240) • Server Banners (960×540 / 1920×1080) with top 48px safe zone overlay</p>
         </div>
-        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] text-[#3368A0] font-medium shadow-xs">
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
           <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
           Zero Server Uploads
         </div>
       </div>
     </div>
 
-    <!-- Banner Preset Selector -->
-    <div class="card-panel rounded-[14px] p-4 mb-6 flex flex-wrap items-center gap-3">
-      <span class="text-xs font-bold text-[#192538] uppercase tracking-wider mr-2">Preset Mode:</span>
-      <button id="presetServerBanner" class="btn-primary text-xs px-3.5 py-2 rounded-[8px]">
-        Server Banner (960 × 540)
-      </button>
-      <button id="presetGlobalProfile" class="btn-secondary text-xs px-3.5 py-2 rounded-[8px]">
-        Global Profile Banner (680 × 240)
-      </button>
-      <button id="presetServerProfile" class="btn-secondary text-xs px-3.5 py-2 rounded-[8px]">
-        Per-Server Profile Banner (600 × 240)
-      </button>
-    </div>
+    <BannerWorkspace lang="en" />
 
-    <!-- Asset Library Quick Callout -->
-    <div class="mb-8 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-[#FF84BA]/10 via-[#FFDF82]/10 to-[#99C2FF]/10 dark:from-[#FF84BA]/15 dark:via-[#FFDF82]/15 dark:to-[#99C2FF]/15 border border-[#FF84BA]/30 dark:border-[#FF84BA]/40 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">✨</span>
-        <div>
-          <div class="text-xs sm:text-sm font-bold text-[#192538] dark:text-[#FFEFE3] flex items-center gap-2">
-            <span>Looking for ready-to-use Discord Banners & Matching PFPs?</span>
-            <span class="text-[10px] font-mono font-extrabold px-1.5 py-0.2 rounded-full bg-[#FF84BA] text-black">110+ Free</span>
-          </div>
-          <p class="text-xs text-[#6B7A90] dark:text-[#99C2FF]">
-            Browse Anime, Gaming, Cyberpunk, and Dark aesthetic sets with safe-zone alignment & 1-click Discord profile theme colors.
-          </p>
-        </div>
-      </div>
-      <a href="/assets/" class="shrink-0 btn-primary text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-xs hover:shadow-md transition-all font-bold">
-        <span>Explore Library</span>
-        <span>→</span>
-      </a>
-    </div>
+    <ToolDossier {...dossier} />
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
-      <!-- Left Column: Upload & Canvas -->
-      <div class="lg:col-span-8 space-y-6">
-        <div id="dropzone" class="group relative overflow-hidden rounded-2xl border-2 border-dashed border-[#C8DFDB] dark:border-[#263454] hover:border-[#FF84BA] dark:hover:border-[#FF84BA] bg-white dark:bg-[#101626] p-8 text-center transition-all duration-300 cursor-pointer shadow-xs hover:shadow-xl select-none">
-          <!-- Ambient Glow / Border Beam -->
-          <div class="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#FF84BA]/15 via-transparent to-transparent"></div>
-          
-          <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
-          
-          <!-- Icon Cluster (with stacked cards styling) -->
-          <div class="relative h-14 w-36 mx-auto mb-4 pointer-events-none">
-            <div class="absolute top-1/2 left-1/2 -translate-x-[78%] -translate-y-1/2 -rotate-8 w-12 h-12 rounded-xl bg-[#FAF8F5] dark:bg-[#182036] border border-[#E0DBD0] dark:border-[#263454] flex items-center justify-center text-xl shadow-xs group-hover:-translate-x-[114%] group-hover:-rotate-12 transition-transform duration-500 ease-out">
-              🖼️
-            </div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-xl bg-[#FF84BA]/15 border border-[#FF84BA]/40 text-[#FF84BA] flex items-center justify-center text-xl shadow-md group-hover:scale-115 transition-transform duration-500 ease-out">
-              ✨
-            </div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-[22%] -translate-y-1/2 rotate-8 w-12 h-12 rounded-xl bg-[#FAF8F5] dark:bg-[#182036] border border-[#E0DBD0] dark:border-[#263454] flex items-center justify-center text-xl shadow-xs group-hover:translate-x-[14%] group-hover:rotate-12 transition-transform duration-500 ease-out">
-              🎨
-            </div>
-          </div>
-
-          <div class="space-y-1 pointer-events-none relative z-10">
-            <p class="text-sm font-bold text-[#192538] dark:text-[#FFEFE3]">Select or Drop Banner Artwork</p>
-            <p class="text-xs text-[#6B7A90] dark:text-[#99C2FF]">PNG, JPG, WEBP, or GIF (Auto-cropped to active preset aspect ratio)</p>
-          </div>
-
-          <div class="inline-flex items-center gap-1.5 rounded-full border border-[#E0DBD0] dark:border-[#263454] bg-[#FAF8F5] dark:bg-[#182036] px-3 py-1 text-xs text-[#6B7A90] dark:text-[#99C2FF] mt-4 pointer-events-none">
-            <svg class="w-3.5 h-3.5 text-[#FF84BA]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-            </svg>
-            <span>Browse or Drop Files</span>
-          </div>
-        </div>
-
-        <div id="editorPanel" class="card-panel rounded-[14px] p-6 hidden">
-          <div class="flex items-center justify-between pb-4 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]" id="editorTitle">Canvas Surface</h2>
-            <div class="flex items-center gap-3">
-              <label class="flex items-center gap-1.5 text-xs text-[#475569] font-medium cursor-pointer">
-                <input type="checkbox" id="safeZoneToggle" checked class="rounded border-[#D8D3C8] text-[#3368A0]" />
-                Show Top 48px Safe Zone
-              </label>
-              <button id="resetBtn" class="btn-secondary text-xs px-2.5 py-1 rounded-[6px]">
-                Reset
-              </button>
-            </div>
-          </div>
-
-          
-          <!-- Premium Motion & Aesthetics Studio -->
-          <div class="mb-6 p-4 rounded-xl bg-black/5 dark:bg-white/5 border border-[#E0DBD0] dark:border-gray-700">
-            <h3 class="text-xs font-bold text-[#192538] dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-[#3368A0] animate-pulse"></span>
-              Aesthetic Studio
-            </h3>
-            
-            <div class="space-y-4">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <label class="text-xs text-[#6B7A90] dark:text-[#99C2FF] font-semibold">1. Curated Anime, Gaming & Aesthetic Artwork</label>
-                  <span class="text-[10px] font-mono text-[#FF84BA] font-bold">1-Click Apply</span>
-                </div>
-                <div class="grid grid-cols-5 sm:grid-cols-10 gap-2" id="unsplash-gallery">
-                  <!-- JS will populate this -->
-                </div>
-              </div>
-              
-              <div>
-                <label class="text-xs text-[#6B7A90] font-semibold mb-2 block">2. Motion Loop Type</label>
-                <div class="flex flex-wrap gap-2">
-                  <button class="motion-btn btn-primary text-xs px-3 py-1.5 rounded-lg" data-motion="none">Static</button>
-                  <button class="motion-btn btn-secondary text-xs px-3 py-1.5 rounded-lg" data-motion="animate-slow-pan">Ken Burns (Pan)</button>
-                  <button class="motion-btn btn-secondary text-xs px-3 py-1.5 rounded-lg" data-motion="animate-pulse">Breathing (Pulse)</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="relative bg-[#FAF8F5] rounded-[10px] border border-[#E0DBD0] overflow-hidden mb-6 flex items-center justify-center p-4">
-            <div class="relative">
-              <canvas id="mainCanvas" class="max-w-full h-auto shadow-sm rounded-[6px] bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] [background-size:16px_16px]"></canvas>
-              
-              
-              <!-- Safe Zone Overlay Group -->
-              <div id="safeZoneOverlay" class="absolute top-0 left-0 right-0 h-[10%] bg-[#DC2626]/20 border-b-2 border-[#DC2626] pointer-events-none flex items-center justify-center">
-                <span class="text-[10px] font-mono font-bold text-white bg-[#192538]/85 px-2.5 py-0.5 rounded shadow-xs">
-                  Top 48px Header Overlay Zone (Keep text below)
-                </span>
-              </div>
-              
-              <!-- Profile Safe Zone (Avatar + Username) -->
-              <div id="profileSafeZone" class="hidden absolute bottom-[-40px] left-6 right-0 h-[80px] pointer-events-none z-10 flex items-end">
-                <div class="w-[80px] h-[80px] rounded-full bg-black/60 border-4 border-[#313338] backdrop-blur-md flex items-center justify-center text-white/70 text-[10px] font-bold shadow-lg">Avatar</div>
-                <div class="ml-4 mb-8 px-3 py-1 rounded bg-black/60 backdrop-blur-md text-white/70 text-xs font-bold shadow-lg">Username</div>
-              </div>
-
-            </div>
-          </div>
-
-          
-          <button id="exportBtn" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center shadow-sm">
-            Export Formatted Banner
-          </button>
-          <div id="motionWarning" class="hidden mt-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-amber-700 dark:text-amber-400 text-xs flex items-start gap-2">
-            <span>⚠️</span>
-            <p><strong>Animated Export:</strong> Discord Nitro required. File size must be under <strong>10MB</strong>. Use our recommended export settings or a third-party GIF compressor if it exceeds limits.</p>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Right Column: Receipt & Requirements -->
-      <div class="lg:col-span-4 space-y-6">
-        <div class="card-panel rounded-[14px] p-6">
-          <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
-            <h2 class="text-sm font-bold text-[#192538]">Validation Receipt</h2>
-            <span id="receiptBadge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
-              Awaiting Media
-            </span>
-          </div>
-
-          <div class="space-y-3 font-mono text-xs">
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Target Mode:</span>
-              <span id="statTargetMode" class="font-bold text-[#192538]">Server Banner</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Output Dimensions:</span>
-              <span id="statOutputDim" class="font-bold text-[#192538]">960 × 540 px</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Original Dimensions:</span>
-              <span id="statOriginalDim" class="text-[#192538]">-- × --</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
-              <span class="text-[#6B7A90]">Binary Limit:</span>
-              <span class="text-[#0D9488] font-bold">10.0 MB Max</span>
-            </div>
-            <div class="flex justify-between py-1.5">
-              <span class="text-[#6B7A90]">Safe Zone Clearance:</span>
-              <span class="text-[#0D9488] font-bold">Top 48px Overlay Active</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-panel rounded-[14px] p-6">
-          <h3 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-2">Requirement Note</h3>
-          <p class="text-xs text-[#475569] leading-relaxed mb-3">
-            Server banners require Discord Boost Level 2. Animated banners require Boost Level 3. Global user profile banners require Discord Nitro.
-          </p>
-          <div class="pt-2 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-medium">
-            <a href="/guides/discord-sizes/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
-              <span>📖</span> Official Discord Banner Sizes Guide
-            </a>
-            <a href="/guides/discord-gif-guide/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
-              <span>✨</span> Animated Banner GIF Limits & Rules
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Text-Locking Sticky Stacking Technical Dossier (600+ Words) -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-        
-        <!-- Left Column: Pinned Progress Timeline (5 cols) -->
-        <div class="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C8DFDB]/50 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] text-xs font-semibold border border-[#66A3BF]/30">
-            <span class="w-2 h-2 rounded-full bg-[#0D9488] animate-pulse"></span>
-            <span>Banner Technical Blueprint</span>
-          </div>
-
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight leading-[1.15]">
-            Designing clean <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Discord banners</span><SketchUnderline color="#66A3BF" /></span> that fit.
-          </h2>
-
-          <p class="text-[#475569] text-sm sm:text-base leading-relaxed">
-            Server banners and user profile cards use completely different shapes. On desktop, Discord also puts menus over the top edge. Here is how to keep your art and text looking sharp everywhere.
-          </p>
-
-          <!-- Step Timeline -->
-          <div class="relative pl-6 space-y-5 select-none pt-2">
-            <div class="absolute left-2.5 top-2 bottom-2 w-0.5 bg-[#E0DBD0] dark:bg-[#263346]"></div>
-            <div id="scroll-progress-line" class="absolute left-2.5 top-2 w-0.5 bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 ease-out" style="height: 0%;"></div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#3368A0] dark:text-[#66A3BF] font-bold" data-step="1">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-current bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10 scale-110">1</span>
-              <span class="text-xs sm:text-sm">01 / Server vs Profile Ratios</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="2">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">2</span>
-              <span class="text-xs sm:text-sm">02 / The Top 48px Header Safe Zone</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="3">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">3</span>
-              <span class="text-xs sm:text-sm">03 / Crisp Retina Resolution</span>
-            </div>
-
-            <div class="scroll-step-indicator flex items-center gap-3.5 text-[#6B7A90] opacity-70" data-step="4">
-              <span class="step-dot w-5 h-5 rounded-full border-2 border-[#D0C9BD] dark:border-[#35435C] bg-[#FAF8F5] dark:bg-[#141A24] flex items-center justify-center text-[10px] z-10">4</span>
-              <span class="text-xs sm:text-sm">04 / Server Boosts & Nitro Perks</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Column: Stacking Sticky Dossier Cards (7 cols) -->
-        <div class="lg:col-span-7 relative pb-16 space-y-12">
-          
-          <!-- Card 1 -->
-          <div class="sticky-step-wrapper sticky top-24 z-10 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-lg border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">RATIO MATHEMATICS // 01</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">16:9 VS 5:2 RATIOS</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Server Banners (16:9) vs User Profiles (5:2)
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                A common mistake is using the exact same crop for both server headers and profile banners. They use very different shapes. Discord server banners use a widescreen 16:9 Discord banner aspect ratio (at least 960×540 px), stretching across the top of your server channels.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Profile banners, on the other hand, are wide and slim. Global profiles use 680×240 pixels, while per-server profile cards display at 600×240 pixels (roughly 5:2). If you paste a 16:9 server banner into your profile, Discord cuts off almost 40% of the top and bottom, which easily slices off character heads or text. This Discord banner maker gives you the exact canvas preset for both styles so you never have to guess.
-              </p>
-              <div class="grid grid-cols-2 gap-3 text-xs font-mono">
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Server Banner Ratio:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">16:9 (960×540 min)</span>
-                </div>
-                <div class="p-3 rounded-[8px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346]">
-                  <span class="text-[#6B7A90] block text-[10px]">Profile Banner Ratio:</span>
-                  <span class="font-bold text-[#192538] dark:text-white">~5:2 (680×240 / 600×240)</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="sticky-step-wrapper sticky top-28 z-20 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">INTERFACE OVERLAY // 02</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3368A0]/10 text-[#3368A0] dark:text-[#66A3BF] font-bold">TOP 48PX OCCLUSION</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                The 48px Header Safe Zone: Protecting Typography
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                On desktop apps and web browsers, Discord places your server name, dropdown menu, and boost badges right over the top edge of your banner. It adds a subtle dark shadow behind that text to keep it readable.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                This UI covers roughly the top 48 pixels (or 96 pixels on high-res Retina screens). If you put your server title, logo, or a character's face in that top strip, the Discord buttons will cover it. We show a red safe-zone overlay while you edit so you can place your important graphics where nothing blocks them.
-              </p>
-              <div class="p-3.5 rounded-[10px] bg-[#C8DFDB]/30 dark:bg-[#1F2E45] border border-[#66A3BF]/30 text-xs text-[#192538] dark:text-[#CBD5E1] flex items-center gap-2">
-                <span class="text-[#0D9488] font-bold">✓ Safe Zone Protection:</span>
-                <span>Active overlay prevents UI collision with Discord's server navigation elements.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="sticky-step-wrapper sticky top-32 z-30 mb-16">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">RESOLUTION CRAFT // 03</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">1920 × 1080 RETINA</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Retina 2x Scaling & Background Contrast Grading
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Discord's official minimum spec is 960×540 pixels. That worked well years ago, but on modern MacBook Retina screens, 1440p monitors, and smartphones, a 960px image gets stretched and can look soft or blurry.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                We recommend exporting at 1920×1080 pixels (the exact same 16:9 shape). At 1080p, your artwork stays crystal clear on high-DPI displays. Because Discord allows files up to 10.0 MB, a clean 1080p PNG or GIF will upload easily without losing sharpness.
-              </p>
-              <div class="p-4 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] font-mono text-xs flex items-center justify-between">
-                <div>
-                  <span class="text-[#6B7A90]">Recommended Master:</span>
-                  <span class="text-[#0D9488] font-bold ml-1">1920 × 1080 px (16:9 Retina)</span>
-                </div>
-                <span class="text-[#3368A0] dark:text-[#66A3BF] font-semibold">10 MB Cap</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="sticky-step-wrapper sticky top-36 z-40">
-            <div class="card-panel p-6 sm:p-8 rounded-[18px] shadow-2xl border border-[#E0DBD0] dark:border-[#263346] bg-[#FFFFFF] dark:bg-[#141A24]">
-              <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4">
-                <span class="text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF]">PERMISSION PROTOCOLS // 04</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300 font-bold">BOOST LEVEL 2 & 3</span>
-              </div>
-              <h3 class="text-lg sm:text-xl font-extrabold text-[#192538] mb-3">
-                Server Boost Tiers & Nitro Gating Verification
-              </h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                Before you export your artwork, make sure your server has unlocked the right perks. Static server banners unlock at Server Boost Level 2 (which needs 7 server boosts). Animated GIF server banners require Server Boost Level 3 (14 boosts). If your server ever loses boosts and drops below that tier, Discord hides the banner until you reach that level again.
-              </p>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed mb-4">
-                For user profiles, static banner uploads need Nitro Basic or standard Nitro, while animated banners need full Discord Nitro. Everything runs right in your browser, so you can test and crop your designs before uploading to Discord.
-              </p>
-              <div class="flex items-center gap-2 text-xs font-mono text-[#0D9488]">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span>Zero Server Uploads • In-Browser 16:9 & 5:2 Geometric Alignment</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Comprehensive FAQ Accordion Section -->
-    <section class="py-16 border-t border-[#E0DBD0] dark:border-[#263346]">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl font-bold text-[#192538] tracking-tight mb-8 text-center">
-          Frequently Asked Questions
-        </h2>
-
-        <div class="space-y-4">
-          {faqSchema.mainEntity.map((item) => (
-            <div class="card-panel p-6 rounded-[14px]">
-              <h3 class="text-base font-bold text-[#192538] mb-2">{item.name}</h3>
-              <p class="text-xs sm:text-sm text-[#475569] leading-relaxed">{item.acceptedAnswer.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <ToolFaq items={faqItems} />
 
   </div>
-
-  <script>
-    interface BannerPreset {
-      name: string;
-      w: number;
-      h: number;
-      safeZoneRatio: number;
-    }
-
-    const PRESETS: Record<string, BannerPreset> = {
-      server: { name: 'Server Banner', w: 960, h: 540, safeZoneRatio: 48 / 540 },
-      globalProfile: { name: 'Global Profile Banner', w: 680, h: 240, safeZoneRatio: 0 },
-      serverProfile: { name: 'Per-Server Profile Banner', w: 600, h: 240, safeZoneRatio: 0 },
-    };
-
-    let currentPresetKey = 'server';
-
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    const dropzone = document.getElementById('dropzone');
-    const editorPanel = document.getElementById('editorPanel');
-    const mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
-    const safeZoneOverlay = document.getElementById('safeZoneOverlay');
-    const safeZoneToggle = document.getElementById('safeZoneToggle') as HTMLInputElement;
-    const resetBtn = document.getElementById('resetBtn');
-    const exportBtn = document.getElementById('exportBtn');
-    const editorTitle = document.getElementById('editorTitle');
-
-    const btnServer = document.getElementById('presetServerBanner');
-    const btnGlobal = document.getElementById('presetGlobalProfile');
-    const btnServerProfile = document.getElementById('presetServerProfile');
-
-    const statTargetMode = document.getElementById('statTargetMode');
-    const statOutputDim = document.getElementById('statOutputDim');
-    const statOriginalDim = document.getElementById('statOriginalDim');
-    const receiptBadge = document.getElementById('receiptBadge');
-
-    let currentBlob: Blob | null = null;
-    let currentObjectUrl: string | null = null;
-    let sourceImage: HTMLImageElement | null = null;
-
-    function cleanup() {
-      if (currentObjectUrl) {
-        URL.revokeObjectURL(currentObjectUrl);
-        currentObjectUrl = null;
-      }
-    }
-
-    function setPreset(key: string) {
-      currentPresetKey = key;
-      const p = PRESETS[key];
-      if (!p) return;
-
-      [btnServer, btnGlobal, btnServerProfile].forEach(b => {
-        b?.classList.remove('btn-primary');
-        b?.classList.add('btn-secondary');
-      });
-
-      if (key === 'server') btnServer?.classList.replace('btn-secondary', 'btn-primary');
-      if (key === 'globalProfile') btnGlobal?.classList.replace('btn-secondary', 'btn-primary');
-      if (key === 'serverProfile') btnServerProfile?.classList.replace('btn-secondary', 'btn-primary');
-
-      if (statTargetMode) statTargetMode.innerText = p.name;
-      if (statOutputDim) statOutputDim.innerText = `${p.w} × ${p.h} px`;
-      if (editorTitle) editorTitle.innerText = `${p.name} (${p.w} × ${p.h})`;
-
-      
-      if (p.safeZoneRatio > 0 && safeZoneToggle.checked) {
-        safeZoneOverlay?.classList.remove('hidden');
-        profileSafeZone?.classList.add('hidden');
-        if (safeZoneOverlay) safeZoneOverlay.style.height = `${(p.safeZoneRatio * 100).toFixed(1)}%`;
-      } else if (p.safeZoneRatio === 0 && safeZoneToggle.checked) {
-        // Profile Banners
-        safeZoneOverlay?.classList.add('hidden');
-        profileSafeZone?.classList.remove('hidden');
-      } else {
-        safeZoneOverlay?.classList.add('hidden');
-        profileSafeZone?.classList.add('hidden');
-      }
-
-
-      if (sourceImage) {
-        renderCanvas(sourceImage);
-      }
-    }
-
-    btnServer?.addEventListener('click', () => setPreset('server'));
-    btnGlobal?.addEventListener('click', () => setPreset('globalProfile'));
-    btnServerProfile?.addEventListener('click', () => setPreset('serverProfile'));
-
-    safeZoneToggle?.addEventListener('change', () => {
-      const p = PRESETS[currentPresetKey];
-      if (p.safeZoneRatio > 0 && safeZoneToggle.checked) {
-        safeZoneOverlay?.classList.remove('hidden');
-        profileSafeZone?.classList.add('hidden');
-      } else if (p.safeZoneRatio === 0 && safeZoneToggle.checked) {
-        safeZoneOverlay?.classList.add('hidden');
-        profileSafeZone?.classList.remove('hidden');
-      } else {
-        safeZoneOverlay?.classList.add('hidden');
-        profileSafeZone?.classList.add('hidden');
-      }
-    });
-
-    fileInput?.addEventListener('change', (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      handleFile(file);
-    });
-
-    dropzone?.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
-    });
-
-    dropzone?.addEventListener('dragleave', () => {
-      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
-    });
-
-    dropzone?.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
-      const file = e.dataTransfer?.files?.[0];
-      if (!file) return;
-      handleFile(file);
-    });
-
-    function handleFile(file: File) {
-      cleanup();
-      currentObjectUrl = URL.createObjectURL(file);
-      const img = new Image();
-      img.onload = () => {
-        sourceImage = img;
-        if (statOriginalDim) statOriginalDim.innerText = `${img.width} × ${img.height} px`;
-        renderCanvas(img);
-        editorPanel?.classList.remove('hidden');
-      };
-      img.src = currentObjectUrl;
-    }
-
-    function renderCanvas(img: HTMLImageElement) {
-      const ctx = mainCanvas.getContext('2d');
-      if (!ctx) return;
-
-      const p = PRESETS[currentPresetKey];
-      mainCanvas.width = p.w;
-      mainCanvas.height = p.h;
-      ctx.clearRect(0, 0, p.w, p.h);
-
-      const targetRatio = p.w / p.h;
-      const imgRatio = img.width / img.height;
-
-      let sx = 0, sy = 0, sw = img.width, sh = img.height;
-
-      if (imgRatio > targetRatio) {
-        sw = img.height * targetRatio;
-        sx = (img.width - sw) / 2;
-      } else {
-        sh = img.width / targetRatio;
-        sy = (img.height - sh) / 2;
-      }
-
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, p.w, p.h);
-
-      mainCanvas.toBlob((blob) => {
-        if (!blob) return;
-        currentBlob = blob;
-        if (receiptBadge) {
-          receiptBadge.innerText = 'Compliant';
-          receiptBadge.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
-        }
-      }, 'image/png');
-    }
-
-    resetBtn?.addEventListener('click', () => {
-      cleanup();
-      currentBlob = null;
-      sourceImage = null;
-      editorPanel?.classList.add('hidden');
-      if (statOriginalDim) statOriginalDim.innerText = '-- × --';
-      if (receiptBadge) {
-        receiptBadge.innerText = 'Awaiting Media';
-        receiptBadge.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
-      }
-      fileInput.value = '';
-    });
-
-    exportBtn?.addEventListener('click', () => {
-      if (!currentBlob) return;
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(currentBlob);
-      const p = PRESETS[currentPresetKey];
-      a.download = `discord-${currentPresetKey}-banner-${p.w}x${p.h}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    });
-
-    // Sticky Scroll Stacking & Observer Script
-    function setupScrollLocking() {
-      const cardWrappers = document.querySelectorAll<HTMLElement>('.sticky-step-wrapper');
-      const stepIndicators = document.querySelectorAll<HTMLElement>('.scroll-step-indicator');
-      const progressBar = document.getElementById('scroll-progress-line');
-
-      if (!cardWrappers.length) return;
-
-      function updateCardStack() {
-        let activeIndex = 0;
-
-        cardWrappers.forEach((wrapper, index) => {
-          const rect = wrapper.getBoundingClientRect();
-          const stickyTop = parseInt(window.getComputedStyle(wrapper).top, 10) || (96 + index * 16);
-          const isLocked = rect.top <= stickyTop + 8;
-
-          if (isLocked) {
-            activeIndex = index;
-          }
-
-          const nextCard = cardWrappers[index + 1];
-          if (nextCard) {
-            const nextRect = nextCard.getBoundingClientRect();
-            const nextStickyTop = parseInt(window.getComputedStyle(nextCard).top, 10) || (96 + (index + 1) * 16);
-            const transitionDist = 180;
-            
-            if (nextRect.top < nextStickyTop + transitionDist) {
-              const progress = Math.max(0, Math.min(1, (nextStickyTop + transitionDist - nextRect.top) / transitionDist));
-              wrapper.style.transform = `scale(${1 - progress * 0.035})`;
-              wrapper.style.filter = `brightness(${1 - progress * 0.08})`;
-            } else {
-              wrapper.style.transform = 'scale(1)';
-              wrapper.style.filter = 'brightness(1)';
-            }
-          }
-        });
-
-        stepIndicators.forEach((ind, i) => {
-          const dot = ind.querySelector('.step-dot');
-          if (i <= activeIndex) {
-            ind.classList.add('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.remove('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.add('border-current', 'scale-110');
-            dot?.classList.remove('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          } else {
-            ind.classList.remove('text-[#3368A0]', 'dark:text-[#66A3BF]', 'font-bold');
-            ind.classList.add('text-[#6B7A90]', 'opacity-70');
-            dot?.classList.remove('border-current', 'scale-110');
-            dot?.classList.add('border-[#D0C9BD]', 'dark:border-[#35435C]');
-          }
-        });
-
-        if (progressBar) {
-          const pct = (activeIndex / (cardWrappers.length - 1)) * 100;
-          progressBar.style.height = `${pct}%`;
-        }
-      }
-
-      window.addEventListener('scroll', updateCardStack, { passive: true });
-      updateCardStack();
-    }
-
-    
-    // Aesthetic Studio Logic
-    const unsplashGallery = document.getElementById('unsplash-gallery');
-    const motionBtns = document.querySelectorAll('.motion-btn');
-    const motionWarning = document.getElementById('motionWarning');
-    const profileSafeZone = document.getElementById('profileSafeZone');
-    
-    // Curated local showcase & background images
-    const aestheticImages = [
-      { url: '/assets/showcase/snow-ronin.jpg', title: 'Frost Ronin' },
-      { url: '/assets/showcase/ghibli-cats.jpg', title: 'Summer Cloudwatchers' },
-      { url: '/assets/showcase/golden-solitude.jpg', title: 'Golden Hour Solitude' },
-      { url: '/assets/showcase/euphoria-eyes.jpg', title: 'Obsidian Trance' },
-      { url: '/assets/showcase/batman-snow.jpg', title: 'Winter Vigilante' },
-      { url: '/assets/banners/anime-sunset.jpg', title: 'Anime Sunset' },
-      { url: '/assets/banners/cyberpunk-tokyo.jpg', title: 'Cyberpunk Tokyo' },
-      { url: '/assets/banners/gaming-arena.jpg', title: 'Gaming Arena' },
-      { url: '/assets/banners/dark-gothic.jpg', title: 'Dark Gothic' },
-      { url: '/assets/banners/aesthetic-pastel.jpg', title: 'Aesthetic Pastel' }
-    ];
-    
-    let currentMotionClass = 'none';
-    
-    if (unsplashGallery) {
-      aestheticImages.forEach(item => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.title = `Apply ${item.title}`;
-        btn.className = 'h-11 sm:h-14 rounded-lg bg-cover bg-center border border-black/10 dark:border-white/10 hover:scale-105 hover:ring-2 hover:ring-[#FF84BA] transition-all cursor-pointer shadow-xs';
-        btn.style.backgroundImage = `url(${item.url})`;
-        btn.onclick = () => {
-          fetch(item.url).then(res => res.blob()).then(blob => {
-             const file = new File([blob], `${item.title.toLowerCase().replace(/\s+/g, '-')}.jpg`, { type: "image/jpeg" });
-             handleFile(file);
-          }).catch(err => {
-            console.error("Failed to load artwork:", err);
-          });
-        };
-        unsplashGallery.appendChild(btn);
-      });
-    }
-    
-    motionBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        motionBtns.forEach(b => b.classList.replace('btn-primary', 'btn-secondary'));
-        btn.classList.replace('btn-secondary', 'btn-primary');
-        
-        // Remove old motion
-        if (currentMotionClass !== 'none') {
-          mainCanvas.classList.remove(currentMotionClass);
-        }
-        
-        currentMotionClass = btn.dataset.motion || 'none';
-        
-        if (currentMotionClass !== 'none') {
-          mainCanvas.classList.add(currentMotionClass);
-          motionWarning?.classList.remove('hidden');
-        } else {
-          motionWarning?.classList.add('hidden');
-        }
-      });
-    });
-
-    setupScrollLocking();
-    document.addEventListener('astro:after-swap', setupScrollLocking);
-  </script>
 </Layout>

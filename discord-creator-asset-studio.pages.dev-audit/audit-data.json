@@ -1,0 +1,122 @@
+{
+  "summary": {
+    "health_score": 96,
+    "business_type": "Client-side Discord asset micro-utility web app (bilingual EN/ES)",
+    "top_findings": [
+      "6 /assets/* titles exceed 60 characters (61-71)",
+      "/pfps/ renders 0 <h1> (meta-refresh redirect stub)",
+      "Sitemap hreflang omits x-default (HTML has it)",
+      "2 /assets/* meta descriptions >= 160 chars",
+      "verify-seo CI gate does not cover /assets/* pages"
+    ],
+    "quick_wins": [
+      "Trim 6 over-length /assets/* titles to <=60",
+      "Shorten 2 long /assets/* meta descriptions",
+      "Add real H1 or 301 for /pfps/",
+      "Add x-default to sitemap hreflang",
+      "Add /assets/* to verify-seo indexablePages"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 85,
+      "what_works": [
+        "trailingSlash always + absolute site; canonicals consistent",
+        "robots.txt allows AI crawlers, blocks training crawlers, Sitemap directive present",
+        "Sitemap: 54 URLs, all 9 new EN tools + 14 ES tool pages, 64 hreflang alternates (32 en/32 es)",
+        "404/500 correctly excluded from sitemap and carry no canonical"
+      ],
+      "findings": [
+        {"title": "Sitemap hreflang omits x-default", "severity": "Medium", "description": "HTML head emits hreflang=x-default but the Astro sitemap writes only en/es alternates.", "recommendation": "Add x-default via @astrojs/sitemap serialize/links hook."},
+        {"title": "/pfps/ uses meta-refresh redirect", "severity": "Low", "description": "821-byte client-redirect stub to /assets/pfps/ with no H1/OG/schema.", "recommendation": "Use a Cloudflare Pages _redirects 301 and drop the stub."},
+        {"title": "Core Web Vitals not measurable", "severity": "Info", "description": "Site undeployed on this branch; no field data.", "recommendation": "Re-run CrUX/PageSpeed after deploy, prioritizing image-heavy /assets/ pages."}
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 90,
+      "what_works": [
+        "content_quality 94-95, filler 0, ai_pattern 0, info density 1.0 on all new tools",
+        "600+ words spec-accurate prose + FAQ per tool, cites exact Discord limits"
+      ],
+      "findings": [
+        {"title": "Repetition flag on all pages", "severity": "Low", "description": "repetition_score ~36-38 from shared chrome + keyword usage; not thin/spun.", "recommendation": "Optionally vary supporting phrasing; keep keyword targeting."},
+        {"title": "Light E-E-A-T author/date signals", "severity": "Low", "description": "No visible reviewer or verified-date on tool pages.", "recommendation": "Add 'Specs verified {date}' using discord-rules.ts verifiedAt."}
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 90,
+      "what_works": [
+        "0 duplicate titles, 0 duplicate descriptions across 56 pages",
+        "All indexable tool pages: single keyword H1, self-canonical, logical H2/H3",
+        "Dense hub-and-spoke internal linking with deliberately varied anchor text"
+      ],
+      "findings": [
+        {"title": "6 /assets/* titles over 60 chars", "severity": "High", "description": "dark 66, gaming 67, pfps 71, icons-2d 64, aesthetic 61, cyberpunk 61.", "recommendation": "Rewrite to <=60 chars with primary keyword front-loaded."},
+        {"title": "/pfps/ missing H1", "severity": "High", "description": "Redirect stub renders 0 H1.", "recommendation": "301 redirect or add a real H1."},
+        {"title": "2 /assets/* descriptions >=160 chars", "severity": "Medium", "description": "anime/, pfps/.", "recommendation": "Trim under 160."},
+        {"title": "CI gate excludes /assets/*", "severity": "Medium", "description": "verify-seo indexablePages omits asset pages, so regressions slip.", "recommendation": "Add /assets/* to indexablePages."}
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 88,
+      "what_works": [
+        "SoftwareApplication + BreadcrumbList + FAQPage on every tool, all valid JSON-LD",
+        "Home: WebSite + Organization + ItemList + FAQPage",
+        "ES FAQ schema carries inLanguage es"
+      ],
+      "findings": [
+        {"title": "FAQPage rich results retired (May 2026)", "severity": "Info", "description": "Markup still valid for AI/Bing; no FAQ rich snippet in Google.", "recommendation": "Keep FAQPage; do not add HowTo."},
+        {"title": "/about, /contact lack JSON-LD", "severity": "Low", "description": "No entity schema on trust pages.", "recommendation": "Add WebPage/Organization/ContactPage."}
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "score": 80,
+      "what_works": [
+        "Static Astro, minimal per-route JS; GA4 loaded with Consent Mode",
+        "Heavy client code (gifenc) scoped only to GIF tool routes"
+      ],
+      "findings": [
+        {"title": "No field CWV data", "severity": "Info", "description": "Undeployed branch.", "recommendation": "Measure post-deploy; confirm /assets/ gallery images set dimensions + lazy-load."}
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "score": 92,
+      "what_works": [
+        "llms.txt present and kept in sync with all new tools",
+        "AI crawlers allowlisted; passage-level FAQ Q&A aids citability",
+        "Factual, spec-cited answers strong for AI Overviews/ChatGPT/Perplexity"
+      ],
+      "findings": [
+        {"title": "Light brand/Organization entity", "severity": "Low", "description": "No Organization entity for AI attribution grounding.", "recommendation": "Add Organization schema + consistent independent-brand statement."}
+      ]
+    },
+    {
+      "name": "Images",
+      "score": 90,
+      "what_works": [
+        "0 of 1007 <img> missing alt"
+      ],
+      "findings": [
+        {"title": "Formats/sizes not audited", "severity": "Info", "description": "Asset library likely PNG/JPG.", "recommendation": "Convert gallery thumbs to WebP/AVIF; confirm lazy-load."}
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {"name": "Phase 1: Critical Fixes", "timeframe": "Week 1", "items": ["Add H1 or 301 for /pfps/", "Trim 6 over-length /assets/* titles", "Add /assets/* to verify-seo gate"]},
+      {"name": "Phase 2: High-Impact Improvements", "timeframe": "Weeks 2-3", "items": ["Shorten 2 long /assets/* descriptions", "Add x-default to sitemap hreflang", "Add WebPage/Organization schema to about/contact"]},
+      {"name": "Phase 3: Content & Authority", "timeframe": "Month 2", "items": ["Add verified-date E-E-A-T line to tools", "Convert asset thumbnails to WebP/AVIF", "ES parity for gif-maker + profile-viewer"]},
+      {"name": "Phase 4: Monitoring & Iteration", "timeframe": "Ongoing", "items": ["Re-run audit on live URL for CWV/CrUX + GSC indexation", "Keep verify-seo green on every change"]}
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}

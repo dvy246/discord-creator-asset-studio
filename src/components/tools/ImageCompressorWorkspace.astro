@@ -1,0 +1,543 @@
+---
+/**
+ * ImageCompressorWorkspace.astro — shared interactive Discord image compressor.
+ *
+ * Compress-only: preserves the source's original pixel dimensions and shrinks
+ * the encoded byte size under a chosen Discord upload target via iterative
+ * quality step-down (WebP / JPEG) or a single lossless pass (PNG). Resizing is a
+ * separate tool. Language-agnostic logic keyed off fixed element IDs; visible
+ * labels vary by locale via `t`, and the client script's runtime strings pass
+ * through data-* attributes on the root element via `js` (read into `L`) — same
+ * pattern as StickerWorkspace/EmojiWorkspace. Imported by both the EN
+ * (/tools/image-compressor/) and ES (/es/tools/image-compressor/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    dropTitle: 'Upload an image to compress for Discord',
+    dropHint: 'PNG, JPG, or WebP • Original dimensions kept • Shrinks byte size only',
+    demoBtn: 'Try with Demo Image',
+    editorTitle: 'Compression Controls',
+    editorSub: 'Pick a target limit and output format',
+    reset: 'Reset',
+    targetLabel: 'Target Upload Limit',
+    targetChat: 'Discord chat upload — 10 MB (free)',
+    targetNitroBasic: 'Nitro Basic — 50 MB',
+    targetNitro: 'Nitro — 500 MB',
+    targetAvatar: 'Avatar / server icon — 8 MB',
+    targetCustom: 'Custom size (KB)',
+    customLabel: 'Custom target (KB)',
+    formatLabel: 'Output Format',
+    formatWebp: 'WebP (smallest — recommended)',
+    formatJpeg: 'JPEG (wide support)',
+    formatPng: 'PNG (lossless — quality slider ignored)',
+    qualityLabel: 'Encoder Quality',
+    qualityNote: 'Auto-lowered until the target is met (WebP / JPEG only).',
+    previewTitle: 'Compressed Preview',
+    previewBox: 'No image yet',
+    receiptTitle: 'Compression Receipt',
+    awaiting: 'Awaiting Image',
+    origSize: 'Original Size:',
+    outSize: 'Compressed Size:',
+    saved: 'Space Saved:',
+    dims: 'Dimensions (unchanged):',
+    finalQuality: 'Final Quality:',
+    formatOut: 'Output Format:',
+    exportBtn: 'Download Compressed Image',
+    links: [
+      { icon: '📐', href: '/tools/avatar/', label: 'Discord Avatar Cropper (512×512)' },
+      { icon: '😀', href: '/tools/emoji/', label: 'Custom Emoji Maker (128px, 256 KiB)' },
+      { icon: '📖', href: '/guides/discord-sizes/', label: 'Official Discord Size & Limit Guide' }
+    ]
+  },
+  es: {
+    dropTitle: 'Sube una imagen para comprimir para Discord',
+    dropHint: 'PNG, JPG o WebP • Mantiene las dimensiones originales • Solo reduce el peso',
+    demoBtn: 'Probar con Imagen de Demostración',
+    editorTitle: 'Controles de Compresión',
+    editorSub: 'Elige un límite objetivo y el formato de salida',
+    reset: 'Reiniciar',
+    targetLabel: 'Límite de Subida Objetivo',
+    targetChat: 'Subida de chat de Discord — 10 MB (gratis)',
+    targetNitroBasic: 'Nitro Basic — 50 MB',
+    targetNitro: 'Nitro — 500 MB',
+    targetAvatar: 'Avatar / icono de servidor — 8 MB',
+    targetCustom: 'Tamaño personalizado (KB)',
+    customLabel: 'Objetivo personalizado (KB)',
+    formatLabel: 'Formato de Salida',
+    formatWebp: 'WebP (más pequeño — recomendado)',
+    formatJpeg: 'JPEG (amplia compatibilidad)',
+    formatPng: 'PNG (sin pérdida — ignora la calidad)',
+    qualityLabel: 'Calidad del Codificador',
+    qualityNote: 'Se reduce automáticamente hasta cumplir el objetivo (solo WebP / JPEG).',
+    previewTitle: 'Vista Previa Comprimida',
+    previewBox: 'Aún no hay imagen',
+    receiptTitle: 'Recibo de Compresión',
+    awaiting: 'Esperando Imagen',
+    origSize: 'Tamaño Original:',
+    outSize: 'Tamaño Comprimido:',
+    saved: 'Espacio Ahorrado:',
+    dims: 'Dimensiones (sin cambios):',
+    finalQuality: 'Calidad Final:',
+    formatOut: 'Formato de Salida:',
+    exportBtn: 'Descargar Imagen Comprimida',
+    links: [
+      { icon: '📐', href: '/es/tools/avatar/', label: 'Recortador de Avatares de Discord (512×512)' },
+      { icon: '😀', href: '/es/tools/emoji/', label: 'Creador de Emojis (128px, 256 KiB)' },
+      { icon: '📖', href: '/es/guides/discord-sizes/', label: 'Guía Oficial de Tamaños y Límites' }
+    ]
+  }
+}[lang];
+
+// Runtime strings consumed by the client script via data-* attributes.
+const js = {
+  en: {
+    invalidFile: 'Please upload a valid image file (PNG, JPG, or WebP).',
+    within: 'Within target',
+    over: 'Over target',
+    pass: '✓ Under your target — ready to upload to Discord.',
+    fail: '⚠ Could not reach the target at minimum quality. Try WebP, a smaller target, or resize the image first.',
+    yes: 'Yes',
+    no: 'No',
+    unchanged: 'Unchanged',
+    working: 'Compressing…'
+  },
+  es: {
+    invalidFile: 'Sube un archivo de imagen válido (PNG, JPG o WebP).',
+    within: 'Dentro del objetivo',
+    over: 'Supera el objetivo',
+    pass: '✓ Por debajo de tu objetivo — listo para subir a Discord.',
+    fail: '⚠ No se pudo alcanzar el objetivo con la calidad mínima. Prueba WebP, un objetivo menor o redimensiona primero.',
+    yes: 'Sí',
+    no: 'No',
+    unchanged: 'Sin cambios',
+    working: 'Comprimiendo…'
+  }
+}[lang];
+---
+
+<!-- Main Workspace Layout -->
+<div
+  class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16"
+  id="ic-workspace"
+  data-invalid-file={js.invalidFile}
+  data-within={js.within}
+  data-over={js.over}
+  data-pass={js.pass}
+  data-fail={js.fail}
+  data-yes={js.yes}
+  data-no={js.no}
+  data-unchanged={js.unchanged}
+  data-working={js.working}
+  data-awaiting={t.awaiting}
+>
+  <!-- Left Column: Upload & Controls (7 cols) -->
+  <div class="lg:col-span-7 space-y-6">
+    <div id="ic-drop" class="border-2 border-dashed border-[#C8DFDB] hover:border-[#3368A0] rounded-[14px] bg-[#FFFFFF] dark:bg-[#141A24] p-8 text-center transition-all cursor-pointer relative shadow-xs">
+      <input type="file" id="ic-file" accept="image/png,image/jpeg,image/webp" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" />
+      <div class="space-y-3 pointer-events-none">
+        <div class="w-12 h-12 rounded-[12px] bg-[#C8DFDB]/50 dark:bg-[#1F2E45] text-[#3368A0] dark:text-[#66A3BF] flex items-center justify-center mx-auto text-xl font-bold">
+          🗜️
+        </div>
+        <div>
+          <p class="text-sm font-bold text-[#192538] dark:text-white">{t.dropTitle}</p>
+          <p class="text-xs text-[#6B7A90] dark:text-[#8494A7] mt-1">{t.dropHint}</p>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-[#E0DBD0]/60 dark:border-[#263346]/60 flex items-center justify-center gap-2">
+        <button type="button" id="ic-demo" class="text-xs px-3.5 py-1.5 rounded-lg bg-[#FAF8F5] dark:bg-[#1E2738] border border-[#E0DBD0] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:border-[#3368A0] transition-colors flex items-center gap-1.5 pointer-events-auto">
+          <span>✨</span> {t.demoBtn}
+        </button>
+      </div>
+    </div>
+
+    <div id="ic-editor" class="card-panel rounded-[14px] p-6 hidden space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+        <div>
+          <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.editorTitle}</h2>
+          <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.editorSub}</p>
+        </div>
+        <button id="ic-reset" class="btn-secondary text-xs px-3 py-1.5 rounded-[6px]">
+          {t.reset}
+        </button>
+      </div>
+
+      <!-- Target Limit -->
+      <div>
+        <label for="ic-target" class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5">
+          <span>🎯</span> {t.targetLabel}
+        </label>
+        <select id="ic-target" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none">
+          <option value="10485760">{t.targetChat}</option>
+          <option value="8388608">{t.targetAvatar}</option>
+          <option value="52428800">{t.targetNitroBasic}</option>
+          <option value="524288000">{t.targetNitro}</option>
+          <option value="custom">{t.targetCustom}</option>
+        </select>
+        <div id="ic-custom-wrap" class="mt-2 hidden">
+          <label for="ic-custom-kb" class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mb-1 block">{t.customLabel}</label>
+          <input type="number" id="ic-custom-kb" min="1" step="1" value="256" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none" />
+        </div>
+      </div>
+
+      <!-- Output Format -->
+      <div>
+        <label for="ic-format" class="text-xs font-semibold text-[#192538] dark:text-white mb-2 flex items-center gap-1.5">
+          <span>🧩</span> {t.formatLabel}
+        </label>
+        <select id="ic-format" class="w-full text-sm rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3 py-2 focus:border-[#3368A0] focus:outline-none">
+          <option value="image/webp">{t.formatWebp}</option>
+          <option value="image/jpeg">{t.formatJpeg}</option>
+          <option value="image/png">{t.formatPng}</option>
+        </select>
+      </div>
+
+      <!-- Quality -->
+      <div id="ic-quality-wrap">
+        <div class="flex items-center justify-between text-xs font-semibold text-[#192538] dark:text-white mb-2">
+          <span class="flex items-center gap-1.5"><span>🎚️</span> {t.qualityLabel}</span>
+          <span id="ic-quality-out" class="font-mono text-[11px] text-[#3368A0] dark:text-[#66A3BF]">92%</span>
+        </div>
+        <input type="range" id="ic-quality" min="0.3" max="0.95" step="0.01" value="0.92" class="w-full accent-[#3368A0] h-1.5 bg-[#E0DBD0] dark:bg-[#263346] rounded-lg cursor-pointer" />
+        <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mt-1">{t.qualityNote}</p>
+      </div>
+
+      <button id="ic-download" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2 shadow-sm">
+        <span>{t.exportBtn}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Right Column: Preview & Receipt (5 cols) -->
+  <div class="lg:col-span-5 space-y-6">
+    <!-- Preview -->
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.previewTitle}</h2>
+      </div>
+      <div class="rounded-[10px] bg-[#FAF8F5] dark:bg-[#101622] border border-[#E0DBD0] dark:border-[#263346] p-4 flex items-center justify-center min-h-[200px] overflow-hidden bg-[repeating-conic-gradient(#EAE6DC_0%_25%,#FFFFFF_0%_50%)] dark:bg-[repeating-conic-gradient(#1A2230_0%_25%,#121824_0%_50%)] [background-size:16px_16px]">
+        <img id="ic-preview" class="max-w-full max-h-[280px] object-contain rounded shadow-md hidden" alt="Compressed image preview" />
+        <span id="ic-preview-empty" class="text-xs text-[#6B7A90] dark:text-[#8494A7] font-mono">{t.previewBox}</span>
+      </div>
+    </div>
+
+    <!-- Receipt -->
+    <div class="card-panel rounded-[14px] p-6">
+      <div class="flex items-center justify-between pb-3 border-b border-[#E0DBD0] mb-4">
+        <h2 class="text-sm font-bold text-[#192538]">{t.receiptTitle}</h2>
+        <span id="ic-badge" class="text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded">
+          {t.awaiting}
+        </span>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs">
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.origSize}</span>
+          <span id="ic-stat-orig" class="text-[#192538]">--</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.outSize}</span>
+          <span id="ic-stat-out" class="font-bold text-[#192538]">--</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.saved}</span>
+          <span id="ic-stat-saved" class="text-[#0D9488] font-bold">--</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.dims}</span>
+          <span id="ic-stat-dims" class="text-[#192538]">-- × --</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-[#FAF8F5]">
+          <span class="text-[#6B7A90]">{t.finalQuality}</span>
+          <span id="ic-stat-quality" class="text-[#192538]">--</span>
+        </div>
+        <div class="flex justify-between py-1.5">
+          <span class="text-[#6B7A90]">{t.formatOut}</span>
+          <span id="ic-stat-format" class="text-[#192538]">--</span>
+        </div>
+      </div>
+
+      <div id="ic-alert" class="mt-4 hidden p-3 rounded-[8px] text-xs"></div>
+
+      <div class="mt-4 pt-3 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-col gap-1.5 text-xs font-medium">
+        {t.links.map((link) => (
+          <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+            <span>{link.icon}</span> {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ws = document.getElementById('ic-workspace');
+  const L = {
+    invalidFile: ws?.dataset.invalidFile || 'Please upload a valid image file (PNG, JPG, or WebP).',
+    within: ws?.dataset.within || 'Within target',
+    over: ws?.dataset.over || 'Over target',
+    pass: ws?.dataset.pass || '',
+    fail: ws?.dataset.fail || '',
+    yes: ws?.dataset.yes || 'Yes',
+    no: ws?.dataset.no || 'No',
+    unchanged: ws?.dataset.unchanged || 'Unchanged',
+    working: ws?.dataset.working || 'Compressing…',
+    awaiting: ws?.dataset.awaiting || 'Awaiting Image'
+  };
+
+  const fileInput = document.getElementById('ic-file') as HTMLInputElement;
+  const dropzone = document.getElementById('ic-drop');
+  const demoBtn = document.getElementById('ic-demo');
+  const editor = document.getElementById('ic-editor');
+  const resetBtn = document.getElementById('ic-reset');
+  const targetSel = document.getElementById('ic-target') as HTMLSelectElement;
+  const customWrap = document.getElementById('ic-custom-wrap');
+  const customKb = document.getElementById('ic-custom-kb') as HTMLInputElement;
+  const formatSel = document.getElementById('ic-format') as HTMLSelectElement;
+  const qualityWrap = document.getElementById('ic-quality-wrap');
+  const qualitySlider = document.getElementById('ic-quality') as HTMLInputElement;
+  const qualityOut = document.getElementById('ic-quality-out');
+  const downloadBtn = document.getElementById('ic-download');
+
+  const previewImg = document.getElementById('ic-preview') as HTMLImageElement;
+  const previewEmpty = document.getElementById('ic-preview-empty');
+
+  const statOrig = document.getElementById('ic-stat-orig');
+  const statOut = document.getElementById('ic-stat-out');
+  const statSaved = document.getElementById('ic-stat-saved');
+  const statDims = document.getElementById('ic-stat-dims');
+  const statQuality = document.getElementById('ic-stat-quality');
+  const statFormat = document.getElementById('ic-stat-format');
+  const badge = document.getElementById('ic-badge');
+  const alertBox = document.getElementById('ic-alert');
+
+  // State
+  let sourceImage: HTMLImageElement | null = null;
+  let sourceBytes = 0;
+  let originalFileName = 'image';
+  let workCanvas: HTMLCanvasElement | null = null;
+  let currentBlob: Blob | null = null;
+  let currentObjectUrl: string | null = null;
+  let recompressTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const DEMO_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%233368A0"/><stop offset="55%" stop-color="%2366A3BF"/><stop offset="100%" stop-color="%230D9488"/></linearGradient></defs><rect width="900" height="600" fill="url(%23g)"/><circle cx="230" cy="200" r="120" fill="%23C8DFDB" opacity="0.55"/><circle cx="680" cy="410" r="160" fill="%23F2EFE7" opacity="0.35"/><rect x="360" y="250" width="320" height="120" rx="18" fill="%23192538" opacity="0.35"/><text x="450" y="325" font-family="sans-serif" font-size="46" font-weight="bold" fill="%23FFFFFF" text-anchor="middle">COMPRESS ME</text></svg>`;
+
+  function cleanup() {
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+  }
+
+  function formatBytes(bytes: number): string {
+    if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    if (bytes >= 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${bytes} B`;
+  }
+
+  function getTargetBytes(): number {
+    if (targetSel.value === 'custom') {
+      const kb = parseFloat(customKb.value);
+      return Number.isFinite(kb) && kb > 0 ? Math.round(kb * 1024) : 256 * 1024;
+    }
+    return parseInt(targetSel.value, 10);
+  }
+
+  fileInput?.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) handleFile(file);
+  });
+
+  dropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+  dropzone?.addEventListener('dragleave', () => {
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+  });
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-[#3368A0]', 'bg-[#FAF8F5]');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) handleFile(file);
+  });
+
+  demoBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    loadImage(DEMO_SVG, 'demo-image', 0);
+  });
+
+  function handleFile(file: File) {
+    if (!file.type.startsWith('image/')) {
+      alert(L.invalidFile);
+      return;
+    }
+    originalFileName = file.name.replace(/\.[^/.]+$/, '');
+    sourceBytes = file.size;
+    const url = URL.createObjectURL(file);
+    loadImage(url, originalFileName, file.size, url);
+  }
+
+  function loadImage(src: string, name: string, bytes: number, revokeAfter?: string) {
+    const img = new Image();
+    img.onload = () => {
+      sourceImage = img;
+      originalFileName = name;
+      sourceBytes = bytes;
+      workCanvas = document.createElement('canvas');
+      workCanvas.width = img.naturalWidth;
+      workCanvas.height = img.naturalHeight;
+      const ctx = workCanvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0);
+      // For SVG demo (bytes unknown), estimate original as a lossless PNG pass.
+      if (!sourceBytes) {
+        workCanvas.toBlob((b) => {
+          sourceBytes = b ? b.size : 0;
+          if (revokeAfter) URL.revokeObjectURL(revokeAfter);
+          editor?.classList.remove('hidden');
+          recompress();
+        }, 'image/png');
+        return;
+      }
+      if (revokeAfter) URL.revokeObjectURL(revokeAfter);
+      editor?.classList.remove('hidden');
+      recompress();
+    };
+    img.src = src;
+  }
+
+  function encode(type: string, quality: number): Promise<Blob | null> {
+    return new Promise((resolve) => {
+      workCanvas!.toBlob((b) => resolve(b), type, quality);
+    });
+  }
+
+  async function recompress() {
+    if (!sourceImage || !workCanvas) return;
+
+    const type = formatSel.value;
+    const targetBytes = getTargetBytes();
+    const isLossless = type === 'image/png';
+
+    if (qualityWrap) qualityWrap.style.opacity = isLossless ? '0.45' : '1';
+    qualitySlider.disabled = isLossless;
+
+    badge!.innerText = L.working;
+    badge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
+
+    let finalBlob: Blob | null = null;
+    let finalQuality = 1;
+
+    if (isLossless) {
+      finalBlob = await encode('image/png', 1);
+      finalQuality = 1;
+    } else {
+      const startQ = parseFloat(qualitySlider.value);
+      let q = startQ;
+      let best: Blob | null = null;
+      let bestQ = q;
+      // Step down until under target or floor reached; keep the smallest attempt.
+      while (q >= 0.3) {
+        const blob = await encode(type, q);
+        if (blob) {
+          best = blob;
+          bestQ = q;
+          if (blob.size <= targetBytes) break;
+        }
+        q = Math.round((q - 0.06) * 100) / 100;
+      }
+      finalBlob = best;
+      finalQuality = bestQ;
+    }
+
+    if (!finalBlob) return;
+
+    currentBlob = finalBlob;
+    cleanup();
+    currentObjectUrl = URL.createObjectURL(finalBlob);
+
+    previewImg.src = currentObjectUrl;
+    previewImg.classList.remove('hidden');
+    previewEmpty?.classList.add('hidden');
+
+    const outBytes = finalBlob.size;
+    const savedPct = sourceBytes > 0 ? Math.max(0, Math.round((1 - outBytes / sourceBytes) * 100)) : 0;
+
+    statOrig!.innerText = sourceBytes > 0 ? formatBytes(sourceBytes) : '--';
+    statOut!.innerText = formatBytes(outBytes);
+    statSaved!.innerText = sourceBytes > 0 ? `${savedPct}% (${formatBytes(Math.max(0, sourceBytes - outBytes))})` : '--';
+    statDims!.innerText = `${sourceImage.naturalWidth} × ${sourceImage.naturalHeight} (${L.unchanged})`;
+    statQuality!.innerText = isLossless ? '100% (lossless)' : `${Math.round(finalQuality * 100)}%`;
+    statFormat!.innerText = finalBlob.type.replace('image/', '').toUpperCase();
+
+    if (outBytes <= targetBytes) {
+      badge!.innerText = L.within;
+      badge!.className = 'text-[11px] font-mono uppercase bg-[#C8DFDB]/60 text-[#0D9488] border border-[#0D9488]/30 px-2.5 py-0.5 rounded font-bold';
+      alertBox!.className = 'p-3 rounded-[8px] text-xs bg-[#C8DFDB]/40 text-[#0D9488] border border-[#0D9488]/30 block font-medium';
+      alertBox!.innerText = L.pass;
+    } else {
+      badge!.innerText = L.over;
+      badge!.className = 'text-[11px] font-mono uppercase bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 px-2.5 py-0.5 rounded font-bold';
+      alertBox!.className = 'p-3 rounded-[8px] text-xs bg-[#DC2626]/10 text-[#DC2626] border border-[#DC2626]/20 block font-medium';
+      alertBox!.innerText = L.fail;
+    }
+  }
+
+  function scheduleRecompress() {
+    if (recompressTimer) clearTimeout(recompressTimer);
+    recompressTimer = setTimeout(recompress, 120);
+  }
+
+  targetSel?.addEventListener('change', () => {
+    customWrap?.classList.toggle('hidden', targetSel.value !== 'custom');
+    scheduleRecompress();
+  });
+  customKb?.addEventListener('input', scheduleRecompress);
+  formatSel?.addEventListener('change', recompress);
+  qualitySlider?.addEventListener('input', () => {
+    qualityOut!.innerText = `${Math.round(parseFloat(qualitySlider.value) * 100)}%`;
+    scheduleRecompress();
+  });
+
+  downloadBtn?.addEventListener('click', () => {
+    if (!currentBlob || !currentObjectUrl) return;
+    const ext = currentBlob.type === 'image/webp' ? 'webp' : currentBlob.type === 'image/jpeg' ? 'jpg' : 'png';
+    const a = document.createElement('a');
+    a.href = currentObjectUrl;
+    a.download = `compressed_${originalFileName}.${ext}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    cleanup();
+    currentBlob = null;
+    sourceImage = null;
+    workCanvas = null;
+    sourceBytes = 0;
+    editor?.classList.add('hidden');
+    previewImg.classList.add('hidden');
+    previewImg.removeAttribute('src');
+    previewEmpty?.classList.remove('hidden');
+    statOrig!.innerText = '--';
+    statOut!.innerText = '--';
+    statSaved!.innerText = '--';
+    statDims!.innerText = '-- × --';
+    statQuality!.innerText = '--';
+    statFormat!.innerText = '--';
+    badge!.innerText = L.awaiting;
+    badge!.className = 'text-[11px] font-mono uppercase bg-[#FAF8F5] text-[#6B7A90] border border-[#E0DBD0] px-2.5 py-0.5 rounded';
+    alertBox?.classList.add('hidden');
+    fileInput.value = '';
+    targetSel.value = '10485760';
+    customWrap?.classList.add('hidden');
+    formatSel.value = 'image/webp';
+    qualitySlider.value = '0.92';
+    qualityOut!.innerText = '92%';
+  });
+</script>

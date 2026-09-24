@@ -1,0 +1,127 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import GifCompressorWorkspace from '../../components/tools/GifCompressorWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord GIF Compressor | Shrink Animated GIFs";
+const pageDescription = "Free Discord GIF compressor: shrink animated GIFs under the 256 KiB emoji cap or 10 MB chat limit with scale, palette, and frame controls. No uploads.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/gif-compressor/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord GIF Compressor",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "GIF Compressor", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "How do I make a GIF smaller for Discord?", a: "Load the GIF, then pull three levers: scale the dimensions down, reduce the color palette from 256 toward 16, and keep fewer frames. The tool decodes every frame in your browser and re-encodes a smaller GIF, showing the live output size against your chosen target so you can stop the moment it fits." },
+  { q: "What is the Discord file size limit for GIFs?", a: "A free account can upload files up to 10 MB, raised from 8 MB in 2022. Server Boost tiers lift that ceiling for everyone in the server, and Nitro raises your personal limit up to 500 MB. Animated custom emoji are far stricter: 256 KiB and 128 by 128 pixels." },
+  { q: "Why won't my GIF play (shows as a link) in Discord?", a: "The usual cause is size: when a GIF exceeds your upload limit, Discord either rejects it or posts it as a plain link with no inline playback. Oversized dimensions can trigger the same result. Compressing the file under the limit restores normal inline animation and avoids the failed-upload path entirely." },
+  { q: "How do I compress a GIF without losing quality?", a: "GIF compression is inherently lossy because the palette is capped at 256 colors, but you can minimize visible change. Scale down before cutting colors, since flat and cartoon-style art tolerates a smaller palette almost invisibly. Reserve aggressive frame-dropping for clips where motion is not critical, and re-encode from the source rather than stacking passes." },
+  { q: "Does Discord compress GIFs automatically?", a: "Discord does re-process uploads and may serve its own optimized versions, but it will not shrink a file to fit your limit for you — an over-limit GIF is rejected or posted as a dead link first. Staying under the cap yourself with a compressor avoids that path and keeps the animation playing inline." }
+];
+
+const dossier = {
+  eyebrow: "GIF Compressor Blueprint",
+  heading: "From an oversized clip to",
+  highlight: "a GIF that fits Discord",
+  intro: "A GIF that busts Discord's upload limit gets rejected or posted as a dead link that never plays. Here is how the limit, the decode-and-re-encode pipeline, the size knobs, and the in-browser privacy fit together to land your animation under the cap.",
+  steps: [
+    "The Upload Limit",
+    "How Compression Works",
+    "The Size Knobs",
+    "Local & Private"
+  ],
+  cards: [
+    {
+      kicker: "SIZE CEILING // 01",
+      badge: "10 MB FREE / BOOST / NITRO",
+      badgeTone: "emerald" as const,
+      title: "Why a big GIF gets rejected",
+      body: [
+        "Discord's default upload limit is 10 MB for a free account — raised from 8 MB back in 2022. A server's Boost level lifts that ceiling for everyone in the server, and a Nitro subscription pushes your personal cap far higher, up to 500 MB. The catch is that an animated GIF balloons in size fast: a few seconds of full-color motion at a large resolution easily clears 10 MB, which is exactly why so many clips need trimming before they will post to a normal channel.",
+        "When a GIF sits over whatever limit applies to you, Discord does not quietly shrink it — the upload is rejected outright, or the file posts as a plain link that shows no inline animation. Either way the motion your viewers expected never plays. Animated custom emoji face a far tighter ceiling still: 256 KiB and 128 by 128 pixels. This tool lets you pick the byte target you are aiming for and re-encodes until the output lands beneath it, so you avoid the failed-upload path and the dead-link surprise entirely."
+      ]
+    },
+    {
+      kicker: "THE PIPELINE // 02",
+      badge: "DECODE / REQUANTIZE / RE-ENCODE",
+      badgeTone: "blue" as const,
+      title: "Decode, requantize, re-encode",
+      body: [
+        "Compressing a GIF is not a single slider — it is a pipeline. First the file is decoded back into its individual frames, each a full bitmap of pixels. Then the color palette is requantized: the GIF format caps every frame at 256 colors, so the encoder picks a reduced set that best represents the image and maps each pixel to it. Finally the frames are re-encoded into a new, smaller GIF. Because that palette step throws away color detail it cannot restore, the process is lossy — you trade a little fidelity for a much smaller file.",
+        "Understanding the pipeline explains why a compressed GIF looks slightly different from the original and why some clips shrink far more than others. Flat, cartoon-style art with large blocks of solid color survives aggressive palette cuts almost invisibly, while gradients, film grain, and photographic footage show banding once the palette shrinks. The re-encode also lets the tool drop frames or resize dimensions in the same pass. Everything is recomputed from the decoded frames, so each adjustment produces a genuinely new encode rather than a lossy copy stacked on top of a lossy copy."
+      ]
+    },
+    {
+      kicker: "THE CONTROLS // 03",
+      badge: "COLORS / FRAMES / DIMENSIONS",
+      badgeTone: "amber" as const,
+      title: "Three knobs to hit a byte target",
+      body: [
+        "Three independent controls decide the final size, and they stack. Scaling the dimensions down has the largest effect because it removes pixels from every single frame at once — halving width and height roughly quarters the pixel count. Cutting the color palette, from 256 toward 64 or 16, strips bits from each pixel and is often invisible on flat animation. Dropping frames keeps every second or third one, and the tool folds the skipped delays forward so the clip still plays at its original speed rather than running fast.",
+        "The right mix depends on the clip and the target you chose. For the tight 256 KiB emoji cap you will usually lean on all three at once; for a 10 MB chat upload a modest scale reduction alone often suffices. A live size readout shows the current output against your target as you adjust, so you tune toward the ceiling instead of guessing. If the result still overshoots, drop the scale or the color count a step further and re-encode — each pass recomputes from the source frames, so quality never degrades from repeated attempts."
+      ],
+      footer: "Scale cuts the most bytes; palette and frame-skip fine-tune the rest to land under your target."
+    },
+    {
+      kicker: "PRIVACY MODEL // 04",
+      badge: "NOTHING UPLOADED",
+      badgeTone: "purple" as const,
+      title: "Every frame stays on your device",
+      body: [
+        "The entire compression runs inside your browser. Your GIF is read with the browser's built-in ImageDecoder, its frames are requantized and re-encoded by a local encoder in the page, and the finished file is handed straight back to you as a download. At no point is the clip sent to a server, queued in a cloud job, or written to any account — there is nothing to sign into and no upload step to wait on. That makes the tool safe for private screen recordings, work-in-progress art, and anything you would rather not hand to a third party.",
+        "Running locally is also why the tool is fast and works offline once the page has loaded: there is no round-trip latency, no queue, and no upload bandwidth spent on a file that might be tens of megabytes. The only requirement is a reasonably recent Chrome, Edge, or Firefox, since in-browser GIF frame decoding relies on the modern ImageDecoder API. Close the tab and every trace of the clip is gone from memory — nothing lingers in a server log, a temp bucket, or a processing history, because none of those were ever part of the path."
+      ],
+      footer: "Read with the browser's ImageDecoder, re-encoded locally — the GIF never leaves your device."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/gif-compressor.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <div class="flex items-center gap-2">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">GIF Compressor</span>
+      </div>
+        <a href="/es/tools/gif-compressor/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold" hreflang="es">🌐 Español</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord GIF</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Compressor</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Shrink animated GIFs with scale, palette & frame controls • 256 KiB / 10 MB targets • In-browser</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <GifCompressorWorkspace lang="en" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>

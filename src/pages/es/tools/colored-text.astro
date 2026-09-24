@@ -1,0 +1,121 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import AnsiWorkspace from '../../../components/tools/AnsiWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+
+const pageTitle = "Texto de Colores Discord | Códigos ANSI";
+const pageDescription = "Generador de texto de colores Discord: aplica códigos ANSI a tus palabras y copia un bloque listo para pegar. Negrita, subrayado y vista previa.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/colored-text/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/colored-text/";
+
+const appSchema = generateSoftwareApplicationSchema("Generador de Texto de Colores para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Texto de Colores", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cómo pongo texto de colores en Discord?", a: "Discord colorea el texto dentro de un bloque de código con la etiqueta de lenguaje ansi. Este generador escribe los códigos de escape por ti: escribe tu texto, selecciona una parte, elige un color y copia. Pega el resultado en Discord y el bloque ansi con triples comillas invertidas se muestra en color en escritorio y web." },
+  { q: "¿Por qué mi texto de colores de Discord se ve como código plano o no funciona?", a: "Discord solo colorea los bloques ANSI en escritorio y en la app web. Las versiones antiguas de la app móvil muestran el bloque como texto monoespaciado sin color, y si pierdes una comilla invertida o la etiqueta ansi, todo se muestra literal. Copia el bloque completo de esta herramienta para mantener la valla intacta." },
+  { q: "¿Qué colores puedo usar en el texto ANSI de Discord?", a: "Discord admite ocho colores de texto (gris, rojo, verde, dorado, azul, rosa, cian, blanco) y ocho resaltados de fondo, más negrita y subrayado. Corresponden a los códigos ANSI SGR 30-37 y 40-47, con la paleta estilo Solarized de Discord — por eso los tonos se ven algo apagados en vez de primarios puros." },
+  { q: "¿Funciona el texto de colores en nombres de usuario, apodos o biografías de Discord?", a: "No. Los colores ANSI solo aparecen dentro de un bloque de código en los mensajes. Los nombres, apodos y el Sobre mí son texto plano, así que el marcado del bloque se vería literal ahí. Para nombres con estilo usa un generador de fuentes Unicode, que cambia las letras por glifos Unicode estilizados." },
+  { q: "¿Cómo pongo texto de colores en la app móvil de Discord?", a: "Crea el bloque ansi en escritorio o aquí en el navegador, luego cópialo y pégalo en un mensaje móvil. Las versiones nuevas de la app móvil de Discord ya muestran los colores ANSI; en las versiones antiguas el mismo mensaje se lee como texto monoespaciado plano, así que nada se rompe para esos lectores." }
+];
+
+const dossier = {
+  eyebrow: "Plano del Texto de Colores",
+  heading: "Colorear el chat con",
+  highlight: "bloques de código ansi",
+  intro: "Discord no tiene selector de color en el chat — el truco es un bloque de código con la etiqueta ansi, donde Discord lee códigos de escape estilo terminal y pinta cada tramo de texto. Así encajan el bloque, la paleta y los clientes.",
+  steps: [
+    "El Bloque de Código ansi",
+    "Colores, Fondos y Códigos SGR",
+    "Apilar Estilos y Copiar",
+    "Dónde Se Renderiza"
+  ],
+  cards: [
+    {
+      kicker: "ANATOMÍA DE SINTAXIS // 01",
+      badge: "VALLA ```ansi",
+      badgeTone: "emerald" as const,
+      title: "Por qué un bloque de código es lo que colorea el texto",
+      body: [
+        "Discord no expone ningún botón de color en el chat. Lo que realmente tiñe el texto es un bloque de código abierto con una triple comilla invertida y la etiqueta de lenguaje ansi. Dentro de esa valla, Discord lee los códigos de escape ANSI clásicos — las mismas secuencias SGR que usa una terminal — y colorea cada tramo.",
+        "Esta herramienta escribe esas secuencias de escape por ti, así nunca escribes un carácter de control crudo. Selecciona texto, toca un color y envuelve tus palabras en los códigos correctos. La regla clave: todo el mensaje debe quedar dentro de una sola valla ansi, o Discord muestra los códigos como texto literal en vez de color."
+      ]
+    },
+    {
+      kicker: "REGISTRO DE PALETA // 02",
+      badge: "8 TEXTO / 8 FONDO",
+      badgeTone: "blue" as const,
+      title: "Los ocho colores, resaltados, negrita y subrayado",
+      body: [
+        "El modo ANSI de Discord admite ocho colores de texto — gris, rojo, verde, dorado, azul, rosa, cian y blanco — más ocho resaltados de fondo y los atributos negrita y subrayado. Corresponden a los códigos SGR estándar 30-37 para texto y 40-47 para fondos.",
+        "Como Discord los renderiza con una paleta estilo Solarized, los colores se ven algo apagados y cálidos en vez de primarios duros. Por eso el 'verde' tira a oliva y el 'azul' se ve suavizado — es a propósito, y previsualizar aquí muestra el tono exacto antes de pegar."
+      ]
+    },
+    {
+      kicker: "FLUJO DE COMPOSICIÓN // 03",
+      badge: "APILABLE",
+      badgeTone: "amber" as const,
+      title: "Apilar estilos con una vista previa en vivo",
+      body: [
+        "Los estilos se apilan. Selecciona una frase y haz clic en un color de texto, luego haz clic otra vez para añadir un resaltado de fondo, negrita o subrayado al mismo tramo. La vista previa se actualiza en vivo y refleja cómo renderizará Discord el bloque terminado.",
+        "Cuando se vea bien, copia el bloque con un toque. La salida es una valla ansi con triple comilla invertida lista para pegar — suéltala en cualquier canal o DM y tus palabras estilizadas se vuelven color. Todo corre en tu navegador, así nada de lo que escribes se sube a ningún lado."
+      ],
+      footer: "La vista previa en vivo refleja el render de Discord — copia una valla ansi lista y pégala donde sea."
+    },
+    {
+      kicker: "COBERTURA DE CLIENTE // 04",
+      badge: "ESCRITORIO / WEB",
+      badgeTone: "purple" as const,
+      title: "Dónde aparece el texto de colores (y dónde no)",
+      body: [
+        "El color ANSI se renderiza en los mensajes de Discord en escritorio y en la app web, y en las versiones nuevas de móvil. Las versiones antiguas de móvil muestran el mismo bloque como texto monoespaciado plano — igual de legible, solo sin teñir — así que tu mensaje nunca se rompe para nadie.",
+        "El texto de colores no funciona en nombres de usuario, apodos ni en el Sobre mí, porque esos campos son texto plano sin soporte de bloques de código. Para nombres con estilo, usa un generador de fuentes Unicode, que sustituye por glifos estilizados que se ven en todos lados."
+      ],
+      footer: "Se renderiza en mensajes en escritorio, web y móvil nuevo — no en nombres ni biografías."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/colored-text.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Texto de Colores</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Generador de Texto de Colores Discord
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Aplica colores ANSI a tus palabras • Negrita y subrayado • Copia un bloque ```ansi listo</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
+      </div>
+    </div>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <AnsiWorkspace lang="es" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
+  </div>
+</Layout>

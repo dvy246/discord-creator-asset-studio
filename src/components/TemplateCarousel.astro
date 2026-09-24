@@ -1,27 +1,86 @@
 ---
 // Hyper-Optimized 3D Stacked Template Showcase
 // 100% GPU-Accelerated, 0% CPU Thrash, Zero DOM Rebuilds during interactions
+interface Props { lang?: 'en' | 'es'; }
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    navTip: 'Swipe or click side cards to navigate',
+    prevLabel: 'Previous template',
+    nextLabel: 'Next template',
+    gotoTemplate: 'Go to template',
+    cta: 'Customize in Studio',
+    filterAll: 'All',
+    filterBanner: 'Banner',
+    filterAvatar: 'Avatar',
+    filterSticker: 'Sticker',
+    filterEmoji: 'Emoji',
+    cards: [
+      { badge: '16:9 BANNER', spec: '960 × 540 • SAFE ZONE VERIFIED', title: 'Neo-Tokyo Ronin', desc: 'Cyborg ronin in rain-slicked Neo-Tokyo with verified top 48px header clearance.' },
+      { badge: 'ANIMATED BANNER', spec: '720 × 300 • APEX HORIZON', title: 'Spire Sunset Dive', desc: 'High-altitude aerialist silhouette bathed in sunset amber twilight, loop-perfect motion.' },
+      { badge: '512×512 AVATAR', spec: '1:1 CIRCLE SAFE • HD 512PX', title: 'Cyber Ronin Oni', desc: "Robotic oni mask with glowing cyan optics calibrated to Discord's circular crop mask." },
+      { badge: '16:9 BANNER', spec: '960 × 540 • LO-FI AESTHETIC', title: 'Midnight Stargazer', desc: 'Cozy aesthetic bedroom overlooking an expansive pastel violet galaxy nebula.' },
+      { badge: 'ANIMATED AVATAR', spec: 'STREAM STATUS SAFE • ANIMATED PFP', title: 'Ichigo Bankai (TYBW)', desc: 'Kinetic spiritual pressure and glowing eyes calibrated with Discord status pip clearance.' },
+      { badge: '16:9 BANNER', spec: '960 × 540 • 80S SYNTHWAVE', title: 'Outrun Odyssey', desc: 'Retro supercar cruising down an infinite neon purple laser grid into a giant sliced sunset.' },
+      { badge: 'ANIMATED AVATAR', spec: 'ANIMATED • ARC REACTOR GLOW', title: 'Nanotech Mark 85', desc: 'Liquid nanotech assembling Mark 85 armor with pulsing chest arc reactor, optimized for Nitro.' },
+      { badge: 'ANIMATED BANNER', spec: '720 × 300 • CINEMATIC MOTION', title: 'Ghost of Yōtei', desc: 'Dual-blade ronin on a windswept mountain crest beneath twilight snowfall, seamless motion loop.' },
+      { badge: '16:9 BANNER', spec: '960 × 540 • GOTHIC DARK', title: 'Eclipsed Citadel', desc: 'Ominous blackened fortress under a crimson eclipse with drifting embers and ancient runes.' },
+      { badge: '320×320 STICKER', spec: 'EXACT 320PX • LOSSLESS APNG', title: 'Totoro Forest Nap', desc: 'Animated gentle forest spirit with die-cut vinyl contour and transparent background.' },
+      { badge: '320×320 STICKER', spec: 'EXACT 320PX • ALPHA CHANNEL', title: 'Bongo Cat Rhythms', desc: 'High-energy animated paws jamming on keyboard with lossless alpha transparency.' },
+      { badge: '128×128 EMOJI', spec: '128PX HD • 32PX CHAT CRISP', title: 'Pop Cat Dynamic', desc: 'Viral wide-mouth animated pop emote optimized for crisp high-contrast chat reactions.' },
+      { badge: '128×128 EMOJI', spec: '128PX HD • DIVINE AURA GLOW', title: 'Ultra Instinct Aura', desc: 'Silver-haired focus state with living divine aura particles visible on dark and light themes.' },
+    ],
+  },
+  es: {
+    navTip: 'Desliza o toca las tarjetas laterales para navegar',
+    prevLabel: 'Plantilla anterior',
+    nextLabel: 'Plantilla siguiente',
+    gotoTemplate: 'Ir a la plantilla',
+    cta: 'Personalizar en Studio',
+    filterAll: 'Todos',
+    filterBanner: 'Banner',
+    filterAvatar: 'Avatar',
+    filterSticker: 'Sticker',
+    filterEmoji: 'Emoji',
+    cards: [
+      { badge: 'BANNER 16:9', spec: '960 × 540 • ZONA SEGURA VERIFICADA', title: 'Ronin de Neo-Tokio', desc: 'Ronin cíborg en un Neo-Tokio bajo la lluvia con 48px de margen superior verificado para el encabezado.' },
+      { badge: 'BANNER ANIMADO', spec: '720 × 300 • HORIZONTE CUMBRE', title: 'Clavado del Ocaso en la Aguja', desc: 'Silueta de acróbata a gran altura bañada en el crepúsculo ámbar del ocaso, con movimiento en bucle perfecto.' },
+      { badge: 'AVATAR 512×512', spec: '1:1 CÍRCULO SEGURO • HD 512PX', title: 'Oni Ronin Cibernético', desc: 'Máscara oni robótica con ópticos cian brillantes, calibrada para el recorte circular de Discord.' },
+      { badge: 'BANNER 16:9', spec: '960 × 540 • ESTÉTICA LO-FI', title: 'Observador Estelar de Medianoche', desc: 'Acogedora habitación estética con vista a una extensa nebulosa galáctica en violeta pastel.' },
+      { badge: 'AVATAR ANIMADO', spec: 'ESTADO DE STREAM SEGURO • PFP ANIMADO', title: 'Ichigo Bankai (TYBW)', desc: 'Presión espiritual cinética y ojos brillantes calibrados con el margen del indicador de estado de Discord.' },
+      { badge: 'BANNER 16:9', spec: '960 × 540 • SYNTHWAVE DE LOS 80', title: 'Odisea Outrun', desc: 'Superdeportivo retro avanzando por una rejilla láser púrpura neón infinita hacia un enorme atardecer rebanado.' },
+      { badge: 'AVATAR ANIMADO', spec: 'ANIMADO • BRILLO DEL REACTOR ARC', title: 'Nanotecnología Mark 85', desc: 'Nanotecnología líquida ensamblando la armadura Mark 85 con reactor arc pulsante en el pecho, optimizada para Nitro.' },
+      { badge: 'BANNER ANIMADO', spec: '720 × 300 • MOVIMIENTO CINEMATOGRÁFICO', title: 'Ghost of Yōtei', desc: 'Ronin de doble espada en una cresta montañosa azotada por el viento bajo la nevada del crepúsculo, con bucle de movimiento fluido.' },
+      { badge: 'BANNER 16:9', spec: '960 × 540 • OSCURIDAD GÓTICA', title: 'Ciudadela Eclipsada', desc: 'Fortaleza ennegrecida y siniestra bajo un eclipse carmesí, con brasas flotantes y runas ancestrales.' },
+      { badge: 'STICKER 320×320', spec: '320PX EXACTOS • APNG SIN PÉRDIDAS', title: 'Siesta de Totoro en el Bosque', desc: 'Espíritu del bosque animado y apacible con contorno de vinilo troquelado y fondo transparente.' },
+      { badge: 'STICKER 320×320', spec: '320PX EXACTOS • CANAL ALFA', title: 'Ritmos de Bongo Cat', desc: 'Patas animadas llenas de energía tocando el teclado con transparencia alfa sin pérdidas.' },
+      { badge: 'EMOJI 128×128', spec: '128PX HD • NÍTIDO A 32PX EN CHAT', title: 'Pop Cat Dinámico', desc: 'Emote pop animado de boca ancha viral, optimizado para reacciones de chat nítidas y de alto contraste.' },
+      { badge: 'EMOJI 128×128', spec: '128PX HD • BRILLO DE AURA DIVINA', title: 'Aura del Ultra Instinto', desc: 'Estado de concentración de cabello plateado con partículas de aura divina vivientes, visibles en temas claros y oscuros.' },
+    ],
+  },
+}[lang];
 ---
 
-<div class="w-full select-none" id="templateCarouselRoot">
+<div class="w-full select-none" id="templateCarouselRoot" data-goto-label={t.gotoTemplate}>
   <!-- Controls Bar: Category Filters & Instructions -->
   <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 px-2">
     <!-- Filter Pills -->
     <div class="flex items-center gap-1.5 p-1 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] overflow-x-auto" id="carouselFilters">
       <button type="button" data-filter="all" class="carousel-filter-btn px-3.5 py-1.5 rounded-[8px] text-xs font-bold bg-[#3368A0] text-white shadow-xs transition-colors cursor-pointer">
-        All
+        {t.filterAll}
       </button>
       <button type="button" data-filter="banner" class="carousel-filter-btn px-3.5 py-1.5 rounded-[8px] text-xs font-bold text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white transition-colors cursor-pointer">
-        Banner
+        {t.filterBanner}
       </button>
       <button type="button" data-filter="avatar" class="carousel-filter-btn px-3.5 py-1.5 rounded-[8px] text-xs font-bold text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white transition-colors cursor-pointer">
-        Avatar
+        {t.filterAvatar}
       </button>
       <button type="button" data-filter="sticker" class="carousel-filter-btn px-3.5 py-1.5 rounded-[8px] text-xs font-bold text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white transition-colors cursor-pointer">
-        Sticker
+        {t.filterSticker}
       </button>
       <button type="button" data-filter="emoji" class="carousel-filter-btn px-3.5 py-1.5 rounded-[8px] text-xs font-bold text-[#475569] dark:text-[#CBD5E1] hover:text-[#192538] dark:hover:text-white transition-colors cursor-pointer">
-        Emoji
+        {t.filterEmoji}
       </button>
     </div>
 
@@ -30,7 +89,7 @@
       <svg class="w-4 h-4 text-[#3368A0] dark:text-[#66A3BF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
       </svg>
-      <span>Swipe or click side cards to navigate</span>
+      <span>{t.navTip}</span>
     </div>
   </div>
 
@@ -41,7 +100,7 @@
       type="button"
       id="carouselPrevBtn"
       class="absolute left-2 sm:left-4 lg:left-8 z-50 p-3 rounded-full bg-white/95 dark:bg-[#1B2330]/95 border border-[#E0DBD0] dark:border-[#263346] shadow-md text-[#192538] dark:text-white hover:scale-110 active:scale-95 transition-transform cursor-pointer focus:outline-none"
-      aria-label="Previous template"
+      aria-label={t.prevLabel}
     >
       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
@@ -53,7 +112,7 @@
       type="button"
       id="carouselNextBtn"
       class="absolute right-2 sm:right-4 lg:right-8 z-50 p-3 rounded-full bg-white/95 dark:bg-[#1B2330]/95 border border-[#E0DBD0] dark:border-[#263346] shadow-md text-[#192538] dark:text-white hover:scale-110 active:scale-95 transition-transform cursor-pointer focus:outline-none"
-      aria-label="Next template"
+      aria-label={t.nextLabel}
     >
       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
@@ -82,7 +141,7 @@
           <!-- Top Badge -->
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              16:9 BANNER
+              {t.cards[0].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -92,19 +151,19 @@
           <!-- Bottom Content Bar -->
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">
-              960 × 540 • SAFE ZONE VERIFIED
+              {t.cards[0].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Neo-Tokyo Ronin
+              {t.cards[0].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Cyborg ronin in rain-slicked Neo-Tokyo with verified top 48px header clearance.
+              {t.cards[0].desc}
             </p>
             <a
               href="/tools/banner/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -129,7 +188,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              ANIMATED BANNER
+              {t.cards[1].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -138,19 +197,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-amber-400 font-bold uppercase tracking-wider block mb-1">
-              720 × 300 • APEX HORIZON
+              {t.cards[1].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Spire Sunset Dive
+              {t.cards[1].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              High-altitude aerialist silhouette bathed in sunset amber twilight, loop-perfect motion.
+              {t.cards[1].desc}
             </p>
             <a
               href="/tools/banner/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -179,7 +238,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              512×512 AVATAR
+              {t.cards[2].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -188,19 +247,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider block mb-1">
-              1:1 CIRCLE SAFE • HD 512PX
+              {t.cards[2].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Cyber Ronin Oni
+              {t.cards[2].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Robotic oni mask with glowing cyan optics calibrated to Discord's circular crop mask.
+              {t.cards[2].desc}
             </p>
             <a
               href="/tools/avatar/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -225,7 +284,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              16:9 BANNER
+              {t.cards[3].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -234,19 +293,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-purple-400 font-bold uppercase tracking-wider block mb-1">
-              960 × 540 • LO-FI AESTHETIC
+              {t.cards[3].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Midnight Stargazer
+              {t.cards[3].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Cozy aesthetic bedroom overlooking an expansive pastel violet galaxy nebula.
+              {t.cards[3].desc}
             </p>
             <a
               href="/tools/banner/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -275,7 +334,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              ANIMATED AVATAR
+              {t.cards[4].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -284,19 +343,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-orange-400 font-bold uppercase tracking-wider block mb-1">
-              STREAM STATUS SAFE • ANIMATED PFP
+              {t.cards[4].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Ichigo Bankai (TYBW)
+              {t.cards[4].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Kinetic spiritual pressure and glowing eyes calibrated with Discord status pip clearance.
+              {t.cards[4].desc}
             </p>
             <a
               href="/tools/avatar/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -321,7 +380,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              16:9 BANNER
+              {t.cards[5].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -330,19 +389,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-pink-400 font-bold uppercase tracking-wider block mb-1">
-              960 × 540 • 80S SYNTHWAVE
+              {t.cards[5].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Outrun Odyssey
+              {t.cards[5].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Retro supercar cruising down an infinite neon purple laser grid into a giant sliced sunset.
+              {t.cards[5].desc}
             </p>
             <a
               href="/tools/banner/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -371,7 +430,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              ANIMATED AVATAR
+              {t.cards[6].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -380,19 +439,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider block mb-1">
-              ANIMATED • ARC REACTOR GLOW
+              {t.cards[6].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Nanotech Mark 85
+              {t.cards[6].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Liquid nanotech assembling Mark 85 armor with pulsing chest arc reactor, optimized for Nitro.
+              {t.cards[6].desc}
             </p>
             <a
               href="/tools/avatar/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -417,7 +476,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              ANIMATED BANNER
+              {t.cards[7].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -426,19 +485,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider block mb-1">
-              720 × 300 • CINEMATIC MOTION
+              {t.cards[7].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Ghost of Yōtei
+              {t.cards[7].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Dual-blade ronin on a windswept mountain crest beneath twilight snowfall, seamless motion loop.
+              {t.cards[7].desc}
             </p>
             <a
               href="/tools/banner/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -463,7 +522,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              16:9 BANNER
+              {t.cards[8].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -472,19 +531,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-red-400 font-bold uppercase tracking-wider block mb-1">
-              960 × 540 • GOTHIC DARK
+              {t.cards[8].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Eclipsed Citadel
+              {t.cards[8].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Ominous blackened fortress under a crimson eclipse with drifting embers and ancient runes.
+              {t.cards[8].desc}
             </p>
             <a
               href="/tools/banner/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -513,7 +572,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              320×320 STICKER
+              {t.cards[9].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -522,19 +581,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">
-              EXACT 320PX • LOSSLESS APNG
+              {t.cards[9].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Totoro Forest Nap
+              {t.cards[9].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Animated gentle forest spirit with die-cut vinyl contour and transparent background.
+              {t.cards[9].desc}
             </p>
             <a
               href="/tools/sticker/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -563,7 +622,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              320×320 STICKER
+              {t.cards[10].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -572,19 +631,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">
-              EXACT 320PX • ALPHA CHANNEL
+              {t.cards[10].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Bongo Cat Rhythms
+              {t.cards[10].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              High-energy animated paws jamming on keyboard with lossless alpha transparency.
+              {t.cards[10].desc}
             </p>
             <a
               href="/tools/sticker/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -613,7 +672,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              128×128 EMOJI
+              {t.cards[11].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -622,19 +681,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider block mb-1">
-              128PX HD • 32PX CHAT CRISP
+              {t.cards[11].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Pop Cat Dynamic
+              {t.cards[11].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Viral wide-mouth animated pop emote optimized for crisp high-contrast chat reactions.
+              {t.cards[11].desc}
             </p>
             <a
               href="/tools/emoji/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -663,7 +722,7 @@
 
           <div class="relative z-20 p-4 sm:p-5 flex items-center justify-between">
             <span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur-xs text-white text-[11px] font-mono font-bold border border-white/15">
-              128×128 EMOJI
+              {t.cards[12].badge}
             </span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
@@ -672,19 +731,19 @@
 
           <div class="relative z-20 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/75 to-transparent">
             <span class="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider block mb-1">
-              128PX HD • DIVINE AURA GLOW
+              {t.cards[12].spec}
             </span>
             <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight mb-2">
-              Ultra Instinct Aura
+              {t.cards[12].title}
             </h3>
             <p class="text-xs text-white/70 line-clamp-2 mb-4">
-              Silver-haired focus state with living divine aura particles visible on dark and light themes.
+              {t.cards[12].desc}
             </p>
             <a
               href="/tools/emoji/"
               class="card-cta-btn inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[10px] bg-[#3368A0] hover:bg-[#265280] text-white text-xs font-bold shadow-md transition-all hover:scale-102 cursor-pointer"
             >
-              <span>Customize in Studio</span>
+              <span>{t.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -726,6 +785,8 @@
   function setup3DCarousel() {
     const root = document.getElementById('templateCarouselRoot');
     if (!root) return;
+
+    const gotoLabel = root.getAttribute('data-goto-label') || 'Go to template';
 
     const stage = document.getElementById('carouselStage');
     const prevBtn = document.getElementById('carouselPrevBtn');
@@ -771,7 +832,7 @@
       visibleCards.forEach((_, idx) => {
         const dot = document.createElement('button');
         dot.type = 'button';
-        dot.setAttribute('aria-label', `Go to template ${idx + 1}`);
+        dot.setAttribute('aria-label', `${gotoLabel} ${idx + 1}`);
         dot.className = idx === currentIndex
           ? 'w-7 h-2 rounded-full bg-[#3368A0] dark:bg-[#66A3BF] transition-all duration-300 cursor-pointer'
           : 'w-2 h-2 rounded-full bg-[#E0DBD0] dark:bg-[#263346] hover:bg-[#9CB8B4] transition-all duration-300 cursor-pointer';
