@@ -1058,5 +1058,169 @@ For a live side-by-side editor of all of these, use our <a class="text-[#3368A0]
         answer: 'The usual causes are a missing space after a header hash, using single instead of double symbols, or an unclosed wrapper. Also confirm you are typing in a message — formatting is ignored in usernames and bios.'
       }
     ]
-  }
+  },
+  {
+    slug: 'what-font-does-discord-use',
+    title: 'What Font Does Discord Use? gg sans, Explained',
+    heading: 'What Font Does Discord Use? Meet gg sans',
+    metaDescription: "What font does Discord use? Since late 2022, the app's UI and chat run on gg sans, a custom typeface that replaced Whitney. Full story inside.",
+    primaryKeyword: 'what font does discord use',
+    secondaryKeywords: ['gg sans', 'discord font name', 'discord typeface', 'whitney discord font', 'discord app font'],
+    longTailKeywords: ['what font does discord use for usernames', 'what happened to the old discord font', 'can you change the font in discord', 'is gg sans free to download'],
+    category: 'Design & Inspiration',
+    readTime: '7 min read',
+    datePublished: '2026-09-24T09:00:00Z',
+    dateModified: '2026-09-24T09:00:00Z',
+    author: { name: 'Discord Asset Studio Engineering', role: 'Client Architecture Specialist' },
+    summary: "Discord's interface and chat run on gg sans, a custom font it rolled out from December 2022 to replace Whitney — while the logo keeps the Ginto wordmark. Here is what each font is, why the switch happened, and how to style your own name when the app itself gives you no font switcher.",
+    toolCta: {
+      name: 'Font Generator',
+      headline: 'Style Your Name with the Font Generator',
+      description: "You can't swap gg sans, but you can paste bold, italic, and script Unicode into a name or bio. Generate every style in one click.",
+      buttonText: 'Open Font Generator',
+      href: '/tools/fonts/',
+      badge: 'Fancy Fonts • No Nitro'
+    },
+    sections: [
+      {
+        id: 'what-font-does-discord-use',
+        heading: '1. What Font Does Discord Use Today?',
+        content: `So **what font does Discord use**? Across the desktop app, the web client, and mobile, Discord's interface and every chat message are set in **gg sans** — a custom sans-serif typeface Discord commissioned and began rolling out on December 1, 2022. It is the font you read in menus, channel lists, message text, and settings.
+
+gg sans is not a font you already have installed. Discord designed it specifically for on-screen legibility at small sizes and for better accessibility than the font it replaced. Because it is proprietary, it renders inside Discord's own apps and is not distributed for general use on your system.
+
+The one place gg sans does not appear is the logo. Discord's wordmark and marketing headlines use a separate branding typeface called **Ginto** — so the letters in the logo are intentionally chunkier than the text inside the app.`,
+        table: {
+          headers: ['Where you see it', 'Typeface'],
+          rows: [
+            ['App menus & UI', 'gg sans (custom)'],
+            ['Chat messages', 'gg sans (custom)'],
+            ['Logo & wordmark', 'Ginto (branding)'],
+            ['Code blocks', 'System monospace']
+          ]
+        },
+        callout: {
+          type: 'info',
+          title: 'gg sans Since December 2022',
+          text: 'Discord started replacing its old font with gg sans on December 1, 2022. If you still saw the previous typeface for a while after that, it was because the change rolled out gradually across clients.'
+        }
+      },
+      {
+        id: 'gg-sans-explained',
+        heading: '2. gg sans: The Custom Discord Font',
+        content: `gg sans is what most people mean when they ask which font Discord uses, because it is the one you actually read all day. Discord introduced it as part of a 2022 brand refresh, describing goals of sharper legibility, a friendlier feel, and stronger accessibility — especially for smaller UI text and long message threads.
+
+Being a bespoke typeface gives Discord full control: no per-platform licensing limits, consistent rendering across desktop, web, and mobile, and freedom to tune weights and spacing for its own layout. The trade-off for users is that you cannot legitimately download or install gg sans to use elsewhere; it lives inside Discord's apps.
+
+If a designer wants a close free stand-in for mockups, humanist sans-serifs like Inter or Open Sans read as visually comparable, though they are not the same font.`,
+        callout: {
+          type: 'tip',
+          title: 'Want the Look, Not the Font?',
+          text: 'You cannot install gg sans, but you can copy its clean, modern vibe in graphics by pairing a humanist sans-serif with generous line spacing.'
+        }
+      },
+      {
+        id: 'whitney-old-discord-font',
+        heading: '3. Whitney: The Old Discord Font',
+        content: `Before gg sans, Discord used **Whitney**, a humanist sans-serif licensed from the type foundry Hoefler & Co. For years Whitney gave Discord its soft, rounded, approachable look, and long-time users still associate it with the app's early identity.
+
+The move away from Whitney was not cosmetic alone. Licensing a third-party font means ongoing terms and constraints, and Whitney was never tuned specifically for Discord's dense, dark-mode interface. Commissioning gg sans let Discord own its typeface outright, optimize it for its exact UI, and improve accessibility — the reasons a switch made sense despite Whitney's popularity.`,
+        table: {
+          headers: ['Era', 'Font', 'Notes'],
+          rows: [
+            ['Before Dec 2022', 'Whitney', 'Licensed from Hoefler & Co.'],
+            ['Dec 2022 onward', 'gg sans', 'Custom, owned by Discord']
+          ]
+        },
+        callout: {
+          type: 'info',
+          title: 'Miss the Old Look?',
+          text: 'Whitney is a commercial font you would have to license separately from its foundry. Discord will not bring it back as a toggle — gg sans is now the single UI typeface.'
+        }
+      },
+      {
+        id: 'ginto-logo-font',
+        heading: '4. Ginto: The Font in the Discord Logo',
+        content: `The bold letters in the Discord wordmark are not gg sans — they are **Ginto**, a geometric grotesque family Discord uses for branding and large marketing headlines. That is why the logo looks heavier and more distinctive than the text inside the app.
+
+Keeping a separate display font for the logo is normal brand practice: a punchy typeface for the mark and a highly legible one (gg sans) for the interface you actually read. So if you are matching the logo specifically rather than the app text, Ginto — not gg sans — is the family to look at.`,
+        callout: {
+          type: 'tip',
+          title: 'Logo vs. App Text',
+          text: 'Ginto styles the wordmark and headlines; gg sans styles everything you read inside the app. Two different fonts, two different jobs.'
+        }
+      },
+      {
+        id: 'can-you-change-discord-font',
+        heading: '5. Can You Change the Font in Discord?',
+        content: `The honest answer: **no, Discord has no built-in font switcher.** There is no setting to swap gg sans for another typeface, and because gg sans is proprietary you cannot install it elsewhere either. Third-party client mods that restyle Discord exist, but they violate Discord's Terms of Service and can put your account at risk, so they are not recommended.
+
+What you *can* change is the styling of the text you type and the text in your own name or bio — using two different, fully allowed tricks:
+
+- **Inside messages:** Discord Markdown handles bold, italic, underline, strikethrough, and more. Our <a class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline" href="/blog/discord-text-formatting-guide/">text formatting guide</a> covers every code.
+- **In names and bios:** paste look-alike Unicode letters (the "fancy font" trick) from a <a class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline" href="/tools/fonts/">Discord font generator</a>.`,
+        callout: {
+          type: 'warning',
+          title: 'Avoid Client Mods',
+          text: 'Tools that patch the Discord client to change its font break the Terms of Service and can get your account actioned. The Unicode and Markdown methods here are safe and need no download.'
+        }
+      },
+      {
+        id: 'unicode-font-trick',
+        heading: '6. How to Get a "Fancy Font" in Your Name',
+        content: `Since you cannot change gg sans, the way people get stylish nicknames is a Unicode trick, not a real font. The Unicode standard already contains styled look-alike letters — bold (𝐛), italic (𝑖), script (𝓼), fraktur, monospace, and more. A font generator maps your ordinary letters to these characters, and because the result is plain text, you can paste it anywhere that accepts text.
+
+Type your text once in our <a class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline" href="/tools/fonts/">font generator</a>, tap Copy on a style, and paste it into a display name, server nickname, or your About Me. Two caveats: it does **not** work in the lowercase @username handle, and heavily decorative styles can render as boxes on older devices and are read aloud as symbol names by screen readers.`,
+        table: {
+          headers: ['Location', 'Fancy Unicode font works?'],
+          rows: [
+            ['Display name / nickname', 'Yes'],
+            ['About Me bio', 'Yes'],
+            ['Channel & role names', 'Yes'],
+            ['Chat messages', 'Yes'],
+            ['@username handle', 'No — a-z, 0-9, _ and . only']
+          ]
+        },
+        callout: {
+          type: 'tip',
+          title: 'Use Styles Sparingly',
+          text: 'Bold and italic stay readable on every device; fraktur, script, and upside-down styles are best as a one-word accent, not a whole name.'
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: 'What font does Discord use?',
+        answer: 'Discord uses gg sans, a custom sans-serif typeface it began rolling out on December 1, 2022, for its app UI and chat. The Discord logo wordmark uses a separate branding font called Ginto.'
+      },
+      {
+        question: 'What was the old Discord font?',
+        answer: 'Before gg sans, Discord used Whitney, a humanist sans-serif licensed from the foundry Hoefler & Co. Discord replaced it with its own gg sans in late 2022.'
+      },
+      {
+        question: 'Can I download or install gg sans?',
+        answer: 'No. gg sans is proprietary to Discord and is not distributed for general use. For a free look-alike in your own designs, humanist sans-serifs like Inter or Open Sans are close visual stand-ins.'
+      },
+      {
+        question: 'Can you change the font in Discord?',
+        answer: 'Discord has no built-in font switcher, so you cannot change gg sans in the app itself. You can only style text you type (via Markdown) or use Unicode "fancy font" glyphs in your name and bio.'
+      },
+      {
+        question: 'What font is the Discord logo?',
+        answer: 'The Discord wordmark and marketing headlines use Ginto, a geometric grotesque family — not gg sans, which is reserved for the interface and chat text.'
+      },
+      {
+        question: 'Why did Discord change its font?',
+        answer: 'Discord commissioned gg sans for better on-screen legibility and accessibility across sizes, and to own its typeface outright instead of licensing a third-party font built for other uses.'
+      },
+      {
+        question: 'How do I get a different font in my Discord username?',
+        answer: 'Use a Unicode font generator: type your text, copy a bold, italic, or script style, and paste it into your display name or nickname. Note the lowercase @username handle only allows a-z, 0-9, underscore, and period, so styled glyphs show only in display names, nicknames, and bios.'
+      },
+      {
+        question: 'Does gg sans look the same on mobile and desktop?',
+        answer: 'Yes. Because gg sans is bundled inside Discord\'s own apps, it renders consistently across the desktop app, the web client, and mobile — you do not need the font installed on your own device.'
+      }
+    ]
+  },
 ];

@@ -665,7 +665,8 @@ const BLOG = [
   { file: 'public/og/blog-spoiler.png', title: 'DISCORD IMAGE', titleLine2: 'SPOILER', subtitle: 'HIDE SENSITIVE MEDIA ON DESKTOP & MOBILE' },
   { file: 'public/og/blog-server-banner.png', title: 'CHANGE SERVER', titleLine2: 'BANNER', subtitle: 'BOOST TIER REQUIREMENTS & STEP-BY-STEP GUIDE' },
   { file: 'public/og/blog-change-username.png', title: 'CHANGE YOUR', titleLine2: 'DISCORD USERNAME', subtitle: 'NEW @HANDLE RULES • DESKTOP & MOBILE • LIMITS FIXED' },
-  { file: 'public/og/blog-text-formatting-guide.png', title: 'DISCORD TEXT', titleLine2: 'FORMATTING GUIDE', subtitle: 'BOLD • STRIKETHROUGH • SPOILER • BIG & SMALL TEXT' }
+  { file: 'public/og/blog-text-formatting-guide.png', title: 'DISCORD TEXT', titleLine2: 'FORMATTING GUIDE', subtitle: 'BOLD • STRIKETHROUGH • SPOILER • BIG & SMALL TEXT' },
+  { file: 'public/og/blog-discord-font.png', title: 'WHAT FONT DOES', titleLine2: 'DISCORD USE', subtitle: 'GG SANS EXPLAINED • THE CUSTOM TYPEFACE SINCE 2022' }
 ];
 
 for (const b of BLOG) {

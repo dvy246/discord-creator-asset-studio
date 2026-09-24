@@ -49,6 +49,7 @@ All image processing executes locally in the browser via Web Workers and the HTM
 - [How to Put a Spoiler on a Discord Image](https://discord-creator-asset-studio.pages.dev/blog/how-to-put-spoiler-on-discord-image/): Hide sensitive media on desktop and mobile.
 - [PFP Discord Ideas](https://discord-creator-asset-studio.pages.dev/blog/discord-pfp-ideas-anime-avatars/): Anime avatar and profile picture design inspiration.
 - [Discord Text Formatting Guide](https://discord-creator-asset-studio.pages.dev/blog/discord-text-formatting-guide/): Every Markdown trick — bold, italic, strikethrough, spoiler/hide/censor, plus the only ways to make text bigger (headers) or smaller (subtext).
+- [What Font Does Discord Use?](https://discord-creator-asset-studio.pages.dev/blog/what-font-does-discord-use/): Discord's UI and chat run on gg sans, a custom typeface rolled out from December 2022 that replaced Whitney; the logo wordmark uses Ginto. gg sans is proprietary and there is no built-in font switcher, so Unicode glyph styles are the only way to "font" a name or bio.
 
 ## Contact & Governance
 - [About the Project](https://discord-creator-asset-studio.pages.dev/about/)

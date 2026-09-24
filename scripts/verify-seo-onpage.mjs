@@ -194,6 +194,11 @@ const indexablePages = [
     primaryKeyword: 'discord text formatting guide',
   },
   {
+    path: 'blog/what-font-does-discord-use/index.html',
+    url: '/blog/what-font-does-discord-use/',
+    primaryKeyword: 'what font does discord use',
+  },
+  {
     path: 'es/tools/emoji/index.html',
     url: '/es/tools/emoji/',
     primaryKeyword: 'emojis discord',
