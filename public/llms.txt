@@ -48,6 +48,7 @@ All image processing executes locally in the browser via Web Workers and the HTM
 - [How to Change Discord Username](https://discord-creator-asset-studio.pages.dev/blog/how-to-change-discord-username/): The new unique @handle rules, username vs display name, desktop and mobile steps, change limits, and common errors.
 - [How to Put a Spoiler on a Discord Image](https://discord-creator-asset-studio.pages.dev/blog/how-to-put-spoiler-on-discord-image/): Hide sensitive media on desktop and mobile.
 - [PFP Discord Ideas](https://discord-creator-asset-studio.pages.dev/blog/discord-pfp-ideas-anime-avatars/): Anime avatar and profile picture design inspiration.
+- [Discord Text Formatting Guide](https://discord-creator-asset-studio.pages.dev/blog/discord-text-formatting-guide/): Every Markdown trick — bold, italic, strikethrough, spoiler/hide/censor, plus the only ways to make text bigger (headers) or smaller (subtext).
 
 ## Contact & Governance
 - [About the Project](https://discord-creator-asset-studio.pages.dev/about/)

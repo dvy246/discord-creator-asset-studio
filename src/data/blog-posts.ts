@@ -813,5 +813,250 @@ If you keep colliding with taken handles, skip the guesswork — the <a href="/t
         answer: 'No. Changing your username or display name is free for every account. Discord Nitro is not required to update either name.'
       }
     ]
+  },
+  {
+    slug: 'discord-text-formatting-guide',
+    title: 'Discord Text Formatting Guide | Bold, Spoiler & More',
+    heading: 'Discord Text Formatting Guide: Bold, Spoiler & Big Text',
+    metaDescription: 'This Discord text formatting guide covers every markdown trick — bold, italic, strikethrough, spoilers, big header text, and small subtext.',
+    primaryKeyword: 'discord text formatting guide',
+    secondaryKeywords: [
+      'discord bold text',
+      'discord strikethrough',
+      'discord spoiler text',
+      'discord subtext'
+    ],
+    longTailKeywords: [
+      'how to bold text in discord',
+      'how to cross out text in discord',
+      'how to make text small in discord',
+      'how to spoiler text on discord',
+      'how to make text big in discord',
+      'how to make discord text bigger',
+      'how to make discord text smaller',
+      'how to censor text on discord',
+      'how to hide text in discord'
+    ],
+    category: 'Specifications & Guides',
+    readTime: '8 min read',
+    datePublished: '2026-09-24T08:00:00Z',
+    dateModified: '2026-09-24T08:00:00Z',
+    author: {
+      name: 'Discord Asset Studio Engineering',
+      role: 'Client Architecture Specialist'
+    },
+    summary: 'Discord uses a lightweight Markdown syntax in chat. This guide shows every text formatting trick — how to bold, italicize, underline, cross out, spoiler, and censor text, plus the only ways to make Discord text bigger (headers) or smaller (subtext) — with copy-paste examples for desktop, web, and mobile.',
+    toolCta: {
+      name: 'Discord Text Formatting Generator',
+      headline: 'Skip the Syntax — Generate Every Style',
+      description: 'Type your message once and copy the bold, italic, strikethrough, spoiler, header, and subtext versions as ready-to-paste cards.',
+      buttonText: 'Open Text Formatting Generator',
+      href: '/tools/text-formatting/',
+      badge: 'Native Markdown • No Nitro'
+    },
+    sections: [
+      {
+        id: 'what-is-discord-text-formatting',
+        heading: '1. What Discord Text Formatting Is (and Where It Works)',
+        content: `<mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord text formatting</mark> runs on a lightweight version of Markdown — the same shorthand used on GitHub and Reddit. You type a few symbols around your words and Discord renders the style the moment the message posts.
+
+The single most important rule: formatting only renders inside **messages** (and message-adjacent fields like embeds). It does **not** work in your username, nickname, or About Me bio — those stay plain text. For a styled name you need Unicode glyphs from a <a class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline" href="/tools/fonts/">Discord font generator</a>, not Markdown.
+
+Everything below works with no Nitro on Discord desktop, the web app, and mobile. When you want the styled output without memorizing symbols, our <a class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline" href="/tools/text-formatting/">Discord text formatting generator</a> prints every style as a copy-paste card.`,
+        table: {
+          headers: ['Location', 'Markdown works?', 'Use instead'],
+          rows: [
+            ['Chat messages', 'Yes — full Markdown', '—'],
+            ['Embeds & webhooks', 'Yes', '—'],
+            ['Username (@handle)', 'No', 'Lowercase text only'],
+            ['Display name / nickname', 'No', 'Unicode font glyphs'],
+            ['About Me bio', 'No', 'Unicode font glyphs']
+          ]
+        },
+        callout: {
+          type: 'info',
+          title: 'Formatting vs Fonts',
+          text: 'Markdown styles (bold, spoiler, headers) only render inside messages. To style a username or bio you need Unicode "font" glyphs — special characters, not Markdown.'
+        }
+      },
+      {
+        id: 'bold-italic-underline',
+        heading: '2. How to Bold, Italicize & Underline Text',
+        content: `Bold is the most-requested style. To **bold text in Discord**, wrap the words in two asterisks on each side. Italics use one asterisk (or one underscore), and underline uses two underscores — a Discord extension that plain Markdown does not have.
+
+You can stack them: two asterisks plus two underscores gives underlined bold, and three asterisks gives bold italic. The wrappers just nest.
+
+- **Bold:** two asterisks around the words.
+- **Italic:** one asterisk (or one underscore) around the words.
+- **Underline:** two underscores around the words.
+- **Bold italic:** three asterisks around the words.`,
+        table: {
+          headers: ['Style', 'What you type', 'What posts'],
+          rows: [
+            ['Bold', '**hello**', 'hello (bold)'],
+            ['Italic', '*hello* or _hello_', 'hello (italic)'],
+            ['Underline', '__hello__', 'hello (underlined)'],
+            ['Bold italic', '***hello***', 'hello (bold + italic)'],
+            ['Underlined bold', '__**hello**__', 'hello (underlined bold)']
+          ]
+        },
+        callout: {
+          type: 'tip',
+          title: 'Asterisk vs Underscore',
+          text: 'A single asterisk and a single underscore both italicize. But two underscores underline while two asterisks bold — so once you double them, _ and * are no longer interchangeable.'
+        }
+      },
+      {
+        id: 'strikethrough-cross-out',
+        heading: '3. How to Cross Out Text (Strikethrough)',
+        content: `To **cross out text in Discord**, wrap it in two tildes on each side. The tilde key (~) usually sits at the top-left of the keyboard, on the same key as the backtick.
+
+Strikethrough is ideal for corrections, crossed-off checklist items, or a fake-dramatic edit — for example, striking out one word and following it with the real one.
+
+- Type two tildes, your text, then two more tildes.`,
+        table: {
+          headers: ['Goal', 'What you type', 'Result'],
+          rows: [
+            ['Cross out a word', '~~wrong~~', 'wrong (struck through)'],
+            ['Correction joke', '~~hate~~ love', 'hate love']
+          ]
+        },
+        callout: {
+          type: 'info',
+          title: 'Both Sides Need Two Tildes',
+          text: 'Strikethrough is a single style — there is no partial or half strike. The opening and closing must each be exactly two tildes, or the text posts unformatted.'
+        }
+      },
+      {
+        id: 'spoiler-hide-censor',
+        heading: '4. How to Spoiler, Hide & Censor Text',
+        content: `Spoiler tags black out text until a reader clicks it — this is how you **hide text in Discord** or **censor text on Discord** for plot twists, quiz answers, or sensitive words. Wrap the text in two vertical bars (pipes) on each side.
+
+On desktop and web you can also select the text and click the eye / spoiler icon in the small formatting popup that appears above the selection. Readers then see a grey block that reveals on click.
+
+- Type two pipes, your secret, then two more pipes.
+- The pipe key is Shift + backslash on most keyboards.
+- To hide an image instead of text, rename the file with a SPOILER_ prefix — see our <a class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline" href="/blog/how-to-put-spoiler-on-discord-image/">spoiler image guide</a>.`,
+        table: {
+          headers: ['Goal', 'What you type', 'Result'],
+          rows: [
+            ['Hide a plot twist', '||he is the villain||', 'grey block (click to reveal)'],
+            ['Censor a word', 'that is ||classified||', 'that is + grey block']
+          ]
+        },
+        callout: {
+          type: 'tip',
+          title: 'Hide vs Censor',
+          text: 'Spoilers do not delete or encrypt text — anyone can click to reveal it. Use them to prevent accidental reading, not to keep secrets from determined readers.'
+        }
+      },
+      {
+        id: 'big-text-headers',
+        heading: '5. How to Make Text Bigger (Headers)',
+        content: `There is exactly one way to **make text bigger in Discord**: headers. Start a line with one, two, or three hash symbols followed by a space. One hash is the biggest; three is the smallest header size but still larger than normal chat text.
+
+Headers must sit at the **start of a line** — you cannot enlarge a single word in the middle of a sentence. They are perfect for message titles, section breaks in long posts, and announcements.
+
+- **Biggest:** one hash, a space, then your title.
+- **Medium:** two hashes, a space, then your text.
+- **Small header:** three hashes, a space, then your text (still bigger than the body).`,
+        table: {
+          headers: ['Size', 'What you type', 'Rendered size'],
+          rows: [
+            ['Header 1 (biggest)', '# Big title', 'Largest'],
+            ['Header 2', '## Medium title', 'Large'],
+            ['Header 3', '### Small header', 'Slightly enlarged']
+          ]
+        },
+        callout: {
+          type: 'warning',
+          title: 'Headers Need a Trailing Space',
+          text: 'A hash with no space after it (like #news) is treated as plain text. You must type the hash, then a space, then your words for the header to render larger.'
+        }
+      },
+      {
+        id: 'small-text-subtext',
+        heading: '6. How to Make Text Smaller (Subtext)',
+        content: `The counterpart to headers is subtext, and it is the only way to **make text smaller in Discord**. Start a line with a hyphen, a hash, and a space (the -# prefix). Subtext renders in muted grey at a smaller size than normal chat text — ideal for footnotes, captions, disclaimers, and credits.
+
+Like headers, subtext must begin a line and applies to the whole line, not a single word.
+
+- Type a hyphen, then a hash, then a space, then your small text.`,
+        table: {
+          headers: ['Goal', 'What you type', 'Result'],
+          rows: [
+            ['Footnote / caption', '-# posted from mobile', 'small grey text'],
+            ['Disclaimer line', '-# not affiliated with Discord', 'small grey text']
+          ]
+        },
+        callout: {
+          type: 'info',
+          title: 'Subtext Is the Only "Small" Option',
+          text: 'Discord has no font-size slider in chat. Subtext (the -# prefix) is the single built-in way to shrink text; every other style — bold, italic, spoiler — keeps the normal body size.'
+        }
+      },
+      {
+        id: 'code-quotes-lists-links',
+        heading: '7. Code, Quotes, Lists & Masked Links',
+        content: `Beyond styling words, Discord Markdown structures whole blocks of a message:
+
+- **Inline code:** wrap a snippet in single backticks for a monospace highlight.
+- **Code block:** wrap several lines in triple backticks; add a language name after the opening backticks for colour syntax highlighting.
+- **Block quote:** start a line with a greater-than sign and a space to quote one line; three of them quote everything that follows.
+- **Bullet list:** start each line with a hyphen or asterisk and a space.
+- **Numbered list:** start each line with a number, a dot, and a space.
+- **Masked link:** [visible text](https://example.com) hides a long URL behind clickable text — but it only works inside embeds and some bot messages, not normal chat.
+
+For a live side-by-side editor of all of these, use our <a class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline" href="/tools/markdown/">Discord markdown previewer</a>; for one-tap copyable style cards, use the <a class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline" href="/tools/text-formatting/">text formatting generator</a>.`,
+        table: {
+          headers: ['Structure', 'What you type', 'Notes'],
+          rows: [
+            ['Inline code', '`code`', 'Monospace, does not wrap'],
+            ['Code block', '```js ... ```', 'Optional language for colours'],
+            ['Quote', '> quoted line', '>>> quotes everything after it'],
+            ['Masked link', '[text](https://...)', 'Embeds / bots only, not chat']
+          ]
+        },
+        callout: {
+          type: 'tip',
+          title: 'Escape a Symbol',
+          text: 'To show a literal asterisk or underscore instead of triggering a style, put a backslash before it (\\*not italic\\*). The backslash tells Discord to print the symbol as-is.'
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: 'How do you bold text in Discord?',
+        answer: 'Wrap the words in two asterisks on each side — for example, **hello** posts as bold. Two asterisks bold the text, while a single asterisk italicizes it instead.'
+      },
+      {
+        question: 'How do you cross out text in Discord?',
+        answer: 'Wrap the text in two tildes on each side, like ~~this~~. It renders as strikethrough on Discord desktop, the web app, and mobile.'
+      },
+      {
+        question: 'How do you make text smaller in Discord?',
+        answer: 'Start the line with a hyphen, a hash, and a space (the -# prefix), then your text. This subtext style is the only built-in way to make Discord text smaller — it shows as muted grey text below the normal size.'
+      },
+      {
+        question: 'How do you make text bigger in Discord?',
+        answer: 'Start a line with one to three hash symbols followed by a space. One hash is the biggest header, two hashes are medium, and three are the smallest header — headers are the only way to enlarge text in chat.'
+      },
+      {
+        question: 'How do you spoiler or hide text in Discord?',
+        answer: 'Wrap the text in two vertical bars (pipes) on each side, like ||secret||. Discord blacks it out until a reader clicks to reveal it. You can also select text and use the spoiler icon in the formatting popup.'
+      },
+      {
+        question: 'How do you censor text on Discord?',
+        answer: 'Use a spoiler tag: wrap the word in double pipes, like ||classified||. It hides the word behind a grey block that only shows when clicked. Spoilers are not encryption, so anyone can reveal them.'
+      },
+      {
+        question: 'Does Discord text formatting work in usernames or your bio?',
+        answer: 'No. Markdown formatting only renders inside messages and embeds. Usernames, display names, and About Me bios are plain text — to style those you need Unicode font glyphs from a font generator, not Markdown.'
+      },
+      {
+        question: 'Why is my Discord text formatting not showing?',
+        answer: 'The usual causes are a missing space after a header hash, using single instead of double symbols, or an unclosed wrapper. Also confirm you are typing in a message — formatting is ignored in usernames and bios.'
+      }
+    ]
   }
 ];

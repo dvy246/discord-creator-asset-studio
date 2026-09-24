@@ -189,6 +189,11 @@ const indexablePages = [
     primaryKeyword: 'how to change discord username',
   },
   {
+    path: 'blog/discord-text-formatting-guide/index.html',
+    url: '/blog/discord-text-formatting-guide/',
+    primaryKeyword: 'discord text formatting guide',
+  },
+  {
     path: 'es/tools/emoji/index.html',
     url: '/es/tools/emoji/',
     primaryKeyword: 'emojis discord',
