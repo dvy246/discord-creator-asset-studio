@@ -119,6 +119,11 @@ const indexablePages = [
     primaryKeyword: 'discord video compressor',
   },
   {
+    path: 'tools/fake-message-maker/index.html',
+    url: '/tools/fake-message-maker/',
+    primaryKeyword: 'discord fake message maker',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -302,6 +307,11 @@ const indexablePages = [
     path: 'es/tools/video-compressor/index.html',
     url: '/es/tools/video-compressor/',
     primaryKeyword: 'comprimir video discord',
+  },
+  {
+    path: 'es/tools/fake-message-maker/index.html',
+    url: '/es/tools/fake-message-maker/',
+    primaryKeyword: 'mensajes falsos de discord',
   },
   {
     path: 'es/tools/snowflake/index.html',

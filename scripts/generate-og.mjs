@@ -374,6 +374,20 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/fake-message-maker.png',
+    config: {
+      title: 'DISCORD FAKE', titleLine2: 'MESSAGE MAKER',
+      subtitle: 'BUILD A FICTIONAL DISCORD CHAT SCREENSHOT FOR MEMES & ROLEPLAY',
+      tagline1: 'NAMES • NAME COLORS • AVATARS • BOT TAGS • DARK / LIGHT',
+      tagline2: 'FICTIONAL WATERMARK ON • CANVAS PNG • ZERO UPLOADS',
+      badge: 'FAKE CHAT MOCKUP • CLIENT-SIDE',
+      cards: [
+        { label: 'MARK', desc: 'FICTIONAL' }, { label: 'THEME', desc: 'DARK / LIGHT' },
+        { label: 'EXPORT', desc: 'PNG 2X' }, { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/gif-maker.png',
     config: {
       title: 'DISCORD GIF', titleLine2: 'MAKER',

@@ -1,0 +1,496 @@
+---
+/**
+ * FakeMessageWorkspace.astro — Discord fake chat screenshot generator.
+ *
+ * Renders a Discord-style message list to a <canvas> (single source of truth =
+ * the on-screen preview) and exports a PNG. For memes, fiction, and roleplay
+ * ("Beluga-style" edits) only. AdSense/safety guardrails baked in: a default-on
+ * "FICTIONAL" watermark, a persistent disclaimer banner, and framing that never
+ * encourages impersonation, deception, harassment, or fraud. Fully client-side,
+ * nothing uploaded, nothing stored. Language-agnostic logic on fixed element
+ * IDs; visible labels via `t`, runtime strings via data-* on the root node.
+ * Imported by /tools/fake-message-maker/ and /es/tools/fake-message-maker/.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    disclaimerTitle: 'For memes, fiction & roleplay only',
+    disclaimerBody:
+      'This makes clearly fictional chat mockups. Do not use it to impersonate real people, fabricate evidence, deceive, harass, or defraud anyone. The "FICTIONAL" watermark is on by default — please keep it.',
+    editorTitle: 'Message Builder',
+    editorSub: 'Add messages, set names, colors and avatars',
+    themeLabel: 'Theme',
+    themeDark: 'Dark',
+    themeLight: 'Light',
+    channelLabel: 'Channel name',
+    channelPlaceholder: 'general',
+    wmLabel: 'FICTIONAL watermark',
+    wmHint: 'Keeps the image honest. Off shows a reminder.',
+    addBtn: '+ Add message',
+    exportBtn: 'Download PNG',
+    previewTitle: 'Preview',
+    previewHint: 'This exact image is what downloads.',
+    // per-message card labels
+    authorLabel: 'Name',
+    colorLabel: 'Name color',
+    timeLabel: 'Time',
+    botLabel: 'BOT tag',
+    avatarLabel: 'Avatar',
+    avatarPick: 'Upload',
+    avatarClear: 'Clear',
+    textLabel: 'Message',
+    textPlaceholder: 'Type a message…',
+    deleteMsg: 'Delete',
+    wmOffNote:
+      'Watermark off. Only use fully fictional content — never to impersonate or mislead.',
+    links: [
+      { icon: '💬', href: '/tools/markdown/', label: 'Discord Markdown Previewer' },
+      { icon: '🎨', href: '/tools/colors/', label: 'Discord Color & Hex Codes' },
+      { icon: '😀', href: '/tools/emoji-copy-paste/', label: 'Emoji Copy & Paste Board' }
+    ]
+  },
+  es: {
+    disclaimerTitle: 'Solo para memes, ficción y roleplay',
+    disclaimerBody:
+      'Crea maquetas de chat claramente ficticias. No lo uses para suplantar a personas reales, fabricar pruebas, engañar, acosar ni estafar. La marca de agua "FICTICIO" está activada por defecto — por favor mantenla.',
+    editorTitle: 'Constructor de Mensajes',
+    editorSub: 'Añade mensajes, define nombres, colores y avatares',
+    themeLabel: 'Tema',
+    themeDark: 'Oscuro',
+    themeLight: 'Claro',
+    channelLabel: 'Nombre del canal',
+    channelPlaceholder: 'general',
+    wmLabel: 'Marca de agua FICTICIO',
+    wmHint: 'Mantiene la imagen honesta. Al desactivar muestra un aviso.',
+    addBtn: '+ Añadir mensaje',
+    exportBtn: 'Descargar PNG',
+    previewTitle: 'Vista Previa',
+    previewHint: 'Esta imagen es exactamente la que se descarga.',
+    authorLabel: 'Nombre',
+    colorLabel: 'Color del nombre',
+    timeLabel: 'Hora',
+    botLabel: 'Etiqueta BOT',
+    avatarLabel: 'Avatar',
+    avatarPick: 'Subir',
+    avatarClear: 'Quitar',
+    textLabel: 'Mensaje',
+    textPlaceholder: 'Escribe un mensaje…',
+    deleteMsg: 'Eliminar',
+    wmOffNote:
+      'Marca de agua desactivada. Usa solo contenido totalmente ficticio — nunca para suplantar o engañar.',
+    links: [
+      { icon: '💬', href: '/es/tools/markdown/', label: 'Vista Previa de Markdown de Discord' },
+      { icon: '🎨', href: '/es/tools/colors/', label: 'Colores y Códigos Hex de Discord' },
+      { icon: '😀', href: '/es/tools/emoji-copy-paste/', label: 'Tablero de Emojis Copiar y Pegar' }
+    ]
+  }
+}[lang];
+
+// Runtime strings the client script needs, localized.
+const rt = {
+  en: { wm: 'FICTIONAL', defAuthor: 'Username', defTime: 'Today at 12:00 PM', defText: 'This is a fictional message.', filename: 'discord-fake-message.png' },
+  es: { wm: 'FICTICIO', defAuthor: 'Usuario', defTime: 'Hoy a las 12:00', defText: 'Este es un mensaje ficticio.', filename: 'discord-chat-ficticio.png' }
+}[lang];
+---
+
+<div
+  id="fmm-workspace"
+  data-wm={rt.wm}
+  data-defauthor={rt.defAuthor}
+  data-deftime={rt.defTime}
+  data-deftext={rt.defText}
+  data-filename={rt.filename}
+  data-wmoffnote={t.wmOffNote}
+>
+  <!-- Persistent safety disclaimer (always visible) -->
+  <div class="mb-6 p-4 rounded-[12px] border border-amber-500/40 bg-amber-500/10 text-amber-900 dark:text-amber-200">
+    <div class="font-bold text-sm flex items-center gap-1.5 mb-1">⚠️ {t.disclaimerTitle}</div>
+    <p class="text-xs leading-relaxed">{t.disclaimerBody}</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+    <!-- Left: controls -->
+    <div class="lg:col-span-5 space-y-6">
+      <div class="card-panel rounded-[14px] p-6 space-y-5">
+        <div class="pb-3 border-b border-[#E0DBD0] dark:border-[#263346]">
+          <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.editorTitle}</h2>
+          <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.editorSub}</p>
+        </div>
+
+        <!-- Theme + channel + watermark -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <span class="text-xs font-semibold text-[#192538] dark:text-white mb-1.5 block">{t.themeLabel}</span>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" id="fmm-theme-dark" data-theme="dark" class="fmm-theme px-2 py-1.5 rounded-lg border-2 border-[#3368A0] text-xs font-bold text-[#3368A0] dark:text-[#66A3BF]">{t.themeDark}</button>
+              <button type="button" id="fmm-theme-light" data-theme="light" class="fmm-theme px-2 py-1.5 rounded-lg border border-[#E0DBD0] dark:border-[#263346] text-xs font-medium text-[#475569] dark:text-[#CBD5E1] hover:border-[#3368A0]">{t.themeLight}</button>
+            </div>
+          </div>
+          <div>
+            <label for="fmm-channel" class="text-xs font-semibold text-[#192538] dark:text-white mb-1.5 block">{t.channelLabel}</label>
+            <div class="flex items-center rounded-[8px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] px-2">
+              <span class="text-[#6B7A90] dark:text-[#8494A7] text-sm">#</span>
+              <input type="text" id="fmm-channel" value="general" placeholder={t.channelPlaceholder} class="w-full text-sm bg-transparent text-[#192538] dark:text-white px-1.5 py-2 focus:outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <label class="flex items-start gap-2.5 p-3 rounded-[10px] bg-[#FAF8F5] dark:bg-[#1B2330] border border-[#E0DBD0] dark:border-[#263346] cursor-pointer">
+          <input type="checkbox" id="fmm-watermark" checked class="mt-0.5 accent-[#3368A0]" />
+          <span>
+            <span class="text-xs font-semibold text-[#192538] dark:text-white block">{t.wmLabel}</span>
+            <span class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.wmHint}</span>
+          </span>
+        </label>
+        <p id="fmm-wm-note" class="hidden text-[11px] text-amber-700 dark:text-amber-300 leading-relaxed"></p>
+
+        <!-- Message editor cards get injected here -->
+        <div id="fmm-messages" class="space-y-3"></div>
+
+        <button id="fmm-add" type="button" class="w-full py-2.5 rounded-[10px] text-xs font-semibold border border-dashed border-[#3368A0]/50 text-[#3368A0] dark:text-[#66A3BF] hover:bg-[#3368A0]/5 transition-colors">
+          {t.addBtn}
+        </button>
+
+        <button id="fmm-export" type="button" class="btn-primary w-full py-3.5 rounded-[10px] text-sm font-semibold flex items-center justify-center gap-2 shadow-sm">
+          <span>⬇ {t.exportBtn}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right: preview -->
+    <div class="lg:col-span-7 space-y-6">
+      <div class="card-panel rounded-[14px] p-6">
+        <div class="pb-3 border-b border-[#E0DBD0] dark:border-[#263346] mb-4 flex items-center justify-between">
+          <h2 class="text-sm font-bold text-[#192538] dark:text-white">{t.previewTitle}</h2>
+          <span class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">{t.previewHint}</span>
+        </div>
+        <div class="rounded-[10px] overflow-hidden border border-[#E0DBD0] dark:border-[#263346]">
+          <canvas id="fmm-canvas" width="1200" height="600" class="w-full block"></canvas>
+        </div>
+      </div>
+
+      <div class="card-panel rounded-[14px] p-6">
+        <div class="flex flex-col gap-1.5 text-xs font-medium">
+          {t.links.map((link) => (
+            <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+              <span>{link.icon}</span> {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message editor card template (cloned per message) -->
+  <template id="fmm-msg-template">
+    <div class="fmm-card rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5]/60 dark:bg-[#1B2330]/60 p-3 space-y-2.5">
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[10px] font-semibold text-[#6B7A90] dark:text-[#8494A7] uppercase tracking-wide">{t.authorLabel}</label>
+          <input type="text" data-field="author" class="fmm-in w-full text-sm rounded-[6px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] text-[#192538] dark:text-white px-2 py-1.5 focus:border-[#3368A0] focus:outline-none" />
+        </div>
+        <div>
+          <label class="text-[10px] font-semibold text-[#6B7A90] dark:text-[#8494A7] uppercase tracking-wide">{t.timeLabel}</label>
+          <input type="text" data-field="time" class="fmm-in w-full text-sm rounded-[6px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] text-[#192538] dark:text-white px-2 py-1.5 focus:border-[#3368A0] focus:outline-none" />
+        </div>
+      </div>
+      <div>
+        <label class="text-[10px] font-semibold text-[#6B7A90] dark:text-[#8494A7] uppercase tracking-wide">{t.textLabel}</label>
+        <textarea data-field="text" rows="2" placeholder={t.textPlaceholder} class="fmm-in w-full text-sm rounded-[6px] border border-[#E0DBD0] dark:border-[#263346] bg-white dark:bg-[#141A24] text-[#192538] dark:text-white px-2 py-1.5 focus:border-[#3368A0] focus:outline-none resize-y"></textarea>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <label class="flex items-center gap-1.5 text-[11px] text-[#475569] dark:text-[#CBD5E1]">
+          {t.colorLabel}
+          <input type="color" data-field="color" value="#F2F3F5" class="fmm-in w-7 h-6 rounded border border-[#E0DBD0] dark:border-[#263346] cursor-pointer bg-transparent" />
+        </label>
+        <label class="flex items-center gap-1.5 text-[11px] text-[#475569] dark:text-[#CBD5E1] cursor-pointer">
+          <input type="checkbox" data-field="bot" class="fmm-in accent-[#3368A0]" /> {t.botLabel}
+        </label>
+        <label class="flex items-center gap-1.5 text-[11px] text-[#3368A0] dark:text-[#66A3BF] cursor-pointer">
+          <span class="underline">{t.avatarLabel}: {t.avatarPick}</span>
+          <input type="file" accept="image/*" data-field="avatar" class="fmm-avatar hidden" />
+        </label>
+        <button type="button" data-field="avatar-clear" class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] hover:underline">{t.avatarClear}</button>
+        <button type="button" data-field="delete" class="fmm-del ml-auto text-[11px] font-semibold text-[#B4252A] hover:underline">{t.deleteMsg}</button>
+      </div>
+    </div>
+  </template>
+</div>
+<script>
+  const root = document.getElementById('fmm-workspace');
+  if (root) {
+    const RT = {
+      wm: root.dataset.wm || 'FICTIONAL',
+      defAuthor: root.dataset.defauthor || 'Username',
+      defTime: root.dataset.deftime || 'Today at 12:00 PM',
+      defText: root.dataset.deftext || 'This is a fictional message.',
+      filename: root.dataset.filename || 'discord-fake-message.png',
+      wmOffNote: root.dataset.wmoffnote || ''
+    };
+    const canvas = document.getElementById('fmm-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    const listEl = document.getElementById('fmm-messages')!;
+    const tpl = document.getElementById('fmm-msg-template') as HTMLTemplateElement;
+    const addBtn = document.getElementById('fmm-add')!;
+    const exportBtn = document.getElementById('fmm-export')!;
+    const wmToggle = document.getElementById('fmm-watermark') as HTMLInputElement;
+    const wmNote = document.getElementById('fmm-wm-note')!;
+    const channelIn = document.getElementById('fmm-channel') as HTMLInputElement;
+    const themeBtns = Array.from(document.querySelectorAll('.fmm-theme')) as HTMLElement[];
+
+    const SCALE = 2;
+    const BASE_W = 600;
+    const PAD = 16;
+    const AV = 40;                 // avatar diameter
+    const TEXT_L = PAD + AV + 16;  // left edge of text column = 72
+    const EMOJI = ", 'Noto Color Emoji', 'Apple Color Emoji', sans-serif";
+    const NAME_FONT = "600 15px -apple-system, 'Segoe UI', Roboto";
+    const TIME_FONT = "400 12px -apple-system, 'Segoe UI', Roboto";
+    const MSG_FONT  = "400 15px -apple-system, 'Segoe UI', Roboto";
+    const CH_FONT   = "700 15px -apple-system, 'Segoe UI', Roboto";
+    const LINE_H = 20;
+    const HEAD_H = 44;
+    const THEMES = {
+      dark:  { bg:'#313338', name:'#F2F3F5', text:'#DBDEE1', time:'#949BA4', channel:'#F2F3F5', hash:'#80848E', head:'#2B2D31', line:'#3F4147' },
+      light: { bg:'#FFFFFF', name:'#060607', text:'#313338', time:'#5C5E66', channel:'#060607', hash:'#5C5E66', head:'#F2F3F5', line:'#E3E5E8' }
+    };
+    const AV_COLORS = ['#5865F2','#3BA55D','#FAA81A','#ED4245','#EB459E','#9B59B6','#1ABC9C'];
+
+    let theme: 'dark' | 'light' = 'dark';
+    let uid = 0;
+    const messages: any[] = []; // {id, author, color, time, bot, text, avatar}
+
+    function avatarColor(name: string){ let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))>>>0; return AV_COLORS[h % AV_COLORS.length]; }
+    function makeCard(msg: any){
+      const node = (tpl.content.firstElementChild as HTMLElement).cloneNode(true) as HTMLElement;
+      node.dataset.id = String(msg.id);
+      const q = (f: string) => node.querySelector(`[data-field="${f}"]`) as any;
+      q('author').value = msg.author;
+      q('time').value = msg.time;
+      q('text').value = msg.text;
+      q('color').value = msg.color;
+      q('bot').checked = msg.bot;
+      q('author').addEventListener('input', (e: any) => { msg.author = e.target.value; render(); });
+      q('time').addEventListener('input', (e: any) => { msg.time = e.target.value; render(); });
+      q('text').addEventListener('input', (e: any) => { msg.text = e.target.value; render(); });
+      q('color').addEventListener('input', (e: any) => { msg.color = e.target.value; render(); });
+      q('bot').addEventListener('change', (e: any) => { msg.bot = e.target.checked; render(); });
+      q('avatar').addEventListener('change', (e: any) => {
+        const file = e.target.files && e.target.files[0];
+        if(!file) return;
+        const img = new Image();
+        img.onload = () => { msg.avatar = img; render(); };
+        img.src = URL.createObjectURL(file);
+      });
+      q('avatar-clear').addEventListener('click', () => { msg.avatar = null; q('avatar').value = ''; render(); });
+      q('delete').addEventListener('click', () => {
+        const idx = messages.findIndex((m) => m.id === msg.id);
+        if(idx >= 0) messages.splice(idx, 1);
+        node.remove();
+        render();
+      });
+      return node;
+    }
+
+    function addMessage(seed?: any){
+      const msg = Object.assign({ id: ++uid, author: RT.defAuthor, color: '#F2F3F5', time: RT.defTime, bot: false, text: RT.defText, avatar: null }, seed || {});
+      messages.push(msg);
+      listEl.appendChild(makeCard(msg));
+      render();
+    }
+
+    function wrap(text: string, maxW: number){
+      const out: string[] = [];
+      for(const para of String(text).split('\n')){
+        if(para === ''){ out.push(''); continue; }
+        const words = para.split(/(\s+)/);
+        let line = '';
+        for(const w of words){
+          const test = line + w;
+          if(ctx.measureText(test).width > maxW && line !== ''){
+            out.push(line.replace(/\s+$/,''));
+            line = w.replace(/^\s+/,'');
+          } else { line = test; }
+        }
+        if(line !== '') out.push(line.replace(/\s+$/,''));
+      }
+      return out.length ? out : [''];
+    }
+
+    function roundRect(x: number, y: number, w: number, h: number, r: number){
+      ctx.beginPath();
+      ctx.moveTo(x+r,y);
+      ctx.arcTo(x+w,y,x+w,y+h,r);
+      ctx.arcTo(x+w,y+h,x,y+h,r);
+      ctx.arcTo(x,y+h,x,y,r);
+      ctx.arcTo(x,y,x+w,y,r);
+      ctx.closePath();
+    }
+    function drawAvatar(m: any, x: number, top: number){
+      const cx = x + AV/2, cy = top + AV/2, r = AV/2;
+      ctx.save();
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.closePath(); ctx.clip();
+      if(m.avatar){
+        const img = m.avatar;
+        const s = Math.max(AV/img.width, AV/img.height);
+        const w = img.width*s, h = img.height*s;
+        ctx.drawImage(img, cx - w/2, cy - h/2, w, h);
+      } else {
+        ctx.fillStyle = avatarColor(m.author || '?');
+        ctx.fillRect(x, top, AV, AV);
+        ctx.fillStyle = '#fff';
+        ctx.font = "600 18px" + EMOJI;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText((m.author || '?').trim().charAt(0).toUpperCase() || '?', cx, cy+1);
+        ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      }
+      ctx.restore();
+    }
+
+    function drawBotTag(x: number, y: number){
+      const label = 'BOT';
+      ctx.font = "700 10px" + EMOJI;
+      const tw = ctx.measureText(label).width;
+      const tagW = tw + 8, tagH = 15;
+      ctx.fillStyle = '#5865F2';
+      roundRect(x, y, tagW, tagH, 3); ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, x + 4, y + tagH/2 + 0.5);
+      ctx.textBaseline = 'alphabetic';
+      return x + tagW + 8;
+    }
+    function render(){
+      const th = THEMES[theme];
+      const maxTextW = BASE_W - TEXT_L - PAD;
+      // pass 1: layout
+      ctx.font = MSG_FONT + EMOJI;
+      let y = HEAD_H;
+      const layout: any[] = [];
+      for(let i=0;i<messages.length;i++){
+        const m = messages[i];
+        const grouped = i>0 && messages[i-1].author === m.author && !m.bot && !messages[i-1].bot;
+        ctx.font = MSG_FONT + EMOJI;
+        const lines = wrap(m.text || '', maxTextW);
+        const topGap = grouped ? 4 : 16;
+        const headH = grouped ? 0 : 22;
+        const rowTop = y + topGap;
+        layout.push({ m, grouped, lines, rowTop, headH });
+        y = rowTop + headH + lines.length * LINE_H;
+      }
+      const totalH = Math.max(Math.round(y + 16), HEAD_H + 90);
+
+      // size + reset transform (setting width/height clears the context)
+      canvas.width = BASE_W * SCALE;
+      canvas.height = totalH * SCALE;
+      ctx.setTransform(SCALE, 0, 0, SCALE, 0, 0);
+
+      // background + channel header band
+      ctx.fillStyle = th.bg; ctx.fillRect(0, 0, BASE_W, totalH);
+      ctx.fillStyle = th.head; ctx.fillRect(0, 0, BASE_W, HEAD_H);
+      ctx.fillStyle = th.line; ctx.fillRect(0, HEAD_H, BASE_W, 1);
+      ctx.textBaseline = 'middle';
+      ctx.font = "700 17px" + EMOJI; ctx.fillStyle = th.hash; ctx.fillText('#', PAD, HEAD_H/2 + 1);
+      ctx.font = CH_FONT + EMOJI; ctx.fillStyle = th.channel;
+      ctx.fillText((channelIn.value || 'general').trim() || 'general', PAD + 16, HEAD_H/2 + 1);
+      ctx.textBaseline = 'alphabetic';
+      // FMM_DRAWROWS
+      for(const row of layout){
+        const { m, grouped, lines, rowTop, headH } = row;
+        if(!grouped){
+          drawAvatar(m, PAD, rowTop);
+          ctx.font = NAME_FONT + EMOJI;
+          const nm = (m.color || '').toUpperCase();
+          ctx.fillStyle = (nm === '' || nm === '#FFFFFF' || nm === '#F2F3F5') ? th.name : m.color;
+          const nameY = rowTop + 14;
+          const authorTxt = m.author || RT.defAuthor;
+          ctx.fillText(authorTxt, TEXT_L, nameY);
+          let cursor = TEXT_L + ctx.measureText(authorTxt).width + 8;
+          if(m.bot) cursor = drawBotTag(cursor, rowTop + 1);
+          ctx.font = TIME_FONT + EMOJI;
+          ctx.fillStyle = th.time;
+          ctx.fillText(m.time || '', cursor, nameY);
+        }
+        ctx.font = MSG_FONT + EMOJI;
+        ctx.fillStyle = th.text;
+        let ty = rowTop + headH + 15;
+        for(const ln of lines){ ctx.fillText(ln, TEXT_L, ty); ty += LINE_H; }
+      }
+      drawWatermark(totalH);
+    }
+    function drawWatermark(totalH: number){
+      if(!wmToggle.checked) return;
+      const label = RT.wm;
+      // faint tiled diagonal
+      ctx.save();
+      ctx.globalAlpha = 0.10;
+      ctx.fillStyle = theme === 'dark' ? '#FFFFFF' : '#000000';
+      ctx.font = "800 22px" + EMOJI;
+      ctx.rotate(-0.32);
+      for(let yy = -totalH; yy < totalH * 1.5; yy += 120){
+        for(let xx = -100; xx < BASE_W + 300; xx += 220){ ctx.fillText(label, xx, yy); }
+      }
+      ctx.restore();
+      // solid corner badge
+      ctx.save();
+      ctx.font = "700 11px" + EMOJI;
+      const badge = '⚠ ' + label;
+      const bw = ctx.measureText(badge).width + 16;
+      const bx = BASE_W - bw - 8, by = totalH - 26;
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      roundRect(bx, by, bw, 18, 4); ctx.fill();
+      ctx.fillStyle = '#FFD84D';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(badge, bx + 8, by + 9.5);
+      ctx.textBaseline = 'alphabetic';
+      ctx.restore();
+    }
+
+    function exportPNG(){
+      render();
+      canvas.toBlob((blob) => {
+        if(!blob) return;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = RT.filename;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, 'image/png');
+    }
+
+    function setTheme(next: 'dark' | 'light'){
+      theme = next;
+      themeBtns.forEach((b) => {
+        const active = b.dataset.theme === next;
+        b.classList.toggle('border-2', active);
+        b.classList.toggle('border-[#3368A0]', active);
+        b.classList.toggle('font-bold', active);
+        b.classList.toggle('text-[#3368A0]', active);
+        b.classList.toggle('border', !active);
+        b.classList.toggle('border-[#E0DBD0]', !active);
+        b.classList.toggle('font-medium', !active);
+      });
+      render();
+    }
+
+    themeBtns.forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.theme as 'dark' | 'light')));
+    channelIn.addEventListener('input', render);
+    wmToggle.addEventListener('change', () => {
+      wmNote.textContent = RT.wmOffNote;
+      wmNote.classList.toggle('hidden', wmToggle.checked);
+      render();
+    });
+    addBtn.addEventListener('click', () => addMessage());
+    exportBtn.addEventListener('click', exportPNG);
+
+    // Seed a short, clearly fictional example (meme/roleplay framing)
+    addMessage({ author: 'Beluga', color: '#5865F2', text: 'guys I turned my homework into a meme' });
+    addMessage({ author: 'Beluga', color: '#5865F2', text: 'and somehow got an A+ 💀' });
+    addMessage({ author: 'skipper', color: '#3BA55D', text: 'no way 😭 that’s so fake lmao' });
+    setTheme('dark');
+  }
+</script>

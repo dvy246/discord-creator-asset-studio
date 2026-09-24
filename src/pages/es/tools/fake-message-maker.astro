@@ -1,0 +1,124 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import SketchUnderline from '../../../components/SketchUnderline.astro';
+import FakeMessageWorkspace from '../../../components/tools/FakeMessageWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+
+const pageTitle = "Generador de Mensajes Falsos de Discord | Chat Falso";
+const pageDescription = "Generador de mensajes falsos de Discord gratis para memes, ficción y roleplay. Crea un chat falso con marca de agua FICTICIO en tu navegador. Nada se sube.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/fake-message-maker/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Generador de Mensajes Falsos de Discord",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Estudio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Mensajes Falsos", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Para qué sirve este generador de mensajes falsos de Discord?", a: "Crea capturas de chat de Discord claramente ficticias para memes, cómics, servidores de roleplay y ediciones al estilo \"Beluga\". Escribes los nombres y los mensajes, eliges colores y avatares, y descargas un PNG que parece un chat de Discord. Es un generador de maquetas — los mensajes los inventas tú, no salen de ninguna conversación ni cuenta real." },
+  { q: "¿Cómo hago un mensaje falso de Discord?", a: "Añade una tarjeta de mensaje, escribe un nombre, pega tu línea de diálogo y, si quieres, define un color de nombre, una hora, una etiqueta BOT o sube un avatar. La vista previa de la derecha se redibuja al instante, y los mensajes seguidos del mismo nombre se agrupan igual que en el cliente real. Añade los mensajes que necesite tu escena y pulsa Descargar PNG." },
+  { q: "¿Es seguro y está permitido usar un generador de chats falsos?", a: "Para bromas, historias y roleplay, sí — las maquetas ficticias son parte normal de la cultura de los memes. Lo que no está bien es usar una captura falsa para suplantar a una persona real, fabricar pruebas, acosar o engañar haciendo creer que ocurrió una conversación real. Eso entra en difamación y fraude. Mantenlo obviamente ficticio, que es justo por lo que la marca de agua FICTICIO viene activada." },
+  { q: "¿Por qué hay una marca de agua FICTICIO y puedo quitarla?", a: "La marca de agua mantiene la imagen honesta — indica de un vistazo que el chat es inventado, para que nadie confunda tu meme con una filtración real. Puedes desactivarla para un panel de cómic más limpio, pero aparece un aviso pidiéndote que lo hagas solo con contenido totalmente ficticio. Por favor déjala activada en cualquier cosa que pueda malinterpretarse como real." },
+  { q: "¿Se suben mis mensajes o avatares a algún sitio?", a: "No. Toda la herramienta funciona en tu navegador: el chat se dibuja localmente en un canvas y el PNG se genera en tu dispositivo. Nada de lo que escribes ni ningún avatar que subas se envía a un servidor, se guarda en una cuenta ni se almacena tras cerrar la pestaña. Por eso funciona sin conexión una vez cargada la página." },
+  { q: "¿Puedo cambiar el tema, los avatares y las etiquetas de bot?", a: "Sí. Cambia entre el tema oscuro y claro de Discord, renombra el canal de arriba, da a cada mensaje su propio color de nombre, añade una etiqueta BOT en azulón para diálogo de bots y sube un avatar por nombre (o deja que la herramienta dibuje una inicial de color). Todo lo que ves en la vista previa es exactamente lo que se descarga en el PNG." }
+];
+const dossier = {
+  eyebrow: "Guía del Generador de Mensajes Falsos",
+  heading: "De una escena guionizada a",
+  highlight: "un chat falso listo para compartir",
+  intro: "Un buen meme de chat falso parece auténtico de un vistazo pero es honestamente ficticio. Así encajan la maqueta en canvas, la lógica de agrupado de mensajes, los controles de tema y el marco de seguridad integrado para que tu captura logre la broma sin engañar a nadie.",
+  steps: [
+    "Qué Crea",
+    "Cómo se Dibuja",
+    "Controles de Estilo",
+    "Honesto y Privado"
+  ],
+  cards: [
+    {
+      kicker: "EL RESULTADO // 01",
+      badge: "MAQUETA DE CHAT FICTICIA",
+      badgeTone: "emerald" as const,
+      title: "Una captura, no una conversación real",
+      body: [
+        "Esta herramienta produce una imagen de chat con estilo Discord a partir de un diálogo que escribes tú. Está pensada para memes, viñetas de cómic, recapitulaciones de roleplay y las ediciones al estilo \"Beluga\" que encadenan mensajes inventados hasta un remate. Como tú redactas cada línea, el resultado es un atrezo — una escena ficticia dibujada para parecerse a la app, igual que un decorado de cine ambienta una habitación para parecer real sin ser la casa de nadie.",
+        "Ese marco importa. Un chat falso es buena comedia y pésima prueba: en cuanto una maqueta se hace pasar por una captura genuina de una persona real, deja de ser una broma y se convierte en suplantación o difamación. Todo el diseño aquí — la marca de agua por defecto, el aviso, el texto centrado en el meme — te orienta hacia el uso ficticio y lejos de cualquier cosa que engañe a quien lo vea haciéndole creer que hubo un intercambio real."
+      ]
+    },
+    {
+      kicker: "EL CANVAS // 02",
+      badge: "DIBUJADO LOCALMENTE / NÍTIDO",
+      badgeTone: "blue" as const,
+      title: "Cada fila pintada en un canvas",
+      body: [
+        "La vista previa no es HTML fingiendo ser una imagen — es un <canvas> real que la página pinta mensaje a mensaje. Cada fila coloca un avatar, un nombre de usuario coloreado, una etiqueta BOT opcional, una hora y el texto ajustado con el mismo espaciado que usa Discord. Los mensajes seguidos del mismo nombre se agrupan bajo un solo avatar, igual que hace el cliente, para que un ida y vuelta se lea con naturalidad en vez de repetir la cabecera en cada línea.",
+        "Como la vista previa en pantalla y el archivo exportado son el mismo canvas, lo que ves es exactamente lo que se descarga — no hay un segundo motor de dibujo que se desincronice. La imagen se genera a 2× de resolución para que el texto quede nítido al meterlo en una plantilla de meme o al ampliar, y la altura crece automáticamente para caber tantos mensajes como tenga tu escena."
+      ]
+    },
+    {
+      kicker: "LOS CONTROLES // 03",
+      badge: "TEMA / COLOR / AVATAR / BOT",
+      badgeTone: "amber" as const,
+      title: "Da estilo a cada nombre para vender la escena",
+      body: [
+        "El detalle es lo que hace que un chat falso funcione. Cambia entre el tema oscuro y claro de Discord para encajar donde vivirá el meme, y renombra el canal de arriba para que la cabecera se lea bien. Cada mensaje lleva sus propios controles: un nombre, un color de nombre para usernames teñidos por rol, una hora de texto libre, una etiqueta BOT en azulón para diálogo de bots y un avatar que puedes subir — o dejar en blanco para obtener una inicial de color automática según el nombre.",
+        "Esos ajustes por mensaje separan una edición convincente de una obvia. Da a cada personaje un color y avatar consistentes y el ojo los lee como personas distintas; añade una etiqueta BOT y la línea de un bot parece la respuesta de una integración real. Los controles se acercan a propósito a las opciones de la app real para que tu intercambio guionizado tenga la textura de un servidor de verdad — sin dejar de ser, por diseño, totalmente inventado."
+      ],
+      footer: "Tema, color por nombre, hora, etiqueta BOT y avatar — los mismos mandos que expone el cliente real, afinados para una maqueta."
+    },
+    {
+      kicker: "MODELO DE SEGURIDAD // 04",
+      badge: "MARCA ACTIVADA / NADA SE SUBE",
+      badgeTone: "purple" as const,
+      title: "Honesto por defecto, privado por diseño",
+      body: [
+        "Vienen dos salvaguardas activadas por defecto. La marca de agua FICTICIO se repite tenue por la imagen con una insignia en la esquina, para que una captura recompartida siga anunciándose como inventada; puedes desactivarla para un panel de cómic limpio, pero aparece un aviso pidiéndote que solo lo hagas con contenido totalmente ficticio. Un aviso persistente sobre el editor deja clara la única regla que importa: nunca uses una maqueta para suplantar a una persona real, fabricar pruebas, acosar o estafar.",
+        "La privacidad es la otra mitad. Toda la herramienta funciona en tu navegador — nombres, mensajes y cualquier avatar que subas se dibujan localmente en el canvas y se exportan directo a un PNG. Nada se envía a un servidor, se vincula a una cuenta ni se guarda tras cerrar la pestaña, así que un chiste privado sigue privado. La combinación es deliberada: hacer fácil crear un meme obviamente ficticio e imposible convertirlo en silencio en una acusación de aspecto real."
+      ],
+      footer: "La marca por defecto y el aviso lo mantienen honesto; el dibujado totalmente local lo mantiene privado."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/fake-message-maker.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/es/" class="hover:text-[#3368A0] transition-colors">Estudio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Mensajes Falsos</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Generador de Mensajes Falsos</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">de Discord</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Crea capturas de chat falso de Discord para memes, ficción y roleplay • Marca de agua FICTICIO • En el navegador</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesamiento Local en el Navegador
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <FakeMessageWorkspace lang="es" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>
