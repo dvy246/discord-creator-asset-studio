@@ -32,7 +32,11 @@ function pathnameToSourceFile(pathname) {
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://discord-creator-asset-studio.pages.dev',
+  // Canonical production origin. Set SITE_URL in the deploy environment (Cloudflare Pages
+  // project env vars) to the domain that should rank; falls back to the pages.dev host so
+  // unconfigured/dev builds stay valid. This single value drives canonical, hreflang,
+  // og:url and the sitemap host — and must match SITE_ORIGIN in src/utils/seo.ts.
+  site: (process.env.SITE_URL || 'https://discord-creator-asset-studio.pages.dev').replace(/\/$/, ''),
   trailingSlash: 'always',
   vite: {
     plugins: [tailwindcss()]

@@ -9,12 +9,12 @@ export interface Props {
   hasSpanishAlternate?: boolean;
 }
 
-const { 
-  title, 
-  description, 
+const {
+  title,
+  description,
   canonicalUrl,
   ogType = 'website',
-  ogImage = 'https://discord-creator-asset-studio.pages.dev/og-image.png',
+  ogImage,
   noindex = false,
   hasSpanishAlternate,
 } = Astro.props;
@@ -23,6 +23,16 @@ const {
 const ogImageAlt = `${title} — Discord Creator Asset Studio`;
 
 const site = Astro.site ? new URL(Astro.site).origin : 'https://discord-creator-asset-studio.pages.dev';
+
+// Re-home the OG image onto the canonical origin: pages pass absolute URLs that may point
+// at the old host, and an unset image falls back to the site default. Keeps og:image /
+// twitter:image on the same host as the canonical when SITE_URL flips.
+let ogImageResolved: string;
+try {
+  ogImageResolved = ogImage ? `${site}${new URL(ogImage).pathname}` : `${site}/og-image.png`;
+} catch {
+  ogImageResolved = ogImage ?? `${site}/og-image.png`;
+}
 const pathname = Astro.url.pathname;
 const normalizedPath = pathname.replace(/\/$/, '') || '/';
 
@@ -140,7 +150,7 @@ const routeHasSpanish = hasSpanishAlternate !== undefined
 <meta property="og:description" content={description} />
 <meta property="og:type" content={ogType} />
 {!noindex && <meta property="og:url" content={canonical} />}
-<meta property="og:image" content={ogImage} />
+<meta property="og:image" content={ogImageResolved} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={ogImageAlt} />
@@ -153,5 +163,5 @@ const routeHasSpanish = hasSpanishAlternate !== undefined
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image" content={ogImageResolved} />
 <meta name="twitter:image:alt" content={ogImageAlt} />

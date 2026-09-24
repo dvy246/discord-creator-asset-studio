@@ -7,16 +7,8 @@ import { homeFaqs } from '../../data/home-i18n.ts';
 const pageTitle = "Creador de Banners de Discord y Estudio de Assets";
 const pageDescription = "Creador de banners de Discord en el navegador, más herramientas de emoji, sticker, avatar e icono de rol. Ajusta a tamaños exactos y exporta sin subidas.";
 
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Discord Creator Asset Studio",
-  "url": "https://discord-creator-asset-studio.pages.dev/es/",
-  "inLanguage": "es",
-  "description": pageDescription
-};
-
-// Organization entity is emitted site-wide by Layout.astro (shared @id).
+// WebSite + Organization entities are emitted site-wide by Layout.astro (shared
+// /#website and /#organization @ids, host-derived). Do NOT re-inject here.
 
 // FAQPage JSON-LD built from the same Spanish source as the visible <details>
 // list (home-i18n.ts) so structured data and on-page content never diverge.
@@ -63,7 +55,6 @@ const itemListSchema = JSON.parse(generateItemListSchema([
 
 <Layout title={pageTitle} description={pageDescription} lang="es">
   <!-- Inyectar Schemas -->
-  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
 

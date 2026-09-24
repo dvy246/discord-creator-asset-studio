@@ -7,19 +7,9 @@ import { homeFaqs } from '../data/home-i18n.ts';
 const pageTitle = "Free Discord Creator Tools — Avatars, Banners & Emojis";
 const pageDescription = "Free browser-based Discord creator tools to make and resize avatars, banners, emojis, stickers and GIFs — no uploads, 100% private.";
 
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "@id": "https://discord-creator-asset-studio.pages.dev/#website",
-  "name": "Discord Creator Asset Studio",
-  "alternateName": "Discord Asset Studio",
-  "url": "https://discord-creator-asset-studio.pages.dev/",
-  "description": pageDescription,
-  "inLanguage": "en",
-  "publisher": { "@id": "https://discord-creator-asset-studio.pages.dev/#organization" }
-};
-
-// Organization entity is emitted site-wide by Layout.astro (shared @id).
+// WebSite + Organization entities are emitted site-wide by Layout.astro (shared
+// /#website and /#organization @ids). Do NOT re-inject either here or the entity
+// graph gets duplicate nodes.
 
 // FAQPage JSON-LD is built from the same source as the visible <details> list
 // (home-i18n.ts) so structured data and on-page content never diverge.
@@ -67,7 +57,6 @@ const itemListSchema = JSON.parse(generateItemListSchema([
 
 <Layout title={pageTitle} description={pageDescription}>
   <!-- Inject Schemas -->
-  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
 

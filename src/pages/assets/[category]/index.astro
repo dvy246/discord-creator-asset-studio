@@ -33,7 +33,7 @@ interface Props {
 
 const { categoryInfo, presets } = Astro.props;
 const category = categoryInfo.id;
-const canonicalUrl = `https://discord-creator-asset-studio.pages.dev/assets/${categoryInfo.slug}/`;
+const canonicalUrl = new URL(`/assets/${categoryInfo.slug}/`, Astro.site).toString();
 
 // 1. Structured Data: Breadcrumbs
 const breadcrumbSchema = JSON.parse(generateBreadcrumbSchema([

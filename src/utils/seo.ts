@@ -1,10 +1,32 @@
+// Single source of truth for the canonical production origin. Set SITE_URL in the
+// deploy environment (e.g. Cloudflare Pages project env vars) to the domain that should
+// rank; falls back to the pages.dev host so local/dev builds and unconfigured deploys
+// still emit valid absolute URLs. MUST match `site` in astro.config.mjs (both read the
+// same SITE_URL env var, so canonical/hreflang/sitemap and all JSON-LD stay in lockstep).
+export const SITE_ORIGIN = (process.env.SITE_URL || 'https://discord-creator-asset-studio.pages.dev').replace(/\/$/, '');
+
+/**
+ * Re-home any absolute URL onto SITE_ORIGIN, preserving path/query/hash. Pages across the
+ * codebase pass hardcoded absolute URLs into these generators; normalizing at emit time
+ * means flipping SITE_URL migrates every structured-data URL to the ranking host without
+ * editing each page. A non-absolute or unparseable value is returned unchanged.
+ */
+function rehome(u: string): string {
+  try {
+    const p = new URL(u);
+    return SITE_ORIGIN + p.pathname + p.search + p.hash;
+  } catch {
+    return u;
+  }
+}
+
 const ORG = {
   "@type": "Organization",
-  "@id": "https://discord-creator-asset-studio.pages.dev/#organization",
+  "@id": `${SITE_ORIGIN}/#organization`,
   "name": "Discord Creator Asset Studio",
   "alternateName": "Discord Asset Studio",
-  "url": "https://discord-creator-asset-studio.pages.dev/",
-  "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg",
+  "url": `${SITE_ORIGIN}/`,
+  "logo": `${SITE_ORIGIN}/favicon.svg`,
   "description": "Independent, browser-only creator tools for Discord assets. Not affiliated with or endorsed by Discord, Inc.",
   "areaServed": "Worldwide",
   "knowsAbout": [
@@ -28,7 +50,7 @@ export function generateSoftwareApplicationSchema(name: string, description: str
     "@type": "SoftwareApplication",
     "name": name,
     "description": description,
-    "url": url,
+    "url": rehome(url),
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires a modern web browser with JavaScript enabled.",
@@ -39,6 +61,26 @@ export function generateSoftwareApplicationSchema(name: string, description: str
       "priceCurrency": "USD"
     },
     "publisher": ORG
+  });
+}
+
+/**
+ * WebSite entity — defines the `/#website` node that BlogPosting.isPartOf (and any other
+ * consumer) references by @id. Emitted once site-wide from Layout.astro. No SearchAction:
+ * the site exposes no on-site search endpoint, so advertising a sitelinks searchbox would
+ * be a false signal.
+ */
+export function generateWebSiteSchema(description?: string) {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_ORIGIN}/#website`,
+    "name": "Discord Creator Asset Studio",
+    "alternateName": "Discord Asset Studio",
+    "url": `${SITE_ORIGIN}/`,
+    ...(description ? { "description": description } : {}),
+    "inLanguage": "en",
+    "publisher": { "@id": `${SITE_ORIGIN}/#organization` }
   });
 }
 
@@ -65,12 +107,13 @@ export function generateWebPageSchema(opts: {
     "@type": opts.type ?? "WebPage",
     "name": opts.name,
     "description": opts.description,
-    "url": opts.url,
+    "url": rehome(opts.url),
     "inLanguage": opts.lang ?? "en",
     "isPartOf": {
       "@type": "WebSite",
+      "@id": `${SITE_ORIGIN}/#website`,
       "name": "Discord Creator Asset Studio",
-      "url": "https://discord-creator-asset-studio.pages.dev/"
+      "url": `${SITE_ORIGIN}/`
     },
     "publisher": ORG
   });
@@ -101,12 +144,11 @@ export function generateBreadcrumbSchema(items: { name: string, url: string }[])
       "@type": "ListItem",
       "position": index + 1,
       "name": item.name,
-      "item": item.url
+      "item": rehome(item.url)
     }))
   });
 }
 
-const SITE_ORIGIN = 'https://discord-creator-asset-studio.pages.dev';
 const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og-image.png`;
 
 /**
@@ -130,7 +172,7 @@ export function generateBlogPostingSchema(post: {
     "@type": "BlogPosting",
     "headline": post.heading ?? post.title,
     "description": post.metaDescription,
-    "image": post.image ?? DEFAULT_OG_IMAGE,
+    "image": post.image ? rehome(post.image) : DEFAULT_OG_IMAGE,
     "inLanguage": "en",
     "url": url,
     "mainEntityOfPage": { "@type": "WebPage", "@id": url },
@@ -164,7 +206,7 @@ export function generateItemListSchema(items: { name: string; url: string; descr
       "@type": "ListItem",
       "position": index + 1,
       "name": item.name,
-      "url": item.url,
+      "url": rehome(item.url),
       ...(item.description ? { "description": item.description } : {})
     }))
   });
@@ -186,8 +228,8 @@ export function generateHowToSchema(howTo: {
     "@type": "HowTo",
     "name": howTo.name,
     "description": howTo.description,
-    "image": howTo.image ?? DEFAULT_OG_IMAGE,
-    "url": howTo.url,
+    "image": howTo.image ? rehome(howTo.image) : DEFAULT_OG_IMAGE,
+    "url": rehome(howTo.url),
     ...(howTo.totalTime ? { "totalTime": howTo.totalTime } : {}),
     "step": howTo.steps.map((step, index) => ({
       "@type": "HowToStep",

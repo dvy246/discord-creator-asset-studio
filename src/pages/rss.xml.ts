@@ -1,7 +1,9 @@
 import type { APIRoute } from 'astro';
 import { BLOG_POSTS } from '../data/blog-posts';
 
-const SITE = 'https://discord-creator-asset-studio.pages.dev';
+// Canonical origin — env-driven so the feed host tracks SITE_URL (matches astro.config
+// `site` and SITE_ORIGIN in src/utils/seo.ts). Falls back to the pages.dev host.
+const SITE = (process.env.SITE_URL || 'https://discord-creator-asset-studio.pages.dev').replace(/\/$/, '');
 
 function escapeXml(unsafe: string): string {
   return unsafe

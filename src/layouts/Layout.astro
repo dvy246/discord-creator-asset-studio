@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import SEOHead from '../components/SEOHead.astro';
-import { generateOrganizationSchema } from '../utils/seo';
+import { generateOrganizationSchema, generateWebSiteSchema } from '../utils/seo';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import PaletteSelector from '../components/PaletteSelector.astro';
 import LanguagePicker from '../components/LanguagePicker.astro';
@@ -129,6 +129,14 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
     />
     <!-- Site-wide Organization entity (grounds brand + independence for AI/answer engines) -->
     <script type="application/ld+json" set:html={generateOrganizationSchema()} />
+    <!-- Site-wide WebSite entity (defines the /#website node other schemas reference by @id) -->
+    <script type="application/ld+json" set:html={generateWebSiteSchema(description)} />
+    <!-- Speculation Rules: prefetch same-origin links on hover/pointerdown for near-instant
+         navigation. Prefetch (not prerender) avoids executing the target page, so no false
+         analytics/ad impressions fire for links the user never actually visits. -->
+    <script type="speculationrules" is:inline set:html={JSON.stringify({
+      prefetch: [{ source: 'document', where: { and: [{ href_matches: '/*' }] }, eagerness: 'moderate' }]
+    })} />
     <script is:inline>
       (function() {
         const storedTheme = localStorage.getItem('theme');
