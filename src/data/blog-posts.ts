@@ -1223,4 +1223,207 @@ Type your text once in our <a class="text-[#3368A0] dark:text-[#66A3BF] font-sem
       }
     ]
   },
+  {
+    slug: 'discord-video-size-limit',
+    title: 'Discord Video Size Limit: Upload, Call & Stream Guide',
+    heading: 'Discord Video Size Limit: How to Upload, Call, and Stream',
+    metaDescription: 'Discord video size limit explained: 10 MB free, 50 MB Nitro Basic, 500 MB Nitro. How to shrink big clips, plus video calls and Prime Video streaming.',
+    primaryKeyword: 'discord video size limit',
+    secondaryKeywords: ['discord video upload limit', 'discord video limit', 'discord file size limit', 'discord upload limit', 'max video size discord'],
+    longTailKeywords: ['can you video call on discord', 'can you stream prime video on discord', 'how to send large videos on discord', 'discord video size limit without nitro', 'why is my discord stream a black screen'],
+    category: 'Specifications & Guides',
+    readTime: '8 min read',
+    datePublished: '2026-09-24T10:00:00Z',
+    dateModified: '2026-09-24T10:00:00Z',
+    author: { name: 'Discord Asset Studio Engineering', role: 'Client Architecture Specialist' },
+    summary: "Discord limits video uploads to 10 MB on a free account, 50 MB with Nitro Basic, and 500 MB with full Nitro — and a boosted server can lift the whole channel to 50 MB or 100 MB. Here is every cap in one place, how to send a clip that's too big, and clear answers on video calls and streaming Prime Video.",
+    toolCta: {
+      name: 'Video Compressor',
+      headline: 'Squeeze Any Clip Under the Limit',
+      description: 'Drop in an MP4 and our in-browser compressor shrinks it under 10 MB — resolution, quality, and audio controls, and nothing is ever uploaded.',
+      buttonText: 'Open Video Compressor',
+      href: '/tools/video-compressor/',
+      badge: 'H.264 • Client-Side'
+    },
+    howToSteps: [
+      { name: 'Check the limit that applies to you', text: 'Confirm whether you are on free (10 MB), Nitro Basic (50 MB), or full Nitro (500 MB), and whether the server is boosted to Level 2 (50 MB) or Level 3 (100 MB). Your real ceiling is the higher of your Nitro tier and the server boost level.' },
+      { name: 'Open the Video Compressor', text: 'Go to the in-browser Discord Video Compressor and drop your MP4, WebM, or MOV file onto the dropzone. Nothing is uploaded — the file is processed locally in your browser.' },
+      { name: 'Set a target size and quality', text: 'Pick the target (10, 50, or 500 MB), drop the resolution to 720p or 480p if needed, and nudge the CRF slider higher for a smaller file. Strip the audio track if the clip does not need sound.' },
+      { name: 'Compress and upload', text: 'Run the compression, download the smaller MP4, and drag it into Discord. If it still exceeds the cap, lower the resolution one more step or raise CRF and re-run.' }
+    ],
+    sections: [
+      {
+        id: 'discord-video-size-limit',
+        heading: '1. What Is the Discord Video Size Limit?',
+        content: `The **Discord video size limit** is the same as its file upload limit, because Discord caps every attachment by byte size regardless of type. On a free account you can upload files up to **10 MB**. Discord Nitro Basic raises that to **50 MB**, and full Discord Nitro raises it to **500 MB**. There is no separate, larger allowance for video — a 10 MB clip and a 10 MB PDF hit the exact same wall.
+
+That 10 MB ceiling is genuinely tight for video. A one-minute 1080p screen recording at 30 fps routinely lands between 150 MB and 500 MB straight out of the recorder, so even a 20-second clip usually needs compressing before a free account will accept it.
+
+The limit is per file, not per message, and it applies everywhere you attach media: DMs, group DMs, and server channels.`,
+        table: {
+          headers: ['Account / Tier', 'Max upload per file'],
+          rows: [
+            ['Free (no Nitro)', '10 MB'],
+            ['Nitro Basic', '50 MB'],
+            ['Nitro', '500 MB']
+          ]
+        },
+        callout: {
+          type: 'info',
+          title: 'One Limit for Every File Type',
+          text: 'Discord measures the raw byte size of the attachment. Video, images, audio, PDFs, and zips all share the same per-file cap for your tier — there is no video-only exception.'
+        }
+      },
+      {
+        id: 'why-discord-limits-video',
+        heading: '2. Why the Cap Exists (and What Counts Against It)',
+        content: `Discord stores and serves every attachment from its own CDN, so a hard per-file cap keeps storage and bandwidth costs predictable and stops a single upload from degrading a channel for everyone. Paid tiers exist partly to offset that cost, which is why the ceiling climbs with Nitro.
+
+What counts against the limit is the **encoded file size on disk**, not the resolution or the length on their own. A short 4K clip can be larger than a long 480p one. That matters because it means you have three independent levers to get under the cap: resolution, quality (bitrate), and duration.
+
+Discord also transcodes and may show a compressed preview after upload, but that happens *after* it accepts the file — it never lets you exceed the cap on the way in.`,
+        callout: {
+          type: 'tip',
+          title: 'Three Levers, Not One',
+          text: 'To shrink a video you can lower the resolution (1080p to 720p), lower the quality/bitrate (a higher CRF value), or trim the length. Combining two usually beats hammering one.'
+        }
+      },
+      {
+        id: 'server-boost-vs-nitro',
+        heading: '3. Server Boost vs. Nitro: Which Limit Wins?',
+        content: `There are two separate ways the upload ceiling can go up, and they work in your favour — Discord uses **whichever is higher**.
+
+- **Your Nitro tier** travels with you: Nitro Basic (50 MB) or Nitro (500 MB) applies in every server and DM you are in.
+- **Server Boost level** applies to one specific server for everyone in it: **Level 2 raises the whole server to 50 MB**, and **Level 3 raises it to 100 MB** — with no Nitro required to benefit.
+
+So a free user in a Level 3 server can upload up to 100 MB there, while a Nitro subscriber still gets their 500 MB anywhere. If you only ever get blocked in one community, pushing that server to Level 2 or 3 can be cheaper than everyone buying Nitro.`,
+        table: {
+          headers: ['How you raise it', 'New limit', 'Scope'],
+          rows: [
+            ['Nitro Basic', '50 MB', 'You, everywhere'],
+            ['Nitro', '500 MB', 'You, everywhere'],
+            ['Server Boost Level 2', '50 MB', 'Everyone in that server'],
+            ['Server Boost Level 3', '100 MB', 'Everyone in that server']
+          ]
+        },
+        callout: {
+          type: 'info',
+          title: 'The Higher Number Applies',
+          text: 'If you have Nitro (500 MB) in a Level 2 server (50 MB), you still get 500 MB. Discord takes the larger of your personal tier and the server boost level.'
+        }
+      },
+      {
+        id: 'how-to-send-large-video',
+        heading: "4. How to Send a Video That's Too Big",
+        content: `When a clip is over your cap, you have three realistic options: compress it, host it elsewhere and paste a link, or raise the limit (Nitro or a boosted server). Compression is the one that keeps the video *inside* Discord, and it is usually enough.
+
+1. **Compress it in your browser.** Our <a class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline" href="/tools/video-compressor/">Discord video compressor</a> re-encodes MP4, WebM, and MOV files locally with resolution, CRF quality, and audio-strip controls — nothing is uploaded to a server.
+2. **Drop the resolution first.** Going from 1080p to 720p roughly halves the file at the same quality setting; 480p halves it again. This is the single biggest lever for gameplay and screen recordings.
+3. **Then raise CRF for fine control.** A higher CRF (around 28 to 30) trades a little visual quality for a much smaller file. Strip the audio track entirely if the clip does not need sound.
+4. **Or paste a link instead.** Upload to a host like YouTube (unlisted), Streamable, or Google Drive and paste the URL — Discord unfurls a player card. This sidesteps the size cap entirely for long videos.
+
+For animated clips destined to be emoji or reactions, the <a class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline" href="/tools/gif-compressor/">GIF compressor</a> targets the stricter 256 KiB emoji ceiling instead.`,
+        callout: {
+          type: 'tip',
+          title: 'Leave a Little Headroom',
+          text: 'Target a size just under the limit, not exactly on it. A file that measures 10.0 MB can still be rejected by a 10 MB cap once container overhead is counted — aim for about 9 MB.'
+        }
+      },
+      {
+        id: 'can-you-video-call-on-discord',
+        heading: '5. Can You Video Call on Discord?',
+        content: `**Yes — video calling is free and built in, with no Nitro required.** You can start a camera call in three places:
+
+- **Direct messages:** open any DM and click the camera icon for a one-to-one video call.
+- **Group DMs:** start a video call with the whole group — up to **50 people** can be on the same call.
+- **Server voice channels:** turn your camera on inside a voice channel, or use **Go Live** to share your screen to others in the channel.
+
+The free tier streams and screen-shares at up to **720p / 30 fps**. Nitro raises Go Live and screen-share quality up to **1080p / 60 fps** (with higher source options), which is the main call-quality difference between free and paid.`,
+        table: {
+          headers: ['Where', 'Video call?', 'Cap'],
+          rows: [
+            ['1:1 DM', 'Yes', '2 people'],
+            ['Group DM', 'Yes', 'Up to 50'],
+            ['Server voice channel', 'Yes (+ Go Live)', 'Channel members'],
+            ['Go Live quality (free)', '720p / 30fps', '—'],
+            ['Go Live quality (Nitro)', '1080p / 60fps', '—']
+          ]
+        },
+        callout: {
+          type: 'info',
+          title: 'Calls Are Not Uploads',
+          text: 'Video calls and Go Live are live streams, so the file upload size limit does not apply to them — it only applies to attachments you send in chat.'
+        }
+      },
+      {
+        id: 'can-you-stream-prime-video-on-discord',
+        heading: '6. Can You Stream Prime Video on Discord?',
+        content: `**Yes, you can screen-share Prime Video (or Netflix, Disney+, Hulu) to friends in a voice channel — but you will often hit a black screen.** That black screen is not a Discord bug: streaming services wrap their video in **DRM (digital rights management)**, and when a browser plays DRM content with **hardware acceleration** on, the protected frames are deliberately excluded from screen capture. Discord captures everything *except* the movie.
+
+The usual fix is to turn hardware acceleration off so the video renders in software, where capture can see it:
+
+1. **Disable hardware acceleration in your browser** (Chrome/Edge: Settings → System; Firefox: Settings → Performance). Restart the browser afterwards.
+2. **Disable hardware acceleration in Discord** (Settings → Advanced, and Settings → Voice & Video). Restart Discord.
+3. **Share the browser window** via Go Live — pick the browser as the source rather than the whole desktop, then play the title.
+4. **Try a different browser** if one still shows black. Firefox and Chrome behave differently with different services.
+
+Keep expectations realistic: DRM is designed to block exactly this, so some services or app updates will still refuse to capture, and there is no reliable permanent workaround. Only stream content you are entitled to watch, and treat this as a personal watch-party feature — not a way to redistribute anything.`,
+        callout: {
+          type: 'warning',
+          title: 'Black Screen = DRM, Not a Setting You Missed',
+          text: 'If only the movie is black while the rest of the browser shows fine, that is DRM protection kicking in. Disabling hardware acceleration is the fix that works most often; nothing on the Discord side can unlock protected video.'
+        }
+      },
+      {
+        id: 'upload-streaming-troubleshooting',
+        heading: '7. Quick Fixes for Upload & Stream Errors',
+        content: `Most "your files are too powerful" and black-screen problems come down to a handful of causes. Run through these before assuming something is broken:
+
+- **"Your files are too powerful" on upload:** the clip is over your cap. Compress it under the limit or paste an external link.
+- **Upload fails right at the limit:** container overhead pushed it over. Re-encode to about 10% under the cap.
+- **Black screen sharing a streaming service:** DRM plus hardware acceleration. Disable hardware acceleration in both the browser and Discord.
+- **Black screen sharing a game or app:** often the opposite — some capture paths *need* hardware acceleration or admin rights. Toggle it the other way, or run Discord as administrator on Windows.
+- **Video uploads but will not play inline:** use MP4 with H.264 video and AAC audio; exotic codecs upload but may not preview.`,
+        callout: {
+          type: 'tip',
+          title: 'MP4 (H.264 + AAC) Is the Safe Bet',
+          text: 'For maximum compatibility across desktop, web, and mobile, export or compress to an MP4 with H.264 video and AAC audio. Our video compressor outputs exactly that by default.'
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: 'What is the maximum video size on Discord?',
+        answer: 'Discord caps uploads at 10 MB on a free account, 50 MB with Nitro Basic, and 500 MB with full Nitro. Video uses the same per-file limit as any other attachment — there is no separate, larger video allowance.'
+      },
+      {
+        question: 'How do I increase the Discord upload limit without Nitro?',
+        answer: 'Two ways: be in a boosted server (Level 2 raises the whole server to 50 MB, Level 3 to 100 MB for everyone), or keep the file inside the free 10 MB cap by compressing it. For long videos, uploading elsewhere and pasting a link avoids the cap entirely.'
+      },
+      {
+        question: 'Can you video call on Discord for free?',
+        answer: 'Yes. Video calls are free with no Nitro required, in DMs, group DMs (up to 50 people), and server voice channels. The free tier streams at up to 720p/30fps; Nitro raises that to 1080p/60fps.'
+      },
+      {
+        question: 'How many people can be on a Discord video call?',
+        answer: 'A group DM video call supports up to 50 participants. In a server voice channel, everyone in the channel can turn on their camera or watch a Go Live screen share.'
+      },
+      {
+        question: 'Can you stream Prime Video on Discord without a black screen?',
+        answer: 'Usually yes, by disabling hardware acceleration in both your browser and Discord, then sharing the browser window via Go Live. Because Prime Video uses DRM, some titles or updates may still refuse to capture — DRM is built to block screen recording.'
+      },
+      {
+        question: 'Why is my Discord stream just a black screen?',
+        answer: 'For streaming services (Prime Video, Netflix, Disney+), a black screen is DRM combined with hardware acceleration — disable hardware acceleration to fix it. For games or apps, the cause is often the reverse: enable hardware acceleration or run Discord as administrator.'
+      },
+      {
+        question: 'Does compressing a video for Discord reduce its quality?',
+        answer: 'Some, but far less than you would expect. Lowering resolution to 720p and using a moderate CRF (around 28) can cut a file by 80 to 90% while staying visually clean for chat playback. You control the trade-off with the resolution and CRF settings.'
+      },
+      {
+        question: 'What is the best video format for Discord?',
+        answer: 'MP4 with H.264 video and AAC audio. It uploads, previews inline, and plays on desktop, web, and mobile without extra codecs. Our video compressor outputs H.264 MP4 by default.'
+      }
+    ]
+  },
 ];

@@ -114,6 +114,11 @@ const indexablePages = [
     primaryKeyword: 'discord gif compressor',
   },
   {
+    path: 'tools/video-compressor/index.html',
+    url: '/tools/video-compressor/',
+    primaryKeyword: 'discord video compressor',
+  },
+  {
     path: 'tools/gif-maker/index.html',
     url: '/tools/gif-maker/',
     primaryKeyword: 'discord gif maker',
@@ -197,6 +202,11 @@ const indexablePages = [
     path: 'blog/what-font-does-discord-use/index.html',
     url: '/blog/what-font-does-discord-use/',
     primaryKeyword: 'what font does discord use',
+  },
+  {
+    path: 'blog/discord-video-size-limit/index.html',
+    url: '/blog/discord-video-size-limit/',
+    primaryKeyword: 'discord video size limit',
   },
   {
     path: 'es/tools/emoji/index.html',
@@ -287,6 +297,11 @@ const indexablePages = [
     path: 'es/tools/gif-compressor/index.html',
     url: '/es/tools/gif-compressor/',
     primaryKeyword: 'comprimir gif discord',
+  },
+  {
+    path: 'es/tools/video-compressor/index.html',
+    url: '/es/tools/video-compressor/',
+    primaryKeyword: 'comprimir video discord',
   },
   {
     path: 'es/tools/snowflake/index.html',

@@ -359,6 +359,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/video-compressor.png',
+    config: {
+      title: 'DISCORD VIDEO', titleLine2: 'COMPRESSOR',
+      subtitle: 'SHRINK MP4, WEBM & MOV UNDER 10 MB / 50 MB / 500 MB LIMITS',
+      tagline1: 'RESOLUTION • H.264 QUALITY (CRF) • AUDIO STRIP',
+      tagline2: 'IN-BROWSER FFMPEG WASM TRANSCODE • ZERO UPLOADS',
+      badge: 'VIDEO COMPRESSION • CLIENT-SIDE',
+      cards: [
+        { label: 'FREE', desc: '10 MB' }, { label: 'BOOST', desc: '50 MB' },
+        { label: 'NITRO', desc: '500 MB' }, { label: 'CODEC', desc: 'H.264' },
+        { label: 'PRIVACY', desc: '0 UPLOADS' }
+      ]
+    }
+  },
+  {
     file: 'public/og/gif-maker.png',
     config: {
       title: 'DISCORD GIF', titleLine2: 'MAKER',
@@ -666,7 +681,8 @@ const BLOG = [
   { file: 'public/og/blog-server-banner.png', title: 'CHANGE SERVER', titleLine2: 'BANNER', subtitle: 'BOOST TIER REQUIREMENTS & STEP-BY-STEP GUIDE' },
   { file: 'public/og/blog-change-username.png', title: 'CHANGE YOUR', titleLine2: 'DISCORD USERNAME', subtitle: 'NEW @HANDLE RULES • DESKTOP & MOBILE • LIMITS FIXED' },
   { file: 'public/og/blog-text-formatting-guide.png', title: 'DISCORD TEXT', titleLine2: 'FORMATTING GUIDE', subtitle: 'BOLD • STRIKETHROUGH • SPOILER • BIG & SMALL TEXT' },
-  { file: 'public/og/blog-discord-font.png', title: 'WHAT FONT DOES', titleLine2: 'DISCORD USE', subtitle: 'GG SANS EXPLAINED • THE CUSTOM TYPEFACE SINCE 2022' }
+  { file: 'public/og/blog-discord-font.png', title: 'WHAT FONT DOES', titleLine2: 'DISCORD USE', subtitle: 'GG SANS EXPLAINED • THE CUSTOM TYPEFACE SINCE 2022' },
+  { file: 'public/og/blog-video-size-limit.png', title: 'DISCORD VIDEO', titleLine2: 'SIZE LIMIT', subtitle: '10 MB FREE • 50 MB NITRO BASIC • 500 MB NITRO' }
 ];
 
 for (const b of BLOG) {

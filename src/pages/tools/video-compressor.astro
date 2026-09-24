@@ -1,0 +1,124 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import VideoCompressorWorkspace from '../../components/tools/VideoCompressorWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Video Compressor | Shrink Videos Under 10 MB";
+const pageDescription = "Free Discord video compressor: shrink MP4, WebM and MOV under the 10 MB free limit or 50/500 MB Nitro tiers, entirely in your browser. Nothing uploaded.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/video-compressor/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Video Compressor",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Video Compressor", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "How do I compress a video for Discord?", a: "Drop your clip in, pick the size target you are aiming for (10 MB free, 50 MB Boost, or 500 MB Nitro), choose an output resolution, and set the quality slider. The tool re-encodes the video to H.264 MP4 right in your browser and shows the finished size against your target, so you can lower the resolution or quality a notch and re-run until it fits." },
+  { q: "What is Discord's video upload limit?", a: "A free account can upload files up to 10 MB. Nitro Basic and Server Boost Level 2 raise that to 50 MB, Boost Level 3 to 100 MB, and full Nitro pushes your personal cap to 500 MB. A video over whatever limit applies to you is rejected before it posts, which is why most phone recordings need compressing first." },
+  { q: "Why won't my video upload to Discord?", a: "The usual reason is size: when a clip exceeds your upload limit, Discord blocks it with an error instead of shrinking it for you. Modern phone video is large — a minute of 4K can top 100 MB — so it clears the 10 MB free limit almost instantly. Dropping the resolution to 720p and nudging quality down here usually lands it under the cap." },
+  { q: "Does compressing a video lose quality?", a: "Some, but you control how much. The quality slider maps to H.264's CRF value: lower numbers keep more detail at a bigger file, higher numbers shrink harder with more visible softening. CRF 23 to 28 is a good range for chat clips. Lowering the resolution saves the most bytes with the least perceptible loss, since Discord previews play small anyway." },
+  { q: "What video format is best for Discord?", a: "MP4 with H.264 video and AAC audio, which is exactly what this tool outputs. It plays inline on every Discord client — desktop, web, iOS, and Android — with no plugin. WebM and MOV also work in many places but H.264 MP4 is the safest universal choice, so the compressor standardizes on it regardless of what you feed in." },
+  { q: "Is my video uploaded to a server to compress it?", a: "No. The compression runs entirely in your browser through ffmpeg compiled to WebAssembly. The engine downloads once (about 32 MB) and then transcodes your clip locally — the video is never sent to a server, queued in the cloud, or tied to any account. Close the tab and it is gone from memory. That makes it safe for private recordings." }
+];
+const dossier = {
+  eyebrow: "Video Compressor Blueprint",
+  heading: "From an over-limit clip to",
+  highlight: "a video that posts to Discord",
+  intro: "A video that busts Discord's upload limit is blocked before it ever posts. Here is how the size ceiling, the in-browser transcode pipeline, the three size levers, and the zero-upload privacy model fit together to land your clip under the cap.",
+  steps: [
+    "The Upload Limit",
+    "How Transcoding Works",
+    "The Size Levers",
+    "Local & Private"
+  ],
+  cards: [
+    {
+      kicker: "SIZE CEILING // 01",
+      badge: "10 MB FREE / 50 BOOST / 500 NITRO",
+      badgeTone: "emerald" as const,
+      title: "Why a big video gets blocked",
+      body: [
+        "Discord's default upload limit is 10 MB for a free account. Nitro Basic and Server Boost Level 2 raise it to 50 MB, Boost Level 3 to 100 MB for everyone in the server, and a full Nitro subscription lifts your personal cap to 500 MB. Modern video fills that space fast: a phone shooting 1080p or 4K produces tens of megabytes per minute, so an untouched recording clears the 10 MB free limit almost immediately.",
+        "When a clip sits over whatever limit applies to you, Discord does not quietly shrink it — the upload is rejected with an error before it posts. Either way the video your friends expected never shows up. This tool lets you pick the exact byte target you are aiming for and re-encodes until the output lands beneath it, so you skip the failed-upload wall entirely and post a clip that plays inline on the first try."
+      ]
+    },
+    {
+      kicker: "THE PIPELINE // 02",
+      badge: "DECODE / TRANSCODE / RE-ENCODE",
+      badgeTone: "blue" as const,
+      title: "Decode, transcode, re-encode",
+      body: [
+        "Compressing a video is a full transcode, not a single slider. The file is decoded back into raw frames, those frames are optionally scaled to a smaller resolution, and then the H.264 encoder re-compresses them at the quality you choose while the audio is re-encoded to AAC or dropped. The whole chain runs on ffmpeg — the same engine behind most desktop video tools — compiled to WebAssembly so it executes inside the page rather than on a server.",
+        "Because the encoder rebuilds the file from decoded frames every time, each run is a genuine fresh encode rather than a lossy copy stacked on a lossy copy. That is why lowering the resolution or nudging the quality slider and re-running never compounds the damage. It also explains why some clips shrink far more than others: a static screen recording compresses dramatically, while fast, grainy, high-motion footage holds more detail and needs a lower resolution to hit an aggressive target."
+      ]
+    },
+    {
+      kicker: "THE CONTROLS // 03",
+      badge: "RESOLUTION / QUALITY / AUDIO",
+      badgeTone: "amber" as const,
+      title: "Three levers to hit a byte target",
+      body: [
+        "Three controls decide the final size, and they stack. Resolution has the largest effect because it removes pixels from every frame at once — dropping 1080p to 720p roughly halves the data before any other setting applies. The quality slider maps to H.264's CRF: slide toward better quality for more detail and a bigger file, or toward smaller file to shrink harder. Stripping the audio track saves a few more megabytes when the clip does not need sound.",
+        "The right mix depends on the clip and the target you picked. For the 10 MB free limit, 720p at a mid CRF handles most phone recordings; for a tight target on long or high-motion footage, drop to 480p and lean the slider toward smaller file. A size readout shows the finished output against your target after each run, so you tune toward the ceiling instead of guessing — and because every pass re-encodes from the source, retrying never degrades quality."
+      ],
+      footer: "Resolution cuts the most bytes; quality and audio-strip fine-tune the rest to land under your target."
+    },
+    {
+      kicker: "PRIVACY MODEL // 04",
+      badge: "NOTHING UPLOADED",
+      badgeTone: "purple" as const,
+      title: "Every frame stays on your device",
+      body: [
+        "The entire transcode runs inside your browser. Your video is read locally, ffmpeg-in-WebAssembly re-encodes it in the page, and the finished MP4 is handed straight back to you as a download. At no point is the clip sent to a server, queued in a cloud job, or written to any account — there is nothing to sign into and no upload step to wait on. That makes the tool safe for private screen recordings, unreleased clips, and anything you would rather not hand to a third party.",
+        "The trade-off for that privacy is a one-time engine download of about 32 MB the first time you compress, after which everything is local and fast. Processing speed depends on your own device rather than a server queue, and very long or 4K clips are limited by your browser's available memory — trim a long recording first if it stalls. Close the tab and every trace of the video is gone from memory, because a server log, temp bucket, or processing history was never part of the path."
+      ],
+      footer: "Read locally, re-encoded by ffmpeg-in-WebAssembly — the video never leaves your device."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/video-compressor.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Video Compressor</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Video</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Compressor</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Shrink MP4, WebM &amp; MOV with resolution, quality &amp; audio controls • 10 / 50 / 500 MB targets • In-browser</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <VideoCompressorWorkspace lang="en" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>
