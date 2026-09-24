@@ -1,18 +1,18 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import SketchUnderline from '../../../components/SketchUnderline.astro';
-import { generateBreadcrumbSchema, generateHowToSchema } from '../../../utils/seo';
+import { generateBreadcrumbSchema, generateHowToSchema, SITE_ORIGIN } from '../../../utils/seo';
 
 const pageTitle = "Creador de GIF de Discord | Guía de Límites de Animación";
 const pageDescription = "Guía del creador de GIF de Discord: domina los límites de 256 KiB, tasas de fotogramas y compresión de paleta para banners, emojis y avatares animados.";
-const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/guides/discord-gif-guide/";
+const pageUrl = `${SITE_ORIGIN}/es/guides/discord-gif-guide/`;
 
 const techArticleSchema = {
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": pageTitle,
   "description": pageDescription,
-  "image": "https://discord-creator-asset-studio.pages.dev/og/guide-gif.png",
+  "image": `${SITE_ORIGIN}/og/guide-gif.png`,
   "inLanguage": "es",
   "url": pageUrl,
   "datePublished": "2026-01-01T00:00:00+00:00",
@@ -20,19 +20,19 @@ const techArticleSchema = {
   "author": {
     "@type": "Organization",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/"
+    "url": `${SITE_ORIGIN}/`
   },
   "publisher": {
     "@type": "Organization",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/",
-    "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+    "url": `${SITE_ORIGIN}/`,
+    "logo": `${SITE_ORIGIN}/favicon.svg`
   }
 };
 
 const breadcrumbSchema = generateBreadcrumbSchema([
-  { name: "Inicio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
-  { name: "Guía de Tamaños", url: "https://discord-creator-asset-studio.pages.dev/es/guides/discord-sizes/" },
+  { name: "Inicio", url: `${SITE_ORIGIN}/es/` },
+  { name: "Guía de Tamaños", url: `${SITE_ORIGIN}/es/guides/discord-sizes/` },
   { name: "Guía de GIF", url: pageUrl }
 ]);
 

@@ -1,19 +1,19 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
-import { generateBreadcrumbSchema } from '../../utils/seo';
+import { generateBreadcrumbSchema, SITE_ORIGIN } from '../../utils/seo';
 import { BLOG_POSTS } from '../../data/blog-posts';
 
 const pageTitle = "Discord Guides & Tutorials — Asset Studio Blog";
 const pageDescription = "Authoritative guides for Discord creators. Master stickers, 960x540 banners, anime PFPs, spoiler images, and server boost rules with verified specs.";
-const pageUrl = "https://discord-creator-asset-studio.pages.dev/blog/";
+const pageUrl = `${SITE_ORIGIN}/blog/`;
 
 const breadcrumbSchema = generateBreadcrumbSchema([
-  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Studio", url: `${SITE_ORIGIN}/` },
   { name: "Blog", url: pageUrl }
 ]);
 
-const SITE = "https://discord-creator-asset-studio.pages.dev";
+const SITE = SITE_ORIGIN;
 
 const collectionSchema = {
   "@context": "https://schema.org",

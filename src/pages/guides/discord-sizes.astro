@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
-import { generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+import { generateBreadcrumbSchema, generateFaqSchema, SITE_ORIGIN } from '../../utils/seo';
 
 const pageTitle = "Discord Banner Size | Full Dimensions Guide | Asset Studio";
 const pageDescription = "Verified guide to Discord banner size, avatar dimensions, emoji limits, and sticker specs for 2026. Safe zones, Nitro limits, and boost tier requirements.";
@@ -11,30 +11,30 @@ const techArticleSchema = {
   "@type": "TechArticle",
   "headline": pageTitle,
   "description": pageDescription,
-  "image": "https://discord-creator-asset-studio.pages.dev/og-image.png",
+  "image": `${SITE_ORIGIN}/og-image.png`,
   "inLanguage": "en",
-  "url": "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/",
+  "url": `${SITE_ORIGIN}/guides/discord-sizes/`,
   "datePublished": "2026-01-01T00:00:00+00:00",
   "dateModified": "2026-03-01T00:00:00+00:00",
   "author": {
     "@type": "Organization",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/"
+    "url": `${SITE_ORIGIN}/`
   },
   "publisher": {
     "@type": "Organization",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/",
+    "url": `${SITE_ORIGIN}/`,
     "logo": {
       "@type": "ImageObject",
-      "url": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+      "url": `${SITE_ORIGIN}/favicon.svg`
     }
   }
 };
 
 const breadcrumbJson = generateBreadcrumbSchema([
-  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
-  { name: "Size Guide", url: "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/" }
+  { name: "Studio", url: `${SITE_ORIGIN}/` },
+  { name: "Size Guide", url: `${SITE_ORIGIN}/guides/discord-sizes/` }
 ]);
 
 const faqItems = [

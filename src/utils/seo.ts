@@ -1,9 +1,8 @@
-// Single source of truth for the canonical production origin. Set SITE_URL in the
-// deploy environment (e.g. Cloudflare Pages project env vars) to the domain that should
-// rank; falls back to the pages.dev host so local/dev builds and unconfigured deploys
-// still emit valid absolute URLs. MUST match `site` in astro.config.mjs (both read the
-// same SITE_URL env var, so canonical/hreflang/sitemap and all JSON-LD stay in lockstep).
-export const SITE_ORIGIN = (process.env.SITE_URL || 'https://discord-creator-asset-studio.pages.dev').replace(/\/$/, '');
+// Single source of truth for the canonical production origin. The ranking domain is
+// serverbannermaker.com; SITE_URL in the deploy environment (e.g. Cloudflare Pages project
+// env vars) overrides it if ever needed. MUST match `site` in astro.config.mjs (both read
+// the same SITE_URL env var, so canonical/hreflang/sitemap and all JSON-LD stay in lockstep).
+export const SITE_ORIGIN = (process.env.SITE_URL || 'https://serverbannermaker.com').replace(/\/$/, '');
 
 /**
  * Re-home any absolute URL onto SITE_ORIGIN, preserving path/query/hash. Pages across the

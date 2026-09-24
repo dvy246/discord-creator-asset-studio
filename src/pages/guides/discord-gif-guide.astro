@@ -1,18 +1,18 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SketchUnderline from '../../components/SketchUnderline.astro';
-import { generateBreadcrumbSchema, generateHowToSchema } from '../../utils/seo';
+import { generateBreadcrumbSchema, generateHowToSchema, SITE_ORIGIN } from '../../utils/seo';
 
 const pageTitle = "Discord GIF Maker | Animation Limits Guide | Asset Studio";
 const pageDescription = "Step-by-step Discord GIF maker guide. Master official 256 KiB file limits, frame rates, and palette compression for animated banners, emojis, and avatars.";
-const pageUrl = "https://discord-creator-asset-studio.pages.dev/guides/discord-gif-guide/";
+const pageUrl = `${SITE_ORIGIN}/guides/discord-gif-guide/`;
 
 const techArticleSchema = {
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": pageTitle,
   "description": pageDescription,
-  "image": "https://discord-creator-asset-studio.pages.dev/og-image.png",
+  "image": `${SITE_ORIGIN}/og-image.png`,
   "inLanguage": "en",
   "url": pageUrl,
   "datePublished": "2026-01-01T00:00:00+00:00",
@@ -20,19 +20,19 @@ const techArticleSchema = {
   "author": {
     "@type": "Organization",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/"
+    "url": `${SITE_ORIGIN}/`
   },
   "publisher": {
     "@type": "Organization",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/",
-    "logo": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+    "url": `${SITE_ORIGIN}/`,
+    "logo": `${SITE_ORIGIN}/favicon.svg`
   }
 };
 
 const breadcrumbSchema = generateBreadcrumbSchema([
-  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
-  { name: "Size Guide", url: "https://discord-creator-asset-studio.pages.dev/guides/discord-sizes/" },
+  { name: "Studio", url: `${SITE_ORIGIN}/` },
+  { name: "Size Guide", url: `${SITE_ORIGIN}/guides/discord-sizes/` },
   { name: "GIF Guide", url: pageUrl }
 ]);
 

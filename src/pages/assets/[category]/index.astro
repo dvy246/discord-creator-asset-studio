@@ -10,9 +10,10 @@ import {
   type CategoryInfo, 
   type DiscordAssetPreset 
 } from '../../../data/assets';
-import { 
-  generateBreadcrumbSchema, 
-  generateSoftwareApplicationSchema 
+import {
+  generateBreadcrumbSchema,
+  generateSoftwareApplicationSchema,
+  SITE_ORIGIN
 } from '../../../utils/seo';
 
 export async function getStaticPaths() {
@@ -37,8 +38,8 @@ const canonicalUrl = new URL(`/assets/${categoryInfo.slug}/`, Astro.site).toStri
 
 // 1. Structured Data: Breadcrumbs
 const breadcrumbSchema = JSON.parse(generateBreadcrumbSchema([
-  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
-  { name: "Asset Library", url: "https://discord-creator-asset-studio.pages.dev/assets/" },
+  { name: "Studio", url: `/` },
+  { name: "Asset Library", url: `/assets/` },
   { name: categoryInfo.shortName, url: canonicalUrl }
 ]));
 
@@ -54,7 +55,7 @@ const collectionPageSchema = {
   "isPartOf": {
     "@type": "WebSite",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/"
+    "url": `/`
   },
   "about": [
     { "@type": "Thing", "name": `${categoryInfo.name} Discord Banners` },

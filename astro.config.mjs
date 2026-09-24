@@ -32,11 +32,13 @@ function pathnameToSourceFile(pathname) {
 
 // https://astro.build/config
 export default defineConfig({
-  // Canonical production origin. Set SITE_URL in the deploy environment (Cloudflare Pages
-  // project env vars) to the domain that should rank; falls back to the pages.dev host so
-  // unconfigured/dev builds stay valid. This single value drives canonical, hreflang,
-  // og:url and the sitemap host — and must match SITE_ORIGIN in src/utils/seo.ts.
-  site: (process.env.SITE_URL || 'https://discord-creator-asset-studio.pages.dev').replace(/\/$/, ''),
+  // Canonical production origin. The ranking domain is serverbannermaker.com; SITE_URL in
+  // the deploy environment (Cloudflare Pages project env vars) overrides it if ever needed.
+  // Because this is now the default, every build — including the one served on the pages.dev
+  // preview host — emits serverbannermaker.com as canonical, which is the cross-domain dedup
+  // signal. This single value drives canonical, hreflang, og:url and the sitemap host — and
+  // must match SITE_ORIGIN in src/utils/seo.ts.
+  site: (process.env.SITE_URL || 'https://serverbannermaker.com').replace(/\/$/, ''),
   trailingSlash: 'always',
   vite: {
     plugins: [tailwindcss()]

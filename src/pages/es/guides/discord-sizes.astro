@@ -1,7 +1,7 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import SketchUnderline from '../../../components/SketchUnderline.astro';
-import { generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+import { generateBreadcrumbSchema, generateFaqSchema, SITE_ORIGIN } from '../../../utils/seo';
 
 const pageTitle = "Tamaños de Discord (2026): Guía Oficial de Dimensiones";
 const pageDescription = "Guía completa y verificada de tamaños para Discord 2026. Dimensiones en píxeles, límites de peso y requisitos de Nitro y Boosts.";
@@ -11,30 +11,30 @@ const techArticleSchema = {
   "@type": "TechArticle",
   "headline": pageTitle,
   "description": pageDescription,
-  "image": "https://discord-creator-asset-studio.pages.dev/og-image.png",
+  "image": `${SITE_ORIGIN}/og-image.png`,
   "inLanguage": "es",
-  "url": "https://discord-creator-asset-studio.pages.dev/es/guides/discord-sizes/",
+  "url": `${SITE_ORIGIN}/es/guides/discord-sizes/`,
   "datePublished": "2026-01-01T00:00:00+00:00",
   "dateModified": "2026-03-01T00:00:00+00:00",
   "author": {
     "@type": "Organization",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/"
+    "url": `${SITE_ORIGIN}/`
   },
   "publisher": {
     "@type": "Organization",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/",
+    "url": `${SITE_ORIGIN}/`,
     "logo": {
       "@type": "ImageObject",
-      "url": "https://discord-creator-asset-studio.pages.dev/favicon.svg"
+      "url": `${SITE_ORIGIN}/favicon.svg`
     }
   }
 };
 
 const breadcrumbJson = generateBreadcrumbSchema([
-  { name: "Inicio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
-  { name: "Guía de Tamaños", url: "https://discord-creator-asset-studio.pages.dev/es/guides/discord-sizes/" }
+  { name: "Inicio", url: `${SITE_ORIGIN}/es/` },
+  { name: "Guía de Tamaños", url: `${SITE_ORIGIN}/es/guides/discord-sizes/` }
 ]);
 
 const faqItems = [

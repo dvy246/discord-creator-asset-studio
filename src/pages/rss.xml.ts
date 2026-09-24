@@ -2,8 +2,8 @@ import type { APIRoute } from 'astro';
 import { BLOG_POSTS } from '../data/blog-posts';
 
 // Canonical origin — env-driven so the feed host tracks SITE_URL (matches astro.config
-// `site` and SITE_ORIGIN in src/utils/seo.ts). Falls back to the pages.dev host.
-const SITE = (process.env.SITE_URL || 'https://discord-creator-asset-studio.pages.dev').replace(/\/$/, '');
+// `site` and SITE_ORIGIN in src/utils/seo.ts). Defaults to the ranking domain.
+const SITE = (process.env.SITE_URL || 'https://serverbannermaker.com').replace(/\/$/, '');
 
 function escapeXml(unsafe: string): string {
   return unsafe

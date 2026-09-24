@@ -9,14 +9,15 @@ import {
   getCategoryCounts, 
   type AssetCategory 
 } from '../../data/assets';
-import { 
-  generateBreadcrumbSchema, 
-  generateSoftwareApplicationSchema 
+import {
+  generateBreadcrumbSchema,
+  generateSoftwareApplicationSchema,
+  SITE_ORIGIN
 } from '../../utils/seo';
 
 const pageTitle = "Discord Asset Library — 270+ Free Banners & PFPs";
 const pageDescription = "Browse 270+ free Discord banners, animated profile loops, and matching avatar sets across Anime, Gaming, Cyberpunk, and Dark aesthetics with safe zones.";
-const canonicalUrl = "https://discord-creator-asset-studio.pages.dev/assets/";
+const canonicalUrl = `${SITE_ORIGIN}/assets/`;
 
 const presets = getAllPresets();
 const categoryCounts = getCategoryCounts();
@@ -24,7 +25,7 @@ const totalPresetsCount = presets.length;
 
 // Structured Data Schemas
 const breadcrumbSchema = JSON.parse(generateBreadcrumbSchema([
-  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Studio", url: `/` },
   { name: "Asset Library", url: canonicalUrl }
 ]));
 
@@ -39,7 +40,7 @@ const collectionPageSchema = {
   "isPartOf": {
     "@type": "WebSite",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/"
+    "url": `/`
   },
   "about": [
     { "@type": "Thing", "name": "Discord Banners" },

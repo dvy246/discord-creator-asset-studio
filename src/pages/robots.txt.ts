@@ -5,7 +5,7 @@ import type { APIRoute } from 'astro';
 // preserved verbatim from the former static public/robots.txt: retrieval/answer engines
 // welcomed, training-only crawlers opted out.
 export const GET: APIRoute = ({ site }) => {
-  const origin = (site ? new URL(site).origin : 'https://discord-creator-asset-studio.pages.dev');
+  const origin = (site ? new URL(site).origin : 'https://serverbannermaker.com');
   const body = `User-agent: *
 Allow: /
 

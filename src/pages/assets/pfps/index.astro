@@ -7,9 +7,10 @@ import {
   ASSET_CATEGORIES,
   type DiscordAssetPreset 
 } from '../../../data/assets';
-import { 
-  generateBreadcrumbSchema, 
-  generateSoftwareApplicationSchema 
+import {
+  generateBreadcrumbSchema,
+  generateSoftwareApplicationSchema,
+  SITE_ORIGIN
 } from '../../../utils/seo';
 
 const pageTitle = "Discord PFP Gallery — 60+ Anime & Aesthetic Avatars";
@@ -24,8 +25,8 @@ const pfpPresets: DiscordAssetPreset[] = allPresets.filter(p => (p as any).isPfp
 
 // Structured Data Schemas
 const breadcrumbSchema = JSON.parse(generateBreadcrumbSchema([
-  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
-  { name: "Asset Library", url: "https://discord-creator-asset-studio.pages.dev/assets/" },
+  { name: "Studio", url: `/` },
+  { name: "Asset Library", url: `/assets/` },
   { name: "Discord PFPs", url: canonicalUrl }
 ]));
 
@@ -40,7 +41,7 @@ const collectionPageSchema = {
   "isPartOf": {
     "@type": "WebSite",
     "name": "Discord Creator Asset Studio",
-    "url": "https://discord-creator-asset-studio.pages.dev/"
+    "url": `/`
   },
   "about": [
     { "@type": "Thing", "name": "Discord Profile Pictures" },

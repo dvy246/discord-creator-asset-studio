@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(__dirname, '../dist');
-const TARGET_ORIGIN = 'https://discord-creator-asset-studio.pages.dev';
+const TARGET_ORIGIN = (process.env.SITE_URL || 'https://serverbannermaker.com').replace(/\/$/, '');
 
 test('E2E SEO: All generated HTML pages have valid titles, meta descriptions, and canonicals', () => {
   const htmlFiles = [
@@ -189,7 +189,7 @@ test('E2E SEO: Open Graph social images exist and are referenced in meta tags', 
   assert.ok(fs.existsSync(ogPng), 'dist/og-image.png must exist');
 
   const indexHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
-  assert.ok(indexHtml.includes('property="og:image" content="https://discord-creator-asset-studio.pages.dev/og-image.png"'), 'OG image tag must reference live URL');
+  assert.ok(indexHtml.includes(`property="og:image" content="${TARGET_ORIGIN}/og-image.png"`), 'OG image tag must reference live URL');
   assert.ok(indexHtml.includes('property="og:image:width" content="1200"'), 'OG image must declare width 1200');
   assert.ok(indexHtml.includes('property="og:image:height" content="630"'), 'OG image must declare height 630');
 });
