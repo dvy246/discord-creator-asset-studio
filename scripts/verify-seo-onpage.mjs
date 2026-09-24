@@ -139,6 +139,11 @@ const indexablePages = [
     primaryKeyword: 'discord bio template',
   },
   {
+    path: 'tools/text-formatting/index.html',
+    url: '/tools/text-formatting/',
+    primaryKeyword: 'discord text formatting',
+  },
+  {
     path: 'guides/discord-sizes/index.html',
     url: '/guides/discord-sizes/',
     primaryKeyword: 'discord banner size',
@@ -292,6 +297,11 @@ const indexablePages = [
     path: 'es/tools/bio-generator/index.html',
     url: '/es/tools/bio-generator/',
     primaryKeyword: 'generador de bio para discord',
+  },
+  {
+    path: 'es/tools/text-formatting/index.html',
+    url: '/es/tools/text-formatting/',
+    primaryKeyword: 'formato de texto',
   },
   // Asset library pages — gated for title/description length, unique title/desc,
   // single H1, canonical, alt text, and valid JSON-LD (no single-keyword coupling).

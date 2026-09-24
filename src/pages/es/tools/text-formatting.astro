@@ -1,0 +1,122 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import TextFormattingWorkspace from '../../../components/tools/TextFormattingWorkspace.astro';
+import ToolDossier from '../../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../../utils/seo';
+
+const pageTitle = "Formato de Texto en Discord | Negrita, Spoiler y Más";
+const pageDescription = "Generador de formato de texto para Discord gratis: escribe una vez y copia negrita, cursiva, tachado, spoiler, títulos y subtexto para el chat.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/es/tools/text-formatting/";
+const enUrl = "https://discord-creator-asset-studio.pages.dev/tools/text-formatting/";
+
+const appSchema = generateSoftwareApplicationSchema("Generador de Formato de Texto para Discord", pageDescription, pageUrl);
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/es/" },
+  { name: "Formato de Texto", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "¿Cómo pongo texto en negrita en Discord?", a: "Rodea las palabras con dos asteriscos a cada lado: **así**. Discord muestra en negrita todo lo que quede entre los pares. En este generador escribes tu texto una vez y la tarjeta de Negrita te muestra el **texto** exacto para copiar — pulsa Copiar y pégalo en cualquier mensaje. La negrita de markdown solo funciona dentro de los mensajes, no en el nombre de usuario ni en el Sobre mí; para un nombre en negrita usa el truco Unicode del Generador de Fuentes." },
+  { q: "¿Cómo tacho texto en Discord?", a: "Pon dos virgulillas a cada lado del texto: ~~así~~. Discord traza una línea sobre todo el fragmento, útil para correcciones o elementos tachados de una lista. La tarjeta de Tachado de aquí construye el ~~texto~~ a partir de lo que escribas, así lo copias sin recordar la sintaxis. Como todo el markdown de Discord, el tachado se ve dentro de los mensajes, no en los nombres de usuario." },
+  { q: "¿Cómo hago el texto más pequeño en Discord?", a: "Empieza la línea con -# seguido de un espacio y luego tu texto: -# nota pequeña. Discord lo muestra como subtexto pequeño y atenuado — el tamaño de texto más pequeño integrado, ideal para pies, notas o avisos bajo un mensaje. La tarjeta de Subtexto lo genera automáticamente. No hay forma de encoger el nombre de usuario o el Sobre mí de este modo; el subtexto es un estilo solo para mensajes." },
+  { q: "¿Cómo hago el texto más grande en Discord?", a: "Discord no tiene tamaño de fuente libre, pero los títulos agrandan el texto. Empieza una línea con # para el título más grande, ## para mediano o ### para pequeño — # es el texto más grande que ofrece Discord. Las tarjetas de título Grande / Mediano / Pequeño generan cada uno a partir de tu texto. Los títulos solo se renderizan dentro de los mensajes, así que no pueden agrandar un nombre de usuario ni un apodo." },
+  { q: "¿Cómo oculto o censuro texto con spoiler en Discord?", a: "Rodea el texto con barras verticales dobles: ||texto oculto||. Discord lo tapa tras una caja gris que quien lee debe pulsar o tocar para revelar, así que sirve para ocultar spoilers o censurar una palabra. La tarjeta de Spoiler construye el ||texto|| por ti, y la vista previa de aquí aparece tapada y se descubre al hacer clic, igual que en la app real. Los spoilers se ven dentro de los mensajes en escritorio, navegador y móvil." },
+  { q: "¿Funcionan estos formatos en el nombre de usuario de Discord?", a: "No. Cada estilo que construye esta herramienta — negrita, cursiva, títulos, subtexto, citas, spoilers, código — es markdown de Discord, y el markdown solo se renderiza dentro de los mensajes, no en los nombres de usuario, los nombres para mostrar ni el Sobre mí. Para dar estilo a un nombre necesitas caracteres Unicode parecidos, que produce nuestro Generador de Fuentes. Usa esta herramienta para los mensajes del chat y el Generador de Fuentes para nombres y biografías." }
+];
+const dossier = {
+  eyebrow: "Plano del Formato de Texto",
+  heading: "De texto plano a",
+  highlight: "mensajes de Discord con formato",
+  intro: "Los mensajes de Discord admiten una variante ligera de markdown para dar estilo al texto. Esta herramienta le da la vuelta al editor de siempre: escribe tu texto una vez y cada estilo de formato aparece como una tarjeta que puedes copiar, con vista previa en vivo. Aquí está el modelo completo — los estilos en línea, los estilos de bloque y dónde se ve cada uno.",
+  steps: [
+    "Cómo Funciona el Formato",
+    "Estilos en Línea",
+    "Títulos, Subtexto y Bloques",
+    "Dónde Funciona y Copiar"
+  ],
+  cards: [
+    {
+      kicker: "CÓMO FUNCIONA // 01",
+      badge: "MARKDOWN, NO UNA FUENTE",
+      badgeTone: "emerald" as const,
+      title: "El formato de Discord es markdown que escribes en línea",
+      body: [
+        "Discord toma una pequeña parte de markdown para sus mensajes. Rodeas el texto con unos pocos símbolos y se muestra con estilo — sin barra de herramientas y sin HTML. El conjunto básico cubre negrita, cursiva, subrayado, tachado, código en línea, spoilers, citas de bloque, bloques de código de varias líneas, títulos, listas con viñetas y numeradas, y subtexto pequeño. Como son caracteres que escribes en línea, los mismos atajos funcionan igual en la app de escritorio, el navegador y el móvil, así que lo que creas aquí sirve en todas partes.",
+        "Este generador es de salida primero. En vez de un solo editor en vivo, escribes tu texto una vez arriba y cada estilo se renderiza a la vez como su propia tarjeta — la vista previa con estilo sobre un fondo oscuro de Discord, más el markdown en crudo para copiar. Eso lo hace una forma rápida de coger la sintaxis exacta de un estilo que usas poco, o de comparar negrita, spoiler y título lado a lado antes de pegar en un canal. Todo funciona en tu navegador; no se sube nada y no se publica ningún mensaje por ti."
+      ]
+    },
+    {
+      kicker: "ESTILOS EN LÍNEA // 02",
+      badge: "NEGRITA / CURSIVA / SPOILER",
+      badgeTone: "blue" as const,
+      title: "Negrita, cursiva, subrayado, tachado, código, spoiler",
+      body: [
+        "Los estilos en línea envuelven un fragmento por ambos lados con el mismo marcador. Dos asteriscos ponen el texto en **negrita**, un asterisco o un guion bajo lo pasan a *cursiva*, dos guiones bajos añaden un __subrayado__ exclusivo de Discord, dos virgulillas ~~tachan~~ el texto, y una comilla invertida crea `código en línea` que ignora cualquier otro formato dentro. Dos barras verticales crean un ||spoiler|| que oculta el texto tras una caja que se pulsa — la forma de ocultar o censurar ligeramente una palabra.",
+        "Puedes anidar los marcadores para combinar efectos. Tres asteriscos dan ***negrita y cursiva*** a la vez, y puedes superponer un subrayado sobre la negrita envolviendo todo con dos guiones bajos más. El orden de los marcadores no importa mientras cada marcador de apertura tenga uno de cierre alrededor del mismo texto. Como el código en línea desactiva cualquier otro estilo dentro, un par de comillas invertidas es también lo más rápido para mostrar asteriscos o barras literales en un tramo corto."
+      ]
+    },
+    {
+      kicker: "TÍTULOS Y BLOQUES // 03",
+      badge: "TEXTO MÁS GRANDE / PEQUEÑO",
+      badgeTone: "amber" as const,
+      title: "Haz el texto más grande, más pequeño o en bloques",
+      body: [
+        "Discord no tiene tamaño de fuente libre, así que los títulos son cómo agrandas el texto. Empieza una línea con # para un título grande, ## para mediano o ### para pequeño — # es el texto más grande que ofrece Discord, y el espacio tras las almohadillas es obligatorio. Para lo contrario y hacer el texto más pequeño, empieza una línea con -# para subtexto atenuado, el tamaño más pequeño integrado, ideal para pies y notas. Esta es la respuesta a las preguntas habituales de texto 'más grande' y 'más pequeño': son estilos de mensaje, no un ajuste de fuente.",
+        "Los estilos de bloque manejan la estructura. Un signo de mayor que y un espacio, > así, inicia una cita de bloque; tres de ellos, >>>, citan cada línea hasta que termina el mensaje. Tres comillas invertidas en su propia línea abren un bloque de código que conserva tus saltos de línea y sangría con exactitud — añade un nombre de lenguaje tras la apertura para resaltar la sintaxis. Un guion o asterisco más un espacio inicia una lista con viñetas. Todos ellos se renderizan en vivo en las tarjetas de arriba para que veas el resultado antes de copiar."
+      ],
+      footer: "Los títulos (#, ##, ###) son la única forma de agrandar el texto; el subtexto (-#) la única de encogerlo — ambos solo en mensajes."
+    },
+    {
+      kicker: "DÓNDE FUNCIONA // 04",
+      badge: "SOLO MENSAJES / SIN NITRO",
+      badgeTone: "purple" as const,
+      title: "Solo mensajes, copiar y pegar, y sin Nitro",
+      body: [
+        "Cada estilo de aquí es markdown de Discord, y el markdown se renderiza solo dentro de los mensajes — el cuerpo de un mensaje de chat, un hilo o un mensaje directo. No funciona en tu nombre de usuario, nombre para mostrar, apodo de servidor ni en el Sobre mí de tu perfil, porque esos campos no ejecutan el formateador de mensajes. Si quieres un nombre en negrita o con estilo, necesitas caracteres Unicode parecidos, que produce nuestro Generador de Fuentes; esta herramienta y esa son las dos mitades de dar estilo al texto de Discord.",
+        "Nada de esto requiere Nitro, un bot ni un permiso especial — es texto plano que copias y pegas, así que funciona igual en escritorio, navegador y móvil. Escribe tu texto una vez arriba, pulsa Copiar en el estilo que quieras (o Copiar todos los estilos para cogerlos todos) y pégalo directamente en un canal. Para un solo editor en vivo donde redactas un mensaje entero con formato mixto, usa la Vista Previa de Markdown; para texto de colores, el Generador de Texto de Colores ANSI."
+      ],
+      footer: "El formato es solo para mensajes y no necesita Nitro — para nombres con estilo usa el Generador de Fuentes."
+    }
+  ]
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} lang="es" ogImage="https://discord-creator-asset-studio.pages.dev/og/text-formatting.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems, 'es')} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+    <div class="mb-8">
+      <nav class="flex items-center justify-between gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono" aria-label="Miga de pan">
+        <div class="flex items-center gap-2">
+          <a href="/es/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+          <span>/</span>
+          <span class="text-[#192538] dark:text-white font-semibold">Formato de Texto</span>
+        </div>
+        <a href={enUrl} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold">🌐 English</a>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] dark:text-white tracking-tight">
+            Generador de <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Formato de Texto</mark>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-gray-400 mt-1">Escribe una vez, copia cualquier estilo • Negrita, spoiler, títulos y código • Funciona en el chat</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-black/40 px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-white/10 text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs backdrop-blur-md">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Procesado en el navegador
+        </div>
+      </div>
+    </div>
+
+    <!-- Herramienta interactiva completa (mismo componente que la versión en inglés) -->
+    <TextFormattingWorkspace lang="es" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} heading="Preguntas Frecuentes" />
+  </div>
+</Layout>
+

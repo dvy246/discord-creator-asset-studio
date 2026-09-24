@@ -71,6 +71,7 @@ const ES_NAV_ROUTES = new Set([
   '/tools/permissions-calculator/',
   '/tools/username-generator/',
   '/tools/bio-generator/',
+  '/tools/text-formatting/',
   '/guides/discord-sizes/',
 ]);
 const L = (path: string) => (lang === 'es' && ES_NAV_ROUTES.has(path) ? `/es${path}` : path);
@@ -210,6 +211,10 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
                   <a href={L("/tools/bio-generator/")} class={MENU_ITEM}>
                     <span class="text-sm">📝</span>
                     <div><div class="font-bold">Bio Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Templates & copy-paste ideas</div></div>
+                  </a>
+                  <a href={L("/tools/text-formatting/")} class={MENU_ITEM}>
+                    <span class="text-sm">🔠</span>
+                    <div><div class="font-bold">Text Formatting Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Bold, spoiler, headers & code</div></div>
                   </a>
                   <a href={L("/tools/colors/")} class={MENU_ITEM}>
                     <span class="text-sm">🎨</span>
@@ -435,6 +440,9 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
             </a>
             <a href={L("/tools/bio-generator/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>📝</span> Bio Generator
+            </a>
+            <a href={L("/tools/text-formatting/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
+              <span>🔠</span> Text Formatting
             </a>
             <a href={L("/tools/avatar/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
               <span>👤</span> Avatar Studio
@@ -745,6 +753,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
               <li><a href={L("/tools/permissions-calculator/")} class="hover:text-[#3368A0] transition-colors">Permission Calculator (Roles & Bots)</a></li>
               <li><a href={L("/tools/username-generator/")} class="hover:text-[#3368A0] transition-colors">Username Generator (Ideas)</a></li>
               <li><a href={L("/tools/bio-generator/")} class="hover:text-[#3368A0] transition-colors">Bio Generator (Templates)</a></li>
+              <li><a href={L("/tools/text-formatting/")} class="hover:text-[#3368A0] transition-colors">Text Formatting (Bold, Spoiler)</a></li>
             </ul>
           </div>
 

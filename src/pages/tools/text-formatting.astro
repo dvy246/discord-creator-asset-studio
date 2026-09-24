@@ -1,0 +1,124 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SketchUnderline from '../../components/SketchUnderline.astro';
+import TextFormattingWorkspace from '../../components/tools/TextFormattingWorkspace.astro';
+import ToolDossier from '../../components/tools/ToolDossier.astro';
+import ToolFaq from '../../components/tools/ToolFaq.astro';
+import { generateSoftwareApplicationSchema, generateBreadcrumbSchema, generateFaqSchema } from '../../utils/seo';
+
+const pageTitle = "Discord Text Formatting Generator | Bold, Spoiler & More";
+const pageDescription = "Free Discord text formatting generator — type once and copy bold, italic, underline, strikethrough, spoiler, headers, subtext and code for chat.";
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/tools/text-formatting/";
+
+const appSchema = generateSoftwareApplicationSchema(
+  "Discord Text Formatting Generator",
+  pageDescription,
+  pageUrl
+);
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Text Formatting Generator", url: pageUrl }
+]);
+
+const faqItems = [
+  { q: "How do I make bold text in Discord?", a: "Wrap the words in two asterisks on each side: **like this**. Discord renders everything between the pairs in bold. In this generator, type your text once and the Bold card shows the exact **text** to copy — tap Copy and paste it into any message. Bold markdown only works inside messages, not in your username or About Me; for a bold name you need the Unicode trick from the Font Generator instead." },
+  { q: "How do I cross out (strikethrough) text in Discord?", a: "Put two tildes on each side of the text: ~~like this~~. Discord draws a line through the whole run, which is handy for corrections or crossed-off list items. The Strikethrough card here builds the ~~text~~ for you from whatever you type, so you can copy it without remembering the syntax. Like all Discord markdown, strikethrough renders inside messages, not in usernames." },
+  { q: "How do I make text smaller in Discord?", a: "Start the line with -# followed by a space, then your text: -# small note. Discord shows it as small, muted subtext — the smallest built-in text size, useful for footnotes, captions, or disclaimers under a message. The Subtext card builds it automatically. There is no way to shrink your username or About Me text this way; subtext is a message-only style." },
+  { q: "How do I make text bigger in Discord?", a: "Discord has no free-form font size, but headers make text larger. Start a line with # and a space for the biggest header, ## for medium, or ### for small — # is the largest text Discord offers. The Big / Medium / Small header cards here generate each one from your text. Headers only render inside messages, so they cannot enlarge a username or nickname." },
+  { q: "How do I hide or censor text with a spoiler in Discord?", a: "Wrap the text in double vertical bars: ||hidden text||. Discord blurs it behind a grey box that readers must click or tap to reveal, so it works to hide spoilers or lightly censor a word. The Spoiler card builds the ||text|| for you, and the preview here blurs on load and reveals on click, exactly like the real app. Spoilers render inside messages and work on desktop, web, and mobile." },
+  { q: "Do these formatting styles work in a Discord username?", a: "No. Every style this tool builds — bold, italic, headers, subtext, quotes, spoilers, code — is Discord markdown, and markdown only renders inside messages, not in usernames, display names, or the About Me field. To style a name you need look-alike Unicode characters, which our Font Generator produces. Use this tool for chat messages, and the Font Generator for names and bios." }
+];
+const dossier = {
+  eyebrow: "Text Formatting Blueprint",
+  heading: "From plain text to",
+  highlight: "formatted Discord messages",
+  intro: "Discord messages support a light flavour of markdown for styling text. This tool flips the usual editor around: type your text once and every formatting style appears as a copyable card with a live preview. Here is the full model — the inline styles, the block styles, and where each one actually shows up.",
+  steps: [
+    "How Formatting Works",
+    "Inline Styles",
+    "Headers, Subtext & Blocks",
+    "Where It Works & Copy"
+  ],
+  cards: [
+    {
+      kicker: "HOW IT WORKS // 01",
+      badge: "MARKDOWN, NOT A FONT",
+      badgeTone: "emerald" as const,
+      title: "Discord formatting is markdown you type inline",
+      body: [
+        "Discord borrows a small slice of markdown for its messages. You surround text with a few symbols and it renders styled — no toolbar required and no HTML. The core set covers bold, italic, underline, strikethrough, inline code, spoilers, block quotes, multi-line code blocks, headers, bulleted and numbered lists, and small subtext. Because these are just characters you type inline, the same shortcuts behave identically on the desktop app, the browser client, and mobile, so what you build here works everywhere.",
+        "This generator is output-first. Instead of one live editor, you type your text once at the top and every style renders at once as its own card — the styled preview on a Discord-dark background, plus the raw markdown to copy. That makes it a fast way to grab the exact syntax for a style you use rarely, or to compare bold, spoiler, and header side by side before you paste into a channel. Everything runs in your browser; nothing is uploaded and no message is posted for you."
+      ]
+    },
+    {
+      kicker: "INLINE STYLES // 02",
+      badge: "BOLD / ITALIC / SPOILER",
+      badgeTone: "blue" as const,
+      title: "Bold, italic, underline, strikethrough, code, spoiler",
+      body: [
+        "Inline styles wrap a snippet of text on both sides with the same marker. Two asterisks make text **bold**, one asterisk or one underscore makes it *italic*, two underscores add an __underline__ that is unique to Discord, two tildes ~~cross out~~ the text, and a single backtick makes `inline code` that ignores any other formatting inside. Double vertical bars create a ||spoiler|| that hides text behind a click-to-reveal box — the way to hide or lightly censor a word.",
+        "You can nest markers to combine effects. Three asterisks give ***bold italic*** at once, and you can layer an underline over bold by wrapping the whole thing in two more underscores. The order of markers does not matter as long as each opening marker has a matching closing marker around the same text. Because inline code disables every other style inside it, a pair of backticks is also the quickest way to show raw asterisks or bars literally in a short span."
+      ]
+    },
+    {
+      kicker: "HEADERS & BLOCKS // 03",
+      badge: "BIGGER / SMALLER TEXT",
+      badgeTone: "amber" as const,
+      title: "Make text bigger, smaller, or into blocks",
+      body: [
+        "Discord has no free-form font size, so headers are how you make text bigger. Start a line with # for a big header, ## for medium, or ### for small — # is the largest text Discord offers, and the space after the hashes is required. To go the other way and make text smaller, start a line with -# for muted subtext, the smallest built-in size, ideal for footnotes and captions. These are the answer to the common 'bigger' and 'smaller' text questions: they are message styles, not a font setting.",
+        "Block styles handle structure. A greater-than sign and a space, > like this, starts a block quote; three of them, >>>, quote every line until the message ends. Three backticks on their own line open a code block that preserves your line breaks and spacing exactly — add a language name after the opening fence for syntax highlighting. A dash or asterisk plus a space starts a bulleted list. Every one of these renders live in the cards above so you can see the result before you copy."
+      ],
+      footer: "Headers (#, ##, ###) are the only way to enlarge text; subtext (-#) is the only way to shrink it — both are message-only."
+    },
+    {
+      kicker: "WHERE IT WORKS // 04",
+      badge: "MESSAGES ONLY / NO NITRO",
+      badgeTone: "purple" as const,
+      title: "Messages only, copy-paste, and no Nitro",
+      body: [
+        "Every style here is Discord markdown, and markdown renders only inside messages — the body of a chat message, a thread, or a direct message. It does not work in your username, display name, server nickname, or the About Me on your profile, because those fields do not run the message formatter. If you want a bold or fancy name, you need look-alike Unicode characters instead, which our Font Generator produces; this tool and that one are the two halves of styling Discord text.",
+        "None of this requires Nitro, a bot, or any special permission — it is plain text you copy and paste, so it works the same on desktop, web, and mobile. Type your text once above, tap Copy on the style you want (or Copy all styles to grab the lot), and paste it straight into a channel. For a single live editor where you draft a whole message with mixed formatting, use the Markdown Live Preview; for coloured text, the ANSI Colored Text Generator."
+      ],
+      footer: "Formatting is message-only and needs no Nitro — for styled names use the Font Generator instead."
+    }
+  ]
+};
+---
+<Layout title={pageTitle} description={pageDescription} ogImage="https://discord-creator-asset-studio.pages.dev/og/text-formatting.png">
+  <script type="application/ld+json" set:html={appSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={generateFaqSchema(faqItems)} />
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <div class="mb-8">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs text-[#6B7A90] dark:text-[#8494A7] mb-2 font-mono">
+        <a href="/" class="hover:text-[#3368A0] transition-colors">Studio</a>
+        <span>/</span>
+        <span class="text-[#192538] dark:text-white font-semibold">Text Formatting Generator</span>
+      </nav>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-[#192538] tracking-tight">
+            <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">Discord Text</mark> <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Formatting</span><SketchUnderline color="#66A3BF" /></span>
+          </h1>
+          <p class="text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8] mt-1">Type once, copy any style • Bold, spoiler, headers, subtext &amp; code • Works in chat</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs bg-[#FFFFFF] dark:bg-[#161F2E] px-3.5 py-1.5 rounded-[8px] border border-[#C8DFDB] dark:border-[#263346] text-[#3368A0] dark:text-[#66A3BF] font-medium shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
+          Local Browser Processing
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Layout (shared component, EN + ES) -->
+    <TextFormattingWorkspace lang="en" />
+
+    <ToolDossier {...dossier} />
+
+    <ToolFaq items={faqItems} />
+
+  </div>
+</Layout>
+

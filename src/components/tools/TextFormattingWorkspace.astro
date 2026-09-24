@@ -1,0 +1,287 @@
+---
+/**
+ * TextFormattingWorkspace.astro — Discord text formatting generator (output-first).
+ *
+ * One input at the top → a grid of native-markdown "effect" cards. Each card
+ * shows a live Discord-styled preview of that effect, the raw markdown to copy,
+ * and a one-click Copy button. Unlike the markdown previewer (a single live
+ * editor) this is effect-first: type once, get every formatting applied side by
+ * side. Native Discord markdown ONLY — no Unicode glyphs (that is the fonts
+ * tool). 100% client-side, no deps, no network. Language-agnostic logic on
+ * fixed IDs; visible labels via `t`, runtime strings via data-*.
+ * Imported by the EN (/tools/text-formatting/) and ES (/es/tools/text-formatting/) pages.
+ */
+interface Props {
+  lang?: 'en' | 'es';
+}
+const { lang = 'en' } = Astro.props;
+
+const t = {
+  en: {
+    inputLabel: 'Your text',
+    inputHint: 'Type once — every Discord formatting style updates below. Tap Copy on the one you want.',
+    copyAll: 'Copy all styles',
+    clearBtn: 'Clear',
+    starter: 'your text here',
+    headerNote: 'Headers, subtext, quotes and lists only render inside messages — not in usernames. For styled names, use the Font Generator.',
+    labels: {
+      bold: 'Bold', italic: 'Italic', bolditalic: 'Bold Italic', underline: 'Underline',
+      strike: 'Strikethrough', underlinebold: 'Underline + Bold', spoiler: 'Spoiler (hide/censor)',
+      code: 'Inline code', h1: 'Big header', h2: 'Medium header', h3: 'Small header',
+      subtext: 'Subtext (small text)', quote: 'Quote', codeblock: 'Code block', bullet: 'Bulleted list'
+    },
+    links: [
+      { icon: '🔤', href: '/tools/fonts/', label: 'Fancy Font Generator (for names)' },
+      { icon: '📝', href: '/tools/markdown/', label: 'Markdown Live Preview' },
+      { icon: '🌈', href: '/tools/colored-text/', label: 'Colored Text Generator (ANSI)' }
+    ]
+  },
+  es: {
+    inputLabel: 'Tu texto',
+    inputHint: 'Escribe una vez — cada estilo de formato de Discord se actualiza abajo. Pulsa Copiar en el que quieras.',
+    copyAll: 'Copiar todos los estilos',
+    clearBtn: 'Borrar',
+    starter: 'tu texto aquí',
+    headerNote: 'Los títulos, el subtexto, las citas y las listas solo se ven dentro de los mensajes — no en los nombres de usuario. Para nombres con estilo, usa el Generador de Fuentes.',
+    labels: {
+      bold: 'Negrita', italic: 'Cursiva', bolditalic: 'Negrita Cursiva', underline: 'Subrayado',
+      strike: 'Tachado', underlinebold: 'Subrayado + Negrita', spoiler: 'Spoiler (ocultar/censurar)',
+      code: 'Código en línea', h1: 'Título grande', h2: 'Título mediano', h3: 'Título pequeño',
+      subtext: 'Subtexto (texto pequeño)', quote: 'Cita', codeblock: 'Bloque de código', bullet: 'Lista con viñetas'
+    },
+    links: [
+      { icon: '🔤', href: '/es/tools/fonts/', label: 'Generador de Fuentes (para nombres)' },
+      { icon: '📝', href: '/es/tools/markdown/', label: 'Vista Previa de Markdown' },
+      { icon: '🌈', href: '/es/tools/colored-text/', label: 'Texto de Colores (ANSI)' }
+    ]
+  }
+}[lang];
+
+// Effect order for the grid. Each id maps to a live builder in the client script.
+const EFFECTS = [
+  { id: 'bold', badge: '**' },
+  { id: 'italic', badge: '*' },
+  { id: 'bolditalic', badge: '***' },
+  { id: 'underline', badge: '__' },
+  { id: 'strike', badge: '~~' },
+  { id: 'underlinebold', badge: '__**' },
+  { id: 'spoiler', badge: '||' },
+  { id: 'code', badge: '`' },
+  { id: 'h1', badge: '#' },
+  { id: 'h2', badge: '##' },
+  { id: 'h3', badge: '###' },
+  { id: 'subtext', badge: '-#' },
+  { id: 'quote', badge: '>' },
+  { id: 'codeblock', badge: '```' },
+  { id: 'bullet', badge: '-' }
+] as const;
+
+const js = {
+  en: { copy: 'Copy', copied: 'Copied!', copyAll: 'Copy all styles', copiedAll: 'All copied!' },
+  es: { copy: 'Copiar', copied: '¡Copiado!', copyAll: 'Copiar todos los estilos', copiedAll: '¡Todo copiado!' }
+}[lang];
+---
+<div
+  id="tf-workspace"
+  class="space-y-6 mb-16"
+  data-copy={js.copy}
+  data-copied={js.copied}
+  data-copyall={js.copyAll}
+  data-copiedall={js.copiedAll}
+>
+  <!-- Sticky input -->
+  <div class="sticky top-2 z-20">
+    <div class="card-panel rounded-[14px] p-4 sm:p-5 shadow-sm backdrop-blur">
+      <div class="flex items-center justify-between gap-2 mb-2">
+        <label for="tf-input" class="block text-sm font-bold text-[#192538] dark:text-white">{t.inputLabel}</label>
+        <button type="button" id="tf-copyall" class="btn-secondary px-3 py-1.5 rounded-[8px] text-xs font-semibold shrink-0">{t.copyAll}</button>
+      </div>
+      <div class="flex items-stretch gap-2">
+        <input
+          type="text"
+          id="tf-input"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder={t.starter}
+          class="flex-1 min-w-0 text-base rounded-[10px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#1B2330] text-[#192538] dark:text-white px-3.5 py-2.5 focus:border-[#3368A0] focus:outline-none"
+        />
+        <button type="button" id="tf-clear" class="btn-secondary px-4 py-2.5 rounded-[10px] text-xs font-semibold shrink-0">{t.clearBtn}</button>
+      </div>
+      <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] mt-2">{t.inputHint}</p>
+    </div>
+  </div>
+
+  <!-- Effect grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {EFFECTS.map((fx) => (
+      <div class="tf-card card-panel rounded-[12px] p-4 flex flex-col gap-3" data-fx={fx.id}>
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-xs font-bold text-[#192538] dark:text-white">{t.labels[fx.id as keyof typeof t.labels]}</span>
+          <code class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#EDE8DE] dark:bg-[#1B2330] text-[#6B7A90] dark:text-[#8494A7]">{fx.badge}</code>
+        </div>
+        <!-- Discord-styled live preview -->
+        <div class="tf-preview rounded-[8px] bg-[#313338] px-3 py-2.5 min-h-[2.75rem] flex items-center text-[#dbdee1] text-sm break-words overflow-hidden"></div>
+        <div class="flex items-center justify-between gap-2 pt-0.5">
+          <code class="tf-md flex-1 min-w-0 truncate text-[11px] font-mono text-[#6B7A90] dark:text-[#8494A7]"></code>
+          <button type="button" class="tf-copy btn-secondary text-xs px-3 py-1.5 rounded-[6px] shrink-0" data-fx={fx.id}>{js.copy}</button>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <p class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] flex items-start gap-1.5">
+    <span class="shrink-0">ℹ️</span><span>{t.headerNote}</span>
+  </p>
+
+  <div class="flex flex-col sm:flex-row sm:flex-wrap gap-x-6 gap-y-1.5 text-xs font-medium pt-2">
+    {t.links.map((link) => (
+      <a href={link.href} class="text-[#3368A0] dark:text-[#66A3BF] hover:underline flex items-center gap-1">
+        <span>{link.icon}</span> {link.label}
+      </a>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  /* Discord-accurate preview glyphs inside .tf-preview */
+  .tf-preview .tf-h1 { font-size: 1.5rem; font-weight: 700; line-height: 1.25; color: #fff; }
+  .tf-preview .tf-h2 { font-size: 1.25rem; font-weight: 700; line-height: 1.25; color: #fff; }
+  .tf-preview .tf-h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.25; color: #fff; }
+  .tf-preview .tf-subtext { font-size: 0.8rem; color: #949ba4; }
+  .tf-preview strong { font-weight: 700; }
+  .tf-preview em { font-style: italic; }
+  .tf-preview u { text-decoration: underline; }
+  .tf-preview s { text-decoration: line-through; }
+  .tf-preview code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85em; background: #2b2d31; border: 1px solid #1e1f22;
+    border-radius: 4px; padding: 0.05em 0.3em; color: #dbdee1;
+  }
+  .tf-preview .tf-pre {
+    display: block; width: 100%; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.82em; background: #2b2d31; border: 1px solid #1e1f22;
+    border-radius: 4px; padding: 0.4em 0.6em; color: #dbdee1; white-space: pre-wrap;
+  }
+  .tf-preview .tf-quote {
+    display: inline-block; border-left: 4px solid #4e5058; padding-left: 0.6em; color: #dbdee1;
+  }
+  .tf-preview .tf-bullet::before { content: "• "; color: #dbdee1; }
+  .tf-preview .tf-spoiler {
+    background: #202225; color: transparent; border-radius: 4px; padding: 0 0.2em; cursor: pointer;
+    transition: color 0.1s;
+  }
+  .tf-preview .tf-spoiler.revealed { background: #35373c; color: #dbdee1; }
+  .tf-preview .tf-empty { color: #949ba4; font-style: italic; }
+</style>
+
+<script>
+  const ws = document.getElementById('tf-workspace');
+  const L = {
+    copy: ws?.dataset.copy || 'Copy',
+    copied: ws?.dataset.copied || 'Copied!',
+    copyAll: ws?.dataset.copyall || 'Copy all styles',
+    copiedAll: ws?.dataset.copiedall || 'All copied!'
+  };
+
+  const input = document.getElementById('tf-input') as HTMLInputElement;
+  const clearBtn = document.getElementById('tf-clear');
+  const copyAllBtn = document.getElementById('tf-copyall');
+
+  function esc(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // Each effect: md() → raw Discord markdown to copy; html() → styled preview markup.
+  // `r` is the raw input, `e` is the HTML-escaped input.
+  const EFFECTS: Record<string, { md: (r: string) => string; html: (e: string) => string }> = {
+    bold:          { md: (r) => `**${r}**`,             html: (e) => `<strong>${e}</strong>` },
+    italic:        { md: (r) => `*${r}*`,               html: (e) => `<em>${e}</em>` },
+    bolditalic:    { md: (r) => `***${r}***`,           html: (e) => `<strong><em>${e}</em></strong>` },
+    underline:     { md: (r) => `__${r}__`,             html: (e) => `<u>${e}</u>` },
+    strike:        { md: (r) => `~~${r}~~`,             html: (e) => `<s>${e}</s>` },
+    underlinebold: { md: (r) => `__**${r}**__`,         html: (e) => `<u><strong>${e}</strong></u>` },
+    spoiler:       { md: (r) => `||${r}||`,             html: (e) => `<span class="tf-spoiler">${e}</span>` },
+    code:          { md: (r) => '`' + r + '`',          html: (e) => `<code>${e}</code>` },
+    h1:            { md: (r) => `# ${r}`,               html: (e) => `<span class="tf-h1">${e}</span>` },
+    h2:            { md: (r) => `## ${r}`,              html: (e) => `<span class="tf-h2">${e}</span>` },
+    h3:            { md: (r) => `### ${r}`,             html: (e) => `<span class="tf-h3">${e}</span>` },
+    subtext:       { md: (r) => `-# ${r}`,              html: (e) => `<span class="tf-subtext">${e}</span>` },
+    quote:         { md: (r) => `> ${r}`,               html: (e) => `<span class="tf-quote">${e}</span>` },
+    codeblock:     { md: (r) => '```\n' + r + '\n```',  html: (e) => `<span class="tf-pre">${e}</span>` },
+    bullet:        { md: (r) => `- ${r}`,               html: (e) => `<span class="tf-bullet">${e}</span>` }
+  };
+
+  function currentMd(id: string): string {
+    const raw = input.value || input.placeholder;
+    const fn = EFFECTS[id];
+    return fn ? fn.md(raw) : raw;
+  }
+
+  function render() {
+    const raw = input.value || input.placeholder;
+    const e = esc(raw);
+    document.querySelectorAll<HTMLElement>('.tf-card').forEach((card) => {
+      const id = card.dataset.fx || '';
+      const fn = EFFECTS[id];
+      if (!fn) return;
+      const preview = card.querySelector<HTMLElement>('.tf-preview');
+      const mdEl = card.querySelector<HTMLElement>('.tf-md');
+      if (preview) preview.innerHTML = fn.html(e);
+      if (mdEl) mdEl.textContent = fn.md(raw);
+    });
+  }
+
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  }
+
+  function flash(btn: HTMLButtonElement, label: string) {
+    const original = btn.textContent || L.copy;
+    btn.textContent = label;
+    btn.classList.add('!bg-[#0D9488]', '!text-white', '!border-[#0D9488]');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('!bg-[#0D9488]', '!text-white', '!border-[#0D9488]');
+    }, 1400);
+  }
+
+  // Per-card copy. mousedown preventDefault so an active text selection survives.
+  document.querySelectorAll<HTMLButtonElement>('.tf-copy').forEach((btn) => {
+    btn.addEventListener('mousedown', (ev) => ev.preventDefault());
+    btn.addEventListener('click', () => {
+      copyText(currentMd(btn.dataset.fx || ''));
+      flash(btn, L.copied);
+    });
+  });
+
+  // Copy every style at once, one per line, labelled by badge markdown.
+  copyAllBtn?.addEventListener('mousedown', (ev) => ev.preventDefault());
+  copyAllBtn?.addEventListener('click', () => {
+    const all = Object.keys(EFFECTS).map((id) => currentMd(id)).join('\n');
+    copyText(all);
+    flash(copyAllBtn as HTMLButtonElement, L.copiedAll);
+  });
+
+  // Click a spoiler chip in a preview to reveal it, like Discord.
+  document.addEventListener('click', (ev) => {
+    const target = ev.target as HTMLElement;
+    if (target.classList.contains('tf-spoiler')) target.classList.toggle('revealed');
+  });
+
+  input?.addEventListener('input', render);
+  clearBtn?.addEventListener('click', () => { input.value = ''; input.focus(); render(); });
+
+  // Init: seed the input with the localized starter so cards populate on load.
+  if (!input.value) input.value = input.placeholder;
+  render();
+</script>
+

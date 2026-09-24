@@ -554,6 +554,21 @@ const PAGES = [
     }
   },
   {
+    file: 'public/og/text-formatting.png',
+    config: {
+      title: 'DISCORD TEXT', titleLine2: 'FORMATTING GENERATOR',
+      subtitle: 'TYPE ONCE — COPY EVERY MARKDOWN STYLE FOR CHAT',
+      tagline1: 'BOLD • ITALIC • UNDERLINE • STRIKETHROUGH • SPOILER',
+      tagline2: 'HEADERS • SUBTEXT • CODE • QUOTES • LIVE PREVIEW',
+      badge: 'NATIVE DISCORD MARKDOWN • NO NITRO • NO LOGIN',
+      cards: [
+        { label: 'BOLD', desc: '**TEXT**' }, { label: 'SPOILER', desc: '||HIDE||' },
+        { label: 'HEADER', desc: '# BIGGER' }, { label: 'SUBTEXT', desc: '-# SMALLER' },
+        { label: 'COPY', desc: 'ONE CLICK' }
+      ]
+    }
+  },
+  {
     file: 'public/og/colors.png',
     config: {
       title: 'DISCORD COLOR', titleLine2: 'HEX PALETTE',
