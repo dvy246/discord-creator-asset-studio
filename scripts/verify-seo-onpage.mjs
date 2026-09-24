@@ -456,6 +456,21 @@ for (const page of indexablePages) {
 }
 
 // 7. Internal Link Resolution Check (Zero 404s site-wide)
+// Parse public/_redirects so a link to a valid redirect *source* (e.g. an alias
+// or a migrated URL) is not falsely flagged as broken. Format: "/source /dest [code]".
+const redirectSources = new Set();
+const redirectsFile = path.join(__dirname, '../public/_redirects');
+if (fs.existsSync(redirectsFile)) {
+  for (const line of fs.readFileSync(redirectsFile, 'utf-8').split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const source = trimmed.split(/\s+/)[0];
+    if (source && source.startsWith('/')) {
+      redirectSources.add(source.replace(/\/$/, ''));
+    }
+  }
+}
+
 const allDistFiles = [];
 function findFiles(dir) {
   for (const item of fs.readdirSync(dir)) {
@@ -480,6 +495,10 @@ for (const htmlFile of allDistFiles) {
     }
     // Check if dist/<link>/index.html, dist/<link>.html, or dist/<cleanLink>.html exists
     const cleanLink = link.replace(/\/$/, '');
+    // A link that resolves via _redirects (alias / migrated URL) is valid, not broken.
+    if (redirectSources.has(cleanLink)) {
+      continue;
+    }
     const candidate1 = path.join(distDir, link, 'index.html');
     const candidate2 = path.join(distDir, `${link}.html`);
     const candidate3 = path.join(distDir, `${cleanLink}.html`);
