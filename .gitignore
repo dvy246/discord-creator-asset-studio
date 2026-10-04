@@ -28,9 +28,10 @@ screenshots/
 
 # local agent and workspace artifacts
 .agents/
+.wrangler/
 Project-artifacts/
 seo-keyowrds/
-brag-output/
+brag-output*/
 skills-lock.json
 
 # Local Claude SEO plugin install (not part of the app)

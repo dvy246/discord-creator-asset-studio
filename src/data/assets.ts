@@ -157,7 +157,7 @@ export const ASSET_CATEGORIES: Record<AssetCategory, CategoryInfo> = {
     description: 'Cinematic anime aesthetic banners, stylized avatars, and matching profile pairs designed specifically for Discord profiles with seamless safe-zone alignment.',
     icon: '⚔️',
     primaryKeyword: 'discord anime banners',
-    count: 12
+    count: 15
   },
   gaming: {
     id: 'gaming',
@@ -183,7 +183,7 @@ export const ASSET_CATEGORIES: Record<AssetCategory, CategoryInfo> = {
     description: 'Neon-soaked cyber aesthetics, holographic grids, futuristic HUD displays, and electric nightscapes tuned for dark-mode Discord.',
     icon: '⚡',
     primaryKeyword: 'cyberpunk discord banner',
-    count: 10
+    count: 11
   },
   dark: {
     id: 'dark',
@@ -196,7 +196,7 @@ export const ASSET_CATEGORIES: Record<AssetCategory, CategoryInfo> = {
     description: 'Deep contrast, obsidian blacks, cathedral arches, misty horizons, and blood-moon hues that melt naturally into Discord dark mode.',
     icon: '🌑',
     primaryKeyword: 'dark aesthetic discord banner',
-    count: 10
+    count: 12
   },
   superhero: {
     id: 'superhero',
@@ -209,7 +209,7 @@ export const ASSET_CATEGORIES: Record<AssetCategory, CategoryInfo> = {
     description: 'Epic kinetic energy, cosmic hero emblems, lightning storms, and vigilante night-sky compositions crafted for maximum impact.',
     icon: '🦸',
     primaryKeyword: 'superhero discord banners',
-    count: 10
+    count: 12
   },
   aesthetic: {
     id: 'aesthetic',
@@ -222,7 +222,7 @@ export const ASSET_CATEGORIES: Record<AssetCategory, CategoryInfo> = {
     description: 'Gentle pastel skies, soothing twilight gradients, soft floral motifs, and cloudscapes designed to create a peaceful profile presence.',
     icon: '🌸',
     primaryKeyword: 'aesthetic discord banners',
-    count: 10
+    count: 11
   },
   cinematic: {
     id: 'cinematic',
@@ -235,7 +235,7 @@ export const ASSET_CATEGORIES: Record<AssetCategory, CategoryInfo> = {
     description: 'Anamorphic lens flares, stormy horizons, blade-runner rainfall, and vast desert mirages built with widescreen cinematic composition.',
     icon: '🎬',
     primaryKeyword: 'cinematic discord banners',
-    count: 10
+    count: 16
   },
   lofi: {
     id: 'lofi',
@@ -274,7 +274,7 @@ export const ASSET_CATEGORIES: Record<AssetCategory, CategoryInfo> = {
     description: 'Enchanted elven sanctuaries, crystal caverns, glowing runes, and mythical beasts rendered with rich high-fantasy color palettes.',
     icon: '🐉',
     primaryKeyword: 'fantasy discord banner',
-    count: 8
+    count: 9
   },
   horror: {
     id: 'horror',
@@ -404,13 +404,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'nano-dark-void-knight-eclipse',
     slug: 'dark-void-knight-eclipse',
-    title: 'Eclipsed Citadel: Dark Fantasy Void Knight',
-    description: 'Ominous blackened gothic fortress standing below a blood-red eclipsed sun, adrift with embers, ash, and glowing ancient runes.',
+    title: 'Dark Void Knight: Eclipse Vanguard',
+    description: 'Cyber-armored obsidian knight framed by a pulsing violet eclipse ring and volumetric void particles.',
     category: 'dark',
     categoryLabel: 'Dark & Moody',
     mood: 'moody',
     style: 'cinematic-motion',
-    tags: ['dark', 'fantasy', 'knight', 'eclipse', 'gothic', 'castle', 'runes', 'banner', 'pfp', 'matching-set'],
+    tags: ['dark-knight', 'void', 'eclipse', 'cyber-armor', 'obsidian', 'purple', 'neon'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -436,7 +436,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       intensity: 0.7,
       glowColor: '#EF4444'
     },
-    searchQueries: ['dark souls discord banner', 'dark knight pfp discord', 'gothic castle banner', 'blood moon discord set']
+    searchQueries: ['dark void knight banner', 'cyber armor pfp', 'eclipse warrior banner']
   },
   {
     id: 'nano-synthwave-retro-sunset-cruiser',
@@ -520,13 +520,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-iron-spider-infinity-war',
     slug: 'iron-spider-infinity-war-hero',
-    title: 'Infinity Vanguard: Iron Spider Waldoes Deployment',
-    description: 'Peter Parker activating the Stark nanotech Iron Spider suit with gleaming golden waldoes gleaming against cosmic nebula sky.',
+    title: 'Nanotech Vanguard: Waldoes Deployment Banner',
+    description: 'High-tech arachnid hero activating golden mechanical waldoes amidst an alien cosmic battlefield.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['animated', 'spiderman', 'iron-spider', 'marvel', 'stark-tech', 'nanotech', 'banner', 'gif'],
+    tags: ['animated', 'superhero', 'nanotech', 'arachnid', 'cyber', 'mechanical', 'cosmic', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -557,18 +557,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#FBBF24',
       particleCount: 20
     },
-    searchQueries: ['iron spider discord banner', 'tom holland spider-man pfp', 'iron spider animated gif']
+    searchQueries: ['nanotech hero discord banner', 'golden waldoes banner', 'arachnid tech animated gif']
   },
   {
     id: 'animated-miles-morales-neon-descent',
     slug: 'miles-morales-neon-descent',
-    title: 'Cyberpunk Leap: Miles Morales Neon Descent',
-    description: 'Miles Morales descending upside down between neon-drenched Manhattan skyscrapers with electric cyan and crimson light trails.',
+    title: 'Cyberpunk Skyline: Neon Arachnid Descent',
+    description: 'Stylized high-altitude skyline descent through dazzling magenta and teal neon raindrops in a cyberpunk metropolis.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'futuristic',
     style: 'cinematic-motion',
-    tags: ['animated', 'miles-morales', 'spider-man', 'neon', 'cyberpunk', 'manhattan', 'banner', 'gif'],
+    tags: ['animated', 'superhero', 'neon', 'cyberpunk', 'urban', 'skyline', 'descent', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -599,18 +599,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#06B6D4',
       particleCount: 22
     },
-    searchQueries: ['miles morales neon discord banner', 'cyberpunk spider-man pfp', 'miles morales animated gif']
+    searchQueries: ['neon skyline discord banner', 'cyberpunk arachnid pfp', 'neon descent animated gif']
   },
   {
     id: 'animated-spiderverse-leap-of-faith',
     slug: 'spiderverse-leap-of-faith-sunset',
-    title: 'Spider-Verse: Brooklyn Sunset Leap of Faith',
-    description: 'The legendary comic-shaded Leap of Faith as Miles falls upward into the upside-down golden sunset skyline of New York City.',
+    title: 'Chromatic Metropolis: Inverted Leap of Faith',
+    description: 'Cinematic inverted skyward leap against a radiant golden-hour city skyline with chromatic aberration.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'epic',
     style: 'cel-shaded',
-    tags: ['animated', 'spiderverse', 'leap-of-faith', 'miles-morales', 'sunset', 'skyline', 'banner', 'gif'],
+    tags: ['animated', 'leap-of-faith', 'sunset', 'skyline', 'chromatic', 'urban', 'superhero', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -641,18 +641,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#EC4899',
       particleCount: 18
     },
-    searchQueries: ['spiderverse leap of faith banner', 'miles morales falling up pfp', 'into the spider-verse gif']
+    searchQueries: ['inverted leap banner', 'skyline freefall pfp', 'chromatic urban dive gif']
   },
   {
     id: 'animated-amazing-spiderman-skyward-dive',
     slug: 'amazing-spiderman-skyward-dive',
-    title: 'Skyward Velocity: Amazing Spider-Man Canyon Dive',
-    description: 'Andrew Garfield Spider-Man plummeting through skyscraper canyons at breakneck speed before firing a web-line into the clouds.',
+    title: 'Skyward Velocity: Urban Canyon Dive',
+    description: 'Dynamic acrobatic dive plunging through towering glass skyscrapers under a dramatic twilight sky.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'chill',
     style: 'cinematic-motion',
-    tags: ['animated', 'spiderman', 'amazing-spiderman', 'skydive', 'web-swing', 'manhattan', 'banner', 'gif'],
+    tags: ['animated', 'acrobat', 'dive', 'velocity', 'skyscrapers', 'twilight', 'superhero', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -674,7 +674,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #38BDF8 100%)',
       bgPattern: 'lines',
       primaryIcon: '🏙️',
-      secondaryElements: ['spiderman-dive', 'urban-canyon', 'webline']
+      secondaryElements: ['aerial-dive', 'urban-canyon', 'webline']
     },
     motionConfig: {
       type: 'spider-web-glint',
@@ -683,18 +683,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#38BDF8',
       particleCount: 20
     },
-    searchQueries: ['amazing spiderman dive discord banner', 'andrew garfield web swing pfp', 'spiderman freefall gif']
+    searchQueries: ['urban canyon dive banner', 'acrobatic freefall pfp', 'skyline dive gif']
   },
   {
     id: 'animated-tony-stark-mark85-snap',
     slug: 'tony-stark-mark85-snap',
-    title: 'Cinematic Legacy: Tony Stark "I Am Iron Man"',
-    description: 'Tony Stark in battle-damaged Mark 85 armor commanding the six Infinity Stones with cosmic gamma flare and resolute eyes.',
+    title: 'Cinematic Legacy: Quantum Titan Final Stand',
+    description: 'Armor-clad billionaire genius channeling cosmic quantum stones in a blinding heroic flash.',
     category: 'cinematic',
     categoryLabel: 'Cinematic & Film',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['animated', 'iron-man', 'tony-stark', 'infinity-stones', 'avengers', 'endgame', 'banner', 'gif'],
+    tags: ['animated', 'quantum', 'titan', 'nanotech', 'heroic', 'sacrifice', 'cinematic', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -725,18 +725,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#EAB308',
       particleCount: 24
     },
-    searchQueries: ['tony stark discord banner', 'iron man endgame snap pfp', 'i am iron man animated gif']
+    searchQueries: ['quantum titan banner', 'armored hero final stand pfp', 'cosmic stones heroic gif']
   },
   {
     id: 'animated-iron-man-nanotech-assemble',
     slug: 'iron-man-nanotech-armor-assemble',
-    title: 'Nanotech Forge: Iron Man Armor Deployment',
-    description: 'Sleek crimson and titanium-gold nanotech armor plates rapidly streaming across Tony Stark\'s silhouette with electric repulsor flares.',
+    title: 'Nanotech Forge: Armor Suite Deployment',
+    description: 'Crimson and gold futuristic armor assembling from microscopic nanites across the wearer in real-time.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'futuristic',
     style: 'cinematic-motion',
-    tags: ['animated', 'iron-man', 'nanotech', 'stark-tech', 'repulsor', 'armor', 'banner', 'gif'],
+    tags: ['animated', 'nanotech', 'armor', 'futuristic', 'crimson-gold', 'cyber', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -767,18 +767,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#EF4444',
       particleCount: 20
     },
-    searchQueries: ['iron man suit up discord banner', 'iron man nanotech pfp', 'mark 42 armor gif']
+    searchQueries: ['nanotech armor banner', 'futuristic armor suit pfp', 'armor assembly gif']
   },
   {
     id: 'animated-attack-on-titan-eren-rumbling',
     slug: 'attack-on-titan-eren-rumbling',
-    title: 'Rumbling Horizon: Eren Yeager Titan Shifter',
-    description: 'Eren Yeager in Founding Titan form striding through crimson twilight smoke with piercing green titan eyes and wall titans marching.',
+    title: 'Colossal Horizon: Apocalyptic Titan Shifter',
+    description: 'Colossal ancient skeletal titan advancing through smoke and ash against a blood-orange apocalyptic horizon.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'mysterious',
     style: 'atmospheric-mist',
-    tags: ['animated', 'aot', 'attack-on-titan', 'eren-yeager', 'rumbling', 'founding-titan', 'banner', 'gif'],
+    tags: ['animated', 'titan', 'apocalypse', 'dark-fantasy', 'smoke', 'fire', 'colossal', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -800,7 +800,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #120A08 0%, #2D140D 50%, #10B981 100%)',
       bgPattern: 'waves',
       primaryIcon: '⚔️',
-      secondaryElements: ['founding-titan', 'rumbling-smoke', 'green-eyes']
+      secondaryElements: ['colossal-titan', 'smoke-columns', 'red-horizon']
     },
     motionConfig: {
       type: 'inferno-shimmer',
@@ -809,18 +809,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#10B981',
       particleCount: 20
     },
-    searchQueries: ['attack on titan discord banner', 'eren yeager rumbling pfp', 'aot founding titan gif']
+    searchQueries: ['colossal titan banner', 'apocalyptic horizon pfp', 'ancient titan animated gif']
   },
   {
     id: 'animated-wuwa-chixia-flaming-sakura',
     slug: 'wuwa-chixia-flaming-sakura',
-    title: 'Crimson Sparks: Chixia Flaming Sakura Strike',
-    description: 'Wuthering Waves Chixia firing twin thermal pistols into a storm of glowing vermilion embers and swirling blazing sakura blossoms.',
+    title: 'Crimson Sparks: Blazing Sakura Pistols',
+    description: 'Energetic dual-pistol heroine unleashing fiery crimson sparks and swirling flame petals in an open-world fantasy.',
     category: 'gaming',
     categoryLabel: 'Gaming & Esports',
     mood: 'epic',
     style: 'cel-shaded',
-    tags: ['animated', 'wuwa', 'wuthering-waves', 'chixia', 'sakura', 'fire', 'gaming', 'banner', 'gif'],
+    tags: ['animated', 'dual-pistols', 'fire', 'sakura', 'action-rpg', 'anime', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -851,18 +851,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#F43F5E',
       particleCount: 22
     },
-    searchQueries: ['wuthering waves discord banner', 'chixia wuwa pfp', 'flaming sakura anime banner gif']
+    searchQueries: ['crimson dual pistols banner', 'blazing sakura pfp', 'flame hero animated gif']
   },
   {
     id: 'animated-bleach-ichigo-bankai-tybw',
     slug: 'bleach-ichigo-bankai-tybw',
-    title: 'Thousand-Year Tempest: Ichigo Dual Bankai',
-    description: 'Ichigo Kurosaki holding true dual Zangetsu blades while black-and-crimson Getsuga Tensho spiritual pressure swirls violently.',
+    title: 'Thousand-Year Tempest: Dual Reaper Blades',
+    description: 'Fierce soul reaper releasing dual dark blades with crackling spirit energy in a torrential storm.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'epic',
     style: 'cel-shaded',
-    tags: ['animated', 'bleach', 'ichigo-kurosaki', 'bankai', 'tybw', 'shinigami', 'banner', 'gif'],
+    tags: ['animated', 'soul-reaper', 'swordsman', 'tempest', 'dark-energy', 'anime', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -893,18 +893,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#3B82F6',
       particleCount: 22
     },
-    searchQueries: ['bleach tybw discord banner', 'ichigo kurosaki bankai pfp', 'bleach animated gif']
+    searchQueries: ['dual blade reaper banner', 'spirit energy swordsman pfp', 'dark tempest animated gif']
   },
   {
     id: 'animated-wuwa-sanhua-glacio-lotus',
     slug: 'wuwa-sanhua-glacio-lotus',
-    title: 'Glacio Elegance: Sanhua Crystalline Lotus',
-    description: 'Wuthering Waves Sanhua drawing her pure silver rapier amidst freezing mist, crystalline frost petals, and pale blue eyes.',
+    title: 'Glacio Bloom: Frost Lotus Swordswoman',
+    description: 'Stoic icy swordswoman shattering frost lotus crystals with serene glacial precision in an ethereal winter temple.',
     category: 'gaming',
     categoryLabel: 'Gaming & Esports',
     mood: 'ethereal',
     style: 'cel-shaded',
-    tags: ['animated', 'wuwa', 'wuthering-waves', 'sanhua', 'glacio', 'ice', 'sword', 'banner', 'gif'],
+    tags: ['animated', 'glacio', 'ice-sword', 'lotus', 'action-rpg', 'anime', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -935,18 +935,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#38BDF8',
       particleCount: 20
     },
-    searchQueries: ['sanhua wuwa discord banner', 'wuthering waves glacio pfp', 'ice sword anime banner gif']
+    searchQueries: ['frost lotus banner', 'ice swordswoman pfp', 'glacio anime gif']
   },
   {
     id: 'animated-wuwa-changli-phoenix-gaze',
     slug: 'wuwa-changli-phoenix-gaze',
-    title: 'Blazing Rebirth: Changli Phoenix Flame Gaze',
-    description: 'Wuthering Waves Changli sweeping her blazing fan with dancing vermilion phoenix feathers and hypnotizing fiery crimson gaze.',
+    title: 'Blazing Rebirth: Phoenix Flame Gaze',
+    description: 'Regal fire mentor sweeping her blazing feather fan with dancing vermilion sparks and a hypnotizing crimson gaze.',
     category: 'gaming',
     categoryLabel: 'Gaming & Esports',
     mood: 'mysterious',
     style: 'cel-shaded',
-    tags: ['animated', 'wuwa', 'wuthering-waves', 'changli', 'phoenix', 'fire', 'feather', 'banner', 'gif'],
+    tags: ['animated', 'phoenix', 'fire', 'feather', 'action-rpg', 'anime', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -977,7 +977,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#EA580C',
       particleCount: 22
     },
-    searchQueries: ['changli wuwa discord banner', 'wuthering waves phoenix pfp', 'changli animated banner gif']
+    searchQueries: ['phoenix feather banner', 'crimson flame gaze pfp', 'vermilion fire animated gif']
   },
   {
     id: 'animated-lord-krishna-divine-flute',
@@ -1024,13 +1024,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-ghost-of-yotei-ronin',
     slug: 'ghost-of-yotei-ronin-blades',
-    title: 'Snowbound Vengeance: Ghost of Yotei Atsu',
-    description: 'Atsu unsheathing dual katana blades against a howling snow gale beneath the majestic volcanic summit of Mount Yotei.',
+    title: 'Snowbound Vengeance: Mountain Summit Ronin',
+    description: 'Vengeful ronin warrior unsheathing dual katana blades against a howling snow gale beneath a majestic volcanic peak.',
     category: 'gaming',
     categoryLabel: 'Gaming & Esports',
     mood: 'moody',
     style: 'atmospheric-mist',
-    tags: ['animated', 'ghost-of-yotei', 'atsu', 'samurai', 'katana', 'ronin', 'snow', 'banner', 'gif'],
+    tags: ['animated', 'samurai', 'katana', 'ronin', 'snow', 'volcano', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1052,7 +1052,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #94A3B8 100%)',
       bgPattern: 'lines',
       primaryIcon: '⚔️',
-      secondaryElements: ['dual-katana', 'mount-yotei', 'snow-gale']
+      secondaryElements: ['dual-katana', 'volcano-summit', 'snow-gale']
     },
     motionConfig: {
       type: 'birch-blizzard',
@@ -1061,7 +1061,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#E2E8F0',
       particleCount: 24
     },
-    searchQueries: ['ghost of yotei discord banner', 'atsu ronin pfp', 'ghost of tsushima sequel animated gif']
+    searchQueries: ['mountain ronin banner', 'dual katana snow pfp', 'winter samurai animated gif']
   },
   // =========================================================================
   // FLAGSHIP ANIMATED DISCORD BANNERS (WebP Animation Loops)
@@ -1150,13 +1150,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-spiderman-sunset-romance',
     slug: 'spiderman-sunset-skyline-romance',
-    title: 'Web of Love: Spider-Man Twilight Horizon',
-    description: 'Spider-Man embracing Gwen Stacy above golden Manhattan skyscrapers at dusk with gentle windblown lens flares and warm city lights.',
+    title: 'Web of Stars: Twilight Horizon Romance',
+    description: 'Romantic dual silhouette swinging above golden metropolis skyscrapers at dusk with gentle lens flares.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'cozy',
     style: 'cinematic-motion',
-    tags: ['animated', 'spiderman', 'superhero', 'sunset', 'manhattan', 'marvel', 'romance', 'banner', 'gif'],
+    tags: ['animated', 'superhero', 'sunset', 'metropolis', 'romance', 'skyline', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1176,7 +1176,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #111625 0%, #1E293B 50%, #F43F5E 100%)',
       bgPattern: 'circuit',
       primaryIcon: '🕷️',
-      secondaryElements: ['spiderman', 'city-lights', 'sunset-sky']
+      secondaryElements: ['acrobatic-silhouette', 'city-lights', 'sunset-sky']
     },
     motionConfig: {
       type: 'spider-web-glint',
@@ -1185,7 +1185,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#38BDF8',
       particleCount: 18
     },
-    searchQueries: ['spiderman sunset banner', 'spider-man romantic discord pfp', 'amazing spiderman gif']
+    searchQueries: ['twilight skyline romance banner', 'silhouette swinging pfp', 'sunset metropolis gif']
   },
   {
     id: 'animated-cyber-valkyrie-neo-tokyo',
@@ -1230,13 +1230,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-ultra-instinct-goku',
     slug: 'ultra-instinct-goku-focus-aura',
-    title: 'Silver Focus: Ultra Instinct Goku Awakening',
-    description: 'Ultra Instinct Goku shirtless in complete meditative battle focus, surrounded by rippling god-tier silver aura flames and crackling sparks.',
+    title: 'Silver Transcendence: Astral Ki Awakening',
+    description: 'Shirtless martial artist in deep meditative battle focus, surrounded by rippling god-tier silver aura flames.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['animated', 'goku', 'ultra-instinct', 'dragon-ball', 'silver-aura', 'gym', 'focus', 'banner', 'gif'],
+    tags: ['animated', 'martial-arts', 'astral-ki', 'silver-aura', 'gym', 'focus', 'anime', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1265,18 +1265,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#E2E8F0',
       particleCount: 20
     },
-    searchQueries: ['ultra instinct goku banner', 'goku gym motivation discord banner', 'dragon ball animated pfp']
+    searchQueries: ['silver aura fighter banner', 'gym motivation martial artist pfp', 'astral ki animated gif']
   },
   {
     id: 'animated-kratos-blades-chaos',
     slug: 'kratos-blades-of-chaos-blizzard',
-    title: 'Spartan Fury: Kratos Blades in Midgard Blizzard',
-    description: 'Ghost of Sparta standing weathered in a howling Nordic blizzard with incandescent orange Blades of Chaos radiating ember sparks.',
+    title: 'Spartan Fury: Blades of Ash in Midgard Blizzard',
+    description: 'Weathered mythological warrior standing resolute in a howling blizzard with incandescent orange chained blades radiating embers.',
     category: 'gaming',
     categoryLabel: 'Gaming & Esports',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['animated', 'kratos', 'god-of-war', 'blades-of-chaos', 'spartan', 'gaming', 'blizzard', 'banner', 'gif'],
+    tags: ['animated', 'spartan', 'warrior', 'chained-blades', 'blizzard', 'gaming', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1296,7 +1296,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #171211 0%, #291811 60%, #F97316 100%)',
       bgPattern: 'dots',
       primaryIcon: '🪓',
-      secondaryElements: ['blades-of-chaos', 'snow-embers', 'spartan-ash']
+      secondaryElements: ['chained-blades', 'snow-embers', 'spartan-ash']
     },
     motionConfig: {
       type: 'birch-blizzard',
@@ -1305,18 +1305,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#F97316',
       particleCount: 26
     },
-    searchQueries: ['kratos discord banner', 'god of war animated banner', 'kratos blades of chaos gif']
+    searchQueries: ['chained blades warrior banner', 'mythological fury pfp', 'blizzard warrior animated gif']
   },
   {
     id: 'animated-jon-snow-battle-bastards',
     slug: 'jon-snow-battle-bastards-charge',
-    title: 'Winter Bastard: Jon Snow Lone Stand',
-    description: 'Jon Snow drawing Valyrian steel Longclaw alone on the fog-drenched battlefield as the massive cavalry charge rumbles over the horizon.',
+    title: 'Northern Vanguard: Fog Battlefield Lone Stand',
+    description: 'Resolute northern swordsman unsheathing an ancient blade alone on a fog-drenched battlefield as charging horses rumble over the horizon.',
     category: 'cinematic',
     categoryLabel: 'Cinematic & Atmosphere',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['animated', 'jon-snow', 'game-of-thrones', 'battle-of-the-bastards', 'longclaw', 'sword', 'banner', 'gif'],
+    tags: ['animated', 'northern-lord', 'swordsman', 'medieval', 'battlefield', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1345,18 +1345,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#7DD3FC',
       particleCount: 18
     },
-    searchQueries: ['jon snow discord banner', 'battle of the bastards banner', 'game of thrones animated pfp']
+    searchQueries: ['lone swordsman banner', 'medieval battlefield stand pfp', 'fog vanguard animated gif']
   },
   {
     id: 'animated-night-king-dragon-blizzard',
     slug: 'night-king-ice-spear-dragon',
-    title: 'Boreal Eclipse: Night King & Dragon Sky',
-    description: 'The Night King poised with crystalline ice javelin amidst a freezing polar gale as Daenerys dragon wings swoop through freezing thunderclouds.',
+    title: 'Boreal Eclipse: Frost Monarch & Dragon Sky',
+    description: 'Frost monarch poised with a crystalline ice javelin amidst a freezing polar gale as colossal dragon wings sweep through storm clouds.',
     category: 'dark',
     categoryLabel: 'Dark & Gothic',
     mood: 'ominous',
     style: 'cinematic-motion',
-    tags: ['animated', 'night-king', 'dragon', 'game-of-thrones', 'ice-spear', 'blizzard', 'winter', 'banner', 'gif'],
+    tags: ['animated', 'frost-monarch', 'dragon', 'ice-spear', 'blizzard', 'winter', 'fantasy', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1385,18 +1385,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#38BDF8',
       particleCount: 22
     },
-    searchQueries: ['night king discord banner', 'game of thrones dragon banner gif', 'ice spear night king pfp']
+    searchQueries: ['frost monarch banner', 'ice dragon blizzard pfp', 'polar storm fantasy gif']
   },
   {
     id: 'animated-amazing-spiderman-spire',
     slug: 'amazing-spiderman-spire-golden-dusk',
-    title: 'Apex Aerialist: Amazing Spider-Man Spire Sunset',
-    description: 'Spider-Man perched high on an art-deco skyscraper spire watching the radiant golden sunset over the Manhattan sea of clouds.',
+    title: 'Apex Aerialist: Golden Spire Sunset',
+    description: 'Acrobatic sentinel perching atop a cathedral spire overlooking golden sunset city streets and a sea of clouds.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['animated', 'spiderman', 'amazing-spiderman', 'sunset', 'spire', 'golden-hour', 'superhero', 'banner', 'gif'],
+    tags: ['animated', 'aerialist', 'spire', 'sunset', 'golden-hour', 'superhero', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1418,7 +1418,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #180D14 0%, #381223 60%, #FB923C 100%)',
       bgPattern: 'circuit',
       primaryIcon: '🏙️',
-      secondaryElements: ['spiderman', 'skyscraper-spire', 'cloud-sunset']
+      secondaryElements: ['aerial-sentinel', 'skyscraper-spire', 'cloud-sunset']
     },
     motionConfig: {
       type: 'spider-web-glint',
@@ -1427,19 +1427,19 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#FB923C',
       particleCount: 20
     },
-    searchQueries: ['amazing spiderman sunset banner', 'spiderman spire discord banner', 'spider-man aesthetic gif']
+    searchQueries: ['cathedral spire sunset banner', 'aerialist sentinel pfp', 'golden hour city gif']
   },
-  // --- PREVIOUS GHIBLI, OCEAN & KAWAII ANIMATED BANNERS ---
+  // --- PREVIOUS NATURE, OCEAN & KAWAII ANIMATED BANNERS ---
   {
     id: 'animated-totoro-forest-belly',
     slug: 'totoro-forest-belly-nap',
-    title: 'Ghibli Wonder: Totoro Camphor Forest Nap',
-    description: 'Iconic Studio Ghibli scene with little Mei gently resting atop the breathing furry belly of giant sleeping Totoro in the ancient camphor hollow.',
+    title: 'Forest Spirit Wonder: Camphor Tree Nap',
+    description: 'Whimsical anime scene with a gentle child resting atop the breathing furry belly of a giant sleeping forest spirit in the ancient camphor grove.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'cozy',
     style: 'cel-shaded',
-    tags: ['animated', 'totoro', 'ghibli', 'mei', 'camphor-forest', 'forest', 'anime', 'banner', 'gif'],
+    tags: ['animated', 'forest-spirit', 'nature', 'camphor-forest', 'anime', 'cozy', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1458,7 +1458,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #09150F 0%, #10241A 60%, #86EFAC 100%)',
       bgPattern: 'dots',
       primaryIcon: '🍃',
-      secondaryElements: ['totoro', 'camphor-trees', 'forest-leaves']
+      secondaryElements: ['forest-spirit', 'camphor-trees', 'forest-leaves']
     },
     motionConfig: {
       type: 'floating',
@@ -1467,7 +1467,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#22C55E',
       particleCount: 16
     },
-    searchQueries: ['totoro discord banner', 'ghibli animated banner', 'totoro mei nap gif', 'studio ghibli banner']
+    searchQueries: ['forest spirit nap banner', 'cozy anime nature banner', 'ancient camphor forest gif']
   },
   {
     id: 'animated-ocean-whale-sunburst',
@@ -1591,7 +1591,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
     id: 'animated-lone-samurai-purple',
     slug: 'lone-samurai-purple-blossoms',
     title: 'Ronin Sanctuary: Purple Blossom Meadow',
-    description: 'Lone ronin samurai in a woven straw hat standing in a sprawling field of violet wisteria and cherry blossoms under mist-shrouded peaks.',
+    description: 'Lone ronin warrior in a traditional woven hat standing in a sprawling field of violet wisteria and cherry blossoms under mist-shrouded peaks.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'calm',
@@ -1746,13 +1746,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-minecraft-sunset-cat',
     slug: 'minecraft-sunset-staring-cat',
-    title: 'Pixel Horizon: Minecraft Sunset Cat',
-    description: 'Iconic white cat staring into the camera before a pixelated Minecraft sunset with a glowing block sun and evening meadows.',
+    title: 'Voxel Horizon: Pixel Sunset Cat',
+    description: 'White cat staring peacefully into the camera before a vibrant voxel pixel sunset with a blocky sun and evening meadows.',
     category: 'gaming',
     categoryLabel: 'Gaming & Esport',
     mood: 'chill',
     style: 'pixel-art',
-    tags: ['animated', 'minecraft', 'cat', 'sunset', 'meme', 'pixel-art', 'gaming', 'banner', 'gif'],
+    tags: ['animated', 'pixel-art', 'voxel', 'cat', 'sunset', 'gaming', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1771,7 +1771,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #170A06 0%, #2B140D 60%, #FBBF24 100%)',
       bgPattern: 'grid',
       primaryIcon: '🧱',
-      secondaryElements: ['minecraft-cat', 'block-sun', 'evening-sky']
+      secondaryElements: ['pixel-cat', 'block-sun', 'evening-sky']
     },
     motionConfig: {
       type: 'light-pulse',
@@ -1780,7 +1780,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#FBBF24',
       particleCount: 16
     },
-    searchQueries: ['minecraft cat sunset banner', 'cat staring meme discord banner', 'minecraft pixel art banner gif']
+    searchQueries: ['pixel cat sunset banner', 'voxel sunset cat pfp', 'blocky sunset animated gif']
   },
   {
     id: 'animated-rainbow-unicorn-meadow',
@@ -1903,13 +1903,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-reze-violet-sakura',
     slug: 'reze-violet-sakura-gaze',
-    title: 'Reze: Violet Sakura Reverie',
-    description: 'Reze from Chainsaw Man in the spring breeze with fluttering sakura petals, soft violet gaze, and cinematic lens bloom.',
+    title: 'Violet Sakura Reverie: Spring Breeze',
+    description: 'Anime heroine in the spring breeze with fluttering sakura petals, soft violet gaze, and cinematic lens bloom.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'cozy',
     style: 'cinematic-motion',
-    tags: ['animated', 'anime', 'reze', 'chainsaw-man', 'sakura', 'cherry-blossom', 'violet', 'banner', 'gif'],
+    tags: ['animated', 'anime', 'sakura', 'cherry-blossom', 'violet', 'female', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1937,18 +1937,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#C084FC',
       particleCount: 24
     },
-    searchQueries: ['reze discord banner', 'chainsaw man animated banner', 'sakura anime banner', 'reze pfp banner gif']
+    searchQueries: ['violet sakura anime banner', 'spring breeze anime pfp', 'sakura petal banner gif']
   },
   {
     id: 'animated-spiderman-rain-gaze',
     slug: 'spiderman-rain-melancholy-gaze',
-    title: 'Spider-Man: Rain & Melancholy',
-    description: 'Tobey Maguire Spider-Man looking up through a torrential rainstorm with authentic falling rain streaks and gloomy city reflections.',
+    title: 'Rain & Melancholy: Masked Urban Vigilante',
+    description: 'Melancholic masked hero looking up through a torrential rainstorm with falling water droplets and moody city reflections.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'moody',
     style: 'cinematic-motion',
-    tags: ['animated', 'spiderman', 'rain', 'marvel', 'tobey-maguire', 'banner', 'cinematic', 'gif', 'moody'],
+    tags: ['animated', 'superhero', 'rain', 'vigilante', 'urban', 'melancholy', 'banner', 'cinematic', 'gif', 'moody'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -1976,7 +1976,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#38BDF8',
       particleCount: 35
     },
-    searchQueries: ['spiderman rain banner', 'spiderman animated discord banner', 'tobey maguire rain gif', 'sad spiderman banner']
+    searchQueries: ['masked vigilante rain banner', 'moody rain urban pfp', 'rainstorm reflections gif']
   },
   {
     id: 'animated-abyssal-ink-shadow',
@@ -2059,13 +2059,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-gojo-infinite-void',
     slug: 'gojo-infinite-void-six-eyes',
-    title: 'Gojo Satoru: Infinite Void Six Eyes',
-    description: 'Gojo Satoru lifting his blindfold to unleash the boundless azure luminescence of the Six Eyes Domain Expansion.',
+    title: 'Limitless Azure: Celestial Six Eyes Awakening',
+    description: 'Sorcerer lifting his blindfold to unleash the boundless azure luminescence of cosmic stellar eyes.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['animated', 'gojo', 'satoru', 'six-eyes', 'infinite-void', 'domain-expansion', 'jjk', 'jujutsu-kaisen', 'banner', 'gif'],
+    tags: ['animated', 'azure-eyes', 'celestial', 'sorcerer', 'anime', 'cosmic', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -2084,7 +2084,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #030712 0%, #0A1224 60%, #38BDF8 100%)',
       bgPattern: 'lines',
       primaryIcon: '👁️',
-      secondaryElements: ['six-eyes-radiance', 'domain-expansion', 'infinite-blue']
+      secondaryElements: ['azure-radiance', 'celestial-expansion', 'infinite-blue']
     },
     motionConfig: {
       type: 'light-pulse',
@@ -2093,18 +2093,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#38BDF8',
       particleCount: 25
     },
-    searchQueries: ['gojo satoru discord banner', 'six eyes animated banner', 'jujutsu kaisen banner gif', 'gojo domain expansion banner']
+    searchQueries: ['azure celestial eyes banner', 'boundless sorcerer pfp', 'cosmic void anime gif']
   },
   {
     id: 'animated-makima-golden-gaze',
     slug: 'makima-hypnotic-golden-gaze',
-    title: 'Makima: Hypnotic Golden Gaze',
-    description: 'Makima fixing her captivating concentric golden ring eyes with subtle intoxicating aura and velvet crimson shading.',
+    title: 'Hypnotic Concord: Concentric Golden Gaze',
+    description: 'Enigmatic leader fixing her captivating concentric golden ring eyes with subtle intoxicating aura and velvet crimson shading.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'mysterious',
     style: 'cel-shaded',
-    tags: ['animated', 'makima', 'chainsaw-man', 'golden-eyes', 'control-devil', 'anime', 'banner', 'gif', 'crimson'],
+    tags: ['animated', 'golden-eyes', 'concentric-rings', 'anime', 'female', 'banner', 'gif', 'crimson'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -2123,7 +2123,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #120508 0%, #1F0C10 60%, #EAB308 100%)',
       bgPattern: 'dots',
       primaryIcon: '🌀',
-      secondaryElements: ['concentric-eyes', 'control-chains', 'crimson-velvet']
+      secondaryElements: ['concentric-eyes', 'control-aura', 'crimson-velvet']
     },
     motionConfig: {
       type: 'floating',
@@ -2132,7 +2132,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#EAB308',
       particleCount: 15
     },
-    searchQueries: ['makima discord banner', 'makima eyes animated banner', 'chainsaw man control devil banner gif']
+    searchQueries: ['concentric golden eyes banner', 'hypnotic anime stare pfp', 'crimson velvet aura gif']
   },
   {
     id: 'animated-kaneki-spider-lily',
@@ -2176,13 +2176,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-sukuna-malevolent-shrine',
     slug: 'sukuna-malevolent-shrine-domain',
-    title: 'Ryomen Sukuna: Malevolent Shrine',
-    description: 'The King of Curses Ryomen Sukuna manifesting Malevolent Shrine with ominous crimson domain slicing cleave waves.',
+    title: 'Curse Sovereign: Crimson Domain Claws',
+    description: 'The ancient sorcery tyrant manifesting an ominous crimson domain with slicing aura cleave waves.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['animated', 'sukuna', 'jjk', 'jujutsu-kaisen', 'malevolent-shrine', 'domain-expansion', 'cleave', 'banner', 'gif'],
+    tags: ['animated', 'curse-tyrant', 'crimson-domain', 'dark-fantasy', 'anime', 'male', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -2201,7 +2201,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #0A0202 0%, #180707 60%, #F43F5E 100%)',
       bgPattern: 'grid',
       primaryIcon: '⛩️',
-      secondaryElements: ['malevolent-shrine', 'cleave-distortion', 'cursed-blood-sky']
+      secondaryElements: ['crimson-domain', 'cleave-distortion', 'cursed-blood-sky']
     },
     motionConfig: {
       type: 'light-pulse',
@@ -2210,7 +2210,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#F43F5E',
       particleCount: 28
     },
-    searchQueries: ['sukuna discord banner', 'malevolent shrine animated banner', 'sukuna domain expansion gif', 'jujutsu kaisen banner']
+    searchQueries: ['crimson domain banner', 'curse sovereign anime pfp', 'dark slicing aura gif']
   },
   // --- 18 AESTHETIC ANIMATED ANIME BANNERS (DiscordPFP.gg Parity) ---
   {
@@ -2255,13 +2255,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-zoro-santoryu',
     slug: 'zoro-santoryu-three-sword-demon',
-    title: 'Zoro Santoryu: Three-Sword Demon',
-    description: 'Roronoa Zoro in peak Santoryu battle stance with green bandana and roaring conqueror wind aura.',
+    title: 'Three-Blade Tempest: Emerald Swordsman',
+    description: 'Emerald-haired swordsman brandishing triple katanas with spiraling green dragon wind aura.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['animated', 'zoro', 'one-piece', 'santoryu', 'swordsman', 'anime', 'banner', 'gif', 'green'],
+    tags: ['animated', 'three-blades', 'swordsman', 'katana', 'dragon-wind', 'anime', 'banner', 'gif', 'green'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -2288,7 +2288,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       intensity: 0.9,
       glowColor: '#22C55E'
     },
-    searchQueries: ['zoro discord banner', 'one piece animated banner', 'zoro santoryu animated gif']
+    searchQueries: ['triple blade swordsman banner', 'emerald swordsman pfp', 'dragon wind katana gif']
   },
   {
     id: 'animated-rainy-silhou',
@@ -2445,13 +2445,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-train-yuji',
     slug: 'train-yuji-subway-sorcerer',
-    title: 'Train Yuji: Subway Sorcerer',
-    description: 'Yuji Itadori riding a Tokyo subway car with rhythmic window reflections and cursed energy atmosphere.',
+    title: 'Metropolitan Sorcerer: Subway Reflections',
+    description: 'Young sorcerer riding a metropolitan subway car with rhythmic window light reflections and eerie mystical atmosphere.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'moody',
     style: 'cinematic-motion',
-    tags: ['animated', 'yuji', 'jjk', 'subway', 'train', 'jujutsu-kaisen', 'anime', 'banner', 'gif'],
+    tags: ['animated', 'subway', 'train', 'sorcerer', 'metropolis', 'anime', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -2470,7 +2470,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #14141E 0%, #0F172A 60%, #38BDF8 100%)',
       bgPattern: 'grid',
       primaryIcon: '🚇',
-      secondaryElements: ['train-lights', 'cursed-energy']
+      secondaryElements: ['train-lights', 'mystic-energy']
     },
     motionConfig: {
       type: 'rain',
@@ -2478,18 +2478,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       intensity: 0.7,
       glowColor: '#38BDF8'
     },
-    searchQueries: ['yuji itadori discord banner', 'jjk train animated banner', 'jujutsu kaisen banner']
+    searchQueries: ['subway sorcerer banner', 'metro train anime pfp', 'metropolitan night transit gif']
   },
   {
     id: 'animated-2b-monochrome-blade',
     slug: 'yorha-2b-monochrome-blade-awakening',
-    title: '2B Blade: YoRHa Awakening',
-    description: '2B gripping her Virtuous Treaty katana as combat aura sweeps through gothic monochrome ruins.',
+    title: 'YoRHa Reverie: Gothic Monochrome Android',
+    description: 'Combat android gripping an ornate katana as combat aura sweeps through gothic monochrome ruins.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['animated', '2b', 'nier', 'monochrome', 'katana', 'sword', 'goth', 'banner', 'gif'],
+    tags: ['animated', 'android', 'monochrome', 'katana', 'sword', 'goth', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -2516,7 +2516,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       intensity: 0.6,
       glowColor: '#CBD5E1'
     },
-    searchQueries: ['2b monochrome banner', 'nier automata animated banner', '2b katana discord banner']
+    searchQueries: ['monochrome android banner', 'gothic swordswoman pfp', 'monochrome ruins blade gif']
   },
   {
     id: 'animated-red-eyes-gaze',
@@ -2899,13 +2899,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'animated-2b-monochrome',
     slug: '2b-monochrome-blade-reverie',
-    title: 'YoRHa Reverie: 2B Monochrome Blade',
+    title: 'Monochrome Requiem: Android Blade',
     description: 'Monochrome gothic cyber-heroine holding a gleaming katana against falling digital ash and dark city rain.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'mysterious',
     style: 'cinematic-motion',
-    tags: ['animated', '2b', 'nier', 'monochrome', 'katana', 'anime', 'swordswoman', 'banner', 'gif'],
+    tags: ['animated', 'android', 'monochrome', 'katana', 'anime', 'swordswoman', 'banner', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -2934,7 +2934,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#94A3B8',
       particleCount: 24
     },
-    searchQueries: ['2b discord banner', 'animated anime banner', 'monochrome discord banner', '2b nier pfp']
+    searchQueries: ['monochrome android banner', 'cyber heroine pfp', 'digital ash katana gif']
   },
   {
     id: 'animated-blurred-sedan',
@@ -3383,13 +3383,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'showcase-spiderman-void',
     slug: 'neon-arachnid-spiderman-void',
-    title: 'Neon Arachnid: Void Web Slinger',
+    title: 'Neon Arachnid: Obsidian Void Slinger',
     description: 'The masked web-slinger poised against an obsidian void with glowing neon web strands and chromatic street glints.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'epic',
     style: 'cinematic-motion',
-    tags: ['spiderman', 'superhero', 'void', 'web', 'neon', 'marvel', 'banner'],
+    tags: ['superhero', 'arachnid', 'void', 'web', 'neon', 'cyber', 'banner'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -3416,7 +3416,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#38BDF8',
       particleCount: 28
     },
-    searchQueries: ['spiderman discord banner', 'spider-man void banner', 'superhero discord banner', 'spiderman pfp']
+    searchQueries: ['neon arachnid banner', 'obsidian void superhero pfp', 'neon web slinger banner']
   },
   {
     id: 'showcase-stargazing-buddies',
@@ -3498,7 +3498,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
     id: 'showcase-shinchan-clouds',
     slug: 'nostalgic-summer-cumulus-clouds',
     title: 'Nostalgic Sunburst: Golden Cumulus Clouds',
-    description: 'Warm summer afternoon sky filled with towering Ghibli-esque cumulus clouds and gentle sun rays evoking childhood nostalgia.',
+    description: 'Warm summer afternoon sky filled with towering nostalgic cumulus clouds and gentle sun rays evoking childhood memories.',
     category: 'aesthetic',
     categoryLabel: 'Aesthetic & Pastel',
     mood: 'calm',
@@ -3536,17 +3536,17 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   // =========================================================================
   // ANIME & AESTHETIC PROFILE PICTURES (PFPs - Circular Discord Avatars)
   // =========================================================================
-  // --- NEW GHIBLI, OCEAN & KAWAII ANIMATED AVATARS (PFPs) ---
+  // --- NEW NATURE, OCEAN & KAWAII ANIMATED AVATARS (PFPs) ---
   {
     id: 'pfp-totoro-forest-belly-animated',
     slug: 'totoro-forest-belly-avatar-animated',
-    title: 'Totoro & Mei: Ghibli Forest Nap',
-    description: 'Mei gently resting on the soft breathing belly of sleeping giant Totoro in the enchanted camphor tree forest.',
+    title: 'Forest Spirit Slumber: Camphor Grove',
+    description: 'Gentle child resting peacefully on the soft breathing belly of an ancient giant forest spirit in the enchanted camphor woods.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'cozy',
     style: 'cel-shaded',
-    tags: ['totoro', 'ghibli', 'mei', 'animated', 'forest', 'anime', 'pfp', 'gif'],
+    tags: ['forest-spirit', 'nature', 'animated', 'cozy', 'anime', 'pfp', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -3566,7 +3566,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #09150F 0%, #10241A 60%, #86EFAC 100%)',
       bgPattern: 'dots',
       primaryIcon: '🍃',
-      secondaryElements: ['totoro', 'camphor-leaves']
+      secondaryElements: ['forest-spirit', 'camphor-leaves']
     },
     motionConfig: {
       type: 'floating',
@@ -3574,7 +3574,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       intensity: 0.75,
       glowColor: '#22C55E'
     },
-    searchQueries: ['totoro pfp gif', 'ghibli animated avatar', 'cute totoro avatar']
+    searchQueries: ['forest spirit pfp gif', 'cozy nature avatar', 'sleeping giant avatar']
   },
   {
     id: 'pfp-ocean-whale-sunburst-animated',
@@ -3775,13 +3775,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'pfp-minecraft-sunset-cat-animated',
     slug: 'minecraft-sunset-cat-avatar-animated',
-    title: 'Minecraft Cat: Sunset Gaze Animated',
-    description: 'The iconic staring white cat in front of a warm Minecraft block sunset with shimmering green eyes.',
+    title: 'Pixel Sunset Cat: Voxel Gaze',
+    description: 'The iconic white cat sitting quietly before a warm blocky voxel sunset with shimmering green eyes.',
     category: 'cute',
     categoryLabel: 'Cute & Cozy',
     mood: 'chill',
     style: 'pixel-art',
-    tags: ['cat', 'minecraft', 'sunset', 'meme', 'animated', 'cute', 'pfp', 'gif'],
+    tags: ['cat', 'pixel-art', 'voxel', 'sunset', 'meme', 'animated', 'cute', 'pfp', 'gif'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -3801,7 +3801,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #170A06 0%, #2B140D 60%, #FBBF24 100%)',
       bgPattern: 'grid',
       primaryIcon: '🐱',
-      secondaryElements: ['minecraft-cat', 'block-sunset']
+      secondaryElements: ['pixel-cat', 'block-sunset']
     },
     motionConfig: {
       type: 'light-pulse',
@@ -3809,13 +3809,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       intensity: 0.8,
       glowColor: '#FBBF24'
     },
-    searchQueries: ['minecraft cat pfp', 'cat staring meme pfp gif', 'cute minecraft cat avatar']
+    searchQueries: ['pixel cat pfp', 'voxel sunset cat avatar', 'cute blocky cat avatar']
   },
   {
     id: 'pfp-lone-samurai-purple-blossoms-animated',
     slug: 'lone-samurai-purple-blossoms-avatar-animated',
     title: 'Lone Samurai: Purple Blossom Gaze',
-    description: 'Lone ronin warrior in traditional straw hat amidst purple wisteria and falling sakura petals.',
+    description: 'Lone ronin warrior in a traditional woven hat amidst purple wisteria and falling sakura petals.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'calm',
@@ -5383,7 +5383,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       intensity: 0.7,
       glowColor: '#EF4444'
     },
-    searchQueries: ['red hair anime girl pfp', 'crimson gaze discord pfp', 'makima style pfp', 'scarlet eyes avatar']
+    searchQueries: ['red hair anime girl pfp', 'crimson gaze discord pfp', 'scarlet anime avatar', 'scarlet eyes avatar']
   },
   {
     id: 'pfp-krul-tepes-vampire',
@@ -5426,13 +5426,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'pfp-sukuna-red',
     slug: 'curse-king-sukuna-malevolent-crimson',
-    title: 'Curse King Sukuna: Malevolent Crimson',
-    description: 'The King of Curses grinning menacingly with dark tribal curse markings and burning crimson eyes.',
+    title: 'Curse King: Malevolent Crimson Gaze',
+    description: 'Dark sorcery tyrant grinning menacingly with ancient tribal curse markings and burning crimson eyes.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'epic',
     style: 'cel-shaded',
-    tags: ['sukuna', 'jjk', 'anime', 'curse', 'crimson', 'male', 'shrine', 'pfp'],
+    tags: ['curse-king', 'dark-fantasy', 'anime', 'curse', 'crimson', 'male', 'shrine', 'pfp'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -5459,7 +5459,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       intensity: 0.9,
       glowColor: '#DC2626'
     },
-    searchQueries: ['sukuna discord pfp', 'sukuna red pfp', 'jjk anime avatar', 'curse king pfp']
+    searchQueries: ['curse king pfp', 'crimson eyes male avatar', 'dark fantasy anime avatar']
   },
   {
     id: 'pfp-kaneki-ghoul',
@@ -5540,13 +5540,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'pfp-luffy-shades',
     slug: 'straw-hat-swagger-luffy-shades',
-    title: 'Straw Hat Swagger: Luffy Retro Shades',
-    description: 'The future King of the Pirates rocking cool retro aviator sunglasses with his iconic toothy grin.',
+    title: 'Sea Rover Swagger: Retro Aviator Shades',
+    description: 'Playful pirate adventurer rocking cool retro aviator sunglasses with a confident toothy grin.',
     category: 'anime',
     categoryLabel: 'Anime-Inspired',
     mood: 'chill',
     style: 'cel-shaded',
-    tags: ['luffy', 'one-piece', 'anime', 'shades', 'straw-hat', 'male', 'pfp'],
+    tags: ['pirate', 'straw-hat', 'anime', 'shades', 'male', 'pfp'],
     isPopular: true,
     isStaffPick: false,
     isNew: true,
@@ -5573,7 +5573,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       intensity: 0.6,
       glowColor: '#F59E0B'
     },
-    searchQueries: ['luffy sunglasses pfp', 'luffy shades discord pfp', 'one piece avatar', 'straw hat pfp']
+    searchQueries: ['retro shades anime pfp', 'pirate adventurer avatar', 'anime sunglasses pfp']
   },
   {
     id: 'pfp-moonlit-ronin',
@@ -5920,13 +5920,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'pfp-cool-squirtle',
     slug: 'squirtle-squad-pointed-shades',
-    title: 'Squirtle Squad: Pointed Shades',
-    description: 'Legendary Squirtle Squad leader sporting sleek pointed triangular sunglasses and an unapologetic swagger.',
+    title: 'Turtle Squad: Pointed Triangular Shades',
+    description: 'Cool blue turtle sporting sleek pointed triangular sunglasses and an unapologetic swagger.',
     category: 'cute',
     categoryLabel: 'Cute & Whimsical',
     mood: 'chill',
     style: 'cel-shaded',
-    tags: ['squirtle', 'pokemon', 'sunglasses', 'squirtle-squad', 'cute', 'retro', 'unisex', 'pfp'],
+    tags: ['turtle', 'sunglasses', 'pointed-shades', 'cute', 'retro', 'unisex', 'pfp'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -5953,7 +5953,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       intensity: 0.6,
       glowColor: '#38BDF8'
     },
-    searchQueries: ['squirtle squad pfp', 'cool squirtle with sunglasses', 'pokemon discord pfp']
+    searchQueries: ['cool turtle sunglasses pfp', 'pointed shades turtle avatar', 'retro turtle avatar']
   },
   {
     id: 'pfp-cat-mugshot',
@@ -6191,12 +6191,12 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
     id: 'showcase-batman-snow',
     slug: 'winter-vigilante-birch-blizzard',
     title: 'Winter Vigilante: Birch Blizzard',
-    description: 'The Dark Knight standing resolute amidst towering snow-covered birch trees in a quiet winter blizzard.',
+    description: 'Obsidian masked vigilante standing resolute amidst towering snow-covered birch trees in a quiet winter blizzard.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'ominous',
     style: 'matte-painting',
-    tags: ['batman', 'superhero', 'blizzard', 'snow', 'vigilante', 'dark-knight'],
+    tags: ['superhero', 'blizzard', 'snow', 'vigilante', 'night-stalker', 'banner'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -6223,18 +6223,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#CBD5E1',
       particleCount: 36
     },
-    searchQueries: ['batman discord banner', 'dark knight pfp', 'snow superhero banner']
+    searchQueries: ['winter vigilante discord banner', 'snow superhero banner', 'obsidian vigilante pfp']
   },
   {
     id: 'showcase-batman-fire',
     slug: 'dark-vigilante-inferno-roars',
-    title: 'Dark Knight: Warehouse Inferno',
+    title: 'Shadow Guardian: Warehouse Inferno',
     description: 'The masked vigilante standing resolute against an inferno of raging amber warehouse flames and rising sparks.',
     category: 'superhero',
     categoryLabel: 'Superhero & Comic',
     mood: 'ominous',
     style: 'cinematic-motion',
-    tags: ['batman', 'inferno', 'fire', 'dark-knight', 'superhero', 'vigilante'],
+    tags: ['inferno', 'fire', 'superhero', 'vigilante', 'night', 'banner'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -6261,18 +6261,18 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#F97316',
       particleCount: 40
     },
-    searchQueries: ['batman fire discord banner', 'inferno superhero banner', 'dark knight fire pfp']
+    searchQueries: ['vigilante fire discord banner', 'inferno superhero banner', 'night guardian fire pfp']
   },
   {
     id: 'showcase-cloud-cats',
     slug: 'summer-cloudwatchers-ivy-wall',
     title: 'Summer Cloudwatchers: Ivy Wall',
-    description: 'Five peaceful cats perched on a stone ivy-covered wall watching birds soar across massive Ghibli cumulus clouds.',
+    description: 'Five peaceful cats perched on a stone ivy-covered wall watching birds soar across massive summer cumulus clouds.',
     category: 'aesthetic',
     categoryLabel: 'Aesthetic & Pastel',
     mood: 'cozy',
     style: 'matte-painting',
-    tags: ['cats', 'ghibli', 'clouds', 'summer', 'aesthetic', 'cozy', 'sky'],
+    tags: ['cats', 'clouds', 'summer', 'aesthetic', 'cozy', 'sky'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -6299,7 +6299,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#99C2FF',
       particleCount: 22
     },
-    searchQueries: ['ghibli discord banner', 'aesthetic cat pfp', 'anime cloud banner']
+    searchQueries: ['aesthetic cat discord banner', 'cozy cats wall pfp', 'anime cloud banner']
   },
   {
     id: 'showcase-golden-solitude',
@@ -6766,7 +6766,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
     categoryLabel: 'Cute & Whimsical',
     mood: 'cozy',
     style: 'cel-shaded',
-    tags: ['cute', 'kawaii', 'floating-island', 'chibi', 'rainbow', 'ghibli'],
+    tags: ['cute', 'kawaii', 'floating-island', 'chibi', 'rainbow', 'fantasy'],
     isPopular: true,
     isStaffPick: true,
     isNew: true,
@@ -8369,7 +8369,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
     categoryLabel: '2D Server Icons & Badges',
     mood: 'moody',
     style: 'cel-shaded',
-    tags: ['vigilante', 'bat', 'rain', 'dark-knight', 'city'],
+    tags: ['vigilante', 'bat-emblem', 'rain', 'night-sentinel', 'city'],
     isPopular: true,
     profileThemeHex: '#080A10',
     accentHex: '#FFDF82',
@@ -8393,7 +8393,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#99C2FF',
       particleCount: 30
     },
-    searchQueries: ['batman style banner discord', 'vigilante pfp', 'night hero banner']
+    searchQueries: ['night vigilante banner discord', 'vigilante pfp', 'night hero banner']
   },
   {
     id: 'hero-03',
@@ -8500,13 +8500,13 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
   {
     id: 'hero-06',
     slug: 'iron-bastion-power-armor',
-    title: 'Titan Bastion: Arc Reactor Core',
-    description: 'Gleaming gold-titanium composite alloy chestplate with an energized triangular arc reactor humming with power.',
+    title: 'Titan Bastion: Quantum Core Armor',
+    description: 'Gleaming gold-titanium composite alloy chestplate with an energized triangular power core humming with energy.',
     category: 'icons-2d',
     categoryLabel: '2D Server Icons & Badges',
     mood: 'epic',
     style: '3d-render',
-    tags: ['iron-man', 'arc-reactor', 'armor', 'titanium', 'gold'],
+    tags: ['quantum-core', 'armor', 'titanium', 'gold', 'futuristic'],
     profileThemeHex: '#140608',
     accentHex: '#FFDF82',
     glowHex: '#99C2FF',
@@ -8519,7 +8519,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       gradient: 'linear-gradient(135deg, #140608 0%, #2A0E12 50%, #FFDF82 100%)',
       bgPattern: 'hexagons',
       primaryIcon: '🦾',
-      secondaryElements: ['arc-reactor', 'hud-overlay', 'cooling-steam']
+      secondaryElements: ['power-core', 'hud-overlay', 'cooling-steam']
     },
     motionConfig: {
       type: 'light-pulse',
@@ -8529,7 +8529,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#99C2FF',
       particleCount: 22
     },
-    searchQueries: ['iron man discord banner', 'arc reactor pfp', 'titanium hero banner']
+    searchQueries: ['quantum core discord banner', 'power core pfp', 'titanium hero banner']
   },
   {
     id: 'hero-07',
@@ -8540,7 +8540,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
     categoryLabel: '2D Server Icons & Badges',
     mood: 'energetic',
     style: 'cel-shaded',
-    tags: ['spider-man', 'web', 'skyline', 'sunset', 'swing'],
+    tags: ['arachnid', 'web', 'skyline', 'sunset', 'swing', 'superhero'],
     profileThemeHex: '#100612',
     accentHex: '#FF84BA',
     glowHex: '#FFDF82',
@@ -8563,7 +8563,7 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       glowColor: '#FF84BA',
       particleCount: 24
     },
-    searchQueries: ['spiderman style banner', 'web slinger pfp discord', 'sunset hero banner']
+    searchQueries: ['arachnid slinger banner', 'web slinger pfp discord', 'sunset hero banner']
   },
   {
     id: 'hero-08',
@@ -10618,6 +10618,633 @@ const RAW_DISCORD_ASSET_PRESETS: DiscordAssetPreset[] = [
       particleCount: 18
     },
     searchQueries: ['bunny discord banner', 'sleepy rabbit pfp', 'kawaii moon banner']
+    },
+  // =========================================================================
+  // BATCH 6: PINTEREST EXPANSION ANIMATED BANNERS (HORIZONTAL 720X300)
+  // =========================================================================
+  {
+    id: 'animated-crimson-rain-ronin-katana',
+    slug: 'crimson-rain-ronin-katana',
+    title: 'Crimson Rain Ronin: Obsidian Blade Twilight',
+    description: 'Hooded swordsman standing resolute in torrential crimson-lit midnight rain with atmospheric falling water droplets.',
+    category: 'anime',
+    categoryLabel: 'Anime & Manga',
+    mood: 'dark',
+    style: 'cinematic-motion',
+    tags: ['animated', 'katana', 'ronin', 'swordsman', 'rain', 'dark', 'anime', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/crimson-rain-ronin-katana-poster.webp',
+    animatedWebpUrl: '/assets/animated/crimson-rain-ronin-katana.webp',
+    profileThemeHex: '#140C12',
+    accentHex: '#E11D48',
+    glowHex: '#FB7185',
+    paletteColors: ['#140C12', '#2A0E18', '#E11D48', '#FB7185'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 40, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #140C12 0%, #2A0E18 50%, #E11D48 100%)',
+      bgPattern: 'lines',
+      primaryIcon: '⚔️',
+      secondaryElements: ['crimson-rain', 'obsidian-blade', 'water-droplets']
+    },
+    motionConfig: {
+      type: 'rain-droplets',
+      speed: 1.2,
+      intensity: 0.8,
+      glowColor: '#E11D48',
+      particleCount: 24
+    },
+    searchQueries: ['crimson rain ronin discord banner', 'katana swordsman animated banner', 'dark anime rain gif']
+  },
+  {
+    id: 'animated-apex-web-slinger-canyon-glide',
+    slug: 'apex-web-slinger-canyon-glide',
+    title: 'Apex Web Slinger: Urban Canyon Glide',
+    description: 'High-velocity acrobatic swing carving through towering glass skyscraper reflections in a bustling metropolis.',
+    category: 'superhero',
+    categoryLabel: 'Superhero & Comic',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'superhero', 'acrobat', 'web-slinger', 'skyscrapers', 'velocity', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/apex-web-slinger-canyon-glide-poster.webp',
+    animatedWebpUrl: '/assets/animated/apex-web-slinger-canyon-glide.webp',
+    profileThemeHex: '#0D1527',
+    accentHex: '#0284C7',
+    glowHex: '#38BDF8',
+    paletteColors: ['#0D1527', '#1E293B', '#0284C7', '#38BDF8'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 45, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #0D1527 0%, #1E293B 50%, #0284C7 100%)',
+      bgPattern: 'grid',
+      primaryIcon: '🕷️',
+      secondaryElements: ['glass-canyon', 'web-glide', 'city-reflections']
+    },
+    motionConfig: {
+      type: 'spider-web-glint',
+      speed: 1.3,
+      intensity: 0.85,
+      glowColor: '#38BDF8',
+      particleCount: 20
+    },
+    searchQueries: ['apex web slinger banner', 'city canyon swing pfp', 'urban acrobatic animated gif']
+  },
+  {
+    id: 'animated-demon-vanguard-anti-magic-wings',
+    slug: 'demon-vanguard-anti-magic-wings',
+    title: 'Demon Vanguard: Black Aura Anti-Magic Wings',
+    description: 'Fierce dark fantasy warrior channeling an obsidian demon wing with crackling crimson antimagic aura particles.',
+    category: 'anime',
+    categoryLabel: 'Anime & Manga',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'anti-magic', 'demon-wings', 'dark-aura', 'anime', 'warrior', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/demon-vanguard-anti-magic-wings-poster.webp',
+    animatedWebpUrl: '/assets/animated/demon-vanguard-anti-magic-wings.webp',
+    profileThemeHex: '#120A10',
+    accentHex: '#DC2626',
+    glowHex: '#F87171',
+    paletteColors: ['#120A10', '#2B0D18', '#DC2626', '#F87171'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 40, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #120A10 0%, #2B0D18 50%, #DC2626 100%)',
+      bgPattern: 'lines',
+      primaryIcon: '🗡️',
+      secondaryElements: ['demon-wing', 'antimagic-sparks', 'dark-aura']
+    },
+    motionConfig: {
+      type: 'dark-energy',
+      speed: 1.2,
+      intensity: 0.9,
+      glowColor: '#DC2626',
+      particleCount: 25
+    },
+    searchQueries: ['anti magic demon wing banner', 'black aura warrior pfp', 'dark anime swordsman gif']
+  },
+  {
+    id: 'animated-flame-bone-valkyrie-incineration',
+    slug: 'flame-bone-valkyrie-incineration',
+    title: 'Flame Bone Sovereign: Incinerating Winged Blade',
+    description: 'Elite flame wielder commanding incandescent skeletal bone wings amidst rising embers and blinding orange flare.',
+    category: 'fantasy',
+    categoryLabel: 'Fantasy & Mythic',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'flame-bone', 'fire', 'skeletal-wings', 'katana', 'anime', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/flame-bone-valkyrie-incineration-poster.webp',
+    animatedWebpUrl: '/assets/animated/flame-bone-valkyrie-incineration.webp',
+    profileThemeHex: '#1C0D05',
+    accentHex: '#EA580C',
+    glowHex: '#FBA04B',
+    paletteColors: ['#1C0D05', '#3A1507', '#EA580C', '#FBA04B'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 45, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #1C0D05 0%, #3A1507 50%, #EA580C 100%)',
+      bgPattern: 'waves',
+      primaryIcon: '🔥',
+      secondaryElements: ['flame-bone', 'skeletal-wings', 'incineration-embers']
+    },
+    motionConfig: {
+      type: 'embers-drift',
+      speed: 1.1,
+      intensity: 0.85,
+      glowColor: '#EA580C',
+      particleCount: 22
+    },
+    searchQueries: ['flame bone wings banner', 'fire swordswoman pfp', 'incineration anime banner gif']
+  },
+  {
+    id: 'animated-fragrant-blossom-gentle-breeze',
+    slug: 'fragrant-blossom-gentle-breeze',
+    title: 'Fragrant Blossom Reverie: Soft Pastel Meadow',
+    description: 'Charming anime heroine in a warm afternoon breeze with gentle fluttering flower petals and heartwarming soft eyes.',
+    category: 'aesthetic',
+    categoryLabel: 'Aesthetic & Pastel',
+    mood: 'cozy',
+    style: 'cinematic-motion',
+    tags: ['animated', 'pastel', 'floral', 'gentle-breeze', 'aesthetic', 'anime', 'cozy', 'banner', 'gif', 'female'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/fragrant-blossom-gentle-breeze-poster.webp',
+    animatedWebpUrl: '/assets/animated/fragrant-blossom-gentle-breeze.webp',
+    profileThemeHex: '#1E141D',
+    accentHex: '#EC4899',
+    glowHex: '#F472B6',
+    paletteColors: ['#1E141D', '#3B1F34', '#EC4899', '#F472B6'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 40, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #1E141D 0%, #3B1F34 50%, #EC4899 100%)',
+      bgPattern: 'dots',
+      primaryIcon: '🌸',
+      secondaryElements: ['flower-petals', 'warm-breeze', 'pastel-sunlight']
+    },
+    motionConfig: {
+      type: 'cherry-petals',
+      speed: 0.9,
+      intensity: 0.7,
+      glowColor: '#F472B6',
+      particleCount: 18
+    },
+    searchQueries: ['fragrant blossom discord banner', 'soft anime girl pfp', 'pastel floral animated banner']
+  },
+  {
+    id: 'animated-neon-solitude-cyber-gaze',
+    slug: 'neon-solitude-cyber-gaze',
+    title: 'Neon Solitude: Midnight Cyber Gaze',
+    description: 'Stylized anime character framed by pulsing violet neon lines and moody metropolitan dusk bokeh.',
+    category: 'cyberpunk',
+    categoryLabel: 'Cyberpunk & Tech',
+    mood: 'futuristic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'cyberpunk', 'neon-lines', 'midnight', 'anime', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/neon-solitude-cyber-gaze-poster.webp',
+    animatedWebpUrl: '/assets/animated/neon-solitude-cyber-gaze.webp',
+    profileThemeHex: '#100D1E',
+    accentHex: '#8B5CF6',
+    glowHex: '#C084FC',
+    paletteColors: ['#100D1E', '#221A3D', '#8B5CF6', '#C084FC'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 45, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #100D1E 0%, #221A3D 50%, #8B5CF6 100%)',
+      bgPattern: 'circuit',
+      primaryIcon: '⚡',
+      secondaryElements: ['neon-bokeh', 'midnight-lines', 'cyber-haze']
+    },
+    motionConfig: {
+      type: 'neon-pulse',
+      speed: 1.0,
+      intensity: 0.8,
+      glowColor: '#C084FC',
+      particleCount: 20
+    },
+    searchQueries: ['neon solitude banner', 'midnight cyber character pfp', 'violet anime neon gif']
+  },
+  {
+    id: 'animated-quantum-gauntlet-cosmic-surge',
+    slug: 'quantum-gauntlet-cosmic-surge',
+    title: 'Quantum Gauntlet: Cosmic Stone Resonance',
+    description: 'Battle-hardened tech armor channeling prismatic celestial stones with blinding energetic arcs and resolute heroism.',
+    category: 'cinematic',
+    categoryLabel: 'Cinematic & Atmosphere',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'quantum', 'cosmic-stones', 'armor', 'heroic', 'cinematic', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/quantum-gauntlet-cosmic-surge-poster.webp',
+    animatedWebpUrl: '/assets/animated/quantum-gauntlet-cosmic-surge.webp',
+    profileThemeHex: '#1E0A12',
+    accentHex: '#F59E0B',
+    glowHex: '#E11D48',
+    paletteColors: ['#1E0A12', '#3D101C', '#F59E0B', '#E11D48'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 45, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #1E0A12 0%, #3D101C 50%, #F59E0B 100%)',
+      bgPattern: 'hexagons',
+      primaryIcon: '💎',
+      secondaryElements: ['cosmic-stones', 'gauntlet-arcs', 'quantum-resonance']
+    },
+    motionConfig: {
+      type: 'quantum-energy',
+      speed: 1.2,
+      intensity: 0.9,
+      glowColor: '#F59E0B',
+      particleCount: 25
+    },
+    searchQueries: ['quantum gauntlet banner', 'cosmic stone resonance pfp', 'heroic armored snap gif']
+  },
+  {
+    id: 'animated-multiverse-clocktower-inverted-dusk',
+    slug: 'multiverse-clocktower-inverted-dusk',
+    title: 'Multiverse Clocktower: Inverted Twilight Skyline',
+    description: 'Two hero silhouettes perched upside-down above a glowing golden-hour clocktower overlooking an endless metropolis.',
+    category: 'superhero',
+    categoryLabel: 'Superhero & Comic',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'superhero', 'clocktower', 'multiverse', 'inverted-city', 'twilight', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/multiverse-clocktower-inverted-dusk-poster.webp',
+    animatedWebpUrl: '/assets/animated/multiverse-clocktower-inverted-dusk.webp',
+    profileThemeHex: '#1A1124',
+    accentHex: '#F59E0B',
+    glowHex: '#8B5CF6',
+    paletteColors: ['#1A1124', '#361D4C', '#F59E0B', '#8B5CF6'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 50, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #1A1124 0%, #361D4C 50%, #F59E0B 100%)',
+      bgPattern: 'grid',
+      primaryIcon: '🌆',
+      secondaryElements: ['clocktower-dial', 'inverted-city', 'multiverse-haze']
+    },
+    motionConfig: {
+      type: 'chromatic-shift',
+      speed: 1.1,
+      intensity: 0.8,
+      glowColor: '#8B5CF6',
+      particleCount: 18
+    },
+    searchQueries: ['multiverse clocktower discord banner', 'inverted skyline hero pfp', 'twilight city animated gif']
+  },
+  {
+    id: 'animated-curse-sovereign-hand-seal-surge',
+    slug: 'curse-sovereign-hand-seal-surge',
+    title: 'Curse Sovereign: Sovereign Hand Seal Surge',
+    description: 'Ancient curse monarch unleashing domain expansion hand seal with spiraling red curse pressure and slicing aura.',
+    category: 'dark',
+    categoryLabel: 'Dark & Gothic',
+    mood: 'dark',
+    style: 'cinematic-motion',
+    tags: ['animated', 'curse-sovereign', 'hand-seal', 'dark-fantasy', 'domain', 'anime', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/curse-sovereign-hand-seal-surge-poster.webp',
+    animatedWebpUrl: '/assets/animated/curse-sovereign-hand-seal-surge.webp',
+    profileThemeHex: '#16080D',
+    accentHex: '#DC2626',
+    glowHex: '#F87171',
+    paletteColors: ['#16080D', '#330D1B', '#DC2626', '#F87171'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 40, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #16080D 0%, #330D1B 50%, #DC2626 100%)',
+      bgPattern: 'lines',
+      primaryIcon: '🩸',
+      secondaryElements: ['hand-seal', 'curse-spiral', 'slicing-distortion']
+    },
+    motionConfig: {
+      type: 'curse-cleave',
+      speed: 1.2,
+      intensity: 0.9,
+      glowColor: '#DC2626',
+      particleCount: 22
+    },
+    searchQueries: ['curse sovereign hand seal banner', 'domain seal anime pfp', 'dark curse pressure gif']
+  },
+  {
+    id: 'animated-malevolent-temple-blood-water-abyss',
+    slug: 'malevolent-temple-blood-water-abyss',
+    title: 'Malevolent Sanctuary: Blood Water Skull Throne',
+    description: 'Ominous ancient temple rising from shallow mirrored blood waters beneath a giant bull skull and vermilion sky.',
+    category: 'dark',
+    categoryLabel: 'Dark & Gothic',
+    mood: 'dark',
+    style: 'cinematic-motion',
+    tags: ['animated', 'dark-temple', 'blood-water', 'skull-throne', 'ominous', 'horror', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/malevolent-temple-blood-water-abyss-poster.webp',
+    animatedWebpUrl: '/assets/animated/malevolent-temple-blood-water-abyss.webp',
+    profileThemeHex: '#1A0A0E',
+    accentHex: '#B91C1C',
+    glowHex: '#EF4444',
+    paletteColors: ['#1A0A0E', '#3D0E19', '#B91C1C', '#EF4444'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 50, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #1A0A0E 0%, #3D0E19 50%, #B91C1C 100%)',
+      bgPattern: 'waves',
+      primaryIcon: '⛩️',
+      secondaryElements: ['skull-shrine', 'blood-water', 'mirrored-ripples']
+    },
+    motionConfig: {
+      type: 'blood-ripples',
+      speed: 1.0,
+      intensity: 0.8,
+      glowColor: '#EF4444',
+      particleCount: 20
+    },
+    searchQueries: ['malevolent skull shrine banner', 'blood water temple pfp', 'dark shrine water reflections gif']
+  },
+  {
+    id: 'animated-crimson-reaper-thunder-tempest',
+    slug: 'crimson-reaper-thunder-tempest',
+    title: 'Crimson Reaper: Thunder & Spirit Tempest',
+    description: 'Fierce dark reaper swinging massive energy blade as red and black lightning crackles across torrential storm clouds.',
+    category: 'anime',
+    categoryLabel: 'Anime & Manga',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'soul-reaper', 'crimson-lightning', 'spirit-energy', 'swordsman', 'anime', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/crimson-reaper-thunder-tempest-poster.webp',
+    animatedWebpUrl: '/assets/animated/crimson-reaper-thunder-tempest.webp',
+    profileThemeHex: '#0F0C14',
+    accentHex: '#EF4444',
+    glowHex: '#A855F7',
+    paletteColors: ['#0F0C14', '#261633', '#EF4444', '#A855F7'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 40, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #0F0C14 0%, #261633 50%, #EF4444 100%)',
+      bgPattern: 'lines',
+      primaryIcon: '⚡',
+      secondaryElements: ['crimson-lightning', 'reaper-blade', 'thunder-storm']
+    },
+    motionConfig: {
+      type: 'lightning-tempest',
+      speed: 1.3,
+      intensity: 0.9,
+      glowColor: '#EF4444',
+      particleCount: 24
+    },
+    searchQueries: ['crimson reaper lightning banner', 'spirit blade tempest pfp', 'thunder swordsman animated gif']
+  },
+  {
+    id: 'animated-striker-icon-stadium-spotlight-flame',
+    slug: 'striker-icon-stadium-spotlight-flame',
+    title: 'Iconic Striker: Stadium Spotlight & Golden Aura',
+    description: 'Legendary number 7 striker in iconic celebration stance bathed in blazing arena stadium floodlights and golden crowd haze.',
+    category: 'cinematic',
+    categoryLabel: 'Cinematic & Atmosphere',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'football', 'striker', 'stadium', 'sports', 'legend', 'golden-hour', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/striker-icon-stadium-spotlight-flame-poster.webp',
+    animatedWebpUrl: '/assets/animated/striker-icon-stadium-spotlight-flame.webp',
+    profileThemeHex: '#12141D',
+    accentHex: '#F59E0B',
+    glowHex: '#E2E8F0',
+    paletteColors: ['#12141D', '#24293D', '#F59E0B', '#E2E8F0'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 35, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #12141D 0%, #24293D 50%, #F59E0B 100%)',
+      bgPattern: 'dots',
+      primaryIcon: '⚽',
+      secondaryElements: ['stadium-floodlights', 'iconic-stance', 'golden-crowd-haze']
+    },
+    motionConfig: {
+      type: 'stadium-spotlights',
+      speed: 1.0,
+      intensity: 0.8,
+      glowColor: '#F59E0B',
+      particleCount: 20
+    },
+    searchQueries: ['number 7 striker banner', 'stadium celebration pfp discord', 'legendary football player gif']
+  },
+  {
+    id: 'animated-golden-playmaker-world-champion',
+    slug: 'golden-playmaker-world-champion',
+    title: 'Golden Playmaker: World Champion Glory',
+    description: 'The maestro of football lifting the world championship trophy surrounded by shimmering golden confetti and celestial stadium light.',
+    category: 'cinematic',
+    categoryLabel: 'Cinematic & Atmosphere',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'playmaker', 'football', 'champion', 'gold-confetti', 'sports', 'legend', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/golden-playmaker-world-champion-poster.webp',
+    animatedWebpUrl: '/assets/animated/golden-playmaker-world-champion.webp',
+    profileThemeHex: '#0D1524',
+    accentHex: '#38BDF8',
+    glowHex: '#F59E0B',
+    paletteColors: ['#0D1524', '#1A2942', '#38BDF8', '#F59E0B'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 35, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #0D1524 0%, #1A2942 50%, #38BDF8 100%)',
+      bgPattern: 'stars',
+      primaryIcon: '🏆',
+      secondaryElements: ['championship-trophy', 'golden-confetti', 'stadium-glory']
+    },
+    motionConfig: {
+      type: 'golden-confetti',
+      speed: 1.1,
+      intensity: 0.85,
+      glowColor: '#F59E0B',
+      particleCount: 25
+    },
+    searchQueries: ['world champion playmaker banner', 'football maestro trophy pfp', 'golden confetti champion gif']
+  },
+  {
+    id: 'animated-cricket-chase-master-fire-stadium',
+    slug: 'cricket-chase-master-fire-stadium',
+    title: 'Chase Master: Cricket Stadium Fire & Focus',
+    description: 'Fierce modern cricket captain with steely determination amidst electric stadium lights, roaring crowds, and fiery passion.',
+    category: 'cinematic',
+    categoryLabel: 'Cinematic & Atmosphere',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'cricket', 'captain', 'stadium', 'sports', 'legend', 'fire', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/cricket-chase-master-fire-stadium-poster.webp',
+    animatedWebpUrl: '/assets/animated/cricket-chase-master-fire-stadium.webp',
+    profileThemeHex: '#14101E',
+    accentHex: '#3B82F6',
+    glowHex: '#EF4444',
+    paletteColors: ['#14101E', '#2B1A3D', '#3B82F6', '#EF4444'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 35, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #14101E 0%, #2B1A3D 50%, #3B82F6 100%)',
+      bgPattern: 'waves',
+      primaryIcon: '🏏',
+      secondaryElements: ['electric-floodlights', 'roaring-arena', 'fiery-focus']
+    },
+    motionConfig: {
+      type: 'stadium-pulse',
+      speed: 1.0,
+      intensity: 0.8,
+      glowColor: '#EF4444',
+      particleCount: 20
+    },
+    searchQueries: ['cricket chase master banner', 'cricket captain focus pfp', 'arena lights sports banner gif']
+  },
+  {
+    id: 'animated-striker-dynamo-graphic-arena',
+    slug: 'striker-dynamo-graphic-arena',
+    title: 'White Striker: Kinetic Minimalist Profile',
+    description: 'World-class forward in clean white athletic apparel against a minimalist typographic arena with warm golden ambient light.',
+    category: 'cinematic',
+    categoryLabel: 'Cinematic & Atmosphere',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'striker', 'football', 'white-aesthetic', 'sports', 'legend', 'minimalist', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/striker-dynamo-graphic-arena-poster.webp',
+    animatedWebpUrl: '/assets/animated/striker-dynamo-graphic-arena.webp',
+    profileThemeHex: '#1A1A1E',
+    accentHex: '#F8FAFC',
+    glowHex: '#E2E8F0',
+    paletteColors: ['#1A1A1E', '#2D2D35', '#F8FAFC', '#E2E8F0'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 40, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #1A1A1E 0%, #2D2D35 50%, #F8FAFC 100%)',
+      bgPattern: 'lines',
+      primaryIcon: '⚡',
+      secondaryElements: ['kinetic-typography', 'minimalist-arena', 'white-hoodie']
+    },
+    motionConfig: {
+      type: 'speed-streaks',
+      speed: 1.0,
+      intensity: 0.75,
+      glowColor: '#E2E8F0',
+      particleCount: 18
+    },
+    searchQueries: ['white striker banner', 'legendary forward profile banner', 'clean sports discord banner']
+  },
+  {
+    id: 'animated-blaugrana-cathedral-stadium-lights',
+    slug: 'blaugrana-cathedral-stadium-lights',
+    title: 'Blaugrana Captain: Outstretched Arms Victory',
+    description: 'Legendary Blaugrana captain celebrating in triumph with outstretched arms, set against a dynamic typography arena backdrop.',
+    category: 'cinematic',
+    categoryLabel: 'Cinematic & Atmosphere',
+    mood: 'epic',
+    style: 'cinematic-motion',
+    tags: ['animated', 'captain', 'football', 'blaugrana', 'celebration', 'sports', 'legend', 'banner', 'gif'],
+    isPopular: true,
+    isStaffPick: false,
+    isNew: true,
+    isAnimated: true,
+    imageUrl: '/assets/animated/blaugrana-cathedral-stadium-lights-poster.webp',
+    animatedWebpUrl: '/assets/animated/blaugrana-cathedral-stadium-lights.webp',
+    profileThemeHex: '#0D1127',
+    accentHex: '#2563EB',
+    glowHex: '#BE123C',
+    paletteColors: ['#0D1127', '#1E254A', '#2563EB', '#BE123C'],
+    focalPoint: {
+      banner: { x: 50, y: 50 },
+      pfp: { x: 50, y: 50, zoom: 1.2 }
+    },
+    visualTheme: {
+      gradient: 'linear-gradient(135deg, #0D1127 0%, #1E254A 50%, #2563EB 100%)',
+      bgPattern: 'hexagons',
+      primaryIcon: '🏟️',
+      secondaryElements: ['outstretched-arms', 'blaugrana-captain', 'typography-arena']
+    },
+    motionConfig: {
+      type: 'floodlight-beams',
+      speed: 1.0,
+      intensity: 0.7,
+      glowColor: '#2563EB',
+      particleCount: 16
+    },
+    searchQueries: ['blaugrana captain banner', 'football victory outstretched arms pfp', 'legendary captain celebration gif']
   }
 ];
 

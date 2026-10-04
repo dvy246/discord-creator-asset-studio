@@ -62,61 +62,36 @@ const videoMediaUrl = preset.videoUrl || (isAnimated && preset.animatedWebpUrl ?
       class="asset-preview-canvas w-full h-full relative transition-transform duration-500 group-hover:scale-105"
       style={`background: ${preset.visualTheme.gradient};`}
     >
-      {animatedMediaUrl ? (
+      {visualMediaUrl ? (
         isPfpCard ? (
           <div class="absolute inset-0 flex items-center justify-center overflow-hidden z-0">
-            <!-- Ambient blurred backdrop -->
+            <!-- Ambient blurred backdrop: always static to eliminate continuous GPU blur re-rendering -->
             <img
-              src={animatedMediaUrl}
+              src={staticMediaUrl || visualMediaUrl}
               alt=""
               aria-hidden="true"
-              class="absolute inset-0 w-full h-full object-cover blur-lg scale-125 opacity-40 select-none"
+              class="absolute inset-0 w-full h-full object-cover blur-lg scale-125 opacity-40 select-none pointer-events-none"
               loading="lazy"
             />
-            <!-- Sharp centered animated avatar preview -->
+            <!-- Sharp centered avatar preview with hover-to-play motion support -->
             <div class="relative z-1 aspect-square h-full max-h-full py-2 flex items-center justify-center">
               <img
-                src={animatedMediaUrl}
+                src={staticMediaUrl || visualMediaUrl}
+                data-static-src={staticMediaUrl || visualMediaUrl}
+                data-animated-src={animatedMediaUrl || ''}
                 alt={preset.title}
-                class="h-full w-auto aspect-square object-cover rounded-2xl shadow-2xl border border-white/20"
+                class={`card-motion-preview h-full w-auto aspect-square object-cover rounded-2xl shadow-2xl border border-white/20 select-none ${isAnimated ? 'cursor-pointer' : ''}`}
                 loading="lazy"
               />
             </div>
           </div>
         ) : (
           <img
-            src={animatedMediaUrl}
+            src={staticMediaUrl || visualMediaUrl}
+            data-static-src={staticMediaUrl || visualMediaUrl}
+            data-animated-src={animatedMediaUrl || ''}
             alt={preset.title}
-            class="absolute inset-0 w-full h-full object-cover z-0 animated-loop-img select-none"
-            loading="lazy"
-          />
-        )
-      ) : staticMediaUrl ? (
-        isPfpCard ? (
-          <div class="absolute inset-0 flex items-center justify-center overflow-hidden z-0">
-            <!-- Ambient blurred backdrop -->
-            <img
-              src={staticMediaUrl}
-              alt=""
-              aria-hidden="true"
-              class="absolute inset-0 w-full h-full object-cover blur-lg scale-125 opacity-40 select-none"
-              loading="lazy"
-            />
-            <!-- Sharp centered static avatar preview -->
-            <div class="relative z-1 aspect-square h-full max-h-full py-2 flex items-center justify-center">
-              <img
-                src={staticMediaUrl}
-                alt={preset.title}
-                class="h-full w-auto aspect-square object-cover rounded-2xl shadow-2xl border border-white/20"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        ) : (
-          <img
-            src={staticMediaUrl}
-            alt={preset.title}
-            class="absolute inset-0 w-full h-full object-cover z-0"
+            class={`card-motion-preview absolute inset-0 w-full h-full object-cover z-0 select-none ${isAnimated ? 'animated-loop-img cursor-pointer' : ''}`}
             loading="lazy"
           />
         )
@@ -195,11 +170,13 @@ const videoMediaUrl = preset.videoUrl || (isAnimated && preset.animatedWebpUrl ?
         )}
       </div>
 
-      <!-- Animated Loop Indicator -->
-      <div class="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[10px] font-mono text-[#99C2FF] border border-[#99C2FF]/30">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#0D9488] animate-pulse"></span>
-        <span>Loop</span>
-      </div>
+      <!-- Animated Motion Indicator (Hover/Tap to Play) -->
+      {isAnimated && (
+        <div class="card-motion-badge flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-md text-[10px] font-mono text-[#CBD5E1] border border-white/20 shadow-xs transition-all duration-200">
+          <span class="motion-badge-dot w-1.5 h-1.5 rounded-full bg-white/60"></span>
+          <span class="motion-badge-text font-bold uppercase tracking-wider">▶ GIF</span>
+        </div>
+      )}
     </div>
 
     <!-- Matching PFP Circular Preview Floating In Corner -->
@@ -210,17 +187,9 @@ const videoMediaUrl = preset.videoUrl || (isAnimated && preset.animatedWebpUrl ?
     >
       {preset.pfpImageUrl ? (
         <img
-          src={preset.pfpImageUrl}
+          src={preset.imageUrl || preset.pfpImageUrl}
           alt={`${preset.title} Avatar`}
           class="w-full h-full object-cover"
-          loading="lazy"
-        />
-      ) : preset.animatedWebpUrl ? (
-        <img
-          src={preset.animatedWebpUrl}
-          alt={`${preset.title} Avatar`}
-          class="w-full h-full object-cover"
-          style={`object-position: ${preset.focalPoint.pfp.x}% ${preset.focalPoint.pfp.y}%; transform: scale(${preset.focalPoint.pfp.zoom});`}
           loading="lazy"
         />
       ) : preset.imageUrl ? (
@@ -474,6 +443,103 @@ const videoMediaUrl = preset.videoUrl || (isAnimated && preset.animatedWebpUrl ?
     }
   }
 
-  setupAssetCardDropdowns();
-  document.addEventListener('astro:page-load', setupAssetCardDropdowns);
+  function setupAssetCardMotionHover() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    // Cache preloaded Image URLs so playback starts instantaneously without flicker
+    const preloadedUrls = new Set<string>();
+
+    document.querySelectorAll<HTMLElement>('.asset-card[data-is-animated="true"]').forEach(card => {
+      if (card.dataset.motionInitialized === 'true') return;
+      card.dataset.motionInitialized = 'true';
+
+      const motionImg = card.querySelector<HTMLImageElement>('.card-motion-preview');
+      if (!motionImg) return;
+
+      const staticSrc = motionImg.getAttribute('data-static-src') || motionImg.src;
+      const animatedSrc = motionImg.getAttribute('data-animated-src');
+      if (!animatedSrc || staticSrc === animatedSrc) return;
+
+      const badge = card.querySelector<HTMLElement>('.card-motion-badge');
+      const badgeDot = badge?.querySelector<HTMLElement>('.motion-badge-dot');
+      const badgeText = badge?.querySelector<HTMLElement>('.motion-badge-text');
+
+      function startAnimation() {
+        if (!preloadedUrls.has(animatedSrc)) {
+          const preloader = new Image();
+          preloader.src = animatedSrc;
+          preloadedUrls.add(animatedSrc);
+        }
+        motionImg.src = animatedSrc;
+        card.classList.add('is-animating');
+        if (badge && badgeDot && badgeText) {
+          badgeDot.className = 'motion-badge-dot w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse';
+          badgeText.textContent = 'PLAYING';
+          badge.classList.add('border-[#22C55E]/40', 'text-[#22C55E]');
+          badge.classList.remove('text-[#CBD5E1]', 'border-white/20');
+        }
+      }
+
+      function stopAnimation() {
+        motionImg.src = staticSrc;
+        card.classList.remove('is-animating');
+        if (badge && badgeDot && badgeText) {
+          badgeDot.className = 'motion-badge-dot w-1.5 h-1.5 rounded-full bg-white/60';
+          badgeText.textContent = '▶ GIF';
+          badge.classList.remove('border-[#22C55E]/40', 'text-[#22C55E]');
+          badge.classList.add('text-[#CBD5E1]', 'border-white/20');
+        }
+      }
+
+      // Desktop: hover to play
+      card.addEventListener('mouseenter', startAnimation);
+      card.addEventListener('mouseleave', stopAnimation);
+
+      // Keyboard navigation accessibility: focus to play
+      card.addEventListener('focusin', startAnimation);
+      card.addEventListener('focusout', stopAnimation);
+
+      // Touch / Mobile: tap preview canvas to toggle play
+      const previewArea = card.querySelector<HTMLElement>('.asset-preview-canvas');
+      if (previewArea) {
+        previewArea.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          if (target.closest('button') || target.closest('a')) return;
+
+          if (card.classList.contains('is-animating')) {
+            stopAnimation();
+          } else {
+            // Stop other playing cards on mobile to keep memory light
+            document.querySelectorAll<HTMLElement>('.asset-card.is-animating').forEach(other => {
+              if (other !== card) {
+                const otherImg = other.querySelector<HTMLImageElement>('.card-motion-preview');
+                const otherStatic = otherImg?.getAttribute('data-static-src');
+                if (otherImg && otherStatic) otherImg.src = otherStatic;
+                other.classList.remove('is-animating');
+                const ob = other.querySelector<HTMLElement>('.card-motion-badge');
+                const od = ob?.querySelector<HTMLElement>('.motion-badge-dot');
+                const ot = ob?.querySelector<HTMLElement>('.motion-badge-text');
+                if (ob && od && ot) {
+                  od.className = 'motion-badge-dot w-1.5 h-1.5 rounded-full bg-white/60';
+                  ot.textContent = '▶ GIF';
+                  ob.classList.remove('border-[#22C55E]/40', 'text-[#22C55E]');
+                  ob.classList.add('text-[#CBD5E1]', 'border-white/20');
+                }
+              }
+            });
+            startAnimation();
+          }
+        });
+      }
+    });
+  }
+
+  function initAssetCards() {
+    setupAssetCardDropdowns();
+    setupAssetCardMotionHover();
+  }
+
+  initAssetCards();
+  document.addEventListener('astro:page-load', initAssetCards);
 </script>

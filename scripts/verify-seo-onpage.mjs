@@ -350,6 +350,7 @@ const indexablePages = [
   { path: 'assets/icons-2d/index.html', url: '/assets/icons-2d/' },
   { path: 'about/index.html', url: '/about/' },
   { path: 'contact/index.html', url: '/contact/' },
+  { path: 'copyright/index.html', url: '/copyright/' },
 ];
 
 console.log('--- Starting Mandatory On-Page SEO Programmatic Inspection ---');

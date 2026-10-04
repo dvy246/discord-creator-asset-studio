@@ -1,0 +1,93 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SketchUnderline from '../components/SketchUnderline.astro';
+import { generateWebPageSchema, generateBreadcrumbSchema } from '../utils/seo';
+
+const pageUrl = "https://discord-creator-asset-studio.pages.dev/copyright/";
+const copyrightSchema = generateWebPageSchema({
+  name: 'Copyright & DMCA Policy — Discord Creator Asset Studio',
+  description: 'Digital Millennium Copyright Act (DMCA) notice, intellectual property policies, and takedown procedures for Discord Creator Asset Studio.',
+  url: pageUrl
+});
+const breadcrumbSchema = generateBreadcrumbSchema([
+  { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
+  { name: "Copyright & DMCA", url: pageUrl }
+]);
+---
+
+<Layout title="Copyright & DMCA Policy | Discord Asset Studio" description="Digital Millennium Copyright Act (DMCA) notice, intellectual property policies, and takedown procedures for Discord Asset Studio.">
+  <script type="application/ld+json" set:html={copyrightSchema} />
+  <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+    <div class="mb-10">
+      <span class="text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Intellectual Property & Governance</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-[#FFEFE3] tracking-tight mt-2 mb-4">
+        Copyright & <span class="relative inline-block sketch-trigger"><span class="relative z-10">DMCA Policy</span><SketchUnderline color="#66A3BF" /></span>
+      </h1>
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-base leading-relaxed">
+        Effective date: October 4, 2026. Discord Creator Asset Studio respects intellectual property rights and adheres to the Digital Millennium Copyright Act (17 U.S.C. § 512).
+      </p>
+    </div>
+
+    <div class="space-y-8 text-[#475569] dark:text-[#CBD5E1] text-sm leading-relaxed border-t border-[#E0DBD0] dark:border-[#263454] pt-8">
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-[#FFEFE3] mb-3">1. Originality & Client-Side Media Ownership</h2>
+        <p class="mb-3">
+          Discord Creator Asset Studio provides client-side canvas utilities, calculators, and design tools designed to assist digital creators in preparing media for online communication platforms. All asset resizing, compression, and video conversion procedures execute locally within your web browser using HTML5 Canvas, WebAssembly, and client-side libraries.
+        </p>
+        <p>
+          We do not store, host, or transmit user-uploaded files across remote web servers. You retain complete ownership and intellectual property rights over any graphics, banners, avatars, or media you process using our utilities.
+        </p>
+      </section>
+
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-[#FFEFE3] mb-3">2. Showcase Catalog & Community Presets</h2>
+        <p class="mb-3">
+          Visual assets, procedural color themes, and preset templates provided within our free catalog are original aesthetic creations, stylized artwork, or procedural generative designs crafted to demonstrate platform formatting capabilities and safe-zone compliance.
+        </p>
+        <p>
+          If you believe that any graphical preset or text description hosted on this website infringes upon your copyright or intellectual property rights, we provide an expedited Notice and Takedown procedure in full compliance with Title 17, United States Code, Section 512(c)(3).
+        </p>
+      </section>
+
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-[#FFEFE3] mb-3">3. How to Submit a DMCA Takedown Notice</h2>
+        <p class="mb-3">
+          To file a formal copyright infringement notification with our designated agent, please email a written communication containing the following details:
+        </p>
+        <ul class="list-disc pl-5 space-y-2 mb-4 text-[#192538] dark:text-[#F1F5F9]">
+          <li><strong>Identification of the copyrighted work:</strong> A description or link to the copyrighted work claimed to have been infringed, or a representative list of works.</li>
+          <li><strong>Specific location on our website:</strong> The exact URL(s) and asset identifier(s) of the material you request to be removed or disabled.</li>
+          <li><strong>Contact information:</strong> Your legal name, physical address, telephone number, and email address.</li>
+          <li><strong>Good faith statement:</strong> A statement that you have a good faith belief that the disputed use of the material is not authorized by the copyright owner, its agent, or the law.</li>
+          <li><strong>Accuracy statement under penalty of perjury:</strong> A statement that the information provided in the notice is accurate, and under penalty of perjury, that you are the copyright owner or authorized to act on behalf of the owner.</li>
+          <li><strong>Signature:</strong> A physical or electronic signature of the copyright owner or a person authorized to act on their behalf.</li>
+        </ul>
+        <p class="text-xs bg-[#FAF8F5] dark:bg-[#161F2E] p-4 rounded-lg border border-[#E0DBD0] dark:border-[#263454]">
+          <strong>Designated Copyright Agent:</strong><br />
+          DMCA Legal Compliance Team<br />
+          Email: <a href="mailto:legal@discordassets.studio" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">legal@discordassets.studio</a><br />
+          Alternate Contact: <a href="mailto:support@discordassets.studio" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">support@discordassets.studio</a><br />
+          Turnaround time: All valid DMCA notices are acknowledged and reviewed within 24 to 48 business hours.
+        </p>
+      </section>
+
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-[#FFEFE3] mb-3">4. Counter-Notification Procedure</h2>
+        <p>
+          If you believe that your content was removed or disabled by mistake or misidentification, you may submit a written counter-notification pursuant to sections 512(g)(2) and (3) of the DMCA. The counter-notice must include your contact details, identification of the removed material, a statement under penalty of perjury consenting to jurisdiction, and your physical or electronic signature.
+        </p>
+      </section>
+
+      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
+        <h2 class="text-lg font-bold text-[#192538] dark:text-[#FFEFE3] mb-3">5. Trademark & Third-Party Disclaimers</h2>
+        <p class="mb-3">
+          <strong>Discord Trademark Notice:</strong> Discord Creator Asset Studio is an independent, unofficial utility project. We are not affiliated with, sponsored by, or endorsed by Discord, Inc. "Discord", the Discord logo, Clyde mascot, Discord Nitro, and server boost icons are registered trademarks of Discord, Inc. References to these platform names and technical specifications are made strictly under nominative fair use for compatibility, interoperability, and educational purposes.
+        </p>
+        <p>
+          <strong>Pop-Culture & Franchise References:</strong> Any aesthetic or thematic names, genres, or stylistic descriptions appearing in our catalog represent transformative artistic inspiration and do not imply sponsorship, affiliation, or endorsement by respective rights holders.
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>

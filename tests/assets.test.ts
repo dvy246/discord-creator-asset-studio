@@ -18,7 +18,7 @@ import {
 
 test('Catalog Data Architect: Presets counts and queries operate correctly', () => {
   const allPresets = getAllPresets();
-  assert.strictEqual(allPresets.length, 276, 'Should have 276 total presets');
+  assert.strictEqual(allPresets.length, 292, 'Should have 292 total presets');
 
   const pfps = getAllPfps();
   assert.strictEqual(pfps.length, 94, 'Should have 94 total PFPs');
@@ -27,7 +27,7 @@ test('Catalog Data Architect: Presets counts and queries operate correctly', () 
   }
 
   const banners = getAllBanners();
-  assert.strictEqual(banners.length, 209, 'Should have 209 total Banners');
+  assert.strictEqual(banners.length, 225, 'Should have 225 total Banners');
   for (const banner of banners) {
     assert.strictEqual(banner.isPfp, undefined, `Banner ${banner.id} must not have isPfp true`);
   }
@@ -49,7 +49,7 @@ test('Catalog Data Architect: Presets counts and queries operate correctly', () 
   assert.strictEqual(catPfps.length, 23, 'Should have 23 cat PFPs (static + animated)');
 
   const animated = getAnimatedPresets();
-  assert.strictEqual(animated.length, 91, 'Should have 91 animated WebP presets');
+  assert.strictEqual(animated.length, 107, 'Should have 107 animated WebP presets');
   for (const p of animated) {
     assert.ok(p.isAnimated || p.animatedWebpUrl, `Animated preset ${p.id} must have isAnimated or animatedWebpUrl`);
   }
@@ -160,6 +160,23 @@ test('Catalog Data Architect: Presets counts and queries operate correctly', () 
   const ichigo = getPresetBySlug('bleach-ichigo-bankai-tybw');
   assert.ok(ichigo, 'Ichigo Bankai preset should exist');
   assert.strictEqual(ichigo.animatedWebpUrl, '/assets/animated/bleach-ichigo-bankai-tybw.webp');
+
+  // Verify Batch 6 Pinterest Expansion Animated Banners
+  const crimsonRonin = getPresetBySlug('crimson-rain-ronin-katana');
+  assert.ok(crimsonRonin, 'Crimson rain ronin preset should exist');
+  assert.strictEqual(crimsonRonin.animatedWebpUrl, '/assets/animated/crimson-rain-ronin-katana.webp');
+
+  const strikerIcon = getPresetBySlug('striker-icon-stadium-spotlight-flame');
+  assert.ok(strikerIcon, 'Striker icon preset should exist');
+  assert.strictEqual(strikerIcon.animatedWebpUrl, '/assets/animated/striker-icon-stadium-spotlight-flame.webp');
+
+  const playmaker = getPresetBySlug('golden-playmaker-world-champion');
+  assert.ok(playmaker, 'Golden playmaker preset should exist');
+  assert.strictEqual(playmaker.animatedWebpUrl, '/assets/animated/golden-playmaker-world-champion.webp');
+
+  const cricketChase = getPresetBySlug('cricket-chase-master-fire-stadium');
+  assert.ok(cricketChase, 'Cricket chase master preset should exist');
+  assert.strictEqual(cricketChase.animatedWebpUrl, '/assets/animated/cricket-chase-master-fire-stadium.webp');
 });
 
 test('Catalog Data Architect: All image assets referenced exist on filesystem', () => {

@@ -165,9 +165,11 @@ const crawlableCategories = categoriesList.filter((cat) => BUILT_CATEGORY_PAGES.
             title={`Customize ${preset.title}`}
           >
             <img 
-              src={preset.animatedWebpUrl || preset.imageUrl} 
+              src={preset.imageUrl || preset.animatedWebpUrl} 
+              data-static-src={preset.imageUrl || preset.animatedWebpUrl}
+              data-animated-src={preset.animatedWebpUrl || ''}
               alt={preset.title}
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              class="featured-motion-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               loading="lazy"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent p-2.5 flex flex-col justify-between">
@@ -767,6 +769,20 @@ const crawlableCategories = categoriesList.filter((cat) => BUILT_CATEGORY_PAGES.
         e.preventDefault();
         searchInput?.focus();
       }
+    });
+
+    // Setup featured row hover motion
+    document.querySelectorAll('.featured-motion-img').forEach((img) => {
+      const imgEl = img as HTMLImageElement;
+      const staticSrc = imgEl.dataset.staticSrc;
+      const animatedSrc = imgEl.dataset.animatedSrc;
+      if (!staticSrc || !animatedSrc || staticSrc === animatedSrc) return;
+
+      const card = imgEl.closest('.group');
+      if (!card) return;
+
+      card.addEventListener('mouseenter', () => { imgEl.src = animatedSrc; });
+      card.addEventListener('mouseleave', () => { imgEl.src = staticSrc; });
     });
 
     // Run on initial load

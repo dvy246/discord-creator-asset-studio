@@ -353,11 +353,11 @@ Here are some of the most popular avatar styles:
 ### A. Anime <mark class="bg-[#C8DFDB]/60 dark:bg-[#66A3BF]/20 text-[#192538] dark:text-white font-semibold px-1 rounded">PFP Discord</mark> Avatars
 Anime avatars are a staple across Discord servers. Popular looks include:
 - **Lofi and Relaxed**: Soft pastel colors, rain against a window, and headphones.
-- **Action Stills**: Clean, high-contrast action frames from series like Jujutsu Kaisen or Demon Slayer.
+- **Action Stills**: Clean, high-contrast dynamic action frames with supernatural visual effects.
 - **Black-and-White Manga Panels**: Crisp ink drawings that stand out clearly against Discord dark background.
 
 ### B. Character and Retro Game PFPs
-- **Pixel Art & Retro Gaming**: Vintage sprites, Sonic the Hedgehog icons, or 3D low-poly models.
+- **Pixel Art & Retro Gaming**: Vintage 8-bit sprites, platformer speedster icons, or 3D low-poly models.
 - **Dark & Moody Aesthetics**: Muted colors, purple rim lighting, and vintage film textures.
 - **Animals & Mascots**: High-contrast black cat silhouettes, capybaras, or cute illustrations with clear outlines.`,
         callout: {
