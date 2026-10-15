@@ -5,6 +5,7 @@ import { generateOrganizationSchema, generateWebSiteSchema } from '../utils/seo'
 import ThemeToggle from '../components/ThemeToggle.astro';
 import PaletteSelector from '../components/PaletteSelector.astro';
 import LanguagePicker from '../components/LanguagePicker.astro';
+import { layoutI18n, type Lang as LayoutLang } from '../data/layout-i18n.ts';
 
 interface Props {
   title?: string;
@@ -25,6 +26,9 @@ const {
   hasSpanishAlternate,
   ogImage,
 } = Astro.props;
+
+const currentLang: LayoutLang = lang === 'es' ? 'es' : 'en';
+const strings = layoutI18n[currentLang];
 
 const currentPath = Astro.url.pathname;
 const isBlog = currentPath.startsWith('/blog');
@@ -166,7 +170,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
           <img src="/favicon.svg" alt="Discord Creator Asset Studio" class="w-8 h-8 rounded-[8px] shadow-xs hover:scale-105 transition-transform" width="32" height="32" />
           <span class="whitespace-nowrap">Asset Studio</span>
           <span class="text-[10px] leading-none px-2 py-1 rounded-full bg-[#C8DFDB]/60 text-[#3368A0] border border-[#66A3BF]/30 font-semibold hidden xl:inline-block whitespace-nowrap">
-            Unofficial Tools
+            {strings.brand.unofficialBadge}
           </span>
         </a>
 
@@ -175,119 +179,119 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
           <!-- Tools: 2-column mega menu -->
           <details class="relative group" id="tools-dropdown">
             <summary class={navCls(isTools)} aria-label="All Discord creator tools" aria-haspopup="true">
-              <span>Tools</span>
+              <span>{strings.nav.tools}</span>
               <svg class={MENU_CHEV} fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </summary>
             <div class={`${MENU_SURFACE} left-0 w-[30rem]`} role="menu">
               <div class="grid grid-cols-2 gap-x-1">
                 <div>
-                  <div class={MENU_LABEL}>Visual &amp; Profile</div>
+                  <div class={MENU_LABEL}>{strings.toolsMenu.visualHeading}</div>
                   <a href={L("/tools/banner/")} class={MENU_ITEM}>
                     <span class="text-sm">🖼️</span>
-                    <div><div class="font-bold">Banner Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Server & profile safe zones</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.banner.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.banner.desc}</div></div>
                   </a>
                   <a href={L("/tools/avatar/")} class={MENU_ITEM}>
                     <span class="text-sm">👤</span>
-                    <div><div class="font-bold">Avatar Cropper</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">512×512 circular mask</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.avatar.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.avatar.desc}</div></div>
                   </a>
                   <a href={L("/tools/server-icon/")} class={MENU_ITEM}>
                     <span class="text-sm">🏰</span>
-                    <div><div class="font-bold">Server Icon Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">512×512 rounded-square icon</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.serverIcon.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.serverIcon.desc}</div></div>
                   </a>
                   <a href={L("/tools/badge-maker/")} class={MENU_ITEM}>
                     <span class="text-sm">🔰</span>
-                    <div><div class="font-bold">Logo & Badge Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Text & emoji server badges</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.badgeMaker.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.badgeMaker.desc}</div></div>
                   </a>
                   <a href={L('/tools/gif-maker/')} class={MENU_ITEM}>
                     <span class="text-sm">🎞️</span>
-                    <div><div class="font-bold">GIF Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Video to GIF under 10MB</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.gifMaker.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.gifMaker.desc}</div></div>
                   </a>
                   <a href={L("/tools/gif-compressor/")} class={MENU_ITEM}>
                     <span class="text-sm">🗜️</span>
-                    <div><div class="font-bold">GIF Compressor</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Shrink animated GIFs to fit</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.gifCompressor.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.gifCompressor.desc}</div></div>
                   </a>
                   <a href={L("/tools/video-compressor/")} class={MENU_ITEM}>
                     <span class="text-sm">🎬</span>
-                    <div><div class="font-bold">Video Compressor</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Shrink video under 10MB</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.videoCompressor.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.videoCompressor.desc}</div></div>
                   </a>
                   <a href={L("/tools/fake-message-maker/")} class={MENU_ITEM}>
                     <span class="text-sm">💬</span>
-                    <div><div class="font-bold">Fake Message Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Fictional chat screenshots</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.fakeMessage.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.fakeMessage.desc}</div></div>
                   </a>
                   <a href={L("/tools/snowflake/")} class={MENU_ITEM}>
                     <span class="text-sm">🔍</span>
-                    <div><div class="font-bold">Snowflake Decoder</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">ID to date, worker & process</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.snowflake.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.snowflake.desc}</div></div>
                   </a>
                   <a href={L("/tools/permissions-calculator/")} class={MENU_ITEM}>
                     <span class="text-sm">🔐</span>
-                    <div><div class="font-bold">Permission Calculator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Role & bot permission integers</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.permissions.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.permissions.desc}</div></div>
                   </a>
                   <a href={L("/tools/username-generator/")} class={MENU_ITEM}>
                     <span class="text-sm">🎲</span>
-                    <div><div class="font-bold">Username Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Ideas & 3–4 letter handles</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.username.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.username.desc}</div></div>
                   </a>
                   <a href={L("/tools/bio-generator/")} class={MENU_ITEM}>
                     <span class="text-sm">📝</span>
-                    <div><div class="font-bold">Bio Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Templates & copy-paste ideas</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.bio.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.bio.desc}</div></div>
                   </a>
                   <a href={L("/tools/text-formatting/")} class={MENU_ITEM}>
                     <span class="text-sm">🔠</span>
-                    <div><div class="font-bold">Text Formatting Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Bold, spoiler, headers & code</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.textFormatting.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.textFormatting.desc}</div></div>
                   </a>
                   <a href={L("/tools/colors/")} class={MENU_ITEM}>
                     <span class="text-sm">🎨</span>
-                    <div><div class="font-bold">Color & Hex Codes</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Background & blurple palette</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.colors.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.colors.desc}</div></div>
                   </a>
                   <a href={L("/tools/emoji-copy-paste/")} class={MENU_ITEM}>
                     <span class="text-sm">📋</span>
-                    <div><div class="font-bold">Emoji Copy & Paste</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Unicode emoji & kaomoji board</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.emojiCopyPaste.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.emojiCopyPaste.desc}</div></div>
                   </a>
                 </div>
                 <div>
-                  <div class={MENU_LABEL}>Server &amp; Chat Assets</div>
+                  <div class={MENU_LABEL}>{strings.toolsMenu.chatHeading}</div>
                   <a href={L("/tools/emoji/")} class={MENU_ITEM}>
                     <span class="text-sm">😀</span>
-                    <div><div class="font-bold">Emoji Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">128×128 · 32px preview</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.emoji.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.emoji.desc}</div></div>
                   </a>
                   <a href={L("/tools/sticker/")} class={MENU_ITEM}>
                     <span class="text-sm">🏷️</span>
-                    <div><div class="font-bold">Sticker Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Photo to 320×320 sticker</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.sticker.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.sticker.desc}</div></div>
                   </a>
                   <a href={L("/tools/role-icon/")} class={MENU_ITEM}>
                     <span class="text-sm">🛡️</span>
-                    <div><div class="font-bold">Role Icon Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">64×64 server badges</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.roleIcon.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.roleIcon.desc}</div></div>
                   </a>
                   <a href={L("/tools/image-compressor/")} class={MENU_ITEM}>
                     <span class="text-sm">🗜️</span>
-                    <div><div class="font-bold">Image Compressor</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Shrink files under 10 MB</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.imageCompressor.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.imageCompressor.desc}</div></div>
                   </a>
                   <a href={L("/tools/image-resizer/")} class={MENU_ITEM}>
                     <span class="text-sm">📐</span>
-                    <div><div class="font-bold">Image Resizer</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Exact avatar, banner & emoji sizes</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.imageResizer.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.imageResizer.desc}</div></div>
                   </a>
                   <a href={L("/tools/spoiler/")} class={MENU_ITEM}>
                     <span class="text-sm">🙈</span>
-                    <div><div class="font-bold">Spoiler Maker</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Hide text & blur image spoilers</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.spoiler.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.spoiler.desc}</div></div>
                   </a>
                   <a href={L("/tools/timestamp/")} class={MENU_ITEM}>
                     <span class="text-sm">🕒</span>
-                    <div><div class="font-bold">Timestamp Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Dynamic &lt;t:&gt; time codes</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.timestamp.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.timestamp.desc}</div></div>
                   </a>
                   <a href={L("/tools/fonts/")} class={MENU_ITEM}>
                     <span class="text-sm">🔤</span>
-                    <div><div class="font-bold">Font Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Fancy Unicode text styles</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.fonts.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.fonts.desc}</div></div>
                   </a>
                   <a href={L("/tools/colored-text/")} class={MENU_ITEM}>
                     <span class="text-sm">🌈</span>
-                    <div><div class="font-bold">Colored Text Generator</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">ANSI colors, bold & underline</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.coloredText.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.coloredText.desc}</div></div>
                   </a>
                   <a href={L("/tools/markdown/")} class={MENU_ITEM}>
                     <span class="text-sm">📝</span>
-                    <div><div class="font-bold">Markdown Previewer</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Live formatting preview</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.markdown.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.markdown.desc}</div></div>
                   </a>
                   <a href={L("/tools/embed-builder/")} class={MENU_ITEM}>
                     <span class="text-sm">📋</span>
-                    <div><div class="font-bold">Embed Builder</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Webhook JSON + live preview</div></div>
+                    <div><div class="font-bold">{strings.toolsMenu.embedBuilder.title}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.toolsMenu.embedBuilder.desc}</div></div>
                   </a>
                 </div>
               </div>
@@ -297,23 +301,23 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
           <!-- Assets: Library + PFPs + 2D icons -->
           <details class="relative group" id="assets-dropdown">
             <summary class={navCls(isAssets)} aria-label="Free Discord asset library" aria-haspopup="true">
-              <span>Assets</span>
-              <span class="text-[10px] font-mono font-bold bg-[#FF84BA]/15 text-[#FF84BA] px-1.5 py-0.5 rounded-full">110+</span>
+              <span>{strings.nav.assets}</span>
+              <span class="text-[10px] font-mono font-bold bg-[#FF84BA]/15 text-[#FF84BA] px-1.5 py-0.5 rounded-full">{strings.assetsMenu.badge}</span>
               <svg class={MENU_CHEV} fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </summary>
             <div class={`${MENU_SURFACE} left-0 w-72`} role="menu">
-              <div class={MENU_LABEL}>Free Asset Library</div>
+              <div class={MENU_LABEL}>{strings.assetsMenu.heading}</div>
               <a href="/assets/" class={MENU_ITEM}>
                 <span class="text-sm">✨</span>
-                <div><div class="font-bold">Animated Banners & Themes</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">110+ matching banner & PFP sets</div></div>
+                <div><div class="font-bold">{strings.assetsMenu.bannersTitle}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.assetsMenu.bannersDesc}</div></div>
               </a>
               <a href="/assets/pfps/" class={MENU_ITEM}>
                 <span class="text-sm">👤</span>
-                <div><div class="font-bold">Discord PFPs</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">50+ profile picture presets</div></div>
+                <div><div class="font-bold">{strings.assetsMenu.pfpsTitle}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.assetsMenu.pfpsDesc}</div></div>
               </a>
               <a href="/assets/icons-2d/" class={MENU_ITEM}>
                 <span class="text-sm">🎨</span>
-                <div><div class="font-bold">2D Role &amp; Server Icons</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Crisp badge icon presets</div></div>
+                <div><div class="font-bold">{strings.assetsMenu.iconsTitle}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.assetsMenu.iconsDesc}</div></div>
               </a>
             </div>
           </details>
@@ -321,39 +325,39 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
           <!-- Resources: guides + blog merged -->
           <details class="relative group" id="resources-dropdown">
             <summary class={navCls(isResources)} aria-label="Guides, specs and blog" aria-haspopup="true">
-              <span>Resources</span>
+              <span>{strings.nav.resources}</span>
               <svg class={MENU_CHEV} fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </summary>
             <div class={`${MENU_SURFACE} left-0 w-[30rem]`} role="menu">
               <div class="grid grid-cols-2 gap-x-1">
                 <div>
-                  <div class={MENU_LABEL}>Specs &amp; Guides</div>
+                  <div class={MENU_LABEL}>{strings.resourcesMenu.specsHeading}</div>
                   <a href={L("/guides/discord-sizes/")} class={MENU_ITEM}>
                     <span class="text-sm">📏</span>
-                    <div><div class="font-bold">Discord Size Guide</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Every asset dimension & limit</div></div>
+                    <div><div class="font-bold">{strings.resourcesMenu.sizesTitle}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.resourcesMenu.sizesDesc}</div></div>
                   </a>
-                  <a href="/guides/discord-gif-guide/" class={MENU_ITEM}>
+                  <a href={L("/guides/discord-gif-guide/")} class={MENU_ITEM}>
                     <span class="text-sm">🎞️</span>
-                    <div><div class="font-bold">Discord GIF Guide</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Make GIFs under 10MB</div></div>
+                    <div><div class="font-bold">{strings.resourcesMenu.gifTitle}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.resourcesMenu.gifDesc}</div></div>
                   </a>
                   <a href="/blog/" class={MENU_ITEM}>
                     <span class="text-sm">📖</span>
-                    <div><div class="font-bold">All Articles</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Tutorials & design ideas</div></div>
+                    <div><div class="font-bold">{strings.resourcesMenu.blogTitle}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.resourcesMenu.blogDesc}</div></div>
                   </a>
                 </div>
                 <div>
-                  <div class={MENU_LABEL}>Popular Tutorials</div>
+                  <div class={MENU_LABEL}>{strings.resourcesMenu.popularHeading}</div>
                   <a href="/blog/how-to-make-discord-stickers/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
-                    <span>🏷️</span><span class="truncate">How to Make Stickers</span>
+                    <span>🏷️</span><span class="truncate">{strings.resourcesMenu.howToStickers}</span>
                   </a>
                   <a href="/blog/discord-banner-ideas-templates/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
-                    <span>🖼️</span><span class="truncate">Banner Ideas & Templates</span>
+                    <span>🖼️</span><span class="truncate">{strings.resourcesMenu.bannerIdeas}</span>
                   </a>
                   <a href="/blog/discord-pfp-ideas-anime-avatars/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
-                    <span>👤</span><span class="truncate">Anime PFP & Avatars</span>
+                    <span>👤</span><span class="truncate">{strings.resourcesMenu.animePfp}</span>
                   </a>
                   <a href="/blog/how-to-change-discord-server-banner/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
-                    <span>⚡</span><span class="truncate">Change Server Banner</span>
+                    <span>⚡</span><span class="truncate">{strings.resourcesMenu.changeServerBanner}</span>
                   </a>
                 </div>
               </div>
@@ -363,27 +367,27 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
           <!-- Company: about, contact, legal -->
           <details class="relative group" id="company-dropdown">
             <summary class={navCls(isCompany)} aria-label="About, contact and legal" aria-haspopup="true">
-              <span>Company</span>
+              <span>{strings.nav.company}</span>
               <svg class={MENU_CHEV} fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </summary>
             <div class={`${MENU_SURFACE} right-0 w-64`} role="menu">
               <a href="/about/" class={MENU_ITEM}>
                 <span class="text-sm">ℹ️</span>
-                <div><div class="font-bold">About Us</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Our mission & independent tooling</div></div>
+                <div><div class="font-bold">{strings.companyMenu.aboutTitle}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.companyMenu.aboutDesc}</div></div>
               </a>
               <a href="/contact/" class={MENU_ITEM}>
                 <span class="text-sm">✉️</span>
-                <div><div class="font-bold">Contact Us</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">Feedback & spec-change reports</div></div>
+                <div><div class="font-bold">{strings.companyMenu.contactTitle}</div><div class="text-[11px] text-[#6B7A90] dark:text-[#8494A7] font-normal">{strings.companyMenu.contactDesc}</div></div>
               </a>
               <div class="border-t border-[#E0DBD0]/60 dark:border-[#263346]/60 my-1 pt-1"></div>
               <a href="/privacy/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
-                <span>🔒</span><span class="truncate">Privacy Policy</span>
+                <span>🔒</span><span class="truncate">{strings.companyMenu.privacy}</span>
               </a>
               <a href="/terms/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
-                <span>📜</span><span class="truncate">Terms &amp; Conditions</span>
+                <span>📜</span><span class="truncate">{strings.companyMenu.terms}</span>
               </a>
               <a href="/copyright/" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-[#192538] dark:text-[#CBD5E1] hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] hover:text-[#3368A0] dark:hover:text-[#66A3BF] transition-colors">
-                <span>⚖️</span><span class="truncate">Copyright &amp; DMCA</span>
+                <span>⚖️</span><span class="truncate">{strings.companyMenu.copyright}</span>
               </a>
             </div>
           </details>
@@ -392,20 +396,33 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
           <LanguagePicker lang={lang} variant="desktop" />
         </nav>
 
-        <!-- Right Side: Palette Selector, Theme Slider & Privacy Badge & Mobile Hamburger -->
-        <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Right Side: Palette Selector, Theme Slider, Ko-fi Support & Privacy Badge & Mobile Hamburger -->
+        <div class="flex items-center gap-2 sm:gap-2.5">
           <PaletteSelector />
           <ThemeToggle />
+          <a
+            href="https://ko-fi.com/divyyadav"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-[8px] bg-[#FF5E5B]/10 hover:bg-[#FF5E5B]/20 text-[#FF5E5B] dark:bg-[#FF5E5B]/15 dark:hover:bg-[#FF5E5B]/25 font-semibold text-xs border border-[#FF5E5B]/30 transition-all duration-150 shrink-0 shadow-2xs"
+            title={strings.nav.supportKofi}
+            aria-label={strings.nav.supportKofi}
+          >
+            <svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.683-2.566V15.42s3.834.469 5.867-2.181c1.554-2.025.758-4.291.758-4.291zm-6.192 4.148c-.015.01-.03.02-.045.029-.028.018-.057.036-.086.053-.162.095-.343.167-.538.213-.196.046-.408.069-.63.069h-1.637V7.071h1.637c.222 0 .434.023.63.069.195.046.376.118.538.213.029.017.058.035.086.053.015.009.03.019.045.029.351.246.611.594.757 1.015.146.421.146.907 0 1.328-.146.421-.406.769-.757 1.015v.303zm-7.91-1.042c-.287.41-.652.756-1.077 1.02-.279.174-.582.3-.9.373-.318.073-.65.077-.98.012-.33-.065-.634-.203-.895-.404-.261-.2-.469-.462-.609-.766-.14-.304-.199-.641-.173-.979.026-.338.136-.658.322-.937.186-.279.439-.508.736-.667.297-.159.629-.241.967-.238.268.002.531.055.776.155.245.1.464.246.643.43.179-.184.398-.33.643-.43.245-.1.508-.153.776-.155.338-.003.67.079.967.238.297.159.55.388.736.667.186.279.296.599.322.937.026.338-.033.675-.173.979-.14.304-.348.566-.609.766-.261.201-.565.339-.895.404-.33.065-.662.061-.98-.012-.318-.073-.621-.199-.9-.373-.425-.264-.79-.61-1.077-1.02z"/>
+            </svg>
+            <span class="hidden md:inline font-mono text-[11px]">Ko-fi</span>
+          </a>
           <span class="hidden xl:inline-flex items-center gap-1.5 text-xs font-medium text-[#3368A0] bg-[#FFFFFF] px-3 py-1.5 rounded-[8px] border border-[#C8DFDB] shadow-xs whitespace-nowrap shrink-0">
             <span class="w-2 h-2 rounded-full bg-[#0D9488]"></span>
-            Zero Server Uploads
+            {strings.brand.zeroUploads}
           </span>
 
           <!-- Mobile Hamburger Button -->
           <button
             id="mobile-nav-toggle"
             type="button"
-            aria-label="Toggle navigation menu"
+            aria-label={strings.mobileNav.toggleMenuAria}
             aria-expanded="false"
             class="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-[#475569] hover:text-[#192538] hover:bg-[#E0DBD0]/50 transition-colors focus:outline-none focus:ring-2 focus:ring-[#3368A0]"
           >
@@ -423,115 +440,115 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
       <nav id="mobile-nav-menu" class="hidden lg:hidden border-t border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#141A24] px-4 py-4 space-y-3 transition-all duration-200">
         <div>
           <span class="block px-1 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] font-mono">
-            Tools & Generators
+            {strings.mobileNav.toolsAndGenerators}
           </span>
           <div class="grid grid-cols-2 gap-1.5">
             <a href="/assets/" class="p-2.5 rounded-lg text-xs font-bold bg-[#FF84BA]/10 hover:bg-[#FF84BA]/20 border border-[#FF84BA]/40 text-[#FF84BA] flex items-center justify-between transition-colors col-span-2">
               <div class="flex items-center gap-1.5">
-                <span>✨</span> <span>Asset Library & Customizer</span>
+                <span>✨</span> <span>{strings.mobileNav.assetLibrary}</span>
               </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FF84BA] text-black font-extrabold">110+ Free</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FF84BA] text-black font-extrabold">{strings.mobileNav.assetLibraryBadge}</span>
             </a>
             <a href="/assets/pfps/" class="p-2.5 rounded-lg text-xs font-bold bg-[#FFDF82]/10 hover:bg-[#FFDF82]/20 border border-[#FFDF82]/40 text-[#FFDF82] flex items-center justify-between transition-colors col-span-2">
               <div class="flex items-center gap-1.5">
-                <span>👤</span> <span>Discord PFPs & Avatars</span>
+                <span>👤</span> <span>{strings.mobileNav.pfps}</span>
               </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FFDF82] text-black font-extrabold">50+ Free</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FFDF82] text-black font-extrabold">{strings.mobileNav.pfpsBadge}</span>
             </a>
             <a href={L("/tools/image-resizer/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>📐</span> Discord Image Resizer
+              <span>📐</span> {strings.mobileNav.tools.imageResizer}
             </a>
             <a href={L("/tools/banner/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🖼️</span> Banner Studio
+              <span>🖼️</span> {strings.mobileNav.tools.banner}
             </a>
             <a href={L('/tools/gif-maker/')} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🎞️</span> GIF Maker
+              <span>🎞️</span> {strings.mobileNav.tools.gifMaker}
             </a>
             <a href={L("/tools/gif-compressor/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🗜️</span> GIF Compressor
+              <span>🗜️</span> {strings.mobileNav.tools.gifCompressor}
             </a>
             <a href={L("/tools/video-compressor/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🎬</span> Video Compressor
+              <span>🎬</span> {strings.mobileNav.tools.videoCompressor}
             </a>
             <a href={L("/tools/fake-message-maker/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>💬</span> Fake Messages
+              <span>💬</span> {strings.mobileNav.tools.fakeMessage}
             </a>
             <a href={L("/tools/snowflake/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🔍</span> Snowflake Decoder
+              <span>🔍</span> {strings.mobileNav.tools.snowflake}
             </a>
             <a href={L("/tools/permissions-calculator/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🔐</span> Permission Calculator
+              <span>🔐</span> {strings.mobileNav.tools.permissions}
             </a>
             <a href={L("/tools/username-generator/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🎲</span> Username Generator
+              <span>🎲</span> {strings.mobileNav.tools.username}
             </a>
             <a href={L("/tools/bio-generator/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>📝</span> Bio Generator
+              <span>📝</span> {strings.mobileNav.tools.bio}
             </a>
             <a href={L("/tools/text-formatting/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🔠</span> Text Formatting
+              <span>🔠</span> {strings.mobileNav.tools.textFormatting}
             </a>
             <a href={L("/tools/avatar/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>👤</span> Avatar Studio
+              <span>👤</span> {strings.mobileNav.tools.avatar}
             </a>
             <a href={L("/tools/server-icon/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🏰</span> Server Icon Maker
+              <span>🏰</span> {strings.mobileNav.tools.serverIcon}
             </a>
             <a href={L("/tools/badge-maker/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🔰</span> Logo & Badge Maker
+              <span>🔰</span> {strings.mobileNav.tools.badgeMaker}
             </a>
             <a href={L("/tools/emoji/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>😀</span> Emoji Maker
+              <span>😀</span> {strings.mobileNav.tools.emoji}
             </a>
             <a href={L("/tools/sticker/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors">
-              <span>🏷️</span> Sticker Studio
+              <span>🏷️</span> {strings.mobileNav.tools.sticker}
             </a>
             <a href={L("/tools/role-icon/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>🛡️</span> Role Icon Resizer (64×64)
+              <span>🛡️</span> {strings.mobileNav.tools.roleIcon}
             </a>
             <a href={L("/tools/image-compressor/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>🗜️</span> Image Compressor (10 MB Limit)
+              <span>🗜️</span> {strings.mobileNav.tools.imageCompressor}
             </a>
             <a href={L("/tools/spoiler/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>🙈</span> Image & Text Spoiler Maker
+              <span>🙈</span> {strings.mobileNav.tools.spoiler}
             </a>
             <a href={L("/tools/colors/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>🎨</span> Discord Color & Hex Codes
+              <span>🎨</span> {strings.mobileNav.tools.colors}
             </a>
             <a href={L("/tools/timestamp/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>🕒</span> Timestamp Generator
+              <span>🕒</span> {strings.mobileNav.tools.timestamp}
             </a>
             <a href={L("/tools/emoji-copy-paste/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>📋</span> Emoji Copy & Paste Board
+              <span>📋</span> {strings.mobileNav.tools.emojiCopyPaste}
             </a>
             <a href={L("/tools/fonts/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>🔤</span> Fancy Font Generator
+              <span>🔤</span> {strings.mobileNav.tools.fonts}
             </a>
             <a href={L("/tools/colored-text/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>🌈</span> Colored Text Generator
+              <span>🌈</span> {strings.mobileNav.tools.coloredText}
             </a>
             <a href={L("/tools/markdown/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>📝</span> Markdown Previewer
+              <span>📝</span> {strings.mobileNav.tools.markdown}
             </a>
             <a href={L("/tools/embed-builder/")} class="p-2 rounded-lg text-xs font-semibold hover:bg-white dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>📋</span> Embed Builder
+              <span>📋</span> {strings.mobileNav.tools.embedBuilder}
             </a>
           </div>
         </div>
 
         <div class="pt-2 border-t border-[#E0DBD0]/70 dark:border-[#263346]">
           <span class="block px-1 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] font-mono">
-            Guides & Articles
+            {strings.mobileNav.guidesAndArticles}
           </span>
           <div class="grid grid-cols-1 gap-1">
             <a href={L("/guides/discord-sizes/")} class="px-2 py-1.5 rounded-md text-xs font-semibold text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:bg-white dark:hover:bg-[#1E2738] transition-colors flex items-center gap-2">
-              <span>📋</span> Size Cheat Sheet (2026)
+              <span>📋</span> {strings.mobileNav.sizes}
             </a>
             <a href="/guides/discord-gif-guide/" class="px-2 py-1.5 rounded-md text-xs font-semibold text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:bg-white dark:hover:bg-[#1E2738] transition-colors flex items-center gap-2">
-              <span>✨</span> Discord GIF Guide
+              <span>✨</span> {strings.mobileNav.gifGuide}
             </a>
             <a href="/blog/" class="px-2 py-1.5 rounded-md text-xs font-semibold text-[#475569] dark:text-[#CBD5E1] hover:text-[#3368A0] dark:hover:text-[#66A3BF] hover:bg-white dark:hover:bg-[#1E2738] transition-colors flex items-center gap-2">
-              <span>📖</span> Creator Blog & Guides
+              <span>📖</span> {strings.mobileNav.blog}
             </a>
           </div>
         </div>
@@ -540,7 +557,7 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
 
         <!-- Mobile Palette Options -->
         <div class="pt-3 pb-1 border-t border-[#E0DBD0]/70 dark:border-[#263346] mt-3">
-          <span class="block px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7]">Color Palette</span>
+          <span class="block px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7]">{strings.mobileNav.colorPalette}</span>
           <div class="grid grid-cols-2 gap-1.5 px-1 mt-1.5 max-h-56 overflow-y-auto">
             <button type="button" data-palette="default" class="mobile-palette-btn flex items-center gap-2 p-2 rounded-lg text-xs font-medium hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#F0F4F8] transition-colors cursor-pointer">
               <span class="flex -space-x-1"><span class="w-2.5 h-2.5 rounded-full" style="background:#3368A0"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#66A3BF"></span><span class="w-2.5 h-2.5 rounded-full" style="background:#C8DFDB"></span></span>
@@ -600,25 +617,40 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
         <!-- Mobile Company & Legal Links -->
         <div>
           <span class="block px-1 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-[#6B7A90] dark:text-[#8494A7] font-mono">
-            Company & Legal
+            {strings.mobileNav.companyAndLegal}
           </span>
           <div class="grid grid-cols-2 gap-1.5">
             <a href="/about/" class="p-2.5 rounded-lg text-xs font-semibold bg-white/60 dark:bg-[#161F2E]/60 hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] flex items-center gap-1.5 transition-colors">
-              <span>ℹ️</span> <span>About Us</span>
+              <span>ℹ️</span> <span>{strings.mobileNav.about}</span>
             </a>
             <a href="/contact/" class="p-2.5 rounded-lg text-xs font-semibold bg-white/60 dark:bg-[#161F2E]/60 hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] flex items-center gap-1.5 transition-colors">
-              <span>✉️</span> <span>Contact Us</span>
+              <span>✉️</span> <span>{strings.mobileNav.contact}</span>
             </a>
             <a href="/privacy/" class="p-2.5 rounded-lg text-xs font-semibold bg-white/60 dark:bg-[#161F2E]/60 hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] flex items-center gap-1.5 transition-colors">
-              <span>🔒</span> <span>Privacy Policy</span>
+              <span>🔒</span> <span>{strings.mobileNav.privacy}</span>
             </a>
             <a href="/terms/" class="p-2.5 rounded-lg text-xs font-semibold bg-white/60 dark:bg-[#161F2E]/60 hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] flex items-center gap-1.5 transition-colors">
-              <span>📜</span> <span>Terms</span>
+              <span>📜</span> <span>{strings.mobileNav.terms}</span>
             </a>
             <a href="/copyright/" class="p-2.5 rounded-lg text-xs font-semibold bg-white/60 dark:bg-[#161F2E]/60 hover:bg-[#FAF8F5] dark:hover:bg-[#1E2738] border border-[#E0DBD0]/60 dark:border-[#263346] text-[#192538] dark:text-[#CBD5E1] flex items-center gap-1.5 transition-colors col-span-2">
-              <span>⚖️</span> <span>Copyright &amp; DMCA</span>
+              <span>⚖️</span> <span>{strings.mobileNav.copyright}</span>
             </a>
           </div>
+        </div>
+
+        <!-- Mobile Ko-fi Support Link -->
+        <div class="pt-3 border-t border-[#E0DBD0]/70 dark:border-[#263346]">
+          <a
+            href="https://ko-fi.com/divyyadav"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-lg text-xs font-semibold bg-[#FF5E5B]/10 hover:bg-[#FF5E5B]/20 text-[#FF5E5B] border border-[#FF5E5B]/30 transition-colors shadow-2xs"
+          >
+            <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.683-2.566V15.42s3.834.469 5.867-2.181c1.554-2.025.758-4.291.758-4.291zm-6.192 4.148c-.015.01-.03.02-.045.029-.028.018-.057.036-.086.053-.162.095-.343.167-.538.213-.196.046-.408.069-.63.069h-1.637V7.071h1.637c.222 0 .434.023.63.069.195.046.376.118.538.213.029.017.058.035.086.053.015.009.03.019.045.029.351.246.611.594.757 1.015.146.421.146.907 0 1.328-.146.421-.406.769-.757 1.015v.303zm-7.91-1.042c-.287.41-.652.756-1.077 1.02-.279.174-.582.3-.9.373-.318.073-.65.077-.98.012-.33-.065-.634-.203-.895-.404-.261-.2-.469-.462-.609-.766-.14-.304-.199-.641-.173-.979.026-.338.136-.658.322-.937.186-.279.439-.508.736-.667.297-.159.629-.241.967-.238.268.002.531.055.776.155.245.1.464.246.643.43.179-.184.398-.33.643-.43.245-.1.508-.153.776-.155.338-.003.67.079.967.238.297.159.55.388.736.667.186.279.296.599.322.937.026.338-.033.675-.173.979-.14.304-.348.566-.609.766-.261.201-.565.339-.895.404-.33.065-.662.061-.98-.012-.318-.073-.621-.199-.9-.373-.425-.264-.79-.61-1.077-1.02z"/>
+            </svg>
+            <span>{strings.mobileNav.supportKofi}</span>
+          </a>
         </div>
       </nav>
 
@@ -682,13 +714,12 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
       id="cookie-consent-banner"
       role="dialog"
       aria-live="polite"
-      aria-label="Cookie consent"
+      aria-label={strings.cookieBanner.ariaLabel}
       class="hidden fixed bottom-0 inset-x-0 z-[60] p-3 sm:p-4"
     >
       <div class="max-w-3xl mx-auto rounded-[14px] border border-[#E0DBD0] dark:border-[#263346] bg-[#FAF8F5] dark:bg-[#161F2E] shadow-lg backdrop-blur-md p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
         <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed flex-1">
-          We use privacy-friendly analytics cookies to understand how creators use these tools. Your images never leave your device.
-          See our <a href="/privacy/" class="underline hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold">Privacy Policy</a>.
+          {strings.cookieBanner.text} <a href="/privacy/" class="underline hover:text-[#3368A0] dark:hover:text-[#66A3BF] font-semibold">{strings.cookieBanner.privacyLink}</a>.
         </p>
         <div class="flex items-center gap-2 shrink-0">
           <button
@@ -696,14 +727,14 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
             type="button"
             class="px-4 py-2 rounded-[8px] text-xs font-semibold border border-[#E0DBD0] dark:border-[#263346] text-[#475569] dark:text-[#CBD5E1] hover:bg-white dark:hover:bg-[#1E2738] transition-colors focus:outline-none focus:ring-2 focus:ring-[#3368A0]"
           >
-            Decline
+            {strings.cookieBanner.decline}
           </button>
           <button
             id="cookie-consent-accept"
             type="button"
             class="btn-primary px-5 py-2 rounded-[8px] text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#3368A0]"
           >
-            Accept
+            {strings.cookieBanner.accept}
           </button>
         </div>
       </div>
@@ -746,94 +777,94 @@ const MENU_CHEV = 'w-3.5 h-3.5 opacity-50 transition-transform duration-200 grou
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           <div>
-            <div class="flex items-center gap-2 text-[#192538] font-bold mb-3">
-              <div class="w-6 h-6 rounded-[6px] bg-[#3368A0] flex items-center justify-center text-white text-xs">
-                D
-              </div>
-              <span>Discord Asset Studio</span>
-            </div>
-            <p class="text-xs text-[#6B7A90] leading-relaxed">
-              Free, browser-only tools to crop, resize, and format your Discord assets. Everything runs right on your computer without uploading images to any server.
+            <a href={L("/")} class="flex items-center gap-2.5 text-[#192538] dark:text-white font-bold mb-3 hover:opacity-90 transition-opacity group">
+              <img src="/favicon.svg" alt="Discord Creator Asset Studio" class="w-7 h-7 rounded-[7px] shadow-xs group-hover:scale-105 transition-transform" width="28" height="28" />
+              <span class="text-base tracking-tight">Discord Asset Studio</span>
+            </a>
+            <p class="text-xs text-[#6B7A90] dark:text-[#8494A7] leading-relaxed">
+              {strings.footer.tagline}
             </p>
           </div>
 
           <div>
-            <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Core Utilities</h4>
+            <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">{strings.footer.coreUtilities}</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href={L("/tools/image-resizer/")} class="hover:text-[#3368A0] transition-colors">Discord Image Resizer</a></li>
-              <li><a href={L("/tools/emoji/")} class="hover:text-[#3368A0] transition-colors">Emoji Maker & Validator</a></li>
-              <li><a href={L("/tools/sticker/")} class="hover:text-[#3368A0] transition-colors">Sticker Compressor (512 KiB)</a></li>
-              <li><a href={L("/tools/banner/")} class="hover:text-[#3368A0] transition-colors">Profile & Server Banners</a></li>
-              <li><a href={L("/tools/avatar/")} class="hover:text-[#3368A0] transition-colors">Avatar Optimizer</a></li>
-              <li><a href={L("/tools/role-icon/")} class="hover:text-[#3368A0] transition-colors">Role Icon Resizer (64x64)</a></li>
-              <li><a href={L("/tools/image-compressor/")} class="hover:text-[#3368A0] transition-colors">Image Compressor (Under 10 MB)</a></li>
-              <li><a href={L("/tools/spoiler/")} class="hover:text-[#3368A0] transition-colors">Spoiler Maker (Text & Image)</a></li>
-              <li><a href={L("/tools/colors/")} class="hover:text-[#3368A0] transition-colors">Color Palette & Hex Codes</a></li>
-              <li><a href={L("/tools/timestamp/")} class="hover:text-[#3368A0] transition-colors">Timestamp Generator</a></li>
-              <li><a href={L("/tools/emoji-copy-paste/")} class="hover:text-[#3368A0] transition-colors">Emoji Copy & Paste Board</a></li>
-              <li><a href={L("/tools/fonts/")} class="hover:text-[#3368A0] transition-colors">Fancy Font & Text Generator</a></li>
-              <li><a href={L("/tools/colored-text/")} class="hover:text-[#3368A0] transition-colors">Colored Text Generator (ANSI)</a></li>
-              <li><a href={L("/tools/markdown/")} class="hover:text-[#3368A0] transition-colors">Markdown Previewer</a></li>
-              <li><a href={L("/tools/embed-builder/")} class="hover:text-[#3368A0] transition-colors">Embed Builder</a></li>
-              <li><a href={L("/tools/server-icon/")} class="hover:text-[#3368A0] transition-colors">Server Icon Maker (512x512)</a></li>
-              <li><a href={L("/tools/badge-maker/")} class="hover:text-[#3368A0] transition-colors">Logo & Badge Maker</a></li>
-              <li><a href={L('/tools/gif-maker/')} class="hover:text-[#3368A0] transition-colors">Discord GIF Maker (10MB)</a></li>
-              <li><a href={L("/tools/gif-compressor/")} class="hover:text-[#3368A0] transition-colors">GIF Compressor (256 KiB)</a></li>
-              <li><a href={L("/tools/video-compressor/")} class="hover:text-[#3368A0] transition-colors">Video Compressor (10 MB)</a></li>
-              <li><a href={L("/tools/fake-message-maker/")} class="hover:text-[#3368A0] transition-colors">Fake Message Maker</a></li>
-              <li><a href={L("/tools/snowflake/")} class="hover:text-[#3368A0] transition-colors">Snowflake Decoder</a></li>
-              <li><a href={L("/tools/permissions-calculator/")} class="hover:text-[#3368A0] transition-colors">Permission Calculator (Roles & Bots)</a></li>
-              <li><a href={L("/tools/username-generator/")} class="hover:text-[#3368A0] transition-colors">Username Generator (Ideas)</a></li>
-              <li><a href={L("/tools/bio-generator/")} class="hover:text-[#3368A0] transition-colors">Bio Generator (Templates)</a></li>
-              <li><a href={L("/tools/text-formatting/")} class="hover:text-[#3368A0] transition-colors">Text Formatting (Bold, Spoiler)</a></li>
+              <li><a href={L("/tools/image-resizer/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.imageResizer}</a></li>
+              <li><a href={L("/tools/emoji/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.emoji}</a></li>
+              <li><a href={L("/tools/sticker/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.sticker}</a></li>
+              <li><a href={L("/tools/banner/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.banner}</a></li>
+              <li><a href={L("/tools/avatar/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.avatar}</a></li>
+              <li><a href={L("/tools/role-icon/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.roleIcon}</a></li>
+              <li><a href={L("/tools/image-compressor/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.imageCompressor}</a></li>
+              <li><a href={L("/tools/spoiler/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.spoiler}</a></li>
+              <li><a href={L("/tools/colors/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.colors}</a></li>
+              <li><a href={L("/tools/timestamp/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.timestamp}</a></li>
+              <li><a href={L("/tools/emoji-copy-paste/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.emojiCopyPaste}</a></li>
+              <li><a href={L("/tools/fonts/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.fonts}</a></li>
+              <li><a href={L("/tools/colored-text/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.coloredText}</a></li>
+              <li><a href={L("/tools/markdown/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.markdown}</a></li>
+              <li><a href={L("/tools/embed-builder/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.embedBuilder}</a></li>
+              <li><a href={L("/tools/server-icon/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.serverIcon}</a></li>
+              <li><a href={L("/tools/badge-maker/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.badgeMaker}</a></li>
+              <li><a href={L('/tools/gif-maker/')} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.gifMaker}</a></li>
+              <li><a href={L("/tools/gif-compressor/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.gifCompressor}</a></li>
+              <li><a href={L("/tools/video-compressor/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.videoCompressor}</a></li>
+              <li><a href={L("/tools/fake-message-maker/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.fakeMessage}</a></li>
+              <li><a href={L("/tools/snowflake/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.snowflake}</a></li>
+              <li><a href={L("/tools/permissions-calculator/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.permissions}</a></li>
+              <li><a href={L("/tools/username-generator/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.username}</a></li>
+              <li><a href={L("/tools/bio-generator/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.bio}</a></li>
+              <li><a href={L("/tools/text-formatting/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.tools.textFormatting}</a></li>
             </ul>
           </div>
 
           <div>
             <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3 flex items-center gap-1.5">
-              <span>✨ Asset Library</span>
+              <span>✨ {strings.footer.assetLibrary}</span>
               <span class="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#FF84BA]/15 text-[#FF84BA] font-bold">110+</span>
             </h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="/assets/" class="hover:text-[#3368A0] transition-colors font-semibold text-[#192538]">All Presets Hub (110+)</a></li>
-              <li><a href="/assets/pfps/" class="hover:text-[#FFDF82] transition-colors font-bold text-[#FFDF82]">👤 Discord PFPs & Avatars (50+)</a></li>
-              <li><a href="/assets/anime/" class="hover:text-[#3368A0] transition-colors">Anime Banners & PFPs</a></li>
-              <li><a href="/assets/gaming/" class="hover:text-[#3368A0] transition-colors">Gaming & Esports Sets</a></li>
-              <li><a href="/assets/cyberpunk/" class="hover:text-[#3368A0] transition-colors">Cyberpunk & Neon Tech</a></li>
-              <li><a href="/assets/dark/" class="hover:text-[#3368A0] transition-colors">Dark & Gothic Banners</a></li>
-              <li><a href="/assets/aesthetic/" class="hover:text-[#3368A0] transition-colors">Aesthetic & Pastel Vibes</a></li>
-              <li><a href="/assets/icons-2d/" class="hover:text-[#3368A0] transition-colors font-semibold text-[#FF84BA]">🎨 2D Server Role Icons</a></li>
+              <li><a href="/assets/" class="hover:text-[#3368A0] transition-colors font-semibold text-[#192538]">{strings.footer.allPresets}</a></li>
+              <li><a href="/assets/pfps/" class="hover:text-[#FFDF82] transition-colors font-bold text-[#FFDF82]">{strings.footer.pfps}</a></li>
+              <li><a href="/assets/anime/" class="hover:text-[#3368A0] transition-colors">{strings.footer.animeBanners}</a></li>
+              <li><a href="/assets/gaming/" class="hover:text-[#3368A0] transition-colors">{strings.footer.gamingBanners}</a></li>
+              <li><a href="/assets/cyberpunk/" class="hover:text-[#3368A0] transition-colors">{strings.footer.cyberpunkBanners}</a></li>
+              <li><a href="/assets/dark/" class="hover:text-[#3368A0] transition-colors">{strings.footer.darkBanners}</a></li>
+              <li><a href="/assets/aesthetic/" class="hover:text-[#3368A0] transition-colors">{strings.footer.aestheticBanners}</a></li>
+              <li><a href="/assets/icons-2d/" class="hover:text-[#3368A0] transition-colors font-semibold text-[#FF84BA]">{strings.footer.roleIcons2D}</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Documentation</h4>
+            <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">{strings.footer.documentation}</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href={L("/guides/discord-sizes/")} class="hover:text-[#3368A0] transition-colors">Discord Size Cheat Sheet (2026)</a></li>
-              <li><a href="/guides/discord-gif-guide/" class="hover:text-[#3368A0] transition-colors">Discord GIF Guide</a></li>
-              <li><a href="/blog/" class="hover:text-[#3368A0] transition-colors">Creator Blog & Tutorials</a></li>
-              <li><a href="/es/" class="hover:text-[#3368A0] transition-colors">Versión en Español (ES)</a></li>
-              <li><a href="/sitemap-index.xml" class="hover:text-[#3368A0] transition-colors">XML Sitemap</a></li>
-              <li><a href="/rss.xml" class="hover:text-[#3368A0] transition-colors">RSS Feed</a></li>
-              <li><a href="/robots.txt" class="hover:text-[#3368A0] transition-colors">Robots.txt</a></li>
+              <li><a href={L("/guides/discord-sizes/")} class="hover:text-[#3368A0] transition-colors">{strings.footer.sizeGuide}</a></li>
+              <li><a href="/guides/discord-gif-guide/" class="hover:text-[#3368A0] transition-colors">{strings.footer.gifGuide}</a></li>
+              <li><a href="/blog/" class="hover:text-[#3368A0] transition-colors">{strings.footer.blog}</a></li>
+              <li><a href={strings.footer.langSwitch.href} class="hover:text-[#3368A0] transition-colors">{strings.footer.langSwitch.label}</a></li>
+              <li><a href="/sitemap-index.xml" class="hover:text-[#3368A0] transition-colors">{strings.footer.sitemap}</a></li>
+              <li><a href="/rss.xml" class="hover:text-[#3368A0] transition-colors">{strings.footer.rss}</a></li>
+              <li><a href="/robots.txt" class="hover:text-[#3368A0] transition-colors">{strings.footer.robots}</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">Trust & Governance</h4>
+            <h4 class="text-xs font-bold text-[#192538] uppercase tracking-wider mb-3">{strings.footer.trustGovernance}</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="/privacy/" class="hover:text-[#3368A0] transition-colors">Privacy Policy</a></li>
-              <li><a href="/terms/" class="hover:text-[#3368A0] transition-colors">Terms of Service</a></li>
-              <li><a href="/copyright/" class="hover:text-[#3368A0] transition-colors">Copyright &amp; DMCA</a></li>
-              <li><a href="/about/" class="hover:text-[#3368A0] transition-colors">About the Project</a></li>
-              <li><a href="/contact/" class="hover:text-[#3368A0] transition-colors">Contact & Feedback</a></li>
+              <li><a href="/privacy/" class="hover:text-[#3368A0] transition-colors">{strings.footer.privacy}</a></li>
+              <li><a href="/terms/" class="hover:text-[#3368A0] transition-colors">{strings.footer.terms}</a></li>
+              <li><a href="/copyright/" class="hover:text-[#3368A0] transition-colors">{strings.footer.copyright}</a></li>
+              <li><a href="/about/" class="hover:text-[#3368A0] transition-colors">{strings.footer.about}</a></li>
+              <li><a href="/contact/" class="hover:text-[#3368A0] transition-colors">{strings.footer.contact}</a></li>
+              <li><a href="https://ko-fi.com/divyyadav" target="_blank" rel="noopener noreferrer" class="hover:text-[#FF5E5B] text-[#FF5E5B] font-semibold transition-colors flex items-center gap-1.5"><span>☕</span> {strings.footer.supportKofi}</a></li>
+              <li><a href="https://x.com/aiwithme0001" target="_blank" rel="noopener noreferrer" class="hover:text-[#192538] dark:hover:text-white transition-colors flex items-center gap-1.5"><svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> {strings.footer.followX}</a></li>
             </ul>
           </div>
         </div>
 
         <div class="pt-8 border-t border-[#E0DBD0] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6B7A90]">
-          <p>© {new Date().getFullYear()} Discord Asset Studio. Not affiliated with or endorsed by Discord, Inc.</p>
-          <p>Verified against official Discord documentation. 100% Client-Side.</p>
+          <p>{strings.footer.copyrightNotice(new Date().getFullYear())}</p>
+          <p>{strings.footer.verifiedDoc}</p>
         </div>
       </div>
     </footer>

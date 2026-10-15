@@ -7,83 +7,284 @@ const pageUrl = "https://discord-creator-asset-studio.pages.dev/about/";
 const aboutSchema = generateWebPageSchema({
   type: 'AboutPage',
   name: 'About Discord Creator Asset Studio',
-  description: 'The mission, engineering philosophy, and privacy-first, in-browser architecture behind Discord Creator Asset Studio — an independent project not affiliated with Discord.',
+  description: 'Meet Divy Yadav, gamer and Discord server owner behind Asset Studio. Read the story of why this private, free browser toolkit was created.',
   url: pageUrl
 });
 const breadcrumbSchema = generateBreadcrumbSchema([
   { name: "Studio", url: "https://discord-creator-asset-studio.pages.dev/" },
   { name: "About", url: pageUrl }
 ]);
+const personSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Divy Yadav",
+  "jobTitle": "Founder & Lead Builder",
+  "url": pageUrl,
+  "sameAs": [
+    "https://x.com/aiwithme0001",
+    "https://ko-fi.com/divyyadav"
+  ],
+  "knowsAbout": [
+    "Discord Server Administration",
+    "Discord Banner Aspect Ratios",
+    "Client-Side Web Development",
+    "Community Building"
+  ]
+});
 ---
 
-<Layout title="About Us | Discord Asset Studio" description="Learn about the mission, engineering philosophy, and privacy-first architecture of Discord Asset Studio.">
+<Layout title="About Us | Creator Story & Mission | Asset Studio" description="Meet Divy Yadav, gamer and Discord server owner behind Asset Studio. Read the story of why this private, free browser toolkit was created.">
   <script type="application/ld+json" set:html={aboutSchema} />
   <script type="application/ld+json" set:html={breadcrumbSchema} />
+  <script type="application/ld+json" set:html={personSchema} />
+  
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+    <!-- Header -->
     <div class="mb-10">
-      <span class="text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider">Independent Creator Tooling</span>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] tracking-tight mt-2 mb-4">
-        About Discord <span class="relative inline-block sketch-trigger"><span class="relative z-10">Asset Studio</span><SketchUnderline color="#66A3BF" /></span>
+      <span class="text-xs font-bold text-[#3368A0] dark:text-[#66A3BF] uppercase tracking-wider font-mono">
+        Creator Story & Independent Tooling
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight mt-2 mb-4">
+        About Discord <span class="relative inline-block sketch-trigger"><span class="relative z-10 text-[#3368A0] dark:text-[#66A3BF]">Asset Studio</span><SketchUnderline color="#66A3BF" /></span>
       </h1>
-      <p class="text-[#475569] text-base leading-relaxed">
-        Simple, fast, and private Discord asset tools that run entirely in your browser.
+      <p class="text-[#475569] dark:text-[#CBD5E1] text-base sm:text-lg leading-relaxed max-w-2xl">
+        Built by a gamer and server owner who got tired of paywalled templates, confusing safe zones, and broken banner crops.
       </p>
     </div>
 
-    <div class="space-y-8 text-[#475569] text-sm leading-relaxed border-t border-[#E0DBD0] pt-8">
-      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
-        <h2 class="text-lg font-bold text-[#192538] mb-3">Our Philosophy</h2>
-        <p class="mb-3">
-          Many online image converters make you upload your private graphics to remote servers, cover the screen with ads, or charge subscriptions just to remove watermarks.
-        </p>
-        <p>
-          We built Discord Asset Studio to keep things simple, private, and free:
-        </p>
-        <ul class="list-disc pl-5 space-y-2 mt-3 text-[#192538] font-medium">
-          <li><strong>100% In-Browser:</strong> Your images and GIFs are processed directly on your device using your browser. Nothing is ever uploaded to a server.</li>
-          <li><strong>Accurate Limits:</strong> We check exact pixel dimensions and byte counts before you download so Discord never rejects your files.</li>
-          <li><strong>Clear Requirements:</strong> We make it obvious which features are completely free and which ones require Discord Nitro or Server Boost tiers.</li>
-          <li><strong>No Annoyances:</strong> No account signups, no watermarks, no artificial countdowns, and no paywalls.</li>
-        </ul>
+    <div class="space-y-10 text-[#475569] dark:text-[#CBD5E1] text-sm sm:text-base leading-relaxed border-t border-[#E0DBD0] dark:border-[#263346] pt-10">
+      
+      <!-- Creator Story Section (E-E-A-T & Trust) -->
+      <section class="card-panel p-6 sm:p-10 rounded-[20px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] shadow-sm relative overflow-hidden">
+        
+        <!-- Subtle Ambient Background Glow -->
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-[#3368A0]/10 via-[#66A3BF]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-gradient-to-tr from-[#FF5E5B]/10 via-[#5865F2]/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row gap-8 lg:gap-10 items-center md:items-start">
+          
+          <!-- Animated Circular Avatar Frame -->
+          <div class="shrink-0 flex flex-col items-center space-y-4">
+            <div class="relative group cursor-pointer sketch-trigger">
+              
+              <!-- Ambient Glow Aura -->
+              <div class="absolute -inset-1.5 rounded-full bg-gradient-to-r from-[#5865F2] via-[#06B6D4] to-[#FF5E5B] opacity-75 blur-md group-hover:opacity-100 group-hover:blur-lg transition-all duration-500 animate-pulse"></div>
+
+              <!-- Animated Gradient Border Ring -->
+              <div class="relative w-44 h-44 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full p-[3.5px] bg-gradient-to-tr from-[#5865F2] via-[#66A3BF] to-[#FF5E5B] shadow-xl">
+                <div class="w-full h-full rounded-full overflow-hidden bg-[#FAF8F5] dark:bg-[#1B2330] relative">
+                  <img
+                    src="/divy-yadav.jpg"
+                    alt="Divy Yadav — Gamer, Discord Server Owner, and Creator of Asset Studio"
+                    class="w-full h-full object-cover object-[center_18%] group-hover:scale-108 transition-transform duration-500 ease-out"
+                    width="745"
+                    height="1024"
+                    loading="eager"
+                  />
+                  <!-- Inner Shadow Overlay -->
+                  <div class="absolute inset-0 rounded-full ring-1 ring-inset ring-black/10 dark:ring-white/10 pointer-events-none"></div>
+                </div>
+
+                <!-- SVG Hand-Drawn Animated Sketch Circle -->
+                <svg
+                  class="absolute -inset-2.5 w-[calc(100%+20px)] h-[calc(100%+20px)] pointer-events-none overflow-visible"
+                  viewBox="0 0 120 120"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M 60 5 A 55 55 0 1 1 58 5.05"
+                    stroke="#66A3BF"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="sketch-circle-path"
+                    opacity="0.9"
+                  />
+                </svg>
+
+                <!-- Discord Online Status Pill -->
+                <div class="absolute bottom-1 right-1 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#23A55A] border-[3.5px] border-white dark:border-[#141A24] flex items-center justify-center shadow-md">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Identity Caption -->
+            <div class="text-center">
+              <div class="font-extrabold text-[#192538] dark:text-white text-lg tracking-tight">Divy Yadav</div>
+              <div class="text-xs text-[#3368A0] dark:text-[#66A3BF] font-mono font-bold">Founder &amp; Lead Builder</div>
+              <div class="mt-1 flex flex-wrap items-center justify-center gap-1.5 text-[11px] font-mono text-[#6B7A90] dark:text-[#8494A7]">
+                <span class="px-2 py-0.5 rounded-md bg-[#FAF8F5] dark:bg-[#1A2332] border border-[#E0DBD0] dark:border-[#263346]">🎮 Gamer</span>
+                <span class="px-2 py-0.5 rounded-md bg-[#FAF8F5] dark:bg-[#1A2332] border border-[#E0DBD0] dark:border-[#263346]">🏰 Server Owner</span>
+              </div>
+              <div class="mt-2.5 flex items-center justify-center gap-2">
+                <a
+                  href="https://x.com/aiwithme0001"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#FAF8F5] dark:bg-[#1A2332] border border-[#E0DBD0] dark:border-[#263346] hover:border-[#192538] dark:hover:border-white text-[11px] font-medium text-[#192538] dark:text-white transition-all shadow-2xs group hover:-translate-y-0.5"
+                  title="Follow Divy on X (@aiwithme0001)"
+                  aria-label="Follow Divy on X (@aiwithme0001)"
+                >
+                  <svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                  <span class="font-mono">@aiwithme0001</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Story Text & Animated Sketch Intro -->
+          <div class="space-y-4 flex-1 text-left">
+            <div class="pb-4 border-b border-[#E0DBD0] dark:border-[#263346]">
+              <div class="mb-2.5 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#C8DFDB]/60 dark:bg-[#202E42] border border-[#66A3BF]/30 text-xs font-mono font-bold text-[#3368A0] dark:text-[#66A3BF] shadow-xs">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0D9488] opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-[#0D9488]"></span>
+                </span>
+                <span>Community Creator</span>
+              </div>
+
+              <!-- Animated Sketch Intro Headline -->
+              <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#192538] dark:text-white tracking-tight leading-[1.25] sketch-trigger">
+                "Hey, I am <span class="relative inline-block text-[#3368A0] dark:text-[#66A3BF]">Divy<SketchUnderline color="#66A3BF" /></span> — a Discord user like you."
+              </h2>
+              <p class="text-xs sm:text-sm text-[#6B7A90] dark:text-[#8494A7] font-medium mt-1">
+                Why I built Discord Creator Asset Studio from scratch
+              </p>
+            </div>
+
+            <p>
+              I have been running Discord servers with friends for gaming for years. Every time we started a new community or decided to refresh our server layout, getting the visuals right turned into an unexpected chore.
+            </p>
+
+            <p>
+              Finding decent Discord banners online was frustrating. Most search results led to template sites requiring paid monthly subscriptions, buried under pop-up ads, or stamping low-resolution watermarks across the canvas. The free options floating around looked like generic corporate templates that did not match our community vibe.
+            </p>
+
+            <p>
+              So I tried making them myself in Photoshop and Canva. That brought a completely different headache: Discord's aspect ratios are notoriously tricky. Server banners need a 16:9 ratio (960×540 px) with a dark gradient covering the top server title, while profile banners use a narrow 5:2 ratio (680×240 px) where your circular avatar chops off the bottom-left corner.
+            </p>
+
+            <p>
+              I spent hours exporting images, uploading them to Discord, seeing them get cut off awkwardly on my phone, nudging canvas layers by 20 pixels, and repeating the cycle.
+            </p>
+
+            <p>
+              After dealing with that for the tenth time, I realized that thousands of Discord moderators, clan leaders, and creators deal with the exact same trial-and-error loop every week. Making Discord graphics should not require an advanced graphic design degree or expensive subscription software.
+            </p>
+
+            <p>
+              I built Discord Creator Asset Studio to solve this permanently: a simple, fast browser toolkit with interactive safe-zone grids, instant dimension validation, and zero server uploads.
+            </p>
+          </div>
+        </div>
       </section>
 
-      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
-        <h2 class="text-lg font-bold text-[#192538] mb-3">Always Up to Date</h2>
-        <p class="mb-3">
-          We maintain our asset dimensions by constantly verifying against Discord's official developer documentation and Help Center guides:
-        </p>
-        <ul class="list-disc pl-5 space-y-1 text-xs font-mono text-[#3368A0] dark:text-[#66A3BF] mb-4">
-          <li>
-            <a href="https://discord.com/developers/docs" target="_blank" rel="noopener noreferrer" class="hover:underline">
-              Discord Developer Portal &rarr;
-            </a>
-          </li>
-          <li>
-            <a href="https://support.discord.com/hc/en-us" target="_blank" rel="noopener noreferrer" class="hover:underline">
-              Discord Help Center & Knowledge Base &rarr;
-            </a>
-          </li>
-        </ul>
-        <p class="text-xs text-[#6B7A90]">
-          Discord Asset Studio is an independent project. We are not affiliated with, endorsed by, or sponsored by Discord Inc. Discord is a registered trademark of Discord Inc.
-        </p>
-      </section>
-
-      <section class="card-panel p-6 sm:p-8 rounded-[14px]">
-        <h2 class="text-lg font-bold text-[#192538] mb-3">Privacy & Maintainers</h2>
-        <p class="mb-3">
-          Discord Asset Studio is built and maintained by independent web developers who care about clean, fast, and privacy-respecting software. We run zero trackers, store no personal cookies, and process all image pixels right inside your web browser.
-        </p>
-        <div class="flex flex-wrap items-center gap-4 pt-2 text-xs font-semibold">
-          <a href="/contact/" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">
-            Submit a Specification Update &rarr;
-          </a>
-          <span class="text-[#CBD5E1]">•</span>
-          <a href="mailto:support@discordassets.studio" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline">
-            support@discordassets.studio
+      <!-- Ko-fi Support Section -->
+      <section class="card-panel p-6 sm:p-8 rounded-[16px] bg-gradient-to-br from-[#FAF8F5] to-[#FF5E5B]/5 dark:from-[#161F2E] dark:to-[#FF5E5B]/10 border-2 border-[#FF5E5B]/30 shadow-xs">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div class="space-y-2 max-w-xl">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#FF5E5B]/15 text-[#FF5E5B] text-xs font-bold font-mono">
+              <span>☕</span> Support Independent Tooling
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold text-[#192538] dark:text-white">
+              Buy Me a Coffee on Ko-fi
+            </h2>
+            <p class="text-xs sm:text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">
+              This site is a passion project built on late nights between gaming and coding. If these tools saved you an hour in Photoshop or helped your server look great, buying me a coffee on Ko-fi helps cover hosting and keeps this project free for everyone.
+            </p>
+          </div>
+          <a
+            href="https://ko-fi.com/divyyadav"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#FF5E5B] hover:bg-[#E54B48] text-white font-bold text-sm shadow-sm hover:shadow-md transition-all duration-150 transform hover:-translate-y-0.5"
+          >
+            <svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.683-2.566V15.42s3.834.469 5.867-2.181c1.554-2.025.758-4.291.758-4.291zm-6.192 4.148c-.015.01-.03.02-.045.029-.028.018-.057.036-.086.053-.162.095-.343.167-.538.213-.196.046-.408.069-.63.069h-1.637V7.071h1.637c.222 0 .434.023.63.069.195.046.376.118.538.213.029.017.058.035.086.053.015.009.03.019.045.029.351.246.611.594.757 1.015.146.421.146.907 0 1.328-.146.421-.406.769-.757 1.015v.303zm-7.91-1.042c-.287.41-.652.756-1.077 1.02-.279.174-.582.3-.9.373-.318.073-.65.077-.98.012-.33-.065-.634-.203-.895-.404-.261-.2-.469-.462-.609-.766-.14-.304-.199-.641-.173-.979.026-.338.136-.658.322-.937.186-.279.439-.508.736-.667.297-.159.629-.241.967-.238.268.002.531.055.776.155.245.1.464.246.643.43.179-.184.398-.33.643-.43.245-.1.508-.153.776-.155.338-.003.67.079.967.238.297.159.55.388.736.667.186.279.296.599.322.937.026.338-.033.675-.173.979-.14.304-.348.566-.609.766-.261.201-.565.339-.895.404-.33.065-.662.061-.98-.012-.318-.073-.621-.199-.9-.373-.425-.264-.79-.61-1.077-1.02z"/>
+            </svg>
+            <span>Support on Ko-fi</span>
           </a>
         </div>
       </section>
+
+      <!-- Engineering Principles -->
+      <section class="card-panel p-6 sm:p-8 rounded-[16px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346]">
+        <h2 class="text-lg sm:text-xl font-bold text-[#192538] dark:text-white mb-4">
+          Core Principles
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+          <div class="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#1A2332] border border-[#E0DBD0]/60 dark:border-[#263346]">
+            <div class="font-bold text-[#192538] dark:text-white mb-1 flex items-center gap-2">
+              <span class="text-base">🔒</span> 100% In-Browser Privacy
+            </div>
+            <p class="text-[#6B7A90] dark:text-[#8494A7]">
+              Your graphics never touch an external server. Video compression, GIF formatting, and image cropping run locally via Canvas and WebAssembly.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#1A2332] border border-[#E0DBD0]/60 dark:border-[#263346]">
+            <div class="font-bold text-[#192538] dark:text-white mb-1 flex items-center gap-2">
+              <span class="text-base">📏</span> Verified Discord Specs
+            </div>
+            <p class="text-[#6B7A90] dark:text-[#8494A7]">
+              Every canvas preset matches Discord exact requirements — like 320×320 stickers under 512 KiB and 64×64 role icons under 256 KiB.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#1A2332] border border-[#E0DBD0]/60 dark:border-[#263346]">
+            <div class="font-bold text-[#192538] dark:text-white mb-1 flex items-center gap-2">
+              <span class="text-base">💡</span> Clear Tier Transparency
+            </div>
+            <p class="text-[#6B7A90] dark:text-[#8494A7]">
+              We clearly distinguish free assets from Nitro and Server Boost Level requirements so you never format graphics your server cannot use.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#1A2332] border border-[#E0DBD0]/60 dark:border-[#263346]">
+            <div class="font-bold text-[#192538] dark:text-white mb-1 flex items-center gap-2">
+              <span class="text-base">⚡</span> Zero Annoyances
+            </div>
+            <p class="text-[#6B7A90] dark:text-[#8494A7]">
+              No account creation, no watermarks, no artificial countdowns, and no paywalls.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Up to Date & Contact -->
+      <section class="card-panel p-6 sm:p-8 rounded-[16px] bg-white dark:bg-[#141A24] border border-[#E0DBD0] dark:border-[#263346] space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-[#192538] dark:text-white">
+          Documentation & Community Feedback
+        </h2>
+        <p class="text-xs sm:text-sm">
+          We maintain our asset dimensions by constantly verifying against Discord's official developer portal and release notes:
+        </p>
+        <div class="flex flex-wrap gap-4 text-xs font-mono">
+          <a href="https://discord.com/developers/docs" target="_blank" rel="noopener noreferrer" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold flex items-center gap-1">
+            <span>📚</span> Discord Developer Portal &rarr;
+          </a>
+          <a href="https://support.discord.com/hc/en-us" target="_blank" rel="noopener noreferrer" class="text-[#3368A0] dark:text-[#66A3BF] hover:underline font-semibold flex items-center gap-1">
+            <span>❓</span> Discord Help Center &rarr;
+          </a>
+        </div>
+        <div class="pt-4 border-t border-[#E0DBD0] dark:border-[#263346] flex flex-wrap items-center justify-between gap-4 text-xs">
+          <div class="flex items-center gap-3">
+            <a href="/contact/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">
+              Submit a Feedback or Bug Report &rarr;
+            </a>
+            <span class="text-[#CBD5E1] dark:text-[#35435C]">•</span>
+            <a href="mailto:support@discordassets.studio" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">
+              support@discordassets.studio
+            </a>
+          </div>
+          <span class="text-[11px] text-[#6B7A90] dark:text-[#8494A7]">
+            Independent open project. Not affiliated with Discord Inc.
+          </span>
+        </div>
+      </section>
+
     </div>
   </div>
 </Layout>
+

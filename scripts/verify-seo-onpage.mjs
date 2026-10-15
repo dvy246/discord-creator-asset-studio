@@ -214,6 +214,31 @@ const indexablePages = [
     primaryKeyword: 'discord video size limit',
   },
   {
+    path: 'blog/how-to-do-colored-text-discord/index.html',
+    url: '/blog/how-to-do-colored-text-discord/',
+    primaryKeyword: 'how to do colored text in discord',
+  },
+  {
+    path: 'blog/discord-timestamp-code-guide/index.html',
+    url: '/blog/discord-timestamp-code-guide/',
+    primaryKeyword: 'discord timestamp code',
+  },
+  {
+    path: 'blog/discord-about-me-ideas-aesthetic/index.html',
+    url: '/blog/discord-about-me-ideas-aesthetic/',
+    primaryKeyword: 'discord about me ideas aesthetic',
+  },
+  {
+    path: 'blog/discord-role-icon-size-guide/index.html',
+    url: '/blog/discord-role-icon-size-guide/',
+    primaryKeyword: 'discord role icon size',
+  },
+  {
+    path: 'blog/how-to-fit-image-to-discord-banner/index.html',
+    url: '/blog/how-to-fit-image-to-discord-banner/',
+    primaryKeyword: 'fit image to discord banner size',
+  },
+  {
     path: 'es/tools/emoji/index.html',
     url: '/es/tools/emoji/',
     primaryKeyword: 'emojis discord',

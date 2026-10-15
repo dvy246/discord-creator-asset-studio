@@ -1426,4 +1426,852 @@ Keep expectations realistic: DRM is designed to block exactly this, so some serv
       }
     ]
   },
+  {
+    slug: 'how-to-do-colored-text-discord',
+    title: 'How to Do Colored Text in Discord | ANSI Code Guide',
+    heading: 'How to Do Colored Text in Discord',
+    howToSteps: [
+      { name: 'Open the ansi code block', text: 'Type three backticks followed by ansi on a fresh line in your chat input.' },
+      { name: 'Insert the ANSI color escape sequence', text: 'Add the escape character sequence followed by your chosen color integer and the letter m.' },
+      { name: 'Type your message and add reset', text: 'Write your text, then append the reset code sequence so following text stays clean.' },
+      { name: 'Close with three backticks', text: 'End the message with three backticks on a new line and press Enter to send.' }
+    ],
+    metaDescription: 'Learn how to do colored text in discord using ANSI codes and syntax highlighting. Copy copy-paste code blocks or use our interactive visual generator tool.',
+    primaryKeyword: 'how to do colored text in discord',
+    secondaryKeywords: [
+      'discord colored text code',
+      'ansi color discord',
+      'colored text discord copy paste',
+      'discord text formatting color'
+    ],
+    longTailKeywords: [
+      'how to write colored text in discord mobile',
+      'discord colored text generator online',
+      'discord bash color codes',
+      'colored text discord bot'
+    ],
+    category: 'Tutorials',
+    readTime: '6 min read',
+    datePublished: '2026-10-04T08:00:00Z',
+    dateModified: '2026-10-04T08:00:00Z',
+    author: {
+      name: 'Discord Asset Studio Engineering',
+      role: 'Client Architecture Specialist'
+    },
+    summary: 'Discord does not provide a native color picker button, but you can tint text using ANSI terminal escape sequences inside triple-backtick code blocks. Here is how the syntax works, the 16-color palette, and how to copy ready-to-paste blocks without memorizing control codes.',
+    toolCta: {
+      name: 'Discord Colored Text Generator',
+      headline: 'Generate ANSI Colored Discord Text in Seconds',
+      description: 'Pick colors, style words with bold or underline, and copy ready-to-paste ANSI code blocks formatted directly for Discord chat.',
+      buttonText: 'Open Colored Text Studio',
+      href: '/tools/colored-text/',
+      badge: 'ANSI 16-Color • Code Blocks'
+    },
+    sections: [
+      {
+        id: 'why-discord-has-no-color-picker',
+        heading: 'Why Discord Chat Uses ANSI Codes Instead of a Color Picker',
+        content: `Discord chat does not include a color picker button or rich-text palette in its interface. While you can easily type asterisks for bold or italics, tinting text requires terminal escape codes inside an \`ansi\` syntax fence.
+
+When Discord added ANSI terminal styling to desktop and web builds, it gave community moderators, bot developers, and creators a way to highlight important announcements, build warning boxes, and create distinct status messages.
+
+The technique relies on standard ANSI SGR (Select Graphic Rendition) sequences. When enclosed inside three backticks tagged with \`ansi\`, the Discord client parses the numbers and colors the text instead of rendering plain monospaced characters. To format your messages without typing control codes manually, use our in-browser <a href="/tools/colored-text/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord colored text generator</a>. If you need standard markdown styling like bold or strikethrough, check out our <a href="/tools/text-formatting/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord text formatting tool</a>.`,
+        callout: {
+          type: 'info',
+          title: 'The Basic ANSI Fence Pattern',
+          text: 'Every colored message must start with ```ansi on its own line and end with ``` on its own line. Without the ansi tag, Discord treats your escape sequences as raw text.'
+        }
+      },
+      {
+        id: 'ansi-escape-code-syntax-breakdown',
+        heading: 'The ANSI Escape Sequence Formula for Discord',
+        content: `An ANSI color command in Discord follows a strict pattern:
+
+\`\`\`
+\\u001b[{format};{color}m{your text here}\\u001b[0m
+\`\`\`
+
+Here is how each piece works:
+- **\\u001b (ESC)**: The non-printable ASCII escape character (code 27). Because modern keyboards have no key to type this character directly, you have to paste it from an editor or generate it using our tool.
+- **[**: The Control Sequence Introducer (CSI) bracket.
+- **{format}**: The text attribute code. 0 is normal text, 1 is bold, and 4 is underline.
+- **;**: A semicolon separating the attribute from the color number.
+- **{color}**: The 2-digit integer for foreground text (30 through 37) or background highlight (40 through 47).
+- **m**: The terminator that tells Discord the code is complete.
+- **\\u001b[0m**: The reset code. Always place this at the end of your colored phrase so subsequent words return to default gray.`,
+        code: {
+          language: 'ansi',
+          snippet: `\`\`\`ansi
+[0;31mThis is red text[0m
+[1;32mThis is bold green text[0m
+[4;34mThis is underlined blue text[0m
+\`\`\``,
+          caption: 'Basic 3-line ANSI colored text block in Discord'
+        }
+      },
+      {
+        id: 'full-ansi-color-palette-table',
+        heading: 'Complete Discord ANSI Color Code Reference',
+        content: `Discord implements a Solarized-style color palette rather than harsh neon primaries. This means green leans slightly olive, blue looks like soft denim, and yellow appears as warm gold.
+
+You can set foreground text colors (codes 30-37) and background fill colors (codes 40-47). Here is the reference table of every available color in Discord:`,
+        table: {
+          headers: ['Color Name', 'Text Code (FG)', 'Background Code (BG)', 'Visual Appearance in Discord'],
+          rows: [
+            ['Dark Gray / Charcoal', '30', '40', 'Dark slate tone, subtle contrast against dark theme'],
+            ['Red / Crimson', '31', '41', 'Warm salmon red, ideal for warnings and alert tags'],
+            ['Green / Olive', '32', '42', 'Earthy forest olive, perfect for success messages and online tags'],
+            ['Yellow / Amber', '33', '43', 'Warm gold yellow, great for cautions and highlighted notes'],
+            ['Blue / Periwinkle', '34', '44', 'Soft periwinkle blue, excellent for info callouts'],
+            ['Pink / Magenta', '35', '45', 'Soft rose pink, popular for aesthetic headers'],
+            ['Cyan / Teal', '36', '46', 'Vibrant aquamarine teal, high visibility in dark theme'],
+            ['White / Light Gray', '37', '47', 'Clean off-white, strong contrast on dark backgrounds']
+          ]
+        }
+      },
+      {
+        id: 'legacy-syntax-highlighting-tricks',
+        heading: 'Legacy Markdown Color Tricks vs Modern ANSI Blocks',
+        content: `Before Discord supported ANSI blocks, communities relied on language syntax highlighting hacks to introduce color into chat. While these tricks still work, they apply color to whole lines rather than specific words:
+
+- **diff**: Lines starting with \`+\` turn light green; lines starting with \`-\` turn light red.
+- **ini**: Text inside square brackets \`[Like This]\` turns bright blue; numbers turn orange.
+- **css**: Text preceded by a dot \`.selector\` or curly braces turns teal and blue.
+- **yaml**: Keys before a colon \`key:\` turn yellow; numbers turn cyan.
+
+While syntax highlighting hacks are easy to type without escape codes, ANSI blocks are far more versatile. With ANSI, you can color a single word in the middle of a sentence, combine bold with underline, and even apply background fills. For complex layouts, try our <a href="/tools/markdown/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord markdown editor</a>.`,
+        code: {
+          language: 'markdown',
+          snippet: `\`\`\`diff
++ Green line using diff syntax
+- Red line using diff syntax
+\`\`\`
+
+\`\`\`ini
+[Blue Header inside ini syntax]
+\`\`\``,
+          caption: 'Older syntax highlighting workarounds in Discord'
+        }
+      },
+      {
+        id: 'mobile-and-dark-mode-quirks',
+        heading: 'Mobile App Support and Theme Considerations',
+        content: `Recent versions of Discord on both iOS and Android render ANSI colored text inside code blocks. However, members on older client versions will see the message as monospaced white text inside a gray box. The content remains completely readable, though without color.
+
+Colors also look distinct depending on the viewer's theme:
+- **Dark Mode (#313338)**: Cyan (36), yellow (33), and pink (35) offer the highest legibility. Dark gray (30) blends closely into the chat background and should be avoided for crucial text.
+- **Light Mode (#FFFFFF)**: Red (31), blue (34), and dark gray (30) look crisp, while cyan and yellow can appear faint.
+
+If you are setting up community rules or channel banners, pair colored text blocks with our <a href="/tools/colors/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord background color inspector</a> to verify color contrast across both themes.`,
+        callout: {
+          type: 'warning',
+          title: 'Not Supported in Profiles or Bios',
+          text: 'ANSI color codes only render inside message code blocks. They do not work in your username, server nickname, or About Me bio.'
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: 'How do you do colored text in Discord without Nitro?',
+        answer: 'You do not need Nitro. Colored text uses standard ANSI escape codes inside a triple-backtick ansi code block, which is available to all Discord users on desktop, web, and mobile.'
+      },
+      {
+        question: 'Why is my Discord colored text showing raw escape codes like [31m?',
+        answer: 'This happens if you omit the ansi tag after the opening triple backticks, or if you accidentally deleted the invisible ESC character before the bracket. Use our colored text generator to copy a clean, validated block.'
+      },
+      {
+        question: 'Can you use colored text in your Discord bio or About Me?',
+        answer: 'No. Profile bios and server nicknames only accept plain text and Unicode characters. Code block syntax does not render in user profiles.'
+      },
+      {
+        question: 'Does colored text work on the Discord mobile app?',
+        answer: 'Yes, modern Discord updates on iOS and Android render ANSI colors. If a mobile user is on an older app release, the text simply displays as clean monospaced plain text.'
+      },
+      {
+        question: 'What is the fastest way to write colored text in Discord?',
+        answer: 'Use our free in-browser Discord Colored Text Generator. Type your message, click your preferred color and style, and copy the formatted code block directly into Discord.'
+      }
+    ]
+  },
+  {
+    slug: 'discord-timestamp-code-guide',
+    title: 'Discord Timestamp Code Guide | Dynamic Chat Formats',
+    heading: 'Discord Timestamp Code Guide & Formats',
+    howToSteps: [
+      { name: 'Determine event date and time', text: 'Choose the exact date, time, and time zone for your scheduled event or deadline.' },
+      { name: 'Convert to UNIX epoch seconds', text: 'Convert your calendar date into a 10-digit UNIX timestamp using our browser generator.' },
+      { name: 'Select your format flag', text: 'Pick a display flag such as R for countdown or F for full date and time.' },
+      { name: 'Paste into Discord chat', text: 'Send the string in the format <t:TIMESTAMP:FLAG> in any Discord channel, DM, or embed.' }
+    ],
+    metaDescription: 'Master every discord timestamp code format for events and countdowns. Learn UNIX conversion, copy syntax tags, or generate dynamic timestamps instantly.',
+    primaryKeyword: 'discord timestamp code',
+    secondaryKeywords: [
+      'discord relative timestamp',
+      'how to send timestamps in discord',
+      'discord timestamp generator',
+      'discord time format'
+    ],
+    longTailKeywords: [
+      'discord timestamp countdown tag',
+      'discord timestamp format list',
+      'how to make discord timestamp in chat',
+      'discord unix timestamp command'
+    ],
+    category: 'Tutorials',
+    readTime: '5 min read',
+    datePublished: '2026-10-04T08:00:00Z',
+    dateModified: '2026-10-04T08:00:00Z',
+    author: {
+      name: 'Discord Asset Studio Engineering',
+      role: 'Client Architecture Specialist'
+    },
+    summary: 'Discord timestamp codes automatically display dates and times in each viewer local time zone and can even update live countdowns. Here is how the <t:UNIX:FLAG> syntax works, all 7 format styles, and how to post them in chat.',
+    toolCta: {
+      name: 'Discord Timestamp Generator',
+      headline: 'Build Dynamic Discord Timestamps Without Math',
+      description: 'Pick a date and time zone to generate live countdowns, short times, and full dates that auto-sync to every user local device clock.',
+      buttonText: 'Open Timestamp Generator',
+      href: '/tools/timestamp/',
+      badge: '7 Dynamic Formats • Timezone Auto-Sync'
+    },
+    sections: [
+      {
+        id: 'what-is-a-discord-timestamp-code',
+        heading: 'How Discord Dynamic Timestamps Solve Time Zone Confusion',
+        content: `When organizing community game nights, server tournaments, or team meetings, typing "Starts at 8 PM EST" creates confusion for members in other parts of the world. Readers have to calculate offsets manually, leading to missed events.
+
+Discord solved this by adding native dynamic timestamp tags. Instead of writing plain text times, you write a short code containing a UNIX epoch number:
+
+\`\`\`
+<t:1728000000:R>
+\`\`\`
+
+When posted in chat, Discord replaces the tag with a localized time based on each reader's computer or phone settings. Someone in New York sees Eastern Time, someone in London sees GMT, and someone in Tokyo sees JST.
+
+You can generate these tags instantly with our in-browser <a href="/tools/timestamp/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord timestamp generator</a>, or assemble them manually using the guide below.`,
+        callout: {
+          type: 'info',
+          title: 'Direct Chat Conversion',
+          text: 'Timestamps do not require bots or server permissions. Anyone can type a timestamp code directly into regular chat messages, thread titles, and forum posts.'
+        }
+      },
+      {
+        id: 'the-seven-discord-timestamp-formats',
+        heading: 'The Seven Discord Timestamp Format Styles Compared',
+        content: `Discord provides seven distinct format flags that change how your timestamp renders. You append the single-letter flag at the end of the tag after a colon:
+
+\`\`\`
+<t:1728000000:FLAG>
+\`\`\`
+
+Here is how each flag behaves in chat:`,
+        table: {
+          headers: ['Flag', 'Format Style', 'Rendered Output Example', 'Best Usage Scenario'],
+          rows: [
+            ['t', 'Short Time', '9:41 PM', 'Daily recurring voice calls and casual meetings'],
+            ['T', 'Long Time', '9:41:00 PM', 'Exact countdown moments and competitive match starts'],
+            ['d', 'Short Date', '10/04/2026', 'Submission deadlines and calendar milestones'],
+            ['D', 'Long Date', 'October 4, 2026', 'Birthdays, major releases, and holidays'],
+            ['f', 'Short Date/Time', 'October 4, 2026 9:41 PM', 'General event announcements (Discord default)'],
+            ['F', 'Long Date/Time', 'Sunday, October 4, 2026 9:41 PM', 'Official server announcements and rules'],
+            ['R', 'Relative Time', 'in 2 hours / 15 minutes ago', 'Dynamic live countdowns and recent activity notes']
+          ]
+        }
+      },
+      {
+        id: 'how-relative-countdowns-work',
+        heading: 'Using Relative Timestamps (:R) as Live Countdowns',
+        content: `The \`:R\` flag is the most popular Discord timestamp style because it acts as an automatic live countdown.
+
+Unlike static text that becomes outdated as time passes, a relative timestamp updates in real time on the viewer's screen. If an event is scheduled for two hours from now, Discord displays "in 2 hours". As time ticks down, the tag smoothly shifts to "in 45 minutes", "in 5 minutes", "in a few seconds", and eventually "5 minutes ago".
+
+The client updates this text locally without sending extra network requests or editing messages.
+
+For major server announcements, combine the full date style \`:F\` with the countdown style \`:R\`:
+
+\`\`\`
+Server Maintenance: <t:1728000000:F> (<t:1728000000:R>)
+\`\`\`
+
+This pattern gives your community both the exact calendar time and a quick relative sense of urgency.`,
+        callout: {
+          type: 'tip',
+          title: 'Pairing Absolute and Relative Times',
+          text: 'Using both styles side-by-side ensures mobile users with small screens get the exact date while seeing how soon the event happens at a single glance.'
+        }
+      },
+      {
+        id: 'calculating-unix-timestamps',
+        heading: 'How UNIX Timestamps Work and Common Formatting Mistakes',
+        content: `A UNIX timestamp represents the number of seconds that have elapsed since midnight Coordinated Universal Time (UTC) on January 1, 1970.
+
+The most common mistake when building Discord timestamps is using milliseconds instead of seconds. In JavaScript and web development, \`Date.now()\` returns a 13-digit number (e.g., \`1728000000000\`). If you paste a 13-digit number into Discord, the client fails to parse it and leaves the tag as raw code.
+
+To fix this, divide milliseconds by 1,000 and round down to a 10-digit integer.
+
+If you omit the colon and letter flag at the end (e.g., \`<t:1728000000>\`), Discord falls back to the short date/time format (\`:f\`).`,
+        code: {
+          language: 'javascript',
+          snippet: `// Converting JavaScript date to Discord timestamp seconds:
+const eventDate = new Date('2026-10-04T20:00:00Z');
+const unixSeconds = Math.floor(eventDate.getTime() / 1000);
+
+console.log(\`<t:\${unixSeconds}:R>\`);
+// Output: <t:1791144000:R>`,
+          caption: 'Converting milliseconds to seconds for Discord'
+        }
+      },
+      {
+        id: 'using-timestamps-in-announcements',
+        heading: 'Formatting Timestamps in Server Announcements and Embeds',
+        content: `Timestamps integrate smoothly with Discord Markdown formatting. You can wrap them in bold asterisks, place them in bulleted lists, or insert them inside bot webhook embeds.
+
+Here is an example announcement template you can copy and adjust:
+
+\`\`\`
+📢 **COMMUNITY TOURNAMENT**
+📅 Date: <t:1728000000:F>
+⏳ Countdown: **<t:1728000000:R>**
+📍 Voice Channel: General Stage
+\`\`\`
+
+Notice that timestamps work inside bold formatting: \`**<t:1728000000:R>**\` will render the dynamic countdown in bold text. If you want to build rich Discord announcement embeds with colors and custom fields, check out our <a href="/tools/embed-builder/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord embed builder</a>.`,
+        callout: {
+          type: 'info',
+          title: 'Embed Support',
+          text: 'Timestamps can be placed inside embed descriptions, field values, and footers when sending messages through webhooks or bot libraries.'
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: 'Do Discord timestamps update automatically without refreshing?',
+        answer: 'Yes. Relative timestamps (<t:TIMESTAMP:R>) update live on screen as time passes. Discord client handles the countdown in local memory without editing the message.'
+      },
+      {
+        question: 'Why is my Discord timestamp showing as raw code like <t:1728000000:R>?',
+        answer: 'This happens if your timestamp has 13 digits instead of 10 (milliseconds instead of seconds), or if there are typos in the brackets. Discord requires a 10-digit UNIX second timestamp.'
+      },
+      {
+        question: 'Can you use Discord timestamp codes on mobile phones?',
+        answer: 'Yes. You can paste timestamp codes into chat on iPhone and Android apps. They render as clickable localized times just like on desktop.'
+      },
+      {
+        question: 'What happens if you omit the style flag at the end of the tag?',
+        answer: 'If you leave off the flag and type <t:1728000000>, Discord automatically applies the default short date and time format (:f), showing month, day, year, and time.'
+      },
+      {
+        question: 'Can I put dynamic timestamps in channel names or server bios?',
+        answer: 'No. Dynamic timestamps only render inside chat messages, forum posts, threads, and embeds. Channel names and server descriptions treat the tag as plain literal text.'
+      }
+    ]
+  },
+  {
+    slug: 'discord-about-me-ideas-aesthetic',
+    title: 'Discord About Me Ideas Aesthetic | Bio Templates',
+    heading: 'Discord About Me Ideas Aesthetic: Bio Templates',
+    metaDescription: 'Browse discord about me ideas aesthetic templates with symbols, spacing, and clean layouts. Copy minimalist bios that fit the 190-character limit cleanly.',
+    primaryKeyword: 'discord about me ideas aesthetic',
+    secondaryKeywords: [
+      'discord bio templates copy paste',
+      'discord bio character limit',
+      'aesthetic discord bio',
+      'cute discord bio ideas'
+    ],
+    longTailKeywords: [
+      'discord about me symbols copy and paste',
+      'minimalist discord about me ideas',
+      'discord bio ideas for gamers',
+      'short discord bio templates'
+    ],
+    category: 'Design & Inspiration',
+    readTime: '5 min read',
+    datePublished: '2026-10-04T08:00:00Z',
+    dateModified: '2026-10-04T08:00:00Z',
+    author: {
+      name: 'Discord Asset Studio Engineering',
+      role: 'Client Architecture Specialist'
+    },
+    summary: 'An aesthetic Discord About Me bio frames your profile card and gives people a quick look at your personality. Here are tested bio templates, clean Unicode dividers, and layout ideas designed to stay safely within Discord 190-character ceiling.',
+    toolCta: {
+      name: 'Discord Bio Generator',
+      headline: 'Build Aesthetic Discord Bios Under 190 Chars',
+      description: 'Mix aesthetic symbols, borders, and custom bio templates with a live character counter to craft your Discord profile.',
+      buttonText: 'Open Bio Generator',
+      href: '/tools/bio-generator/',
+      badge: '190 Chars • Aesthetic Symbols'
+    },
+    sections: [
+      {
+        id: 'discord-bio-rules-and-190-character-limit',
+        heading: 'Discord About Me Character Limits and Technical Rules',
+        content: `Your Discord About Me bio appears when another member clicks your profile picture in a server member list or chat window. Creating an aesthetic bio requires understanding three technical rules:
+
+1. **The 190-Character Ceiling**: Discord limits your bio to exactly 190 characters. Spaces, punctuation, and line breaks count against this total.
+2. **Line Break Limits**: On desktop popout cards, Discord displays approximately 5 to 6 lines of text before adding a scrollbar. Bios that rely on excessive empty lines get cut off.
+3. **No Markdown Styling**: Standard Discord Markdown (like \`**bold**\` or \`*italics*\`) does not work in bios. Typing asterisks displays literal asterisks.
+
+To get stylized lettering in your bio, you need to use Unicode character replacements from our <a href="/tools/fonts/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord font generator</a> or structure your bio with our <a href="/tools/bio-generator/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord bio generator</a>.`,
+        callout: {
+          type: 'warning',
+          title: 'Emoji Byte Counting',
+          text: 'Custom Discord server emojis cannot be used in bios unless you have Discord Nitro. Standard Unicode emojis count as 2 or more characters toward your 190-character limit.'
+        }
+      },
+      {
+        id: 'curated-aesthetic-bio-templates',
+        heading: 'Copy-and-Paste Aesthetic Discord Bio Templates',
+        content: `Here are copy-ready bio templates formatted to fit within the 190-character limit:
+
+### Minimalist & Clean (124 chars)
+\`\`\`text
+name / age / pronouns
+✦ listening to music
+↳ sleeping or studying
+offline most of the day
+\`\`\`
+
+### Cozy Lo-Fi / Soft Aesthetic (158 chars)
+\`\`\`text
+☕ warm tea & cloudy mornings
+⋆｡˚ reading fantasy novels
+ʚɞ dms open for book recs
+time zone: est / student
+\`\`\`
+
+### Gamer & Co-Op (142 chars)
+\`\`\`text
+🎮 valorant • apex • rpgs
+peak rank: diamond
+duo partner wanted
+streaming on weekends
+feel free to send an invite
+\`\`\`
+
+### Dark / Minimalist Monospace (136 chars)
+\`\`\`text
+[sys.init]
+status: idle
+interests: code, hardware, ambient sound
+don't ping unless urgent
+[connection closed]
+\`\`\`
+
+Each of these templates leaves sufficient character budget so you can add your pronouns, favorite game, or social handle without hitting the limit.`,
+        code: {
+          language: 'text',
+          snippet: `✦ ─── name ─── ✦
+she / her • 20 • infp
+listening to lo-fi beats
+dms: open for friends
+─── ･ ｡ﾟ☆: *.☽ .* :☆ﾟ. ───`,
+          caption: 'Full-width aesthetic framed bio template (148 chars)'
+        }
+      },
+      {
+        id: 'aesthetic-dividers-and-unicode-symbols',
+        heading: 'Safe Unicode Dividers, Stars, and Line Spacers',
+        content: `Aesthetic bios often use subtle Unicode symbols to divide sections. It is important to pick symbols that render reliably across Windows, macOS, iOS, and Android without turning into empty square boxes.
+
+Here is a collection of tested aesthetic symbols you can paste into your bio:`,
+        table: {
+          headers: ['Category', 'Unicode Symbols', 'Recommended Placement'],
+          rows: [
+            ['Stars & Sparkles', '✦ ✧ ★ ☆ ⋆ ˚｡⋆ ｡˚', 'Surrounding your name or heading lines'],
+            ['Brackets & Quotes', '『 』 〖 〗 〘 〙 「 」', 'Framing status words or age/pronoun badges'],
+            ['Arrows & Pointers', '↳ ↬ ⇢ ➔ ➤ ➜', 'Bulleting hobbies, social links, or game handles'],
+            ['Separators & Lines', '• ◦ ─ │ ┊ ┈', 'Dividing short words on a single horizontal line'],
+            ['Decorative Borders', '─── ･ ｡ﾟ☆: *.☽ .* :☆ﾟ. ───', 'Header and footer borders for structured cards']
+          ]
+        }
+      },
+      {
+        id: 'matching-your-bio-with-pfp-and-banner',
+        heading: 'Coordinating Your Bio with Profile Banners and PFPs',
+        content: `A strong Discord profile works as a cohesive unit. When someone opens your profile card, your avatar, banner, profile theme color, and bio appear together.
+
+- **Theme Palette**: Pick a profile color that matches the primary shade of your banner. If your banner features a purple anime landscape, set your profile theme to muted lavender.
+- **Tone Consistency**: If your avatar is dark and cyberpunk, a playful bio filled with flower symbols creates a visual mismatch. Choose monospace brackets and tech dividers instead.
+- **Keep Space for About Me**: Discord displays your About Me text directly over the secondary profile theme color. High-contrast white or light symbols maintain readability against darker backgrounds.
+
+To create matching graphics for your profile header, explore our <a href="/tools/banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord banner maker</a> and <a href="/tools/avatar/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord avatar creator</a>.`,
+        callout: {
+          type: 'tip',
+          title: 'Profile Card Contrast',
+          text: 'Avoid using gray or dim symbols if your profile theme is set to dark charcoal, as the text can blend in and become unreadable.'
+        }
+      },
+      {
+        id: 'troubleshooting-broken-symbols-in-bios',
+        heading: 'Why Some Symbols Turn into Empty Boxes on Mobile',
+        content: `If you copy symbols from random internet generators, you might notice that friends on older Android devices or iPads see empty rectangles (\`□\`), known as "tofu" glyphs.
+
+This happens when a font generator uses uncommon Unicode mathematical alphanumeric blocks that lack system font coverage on older operating systems.
+
+To avoid broken glyphs:
+- Stick to standard symbols from the Basic Multilingual Plane (like stars \`★\`, arrows \`↳\`, and bullets \`•\`).
+- Avoid heavily distorted pseudo-alphabets that convert regular letters into obscure mathematical symbols.
+- Test your finished profile card on both your computer and mobile phone before finalizing.
+
+For clean, widely supported icons and symbols, browse our <a href="/tools/emoji-copy-paste/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord emoji copy paste collection</a>.`,
+        callout: {
+          type: 'info',
+          title: 'Cross-Device Verification',
+          text: 'Always open your own profile on your smartphone to ensure your dividers and symbols display cleanly on mobile screens.'
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: 'What is the character limit for a Discord About Me bio?',
+        answer: 'The Discord About Me bio limit is exactly 190 characters. Spaces, letters, numbers, and line breaks all count toward this total.'
+      },
+      {
+        question: 'Does Discord Markdown work in the About Me bio?',
+        answer: 'No. Markdown formatting like **bold**, *italics*, and code blocks does not work in bios. Discord renders asterisks and backticks as literal text.'
+      },
+      {
+        question: 'Can you add clickable links in a Discord bio?',
+        answer: 'Yes. If you paste a valid URL starting with https:// into your bio, Discord automatically turns it into a clickable link for viewers.'
+      },
+      {
+        question: 'Why do some fancy font characters show up as boxes in Discord?',
+        answer: 'This happens when an obscure Unicode character is not supported by the viewer operating system font set. Stick to widely supported symbols like stars, simple arrows, and clean bullets.'
+      },
+      {
+        question: 'How do you change your Discord About Me bio?',
+        answer: 'On desktop, click the gear icon for User Settings, go to Profiles, and type into the About Me text box. On mobile, tap your profile avatar, tap Edit Profile, and update About Me.'
+      }
+    ]
+  },
+  {
+    slug: 'discord-role-icon-size-guide',
+    title: 'Discord Role Icon Size Guide | 64x64 Specs & Rules',
+    heading: 'Discord Role Icon Size Guide & Specifications',
+    howToSteps: [
+      { name: 'Verify Server Boost Level 2', text: 'Confirm your server has reached at least Boost Level 2 with 7 active community boosts.' },
+      { name: 'Create a 64x64 transparent canvas', text: 'Draw or crop your badge on a 64×64 square canvas with a transparent background.' },
+      { name: 'Export under 256 KiB', text: 'Save the icon as a PNG under the 256 KiB file limit.' },
+      { name: 'Assign in Server Settings', text: 'Navigate to Server Settings, click Roles, choose the role, and upload the icon under Role Icon.' }
+    ],
+    metaDescription: 'Everything about discord role icon size limits and badge requirements. Master the 64x64 pixel dimensions, 256 KiB cap, and Server Boost Level 2 rules.',
+    primaryKeyword: 'discord role icon size',
+    secondaryKeywords: [
+      'how to add role icons in discord',
+      'role icon dimensions discord',
+      'discord role icon format',
+      'discord custom role badge'
+    ],
+    longTailKeywords: [
+      'discord role icon size 64x64',
+      'discord server boost level 2 role icons',
+      'transparent discord role icon png',
+      'role icon size limit discord'
+    ],
+    category: 'Specifications & Guides',
+    readTime: '5 min read',
+    datePublished: '2026-10-04T08:00:00Z',
+    dateModified: '2026-10-04T08:00:00Z',
+    author: {
+      name: 'Discord Asset Studio Engineering',
+      role: 'Client Architecture Specialist'
+    },
+    summary: 'Role icons display next to member display names in chat and server member lists. Here are the exact 64×64 pixel dimensions, 256 KiB upload ceiling, Server Boost Level 2 unlock rules, and practical badge design habits.',
+    toolCta: {
+      name: 'Discord Role Icon Maker',
+      headline: 'Crop and Export 64×64 Role Icons Instantly',
+      description: 'Format custom role icons to exact 64×64 pixel dimensions under 256 KiB with high contrast and transparent backgrounds.',
+      buttonText: 'Open Role Icon Maker',
+      href: '/tools/role-icon/',
+      badge: '64 × 64 px • 256 KiB Max'
+    },
+    sections: [
+      {
+        id: 'official-role-icon-size-specifications',
+        heading: 'Official Discord Role Icon Size and File Specifications',
+        content: `Discord role icons are custom visual badges that display beside a member's name in chat messages, voice channels, and the right-hand server member roster.
+
+Because these icons appear in compact UI locations, Discord enforces strict dimension and file size rules:`,
+        table: {
+          headers: ['Technical Specification', 'Official Requirement', 'Best Practice Recommendation'],
+          rows: [
+            ['Recommended Dimensions', '64×64 pixels', 'Export at 64×64 or 128×128 pixels (square 1:1)'],
+            ['Rendered Display Size', '~16×16 to 20×20 pixels', 'Design with bold silhouettes visible at 16px'],
+            ['Maximum File Size', '256 KiB', 'Keep PNG files under 100 KiB for instant loading'],
+            ['Accepted File Formats', 'PNG, JPG, WEBP', 'Always use 24-bit transparent PNG'],
+            ['Animation Support', 'Static only (no animated GIFs)', 'Use clean vector shapes with crisp outlines'],
+            ['Server Requirement', 'Server Boost Level 2', 'Requires 7 boosts from community members']
+          ]
+        },
+        callout: {
+          type: 'info',
+          title: 'Instant Sizing',
+          text: 'If your source artwork is rectangular or high resolution, format it instantly with our in-browser <a href="/tools/role-icon/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord role icon maker</a>.'
+        }
+      },
+      {
+        id: 'server-boost-level-2-requirements',
+        heading: 'Server Boost Level 2 Requirements and Retention Rules',
+        content: `Unlike server icons which are free for every server, custom uploaded role icons require the server to reach **Server Boost Level 2** (currently 7 community boosts).
+
+Key rules regarding role icon boosts:
+- **Server Boost Threshold**: Level 2 unlocks custom role icons, 50 additional custom emoji slots, and 1080p 60fps streaming.
+- **Grace Period if Boosts Drop**: If member boosts expire and your server drops below Level 2, your configured role icons are not deleted. They remain saved in role settings, but become hidden from member names until the server regains Level 2.
+- **Using Server Emojis as Role Icons**: Even if you do not upload a custom image file, Level 2 allows you to select any existing server emoji or standard Unicode emoji as a role badge.
+
+If you are also setting up server branding, see our guides on <a href="/tools/server-icon/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">server icon sizing</a> and <a href="/guides/discord-sizes/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">complete Discord dimension specs</a>.`,
+        callout: {
+          type: 'tip',
+          title: 'Boost Tier Verification',
+          text: 'Always check Server Settings → Server Boost Status to verify that your boost tier is stable before announcing new custom role icons to staff.'
+        }
+      },
+      {
+        id: 'how-to-upload-and-assign-role-icons',
+        heading: 'How to Add Role Icons in Discord Server Settings',
+        content: `Adding a role icon takes less than a minute once your server reaches Boost Level 2:
+
+1. Open Discord desktop or web, right-click your server icon, and select **Server Settings**.
+2. Click **Roles** in the left sidebar.
+3. Select the role you want to customize (e.g., "Moderator", "VIP", or "Tournament Winner").
+4. Under the **Display** tab, locate the **Role Icon** section.
+5. Click **Choose Image** to upload your 64×64 PNG, or choose an emoji from your server emoji list.
+6. Click **Save Changes** at the bottom of the screen.
+
+Make sure your account has the **Manage Roles** permission, and ensure your own highest role is higher in the hierarchy than the role you are editing.`,
+        callout: {
+          type: 'warning',
+          title: 'Permission Hierarchy',
+          text: 'You cannot edit roles higher than your own highest role, even if you are an administrator, unless you are the server owner.'
+        }
+      },
+      {
+        id: 'design-habits-for-tiny-16px-displays',
+        heading: 'Design Habits for Crisp 16px Role Badges',
+        content: `Because role icons render at roughly 16 to 20 pixels in chat, designs that look gorgeous at 500 pixels can turn into an illegible blur in Discord.
+
+Keep these design principles in mind:
+- **Avoid Words and Numbers**: At 16 pixels, letters turn into smudged pixels. Use symbolic shapes like crowns, shields, stars, swords, or badges instead.
+- **Maintain High Contrast**: Your icon will sit against dark mode (#313338) and light mode (#FFFFFF). Add a thin 1px contrasting border around dark artwork.
+- **Fill the 64×64 Canvas**: Do not leave massive empty margins around your symbol. Let the graphic occupy 85% to 90% of the canvas.
+- **Use Transparent Backgrounds**: Square white boxes behind icons look amateurish in dark mode. Always export as PNG with alpha transparency.
+
+For resizing existing icons without losing sharpness, use our <a href="/tools/image-resizer/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord image resizer</a>.`,
+        code: {
+          language: 'css',
+          snippet: `/* Recommended role icon export parameters */
+canvas-width: 64px;
+canvas-height: 64px;
+color-depth: 32-bit PNG (RGBA);
+compression: lossless;
+safe-padding: 4px;`,
+          caption: 'Optimal export settings for Discord role badges'
+        }
+      },
+      {
+        id: 'role-hierarchy-and-chat-display-order',
+        heading: 'Role Hierarchy and Chat Icon Precedence',
+        content: `A Discord member can hold dozens of server roles at the same time. If several of those roles have custom icons assigned, Discord will only display **one single icon** next to their name in chat.
+
+Discord determines which icon to display based strictly on **Role Hierarchy**:
+- The role placed highest in Server Settings → Roles takes priority.
+- If a member has both a "Moderator" role (higher) and a "Supporter" role (lower), only the Moderator icon displays beside their chat messages.
+- The only way to change which icon appears is to drag the preferred role higher in the server role list.
+
+Keep this in mind when organizing role rewards so higher staff and contributor tiers do not get overridden by lower cosmetic roles.`,
+        callout: {
+          type: 'info',
+          title: 'Single Icon Display',
+          text: 'Discord chat does not stack multiple role icons side-by-side. The highest positioned role in your hierarchy always claims the slot.'
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: 'What is the exact Discord role icon size?',
+        answer: 'The recommended size for Discord role icons is 64×64 pixels, with a maximum file size of 256 KiB. Discord accepts PNG, JPG, and WEBP formats.'
+      },
+      {
+        question: 'Do role icons require Server Boost Level 2?',
+        answer: 'Yes. Custom role icons require Server Boost Level 2, which requires 7 active boosts from server members. Once unlocked, you can assign icons to unlimited roles.'
+      },
+      {
+        question: 'Can Discord role icons be animated GIFs?',
+        answer: 'No. Discord role icons must be static images. Animated GIFs are not supported for role icons, even with Server Boost Level 3.'
+      },
+      {
+        question: 'Why is only one role icon showing if a member has multiple roles?',
+        answer: 'Discord only displays the icon from the highest role in your server role hierarchy. To change which icon shows, drag that role higher in Server Settings.'
+      },
+      {
+        question: 'Can I use custom server emojis as role icons?',
+        answer: 'Yes. When editing a role in Server Settings, you can choose to select any existing custom server emoji or standard Unicode emoji instead of uploading a file.'
+      }
+    ]
+  },
+  {
+    slug: 'how-to-fit-image-to-discord-banner',
+    title: 'Fit Image to Discord Banner Size | Safe Zone Guide',
+    heading: 'How to Fit Image to Discord Banner Size Perfectly',
+    howToSteps: [
+      { name: 'Check your banner destination', text: 'Determine if your graphic is for a Server Banner (960×540) or a Profile Banner (680×240).' },
+      { name: 'Format to the exact aspect ratio', text: 'Resize your canvas to 16:9 or 5:2 in our banner editor to prevent automatic stretching.' },
+      { name: 'Position focal subjects in the safe zone', text: 'Move logos and faces away from the bottom-left avatar cutout and top headers.' },
+      { name: 'Export and upload', text: 'Save as PNG or JPG under 10 MB and upload via User Settings or Server Settings.' }
+    ],
+    metaDescription: 'Learn how to fit image to discord banner size without cropping. Master 16:9 and 5:2 aspect ratios, mobile safe margins, and profile banner dimensions.',
+    primaryKeyword: 'fit image to discord banner size',
+    secondaryKeywords: [
+      'discord banner safe zone',
+      'why is my discord banner cropped',
+      'discord banner aspect ratio',
+      'discord profile banner dimensions'
+    ],
+    longTailKeywords: [
+      'how to make a picture fit discord banner',
+      'discord server banner safe zone template',
+      'discord banner cut off on phone',
+      'discord banner size 960x540'
+    ],
+    category: 'Tutorials',
+    readTime: '6 min read',
+    datePublished: '2026-10-04T08:00:00Z',
+    dateModified: '2026-10-04T08:00:00Z',
+    author: {
+      name: 'Discord Asset Studio Engineering',
+      role: 'Client Architecture Specialist'
+    },
+    summary: 'Discord banners often crop heads, logos, and edges unexpectedly because server banners, user profile cards, and mobile apps use completely different proportions. Here is how to fit any image to Discord banner dimensions with safe zone guides.',
+    toolCta: {
+      name: 'Discord Banner Maker',
+      headline: 'Fit Any Image to Discord Banners with Safe Zones',
+      description: 'Resize, reposition, and preview your image across 960×540 server headers and 680×240 profile banners with interactive safe zone overlays.',
+      buttonText: 'Open Banner Studio',
+      href: '/tools/banner/',
+      badge: 'Server & Profile • Safe Margin Grid'
+    },
+    sections: [
+      {
+        id: 'why-discord-crops-your-banner-images',
+        heading: 'Why One Image Rarely Fits Both Discord Banner Types',
+        content: `One of the most frustrating experiences on Discord is uploading a great picture only to discover that Discord cut off half the graphic or zoomed in on an empty background.
+
+This happens because Discord uses two completely different banners with different proportions:
+
+1. **Server Banners**: Use a **16:9 aspect ratio** with a minimum recommended size of **960×540 pixels**.
+2. **Profile Banners**: Use a roughly **5:2 aspect ratio (2.83:1)** with a recommended size of **680×240 pixels**.
+
+If you upload a 16:9 image as your profile banner, Discord forces a horizontal crop that cuts off roughly 40% of the vertical height. Furthermore, profile cards place your round avatar over the bottom-left corner, covering whatever artwork sits behind it.
+
+You can adjust and preview any picture with our in-browser <a href="/tools/banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord banner maker</a>, which overlays safe zones before you upload.`,
+        callout: {
+          type: 'info',
+          title: 'Two Different Ratios',
+          text: 'Server banners are 16:9 widescreen (960×540), while personal profile banners are ultra-wide 5:2 strips (680×240). Always format artwork for the specific destination.'
+        }
+      },
+      {
+        id: 'server-banner-vs-profile-banner-spec-table',
+        heading: 'Server Banner vs Profile Banner Dimensions and Specs',
+        content: `Before editing your artwork, confirm which banner you are targeting using this specification comparison:`,
+        table: {
+          headers: ['Feature', 'Server Banner', 'Personal Profile Banner'],
+          rows: [
+            ['Aspect Ratio', '16:9 widescreen', '~5:2 ultra-wide (approx. 2.83:1)'],
+            ['Recommended Resolution', '960×540 pixels (or 1920×1080)', '680×240 pixels (or 1360×480)'],
+            ['Minimum Resolution', '960×540 pixels', '680×240 pixels'],
+            ['Max File Size', '10 MB', '10 MB'],
+            ['Unlock Requirement', 'Server Boost Level 2', 'Discord Nitro or Nitro Basic'],
+            ['Animated GIF Support', 'Requires Boost Level 3', 'Requires Discord Nitro'],
+            ['Primary UI Obstruction', 'Top-left server name pill & menu', 'Bottom-left avatar circle cutout']
+          ]
+        }
+      },
+      {
+        id: 'safe-zones-and-avatar-cutouts',
+        heading: 'Mapping Safe Zones: Avoiding Avatar and Header Cutouts',
+        content: `A safe zone is the portion of your canvas guaranteed to remain visible without being obscured by UI elements or responsive screen resizing.
+
+### Profile Banner Safe Zones
+On desktop and mobile profile popout cards, your circular avatar sits over the bottom-left area of the banner:
+- **Left Margin**: Keep critical faces, logos, and text at least **140 pixels away from the left edge** on a 680×240 canvas.
+- **Bottom Margin**: Leave the bottom 50 pixels clear of important text.
+- **The Sweet Spot**: Place your focal artwork in the upper-right two-thirds of the canvas.
+
+### Server Banner Safe Zones
+Server banners display above the channel list on the desktop app:
+- **Top Bar**: Discord renders a dark gradient overlay and the server title pill across the top 20% of the banner.
+- **Keep Logos Centered**: Position server logos and titles slightly below center so they remain unobstructed.
+
+For more templates and banner inspiration, explore our guide on <a href="/blog/discord-banner-ideas-templates/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord banner ideas and templates</a>.`,
+        callout: {
+          type: 'tip',
+          title: 'The Upper-Right Focus Rule',
+          text: 'Because the avatar always sits on the bottom-left, placing character artwork and text on the right side produces an uncluttered profile header every time.'
+        }
+      },
+      {
+        id: 'three-techniques-to-fit-any-image-without-stretching',
+        heading: 'Three Ways to Fit Square or Portrait Art onto Wide Banners',
+        content: `If you have a vertical fanart piece or a square illustration that you want to use as a Discord banner, stretching it horizontally will distort the image. Instead, use one of these three techniques:
+
+1. **Ambient Blurred Background**: Duplicate the original image, scale it to fill the entire 16:9 or 5:2 canvas, apply a 25px Gaussian blur, and place the uncropped subject sharply in the center or right side.
+2. **Solid Color Canvas Extension**: Use Discord dark background (#141A24 or #1E293B) as the canvas base. Place your artwork neatly on the right side and feather the left edge into the background with a soft gradient.
+3. **Smart Rule-of-Thirds Cropping**: If your source image has high resolution, zoom in to crop around the focal point (such as a character eyes or emblem) rather than trying to fit the full full-body pose into a narrow banner strip.
+
+You can also use our <a href="/tools/image-resizer/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">Discord image resizer</a> to crop and pad assets locally.`,
+        callout: {
+          type: 'info',
+          title: 'Zero Upload Processing',
+          text: 'Our banner studio processes all canvas sizing, padding, and safe zone previews directly in your browser, keeping your personal artwork private.'
+        }
+      },
+      {
+        id: 'step-by-step-upload-and-crop-slider-guide',
+        heading: 'Uploading and Adjusting Zoom in Discord Settings',
+        content: `Once your image matches the recommended dimensions, follow these steps to upload it cleanly:
+
+### Profile Banner (Desktop)
+1. Open **User Settings** (gear icon) and select **Profiles**.
+2. Click **Change Banner** on your User Profile card.
+3. Choose **Upload Image** and select your formatted file.
+4. Discord displays a crop preview modal with a zoom slider. Because you pre-sized the image, leave the zoom slider at its default minimum position and click **Apply**.
+5. Click **Save Changes**.
+
+### Server Banner (Desktop)
+1. Open **Server Settings** and navigate to the **Overview** tab.
+2. Scroll to the **Server Banner Background** section.
+3. Click **Upload Image**, position your 960×540 file, and save.
+
+If your server has reached Level 3, you can upload an animated GIF banner following the same steps. For full server guidelines, see our tutorial on <a href="/blog/how-to-change-discord-server-banner/" class="text-[#3368A0] dark:text-[#66A3BF] font-semibold hover:underline">how to change a Discord server banner</a>.`,
+        callout: {
+          type: 'warning',
+          title: 'Avoid Discord Auto-Zoom',
+          text: 'If you drag Discord built-in zoom slider too far to the right, your banner will pixelate on high-DPI screens. Always resize to the exact canvas dimensions before uploading.'
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: 'What is the best size to fit image to discord banner size?',
+        answer: 'For a personal profile banner, use 680×240 pixels (5:2 ratio). For a server banner, use 960×540 pixels (16:9 ratio). Pre-sizing prevents Discord from forcing an unwanted crop.'
+      },
+      {
+        question: 'Why does Discord zoom in on my banner image when uploading?',
+        answer: 'Discord zooms in when the image aspect ratio does not match the banner frame. Pre-sizing your image to 680×240 or 960×540 ensures the entire image fits without automatic zoom.'
+      },
+      {
+        question: 'How much of my profile banner is covered by my avatar?',
+        answer: 'Your circular avatar covers approximately the bottom-left 120 pixels of your profile banner. Keep faces, logos, and text positioned toward the right side.'
+      },
+      {
+        question: 'Can free Discord users upload a profile banner?',
+        answer: 'No. Custom image profile banners require Discord Nitro or Nitro Basic. Free users can only customize their banner with a solid profile theme color.'
+      },
+      {
+        question: 'What is the maximum file size for a Discord banner?',
+        answer: 'Both profile banners and server banners have a maximum file size limit of 10 MB. PNG or JPG files under 5 MB load fastest for community members.'
+      }
+    ]
+  }
 ];

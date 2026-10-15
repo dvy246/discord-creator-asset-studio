@@ -1,0 +1,7 @@
+{
+  "name": "playbook-video",
+  "private": true,
+  "scripts": {
+    "render": "hyperframes render"
+  }
+}

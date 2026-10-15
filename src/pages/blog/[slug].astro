@@ -28,9 +28,14 @@ const ogImageMap: Record<string, string> = {
   'how-to-change-discord-username': 'https://discord-creator-asset-studio.pages.dev/og/blog-change-username.png',
   'discord-text-formatting-guide': 'https://discord-creator-asset-studio.pages.dev/og/blog-text-formatting-guide.png',
   'what-font-does-discord-use': 'https://discord-creator-asset-studio.pages.dev/og/blog-discord-font.png',
-  'discord-video-size-limit': 'https://discord-creator-asset-studio.pages.dev/og/blog-video-size-limit.png'
+  'discord-video-size-limit': 'https://discord-creator-asset-studio.pages.dev/og/blog-video-size-limit.png',
+  'how-to-do-colored-text-discord': 'https://discord-creator-asset-studio.pages.dev/og/colored-text.png',
+  'discord-timestamp-code-guide': 'https://discord-creator-asset-studio.pages.dev/og/timestamp.png',
+  'discord-about-me-ideas-aesthetic': 'https://discord-creator-asset-studio.pages.dev/og/bio-generator.png',
+  'discord-role-icon-size-guide': 'https://discord-creator-asset-studio.pages.dev/og/role-icon.png',
+  'how-to-fit-image-to-discord-banner': 'https://discord-creator-asset-studio.pages.dev/og/banner.png'
 };
-const pageOgImage = ogImageMap[post.slug];
+const pageOgImage = ogImageMap[post.slug] || 'https://discord-creator-asset-studio.pages.dev/og/banner.png';
 
 const blogPostingSchema = JSON.parse(generateBlogPostingSchema({ ...post, image: pageOgImage }));
 
@@ -133,7 +138,7 @@ const otherPosts = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);
     <!-- Header Meta & Title -->
     <header class="mb-10 max-w-4xl">
       <div class="flex flex-wrap items-center gap-3 text-xs font-mono mb-4">
-        <span class="px-2.5 py-1 rounded-md bg-[#3368A0]/10 dark:bg-[#66A3BF]/10 text-[#3368A0] dark:text-[#66A3BF] font-semibold">
+        <span class="px-2.5 py-1 rounded-md bg-[#C8DFDB]/60 dark:bg-[#202E42] text-[#3368A0] dark:text-[#66A3BF] font-semibold border border-[#66A3BF]/20">
           {post.category}
         </span>
         <span class="text-[#6B7A90] dark:text-[#8494A7]">⏱ {post.readTime}</span>
